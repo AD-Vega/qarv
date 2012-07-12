@@ -48,10 +48,10 @@ private slots:
   void on_chooseFilenameButton_clicked(bool checked);
   void on_fpsSpinbox_valueChanged(int value);
   void on_matchMtuButton_clicked(bool checked);
+  void on_gainSlider_valueChanged(int value);
+  void on_exposureSlider_valueChanged(int value);
   void readExposure();
   void readGain();
-  void setExposure();
-  void setGain();
   void setROI();
   void startVideo(bool start);
   void takeNextFrame();

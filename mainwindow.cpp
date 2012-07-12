@@ -26,7 +26,7 @@
 #include "getmtu_linux.h"
 
 const int slidersteps = 1000;
-const int sliderUpdateMsec = 100;
+const int sliderUpdateMsec = 300;
 
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
@@ -36,6 +36,13 @@ MainWindow::MainWindow():
   QIcon idle = QIcon::fromTheme("video-display");
   idleImage = idle.pixmap(video->size()).toImage();
   video->setImage(idleImage);
+
+  autoreadexposure = new QTimer(this);
+  autoreadgain = new QTimer(this);
+  autoreadexposure->setInterval(sliderUpdateMsec);
+  autoreadgain->setInterval(sliderUpdateMsec);
+  this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
+  this->connect(autoreadgain, SIGNAL(timeout()), SLOT(readGain()));
 
   QSpinBox* boxen[] = {xSpinbox, ySpinbox, wSpinbox, hSpinbox};
   for (int i=0; i<sizeof(boxen)/sizeof(void*); i++)
@@ -54,13 +61,6 @@ MainWindow::MainWindow():
     cameraSelector->addItem(display, QVariant::fromValue<ArCamId>(cam));
   }
   cameraSelector->setCurrentIndex(0);
-
-  autoreadexposure = new QTimer(this);
-  autoreadgain = new QTimer(this);
-  autoreadexposure->setInterval(sliderUpdateMsec);
-  autoreadgain->setInterval(sliderUpdateMsec);
-  this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
-  this->connect(autoreadgain, SIGNAL(timeout()), SLOT(readGain()));
 }
 
 void MainWindow::on_unzoomButton_toggled(bool checked) {
@@ -75,17 +75,34 @@ void MainWindow::on_unzoomButton_toggled(bool checked) {
   }
 }
 
-inline double slider2value(int slidervalue,
-                           QPair<double, double>& range) {
-  return range.first + (range.second - range.first) * slidervalue / slidersteps;
+static inline double slider2value_log(int slidervalue,
+                                      QPair<double, double>& range) {
+  double value = log2(range.second) - log2(range.first);
+  return exp2(value * slidervalue / slidersteps + log2(range.first));
 }
 
-inline int value2slider(double value,
-                        QPair<double, double>& range) {
+static inline int value2slider_log(double value,
+                                   QPair<double, double>& range) {
+  return slidersteps *
+         (log2(value) - log2(range.first)) /
+         (log2(range.second) - log2(range.first));
+}
+
+static inline double slider2value(int slidervalue,
+                                      QPair<double, double>& range) {
+  return range.first + (range.second - range.first) *
+         slidervalue / slidersteps;
+}
+
+static inline int value2slider(double value,
+                                   QPair<double, double>& range) {
   return (value - range.first) / (range.second - range.first) * slidersteps;
 }
 
 void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
+  autoreadexposure->stop();
+  autoreadgain->stop();
+
   auto camid = cameraSelector->itemData(index).value<ArCamId>();
   if (camera != NULL) {
     startVideo(false);
@@ -96,12 +113,11 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
   fpsSpinbox->setValue(camera->getFPS());
 
-  qDebug() << camera->getMTU();
   if (camera->getMTU() == 0) {
-    qDebug() << (camera->getMTU() == 0);
     matchMtuButton->setEnabled(false);
     matchMtuButton->setText("Unsupported");
     ifaceSelector->setEnabled(false);
+    mtuSpinbox->setEnabled(false);
   }
 
   auto formats = camera->getPixelFormats();
@@ -130,43 +146,48 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   exposurerange = camera->getExposureLimits();
   gainSlider->setRange(0, slidersteps);
   exposureSlider->setRange(0, slidersteps);
-  gainSlider->setValue(value2slider(camera->getGain(), gainrange));
-  exposureSlider->setValue(value2slider(camera->getExposure(), exposurerange));
-  
+  gainSpinbox->setRange(gainrange.first, gainrange.second);
+  exposureSpinbox->setRange(exposurerange.first, exposurerange.second);
+  readGain();
+  readExposure();
+
   gainAutoButton->setEnabled(camera->hasAutoGain());
   exposureAutoButton->setEnabled(camera->hasAutoExposure());
+  camera->setAutoGain(false);
+  camera->setAutoExposure(false);
+
+  autoreadexposure->start();
+  autoreadgain->start();
 }
 
 void MainWindow::readExposure() {
-  exposureSlider->setValue(value2slider(camera->getExposure(), exposurerange));
+  exposureSlider->setValue(value2slider_log(camera->getExposure(), exposurerange));
+  exposureSpinbox->setValue(camera->getExposure());
 }
 
 void MainWindow::readGain() {
   gainSlider->setValue(value2slider(camera->getGain(), gainrange));
+  gainSpinbox->setValue(camera->getGain());
 }
 
-void MainWindow::setExposure() {
-  camera->setExposure(slider2value(exposureSlider->value(), exposurerange));
-  readExposure();
+void MainWindow::on_exposureSlider_valueChanged(int value) {
+  camera->setExposure(slider2value_log(value, exposurerange));
 }
 
-void MainWindow::setGain() {
-  camera->setGain(slider2value(gainSlider->value(), gainrange));
-  readGain();
+void MainWindow::on_gainSlider_valueChanged(int value) {
+  camera->setGain(slider2value(value, gainrange));
 }
 
 void MainWindow::on_exposureAutoButton_toggled(bool checked) {
   exposureSlider->setEnabled(!checked);
+  exposureSpinbox->setEnabled(!checked);
   camera->setAutoExposure(checked);
-  if (checked) autoreadexposure->start();
-  else autoreadexposure->stop();
 }
 
 void MainWindow::on_gainAutoButton_toggled(bool checked) {
   gainSlider->setEnabled(!checked);
+  gainSpinbox->setEnabled(!checked);
   camera->setAutoGain(checked);
-  if (checked) autoreadgain->start();
-  else autoreadgain->stop();
 }
 
 void MainWindow::on_ifaceSelector_currentIndexChanged(QString iface) {

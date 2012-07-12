@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>385</width>
-    <height>549</height>
+    <height>582</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,9 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="video-display"/>
+         <iconset theme="video-display">
+          <normaloff/>
+         </iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -45,7 +47,9 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="zoom-original"/>
+         <iconset theme="zoom-original">
+          <normaloff/>
+         </iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -64,7 +68,9 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="media-record"/>
+         <iconset theme="media-record">
+          <normaloff/>
+         </iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -80,7 +86,9 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-start"/>
+         <iconset theme="media-playback-start">
+          <normaloff/>
+         </iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -252,18 +260,6 @@
               </widget>
              </item>
             </layout>
-            <zorder>cameraBox</zorder>
-            <zorder>cameraBox</zorder>
-            <zorder>cameraBox</zorder>
-            <zorder>label_5</zorder>
-            <zorder>label_6</zorder>
-            <zorder>label_7</zorder>
-            <zorder>label_8</zorder>
-            <zorder>xSpinbox</zorder>
-            <zorder>ySpinbox</zorder>
-            <zorder>wSpinbox</zorder>
-            <zorder>hSpinbox</zorder>
-            <zorder>outofrangeLabel</zorder>
            </widget>
           </item>
          </layout>
@@ -273,22 +269,28 @@
           <property name="title">
            <string>Exposure</string>
           </property>
-          <layout class="QFormLayout" name="formLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>Gain:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>Gain:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QSlider" name="gainSlider">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="gainSpinbox"/>
              </item>
              <item>
               <widget class="QPushButton" name="gainAutoButton">
@@ -302,14 +304,27 @@
              </item>
             </layout>
            </item>
-           <item row="3" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Exposure:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QSlider" name="exposureSlider">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="exposureSpinbox"/>
              </item>
              <item>
               <widget class="QPushButton" name="exposureAutoButton">
@@ -322,13 +337,6 @@
               </widget>
              </item>
             </layout>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Exposure:</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>
@@ -358,7 +366,9 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset theme="document-open"/>
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
             </property>
            </widget>
           </item>
