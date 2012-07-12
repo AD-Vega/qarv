@@ -1,6 +1,6 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2012  Jure Varlec <jure.varlec@gmail.com>
+    qarv, a Qt interface to aravis.
+    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
