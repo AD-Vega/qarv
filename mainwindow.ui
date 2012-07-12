@@ -130,7 +130,11 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QComboBox" name="cameraSelector"/>
+              <widget class="QComboBox" name="cameraSelector">
+               <property name="minimumContentsLength">
+                <number>20</number>
+               </property>
+              </widget>
              </item>
              <item row="2" column="0">
               <widget class="QLabel" name="label_2">
@@ -140,7 +144,11 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QComboBox" name="pixelFormatSelector"/>
+              <widget class="QComboBox" name="pixelFormatSelector">
+               <property name="minimumContentsLength">
+                <number>20</number>
+               </property>
+              </widget>
              </item>
              <item row="3" column="0">
               <widget class="QLabel" name="label_3">
@@ -174,6 +182,9 @@
              </item>
              <item row="5" column="0" colspan="2">
               <widget class="QPushButton" name="matchMtuButton">
+               <property name="toolTip">
+                <string>Match the camera packet size to the network MTU.</string>
+               </property>
                <property name="text">
                 <string>Match MTU</string>
                </property>
@@ -268,6 +279,9 @@
          <widget class="QGroupBox" name="Exposure">
           <property name="title">
            <string>Exposure</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
