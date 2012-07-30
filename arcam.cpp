@@ -20,6 +20,7 @@ extern "C" {
   #include <arv.h>
 }
 #include <cstdlib>
+#include <cstring>
 
 #include "arcam.h"
 #include <QDebug>
@@ -31,6 +32,25 @@ void arcamInit() {
   arv_enable_interface("Fake");
 }
 
+ArCamId::ArCamId(): id(NULL), vendor(NULL), model(NULL) {}
+
+ArCamId::ArCamId(const char* id_, const char* vendor_, const char* model_) {
+  id = strdup(id_);
+  vendor = strdup(vendor_);
+  model = strdup(model_);
+}
+
+ArCamId::ArCamId(const ArCamId& camid) {
+  id = strdup(camid.id);
+  vendor = strdup(camid.vendor);
+  model = strdup(camid.model);
+}
+
+ArCamId::~ArCamId() {
+  if(id != NULL) free((void*)id);
+  if(vendor != NULL) free((void*)vendor);
+  if(model != NULL) free((void*)model);
+}
 
 ArCam::ArCam(ArCamId id, QObject* parent):
   QObject(parent), acquiring(false) {
@@ -50,11 +70,11 @@ QList<ArCamId> ArCam::listCameras() {
   arv_update_device_list();
   unsigned int N = arv_get_n_devices();
   for (unsigned int i = 0; i < N; i++) {
-    ArCamId id;
-    id.id = arv_get_device_id(i);
-    ArvCamera* camera = arv_camera_new(id.id);
-    id.vendor = arv_camera_get_vendor_name(camera);
-    id.model = arv_camera_get_model_name(camera);
+    const char* camid = arv_get_device_id(i);
+    ArvCamera* camera = arv_camera_new(camid);
+    ArCamId id(camid, arv_camera_get_vendor_name(camera),
+               arv_camera_get_model_name(camera));
+    g_object_unref(camera);
     cameraList << id;
   }
   return QList<ArCamId>(cameraList);

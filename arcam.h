@@ -39,7 +39,12 @@ typedef _ArvBuffer ArvBuffer;
 struct _ArvStream;
 typedef _ArvStream ArvStream;
 
-struct ArCamId {
+class ArCamId {
+public:
+  ArCamId();
+  ArCamId(const char* id, const char* vendor, const char* model);
+  ArCamId(const ArCamId& camid);
+  ~ArCamId();
   const char *id, *vendor, *model;
 };
 
