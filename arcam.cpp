@@ -28,6 +28,7 @@ QList<ArCamId> ArCam::cameraList;
 
 void arcamInit() {
   g_type_init();
+  arv_enable_interface("Fake");
 }
 
 
