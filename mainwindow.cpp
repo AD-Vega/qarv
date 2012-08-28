@@ -161,12 +161,17 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 }
 
 void MainWindow::readExposure() {
-  exposureSlider->setValue(value2slider_log(camera->getExposure(), exposurerange));
+  bool blocked = exposureSlider->blockSignals(true);
+  exposureSlider->setValue(value2slider_log(camera->getExposure(),
+                                            exposurerange));
+  exposureSlider->blockSignals(blocked);
   exposureSpinbox->setValue(camera->getExposure());
 }
 
 void MainWindow::readGain() {
+  bool blocked = gainSlider->blockSignals(true);
   gainSlider->setValue(value2slider(camera->getGain(), gainrange));
+  gainSlider->blockSignals(blocked);
   gainSpinbox->setValue(camera->getGain());
 }
 
