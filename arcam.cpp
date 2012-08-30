@@ -61,7 +61,6 @@ ArCam::ArCam(ArCamId id, QObject* parent):
 
 ArCam::~ArCam() {
   stopAcquisition();
-  g_object_unref(device);
   g_object_unref(camera);
 }
 
