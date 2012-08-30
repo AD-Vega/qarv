@@ -48,12 +48,6 @@ MainWindow::MainWindow():
   for (int i=0; i<sizeof(boxen)/sizeof(void*); i++)
     this->connect(boxen[i], SIGNAL(valueChanged(int)), SLOT(setROI()));
 
-  auto ifaces = QNetworkInterface::allInterfaces();
-  for (int i=0; i<ifaces.length(); i++) {
-    ifaceSelector->addItem(ifaces.at(i).name());
-  }
-  ifaceSelector->setCurrentIndex(0);
-
   auto cameras = ArCam::listCameras();
   foreach (auto cam, cameras) {
     QString display;
@@ -113,16 +107,42 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
   fpsSpinbox->setValue(camera->getFPS());
 
-  if (camera->getMTU() == 0) {
-    matchMtuButton->setEnabled(false);
-    matchMtuButton->setText("Unsupported");
-    ifaceSelector->setEnabled(false);
-    mtuSpinbox->setEnabled(false);
+  auto ifaceIP = camera->getHostIP();
+  QNetworkInterface cameraIface;
+  if (!ifaceIP.isNull()) {
+    auto ifaces = QNetworkInterface::allInterfaces();
+    bool process_loop = true;
+    foreach (QNetworkInterface iface, ifaces) {
+      if (!process_loop) break;
+      auto addresses = iface.addressEntries();
+      foreach (QNetworkAddressEntry addr, addresses) {
+        if (addr.ip() == ifaceIP) {
+          cameraIface = iface;
+          process_loop = false;
+          break;
+        }
+      }
+    }
+
+    if(cameraIface.isValid()) {
+      int mtu = getMTU(cameraIface.name());
+      camera->setMTU(mtu);
+    }
   } else {
-    matchMtuButton->setEnabled(true);
-    matchMtuButton->setText("Match MTU");
-    ifaceSelector->setEnabled(true);
-    mtuSpinbox->setEnabled(true);
+    // No ip found; try best effort MTU in case it's still an eth cam
+    camera->setMTU(1500);
+  }
+
+  if (camera->getMTU() == 0)
+    cameraMTUDescription->setText("Not an ethernet camera.");
+  else {
+    int mtu = camera->getMTU();
+    QString ifname = cameraIface.name();
+    QString description = "Camera on interface " + ifname +
+                          ",\nMTU set to " + QString::number(mtu) + ".";
+    if (mtu < 3000)
+      description += "\nConsider increasing the MTU!";
+    cameraMTUDescription->setText(description);
   }
 
   auto formats = camera->getPixelFormats();
@@ -198,12 +218,6 @@ void MainWindow::on_gainAutoButton_toggled(bool checked) {
   gainSlider->setEnabled(!checked);
   gainSpinbox->setEnabled(!checked);
   camera->setAutoGain(checked);
-}
-
-void MainWindow::on_ifaceSelector_currentIndexChanged(QString iface) {
-  mtuSpinbox->setValue(getMTU(iface));
-  matchMtuButton->setText("Match MTU");
-  matchMtuButton->setEnabled(true);
 }
 
 void MainWindow::on_pixelFormatSelector_currentIndexChanged(int index) {
@@ -321,11 +335,3 @@ void MainWindow::on_fpsSpinbox_valueChanged(int value) {
   fpsSpinbox->setValue(camera->getFPS());
 }
 
-void MainWindow::on_matchMtuButton_clicked(bool checked) {
-  camera->setMTU(mtuSpinbox->value());
-  int mtu = camera->getMTU();
-  if (mtu != mtuSpinbox->value()) {
-    matchMtuButton->setText("Unsupported value");
-    matchMtuButton->setEnabled(false);
-  }
-}

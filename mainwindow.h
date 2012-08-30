@@ -40,14 +40,12 @@ private slots:
   void on_cameraSelector_currentIndexChanged(int index);
   void on_exposureAutoButton_toggled(bool checked);
   void on_gainAutoButton_toggled(bool checked);
-  void on_ifaceSelector_currentIndexChanged(QString iface);
   void on_pixelFormatSelector_currentIndexChanged(int index);
   void on_playButton_clicked(bool checked);
   void on_recordButton_clicked(bool checked);
   void on_filenameEdit_textChanged(QString name);
   void on_chooseFilenameButton_clicked(bool checked);
   void on_fpsSpinbox_valueChanged(int value);
-  void on_matchMtuButton_clicked(bool checked);
   void on_gainSlider_valueChanged(int value);
   void on_exposureSlider_valueChanged(int value);
   void readExposure();

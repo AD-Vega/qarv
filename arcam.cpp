@@ -18,6 +18,8 @@
 
 extern "C" {
   #include <arv.h>
+  #include <gio/gio.h>
+  #include <sys/socket.h>
 }
 #include <cstdlib>
 #include <cstring>
@@ -247,4 +249,28 @@ QSize ArCam::getFrameSize() {
 
 QByteArray ArCam::getFrame() {
   return QByteArray(static_cast<char*>(currentFrame->data), currentFrame->size);
+}
+
+QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
+  sockaddr addr;
+  int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
+  if (!success) {
+    qDebug() << "Unable to translate IP address.";
+    return QHostAddress();
+  }
+  return QHostAddress(&addr);
+}
+
+QHostAddress ArCam::getIP() {
+  if (ARV_IS_GV_DEVICE(device)) {
+    auto gaddr = arv_gv_device_get_device_address(ARV_GV_DEVICE(device));
+    return GSocketAddress_to_QHostAddress(gaddr);
+  } else return QHostAddress();
+}
+
+QHostAddress ArCam::getHostIP() {
+  if (ARV_IS_GV_DEVICE(device)) {
+    auto gaddr = arv_gv_device_get_interface_address(ARV_GV_DEVICE(device));
+    return GSocketAddress_to_QHostAddress(gaddr);
+  } else return QHostAddress();
 }

@@ -26,6 +26,7 @@
 #include <QPair>
 #include <QMetaType>
 #include <QImage>
+#include <QHostAddress>
 
 void arcamInit();
 
@@ -94,6 +95,9 @@ public:
 
   QSize getFrameSize();
   QByteArray getFrame();
+
+  QHostAddress getIP();
+  QHostAddress getHostIP();
 
 signals:
   void frameReady();

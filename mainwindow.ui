@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>385</width>
-    <height>582</height>
+    <width>483</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -122,6 +122,9 @@
              <string>Camera</string>
             </property>
             <layout class="QFormLayout" name="formLayout">
+             <property name="fieldGrowthPolicy">
+              <enum>QFormLayout::ExpandingFieldsGrow</enum>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
@@ -137,73 +140,47 @@
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Pixel format:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QComboBox" name="pixelFormatSelector">
-               <property name="minimumContentsLength">
-                <number>20</number>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Network interface:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QComboBox" name="ifaceSelector"/>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>Interface MTU:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QSpinBox" name="mtuSpinbox">
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>65536</number>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0" colspan="2">
-              <widget class="QPushButton" name="matchMtuButton">
-               <property name="toolTip">
-                <string>Match the camera packet size to the network MTU.</string>
-               </property>
-               <property name="text">
-                <string>Match MTU</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
               <widget class="QLabel" name="label_9">
                <property name="text">
                 <string>FPS:</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="2" column="1">
               <widget class="QSpinBox" name="fpsSpinbox">
                <property name="minimum">
                 <number>1</number>
                </property>
                <property name="maximum">
                 <number>999</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Pixel format:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="pixelFormatSelector">
+               <property name="minimumContentsLength">
+                <number>20</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="cameraMTUDescription">
+               <property name="text">
+                <string>Not an ethernet camera.</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Ethernet MTU:</string>
                </property>
               </widget>
              </item>
