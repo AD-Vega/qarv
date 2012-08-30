@@ -235,16 +235,9 @@ void MainWindow::takeNextFrame() {
   }
 }
 
-void MainWindow::enableNotouchWidgets(bool enabled) {
-  static QList<QWidget*> list;
-  if (list.isEmpty())
-    list << cameraSelector << pixelFormatSelector << fpsSpinbox <<
-         xSpinbox << wSpinbox << ySpinbox << hSpinbox;
-  foreach (auto wgt, list)
-    wgt->setEnabled(enabled);
-}
-
 void MainWindow::startVideo(bool start) {
+  static QList<QWidget*> toDisableWhenPlaying;
+  if (toDisableWhenPlaying.isEmpty()) toDisableWhenPlaying << cameraSelector;
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
@@ -256,7 +249,10 @@ void MainWindow::startVideo(bool start) {
       else {
         camera->startAcquisition();
         started = true;
-        enableNotouchWidgets(false);
+        foreach (auto wgt, toDisableWhenPlaying) {
+          wgt->setEnabled(false);
+        }
+        pixelFormatSelector->setEnabled(false);
       }
     } else if (started && !playing && !recording) {
       QApplication::processEvents();
@@ -264,7 +260,10 @@ void MainWindow::startVideo(bool start) {
       if (decoder != NULL) delete decoder;
       decoder = NULL;
       started = false;
-      enableNotouchWidgets(true);
+      foreach (auto wgt, toDisableWhenPlaying) {
+        wgt->setEnabled(true);
+      }
+      pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1);
     }
   }
 }
@@ -278,6 +277,9 @@ void MainWindow::on_playButton_clicked(bool checked) {
 }
 
 void MainWindow::on_recordButton_clicked(bool checked) {
+  static QList<QWidget*> toDisableWhenRecording;
+  if (toDisableWhenRecording.isEmpty()) toDisableWhenRecording << fpsSpinbox <<
+         xSpinbox << wSpinbox << ySpinbox << hSpinbox;
   if (checked && (recordingfilename != recordingfile->fileName())) {
     recordingfilename = recordingfile->fileName();
     bool open = recordingfile->open(QIODevice::WriteOnly);
@@ -291,6 +293,9 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   startVideo(checked);
   recording = checked && started;
   recordButton->setChecked(recording);
+  foreach (auto wgt, toDisableWhenRecording) {
+    wgt->setEnabled(!recording);
+  }
   recordingTab->setEnabled(!recording);
   qDebug() << checked << started << recording;
 }
