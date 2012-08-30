@@ -118,6 +118,11 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
     matchMtuButton->setText("Unsupported");
     ifaceSelector->setEnabled(false);
     mtuSpinbox->setEnabled(false);
+  } else {
+    matchMtuButton->setEnabled(true);
+    matchMtuButton->setText("Match MTU");
+    ifaceSelector->setEnabled(true);
+    mtuSpinbox->setEnabled(true);
   }
 
   auto formats = camera->getPixelFormats();
