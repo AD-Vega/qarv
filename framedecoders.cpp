@@ -54,12 +54,14 @@ public:
   QImage decode(QByteArray frame) {
     QImage img(size, QImage::Format_Indexed8);
     img.setColorTable(graymap);
-    const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
-    const int h = size.height(), w = size.width(), W = img.bytesPerLine();
-    auto I = img.bits();
-    for (int i=0; i<h; i++)
+    const uint16_t* dta = reinterpret_cast<const uint16_t*>(frame.constData());
+    const int h = size.height(), w = size.width();
+    for (int i=0; i<h; i++) {
+      auto I = img.scanLine(i);
       for (int j=0; j<w; j++)
-        I[i*W+j] = dta[i*w+j] >> 4;
+        I[j] = dta[i * w + j] >> 4;
+    }
+    return img;
   }
 private:
   QSize size;
@@ -73,37 +75,43 @@ public:
     QImage img(size, QImage::Format_Indexed8);
     img.setColorTable(graymap);
     const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
-    const int h = size.height(), w = size.width(), W = img.bytesPerLine();
+    const int h = size.height(), w = size.width();
     assert(frame.size() % 2 == 0);
     assert(h*w % 2 == 0);
 
     int line = 0;
-    uchar* outptr = img.scanLine(0);
-    uchar* outptr_base = outptr;
+    uchar* linestart = img.scanLine(0);
+    int outcurrent = 0;
     const uchar* inptr = dta;
     uint16_t pixel;
-    char * bytes = reinterpret_cast<char*>(&pixel);
+    uchar * bytes = reinterpret_cast<uchar*>(&pixel);
     while (inptr < dta + frame.size()) {
       bytes[0] = inptr[1] << 4;
       bytes[1] = inptr[0];
       pixel >>= 8;
-      *(outptr++) = pixel;
+      linestart[outcurrent++] = pixel;
 
-      if (outptr - outptr_base == w) {
-        if (line++ == h) break;
-        outptr = outptr_base = img.scanLine(line);
+      if (outcurrent == w) {
+        if (++line == h) break;
+        linestart = img.scanLine(line);
+        outcurrent = 0;
       }
 
       bytes[0] = inptr[1] << 4;
       bytes[1] = inptr[2];
       pixel >>= 8;
-      *(outptr++) = pixel;
+      linestart[outcurrent++] = pixel;
 
-      if (outptr - outptr_base == w) {
-        if (line++ == h) break;
-        outptr = outptr_base = img.scanLine(line);
+      if (outcurrent == w) {
+        if (++line == h) break;
+        linestart = img.scanLine(line);
+        outcurrent = 0;
       }
+
+      inptr += 3;
     }
+
+    return img;
   }
 private:
   QSize size;

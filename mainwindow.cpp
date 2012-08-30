@@ -225,8 +225,10 @@ void MainWindow::setROI() {
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame();
-    auto img = decoder->decode(frame);
-    if (playing) video->setImage(img);
+    if (playing) {
+      auto img = decoder->decode(frame);
+      video->setImage(img);
+    }
     if (recording) {
       qint64 written = recordingfile->write(frame, frame.size());
       if (written != frame.size())
