@@ -95,6 +95,16 @@ static inline int value2slider(double value,
   return (value - range.first) / (range.second - range.first) * slidersteps;
 }
 
+void MainWindow::readROILimits() {
+  auto roisize = camera->getROIMaxSize();
+  roirange = QRect(QPoint(0,0), roisize.size());
+  auto roi = camera->getROI();
+  xSpinbox->setRange(0, roisize.width());
+  ySpinbox->setRange(0, roisize.height());
+  wSpinbox->setRange(roisize.x(), roisize.width());
+  hSpinbox->setRange(roisize.y(), roisize.height());
+}
+
 void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
 
@@ -156,15 +166,10 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
   pixelFormatSelector->setEnabled(noofframes > 1);
 
-  auto roisize = camera->getROIMaxSize();
-  roirange = QRect(QPoint(0,0), roisize.size());
-  qDebug() << "roirange" << roirange;
-  auto roi = camera->getROI();
-  xSpinbox->setRange(0, roisize.width());
-  ySpinbox->setRange(0, roisize.height());
-  wSpinbox->setRange(roisize.x(), roisize.width());
-  hSpinbox->setRange(roisize.y(), roisize.height());
+  readROILimits();
   on_resetROIButton_clicked(true);
+  QSize binsize = camera->getBinning();
+  binSpinBox->setValue(binsize.width());
 
   gainrange = camera->getGainLimits();
   exposurerange = camera->getExposureLimits();
@@ -245,6 +250,17 @@ void MainWindow::on_resetROIButton_clicked(bool clicked) {
   wSpinbox->setValue(wSpinbox->maximum());
   hSpinbox->setValue(hSpinbox->maximum());
   on_applyROIButton_clicked(true);
+}
+
+void MainWindow::on_binSpinBox_valueChanged(int value) {
+  bool tostart = started;
+  startVideo(false);
+  int bin = binSpinBox->value();
+  camera->setBinning(QSize(bin, bin));
+  QSize binsize = camera->getBinning();
+  binSpinBox->setValue(binsize.width());
+  readROILimits();
+  startVideo(tostart);
 }
 
 void MainWindow::takeNextFrame() {

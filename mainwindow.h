@@ -51,6 +51,7 @@ private slots:
   void on_exposureSlider_valueChanged(int value);
   void on_resetROIButton_clicked(bool clicked);
   void on_applyROIButton_clicked(bool clicked);
+  void on_binSpinBox_valueChanged(int value);
   void readExposure();
   void readGain();
   void startVideo(bool start);
@@ -58,6 +59,7 @@ private slots:
 
 private:
   void enableNotouchWidgets(bool enabled);
+  void readROILimits();
 
   QImage idleImage;
   ArCam* camera;
