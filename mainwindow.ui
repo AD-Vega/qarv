@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>539</height>
+    <width>587</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -192,7 +192,9 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="view-refresh"/>
+                  <iconset theme="view-refresh">
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -252,12 +254,40 @@
                <item row="3" column="1">
                 <widget class="QSpinBox" name="hSpinbox"/>
                </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Binning</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QSpinBox" name="binSpinBox"/>
+               </item>
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="outofrangeLabel">
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QPushButton" name="pickROIButton">
+                 <property name="text">
+                  <string>Pick</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="resetROIButton">
+                 <property name="text">
+                  <string>Reset</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="applyROIButton">
                <property name="text">
-                <string>Out of bounds!</string>
+                <string>Apply</string>
                </property>
               </widget>
              </item>
@@ -400,6 +430,19 @@
        </attribute>
       </widget>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>

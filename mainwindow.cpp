@@ -42,10 +42,6 @@ MainWindow::MainWindow():
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
 
-  QSpinBox* boxen[] = {xSpinbox, ySpinbox, wSpinbox, hSpinbox};
-  for (int i=0; i<sizeof(boxen)/sizeof(void*); i++)
-    this->connect(boxen[i], SIGNAL(valueChanged(int)), SLOT(setROI()));
-
   QTimer::singleShot(100, this, SLOT(on_refreshCamerasButton_clicked()));
 }
 
@@ -162,15 +158,13 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
   auto roisize = camera->getROIMaxSize();
   roirange = QRect(QPoint(0,0), roisize.size());
+  qDebug() << "roirange" << roirange;
   auto roi = camera->getROI();
   xSpinbox->setRange(0, roisize.width());
-  xSpinbox->setValue(roi.x());
   ySpinbox->setRange(0, roisize.height());
-  ySpinbox->setValue(roi.y());
   wSpinbox->setRange(roisize.x(), roisize.width());
-  wSpinbox->setValue(roi.width());
   hSpinbox->setRange(roisize.y(), roisize.height());
-  hSpinbox->setValue(roi.height());
+  on_resetROIButton_clicked(true);
 
   gainrange = camera->getGainLimits();
   exposurerange = camera->getExposureLimits();
@@ -229,15 +223,28 @@ void MainWindow::on_pixelFormatSelector_currentIndexChanged(int index) {
   camera->setPixelFormat(format);
 }
 
-void MainWindow::setROI() {
+void MainWindow::on_applyROIButton_clicked(bool clicked) {
   QRect ROI(xSpinbox->value(), ySpinbox->value(),
             wSpinbox->value(), hSpinbox->value());
   if (roirange.contains(ROI)) {
-    outofrangeLabel->hide();
+    bool tostart = started;
+    startVideo(false);
     camera->setROI(ROI);
-  } else {
-    outofrangeLabel->show();
+    QRect roi = camera->getROI();
+    xSpinbox->setValue(roi.x());
+    ySpinbox->setValue(roi.y());
+    wSpinbox->setValue(roi.width());
+    hSpinbox->setValue(roi.height());
+    startVideo(tostart);
   }
+}
+
+void MainWindow::on_resetROIButton_clicked(bool clicked) {
+  xSpinbox->setValue(0);
+  ySpinbox->setValue(0);
+  wSpinbox->setValue(wSpinbox->maximum());
+  hSpinbox->setValue(hSpinbox->maximum());
+  on_applyROIButton_clicked(true);
 }
 
 void MainWindow::takeNextFrame() {
@@ -274,7 +281,7 @@ void MainWindow::startVideo(bool start) {
         }
         pixelFormatSelector->setEnabled(false);
       }
-    } else if (started && !playing && !recording) {
+    } else if (started) {
       QApplication::processEvents();
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
@@ -299,7 +306,8 @@ void MainWindow::on_playButton_clicked(bool checked) {
 void MainWindow::on_recordButton_clicked(bool checked) {
   static QList<QWidget*> toDisableWhenRecording;
   if (toDisableWhenRecording.isEmpty()) toDisableWhenRecording << fpsSpinbox <<
-         xSpinbox << wSpinbox << ySpinbox << hSpinbox;
+         xSpinbox << wSpinbox << ySpinbox << hSpinbox << applyROIButton <<
+         resetROIButton << pickROIButton << binSpinBox;
   if (checked && (recordingfilename != recordingfile->fileName())) {
     recordingfilename = recordingfile->fileName();
     QIODevice::OpenMode openflags =

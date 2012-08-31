@@ -49,9 +49,10 @@ private slots:
   void on_fpsSpinbox_valueChanged(int value);
   void on_gainSlider_valueChanged(int value);
   void on_exposureSlider_valueChanged(int value);
+  void on_resetROIButton_clicked(bool clicked);
+  void on_applyROIButton_clicked(bool clicked);
   void readExposure();
   void readGain();
-  void setROI();
   void startVideo(bool start);
   void takeNextFrame();
 
@@ -61,7 +62,7 @@ private:
   QImage idleImage;
   ArCam* camera;
   FrameDecoder* decoder;
-  QRect roirange;
+  QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer *autoreadexposure;
   bool playing, recording, started;
