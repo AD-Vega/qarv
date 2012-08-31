@@ -48,13 +48,21 @@ MainWindow::MainWindow():
   for (int i=0; i<sizeof(boxen)/sizeof(void*); i++)
     this->connect(boxen[i], SIGNAL(valueChanged(int)), SLOT(setROI()));
 
+  QTimer::singleShot(100, this, SLOT(on_refreshCamerasButton_clicked()));
+}
+
+void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
+  cameraSelector->blockSignals(true);
+  cameraSelector->clear();
   auto cameras = ArCam::listCameras();
   foreach (auto cam, cameras) {
     QString display;
     display = display + cam.vendor + " (" + cam.model + ")";
     cameraSelector->addItem(display, QVariant::fromValue<ArCamId>(cam));
   }
+  cameraSelector->blockSignals(false);
   cameraSelector->setCurrentIndex(0);
+  on_cameraSelector_currentIndexChanged(0);
 }
 
 void MainWindow::on_unzoomButton_toggled(bool checked) {
