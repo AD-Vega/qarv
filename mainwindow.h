@@ -63,7 +63,7 @@ private:
   FrameDecoder* decoder;
   QRect roirange;
   QPair<double, double> gainrange, exposurerange;
-  QTimer *autoreadgain, *autoreadexposure;
+  QTimer *autoreadexposure;
   bool playing, recording, started;
   QFile* recordingfile;
   QString recordingfilename;

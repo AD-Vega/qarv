@@ -38,11 +38,9 @@ MainWindow::MainWindow():
   video->setImage(idleImage);
 
   autoreadexposure = new QTimer(this);
-  autoreadgain = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateMsec);
-  autoreadgain->setInterval(sliderUpdateMsec);
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
-  this->connect(autoreadgain, SIGNAL(timeout()), SLOT(readGain()));
+  this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
 
   QSpinBox* boxen[] = {xSpinbox, ySpinbox, wSpinbox, hSpinbox};
   for (int i=0; i<sizeof(boxen)/sizeof(void*); i++)
@@ -103,7 +101,6 @@ static inline int value2slider(double value,
 
 void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
-  autoreadgain->stop();
 
   auto camid = cameraSelector->itemData(index).value<ArCamId>();
   if (camera != NULL) {
@@ -190,7 +187,6 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   camera->setAutoExposure(false);
 
   autoreadexposure->start();
-  autoreadgain->start();
 }
 
 void MainWindow::readExposure() {
