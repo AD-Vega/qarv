@@ -298,7 +298,9 @@ void MainWindow::on_recordButton_clicked(bool checked) {
          xSpinbox << wSpinbox << ySpinbox << hSpinbox;
   if (checked && (recordingfilename != recordingfile->fileName())) {
     recordingfilename = recordingfile->fileName();
-    bool open = recordingfile->open(QIODevice::WriteOnly);
+    QIODevice::OpenMode openflags =
+      recordApendCheck->isChecked() ? QIODevice::Append : QIODevice::WriteOnly;
+    bool open = recordingfile->open(openflags);
     if (!open) {
       recordButton->setChecked(false);
       recordButton->setEnabled(false);
