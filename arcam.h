@@ -101,6 +101,8 @@ public:
   QHostAddress getIP();
   QHostAddress getHostIP();
 
+  int getEstimatedBW();
+
 signals:
   void frameReady();
 

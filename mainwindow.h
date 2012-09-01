@@ -58,6 +58,7 @@ private slots:
   void readGain();
   void startVideo(bool start);
   void takeNextFrame();
+  void updateBandwidthEstimation();
 
 private:
   void enableNotouchWidgets(bool enabled);

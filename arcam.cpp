@@ -282,3 +282,7 @@ QHostAddress ArCam::getHostIP() {
     return GSocketAddress_to_QHostAddress(gaddr);
   } else return QHostAddress();
 }
+
+int ArCam::getEstimatedBW() {
+  return arv_device_get_integer_feature_value(device, "GevSCDCT");
+}

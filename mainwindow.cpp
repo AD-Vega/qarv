@@ -41,6 +41,7 @@ MainWindow::MainWindow():
   autoreadexposure->setInterval(sliderUpdateMsec);
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
+  this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(updateBandwidthEstimation()));
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
@@ -421,5 +422,23 @@ void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
     file << (exposureAutoButton->isChecked() ? " (Auto)" : " (Manual)");
     file << endl;
     outfile.close();
+  }
+}
+
+void MainWindow::updateBandwidthEstimation() {
+  int bw = camera->getEstimatedBW();
+  if (bw == 0) {
+    bandwidthDescription->setText("Not an ethernet camera.");
+  } else {
+    QString unit(" B/s");
+    if (bw >= 1024) {
+      bw /= 1024;
+      unit = " kB/s";
+    }
+    if (bw >= 1024) {
+      bw /= 1024;
+      unit = " MB/s";
+    }
+    bandwidthDescription->setText(QString::number(bw) + unit);
   }
 }
