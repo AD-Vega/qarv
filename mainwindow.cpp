@@ -377,7 +377,7 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
 }
 
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
-  auto name = QFileDialog::getOpenFileName(this, "Open file");
+  auto name = QFileDialog::getSaveFileName(this, "Open file");
   if(!name.isNull()) filenameEdit->setText(name);
 }
 
@@ -395,3 +395,31 @@ void MainWindow::pickedROI(QRect roi) {
   hSpinbox->setValue(roi.height());
 }
 
+void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
+  QFileInfo fle(filenameEdit->text());
+  auto name = QFileDialog::getSaveFileName(this, "Open file", fle.dir().dirName());
+  QFile outfile(name);
+  bool open = outfile.open(QIODevice::WriteOnly);
+  if (open) {
+    QTextStream file(&outfile);
+    auto id = camera->getId();
+    file << "Camera: " << id.id << endl
+         << "Vendor: " << id.vendor << endl
+         << "Model: " << id.model << endl
+         << "Pixel format: " << pixelFormatSelector->currentText() << endl
+         << "FPS: " << fpsSpinbox->value() << endl
+         << "Region of interest: "
+         << xSpinbox->value() << "+"
+         << ySpinbox->value() << "+"
+         << wSpinbox->value() << "x"
+         << hSpinbox->value() << endl
+         << "Binning: " << binSpinBox->value() << endl
+         << "Gain: " << gainSpinbox->value();
+    file << (gainAutoButton->isChecked() ? " (Auto)" : " (Manual)");
+    file << endl
+         << "Exposure: " << exposureSpinbox->value();
+    file << (exposureAutoButton->isChecked() ? " (Auto)" : " (Manual)");
+    file << endl;
+    outfile.close();
+  }
+}

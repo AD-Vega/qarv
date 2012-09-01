@@ -81,6 +81,14 @@ QList<ArCamId> ArCam::listCameras() {
   return QList<ArCamId>(cameraList);
 }
 
+ArCamId ArCam::getId() {
+  const char *id, *vendor, *model;
+  id = arv_camera_get_device_id(camera);
+  vendor = arv_camera_get_vendor_name(camera);
+  model = arv_camera_get_model_name(camera);
+  return ArCamId(id, vendor, model);
+}
+
 QRect ArCam::getROI() {
   int x, y, width, height;
   arv_camera_get_region(camera, &x, &y, &width, &height);

@@ -59,6 +59,8 @@ public:
   ~ArCam();
   
   static QList<ArCamId> listCameras();
+
+  ArCamId getId();
   
   QRect getROI();
   void setROI(QRect roi);
