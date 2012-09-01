@@ -451,10 +451,17 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QPushButton" name="dumpSettingsButton">
           <property name="text">
            <string>Dump camera settings</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="dropInvalidFrames">
+          <property name="text">
+           <string>Drop incomplete/invalid frames</string>
           </property>
          </widget>
         </item>

@@ -96,7 +96,7 @@ public:
   void stopAcquisition();
 
   QSize getFrameSize();
-  QByteArray getFrame();
+  QByteArray getFrame(bool dropInvalid = false);
 
   QHostAddress getIP();
   QHostAddress getHostIP();

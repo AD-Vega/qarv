@@ -255,8 +255,11 @@ QSize ArCam::getFrameSize() {
   return getROI().size();
 }
 
-QByteArray ArCam::getFrame() {
-  return QByteArray(static_cast<char*>(currentFrame->data), currentFrame->size);
+QByteArray ArCam::getFrame(bool dropInvalid) {
+  if(currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
+    return QByteArray();
+  else
+    return QByteArray(static_cast<char*>(currentFrame->data), currentFrame->size);
 }
 
 QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {

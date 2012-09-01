@@ -289,12 +289,14 @@ void MainWindow::on_binSpinBox_valueChanged(int value) {
 
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
-    QByteArray frame = camera->getFrame();
+    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
     if (playing) {
-      auto img = decoder->decode(frame);
-      video->setImage(img);
+      if (frame.isEmpty())
+        video->setImage(invalidImage);
+      else
+        video->setImage(decoder->decode(frame));
     }
-    if (recording) {
+    if (recording && !frame.isEmpty()) {
       qint64 written = recordingfile->write(frame, frame.size());
       if (written != frame.size())
         qDebug() << "Incomplete write!";
@@ -310,6 +312,8 @@ void MainWindow::startVideo(bool start) {
       if (decoder != NULL) delete decoder;
       decoder = makeFrameDecoder(camera->getPixelFormat(),
                                  camera->getFrameSize());
+      invalidImage = QImage(camera->getFrameSize(), QImage::Format_RGB32);
+      invalidImage.fill(Qt::red);
       if (decoder == NULL)
         qDebug() << "Decoder for" << camera->getPixelFormat() <<
         "doesn't exist!";
