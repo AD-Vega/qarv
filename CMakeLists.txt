@@ -20,3 +20,6 @@ set(qarv_SRCS framedecoders.cpp arcam.cpp mainwindow.cpp main.cpp
               glvideowidget.cpp)
 add_executable(qarv ${qarv_SRCS} ${qarv_MOCD})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
+
+install(TARGETS qarv
+        RUNTIME DESTINATION bin/)
