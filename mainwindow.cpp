@@ -321,7 +321,7 @@ void MainWindow::startVideo(bool start) {
         }
         pixelFormatSelector->setEnabled(false);
       }
-    } else if (started) {
+    } else if (!start && started && !playing && !recording) {
       QApplication::processEvents();
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
@@ -348,8 +348,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   if (toDisableWhenRecording.isEmpty()) toDisableWhenRecording << fpsSpinbox <<
          xSpinbox << wSpinbox << ySpinbox << hSpinbox << applyROIButton <<
          resetROIButton << pickROIButton << binSpinBox;
-  if (checked && (recordingfilename != recordingfile->fileName())) {
-    recordingfilename = recordingfile->fileName();
+  if (checked && !recordingfile->isOpen()) {
     QIODevice::OpenMode openflags =
       recordApendCheck->isChecked() ? QIODevice::Append : QIODevice::WriteOnly;
     bool open = recordingfile->open(openflags);
@@ -361,13 +360,14 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   }
   recording = checked;
   startVideo(checked);
+  //qDebug() << "started checked" << started << checked;
   recording = checked && started;
   recordButton->setChecked(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
   }
   recordingTab->setEnabled(!recording);
-  qDebug() << checked << started << recording;
+  //qDebug() << "checked started recording:" << checked << started << recording;
 }
 
 void MainWindow::on_filenameEdit_textChanged(QString name) {
@@ -377,6 +377,7 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
   auto info = QFileInfo(*recordingfile);
   auto dir = info.dir();
   recordButton->setEnabled(dir.exists());
+  qDebug() << "Recording file reopened.";
 }
 
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {

@@ -72,7 +72,6 @@ private:
   QTimer *autoreadexposure;
   bool playing, recording, started;
   QFile* recordingfile;
-  QString recordingfilename;
 };
 
 #endif
