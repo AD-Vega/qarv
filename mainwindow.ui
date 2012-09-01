@@ -277,6 +277,9 @@
                  <property name="text">
                   <string>Pick</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item>

@@ -22,6 +22,7 @@
 
 #include <QGLWidget>
 #include <QImage>
+#include <QMouseEvent>
 
 class GLVideoWidget: public QGLWidget {
   Q_OBJECT
@@ -33,8 +34,21 @@ public:
   QImage getImage();
   void paintGL();
 
+public slots:
+  void enableSelection(bool enable);
+
+signals:
+  void selectionComplete(QRect region);
+
 private:
+  virtual void mouseMoveEvent(QMouseEvent* event);
+  virtual void mousePressEvent(QMouseEvent* event);
+  virtual void mouseReleaseEvent(QMouseEvent* event);
+
   QImage image;
+  bool selecting, drawRectangle;
+  QPoint corner1, corner2;
+  QRect rectangle;
 };
 
 #endif // GLVIDEOWIDGET_H

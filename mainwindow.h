@@ -52,6 +52,7 @@ private slots:
   void on_resetROIButton_clicked(bool clicked);
   void on_applyROIButton_clicked(bool clicked);
   void on_binSpinBox_valueChanged(int value);
+  void pickedROI(QRect roi);
   void readExposure();
   void readGain();
   void startVideo(bool start);

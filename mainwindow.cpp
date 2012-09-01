@@ -42,6 +42,9 @@ MainWindow::MainWindow():
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
 
+  video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
+  this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
+
   QTimer::singleShot(100, this, SLOT(on_refreshCamerasButton_clicked()));
 }
 
@@ -98,7 +101,6 @@ static inline int value2slider(double value,
 void MainWindow::readROILimits() {
   auto roisize = camera->getROIMaxSize();
   roirange = QRect(QPoint(0,0), roisize.size());
-  auto roi = camera->getROI();
   xSpinbox->setRange(0, roisize.width());
   ySpinbox->setRange(0, roisize.height());
   wSpinbox->setRange(roisize.x(), roisize.width());
@@ -166,7 +168,6 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
   pixelFormatSelector->setEnabled(noofframes > 1);
 
-  readROILimits();
   on_resetROIButton_clicked(true);
   QSize binsize = camera->getBinning();
   binSpinBox->setValue(binsize.width());
@@ -245,11 +246,18 @@ void MainWindow::on_applyROIButton_clicked(bool clicked) {
 }
 
 void MainWindow::on_resetROIButton_clicked(bool clicked) {
-  xSpinbox->setValue(0);
-  ySpinbox->setValue(0);
-  wSpinbox->setValue(wSpinbox->maximum());
-  hSpinbox->setValue(hSpinbox->maximum());
-  on_applyROIButton_clicked(true);
+  bool tostart = started;
+  startVideo(false);
+  camera->setROI(camera->getROIMaxSize());
+  // It needs to be applied twice to reach maximum size.
+  camera->setROI(camera->getROIMaxSize());
+  readROILimits();
+  QRect roi = camera->getROI();
+  xSpinbox->setValue(roi.x());
+  ySpinbox->setValue(roi.y());
+  wSpinbox->setValue(roi.width());
+  hSpinbox->setValue(roi.height());
+  startVideo(tostart);
 }
 
 void MainWindow::on_binSpinBox_valueChanged(int value) {
@@ -258,8 +266,15 @@ void MainWindow::on_binSpinBox_valueChanged(int value) {
   int bin = binSpinBox->value();
   camera->setBinning(QSize(bin, bin));
   QSize binsize = camera->getBinning();
+  binSpinBox->blockSignals(true);
   binSpinBox->setValue(binsize.width());
+  binSpinBox->blockSignals(false);
   readROILimits();
+  auto roi = camera->getROI();
+  xSpinbox->setValue(roi.x());
+  ySpinbox->setValue(roi.y());
+  wSpinbox->setValue(roi.width());
+  hSpinbox->setValue(roi.height());
   startVideo(tostart);
 }
 
@@ -363,5 +378,14 @@ void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
 void MainWindow::on_fpsSpinbox_valueChanged(int value) {
   camera->setFPS(value);
   fpsSpinbox->setValue(camera->getFPS());
+}
+
+void MainWindow::pickedROI(QRect roi) {
+  pickROIButton->setChecked(false);
+  QRect current = camera->getROI();
+  xSpinbox->setValue(current.x() + roi.x());
+  ySpinbox->setValue(current.y() + roi.y());
+  wSpinbox->setValue(roi.width());
+  hSpinbox->setValue(roi.height());
 }
 

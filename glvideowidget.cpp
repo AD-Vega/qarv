@@ -22,7 +22,8 @@
 
 GLVideoWidget::GLVideoWidget(QWidget* parent):
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
-  image() {}
+  image(), corner1(), corner2(), rectangle(), selecting(false),
+  drawRectangle(false) {}
 
 void GLVideoWidget::setImage(const QImage& image_) {
   image = image_;
@@ -61,4 +62,64 @@ void GLVideoWidget::paintGL() {
   }
 
   painter.drawImage(out, image);
+
+  if (drawRectangle) {
+    static bool penned = false;
+    static QPen whitepen, blackpen;
+    if (!penned) {
+      whitepen = QPen(Qt::white);
+      whitepen.setWidth(0);
+      whitepen.setStyle(Qt::DotLine);
+      blackpen = QPen(Qt::black);
+      blackpen.setWidth(0);
+    }
+
+    QRect rec(corner1, corner2);
+    rec &= out;
+
+    painter.setPen(blackpen);
+    painter.drawRect(rec);
+    painter.setPen(whitepen);
+    painter.drawRect(rec);
+
+    float scale = out.width() / (float)in.width();
+    rec = rec.normalized();
+    QPoint corner = rec.topLeft(), outcorner = out.topLeft();
+    corner = (corner - outcorner) / scale;
+    int width = rec.width() / scale, height = rec.height() / scale;
+    rectangle.setRect(corner.x(), corner.y(), width, height);
+  }
+}
+
+void GLVideoWidget::enableSelection(bool enable) {
+  if (enable) {
+    selecting = true;
+    setCursor(Qt::CrossCursor);
+  } else {
+    selecting = false;
+    drawRectangle = false;
+    rectangle = QRect();
+    setCursor(Qt::ArrowCursor);
+  }
+}
+
+void GLVideoWidget::mousePressEvent(QMouseEvent* event) {
+  QWidget::mousePressEvent(event);
+  if (selecting) corner1 = event->pos();
+}
+
+void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
+  QWidget::mouseMoveEvent(event);
+  if (selecting) {
+    drawRectangle = true;
+    corner2 = event->pos();
+  }
+}
+
+void GLVideoWidget::mouseReleaseEvent(QMouseEvent* event) {
+  QWidget::mouseReleaseEvent(event);
+  if (selecting) {
+    selecting = false;
+    emit selectionComplete(rectangle);
+  }
 }
