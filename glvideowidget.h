@@ -44,11 +44,15 @@ private:
   virtual void mouseMoveEvent(QMouseEvent* event);
   virtual void mousePressEvent(QMouseEvent* event);
   virtual void mouseReleaseEvent(QMouseEvent* event);
+  virtual void resizeEvent(QResizeEvent* event);
 
   QImage image;
+  QRect in, out;
+
   bool selecting, drawRectangle;
   QPoint corner1, corner2;
-  QRect rectangle;
+  QRect rectangle, drawnRectangle;
+  QPen whitepen, blackpen;
 };
 
 #endif // GLVIDEOWIDGET_H

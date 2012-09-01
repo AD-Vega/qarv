@@ -23,27 +23,33 @@
 GLVideoWidget::GLVideoWidget(QWidget* parent):
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   image(), corner1(), corner2(), rectangle(), selecting(false),
-  drawRectangle(false) {}
-
-void GLVideoWidget::setImage(const QImage& image_) {
-  image = image_;
-  update();
+  drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black) {
+  whitepen.setWidth(0);
+  whitepen.setStyle(Qt::DotLine);
+  blackpen.setWidth(0);
 }
+
+GLVideoWidget::~GLVideoWidget() {}
 
 QImage GLVideoWidget::getImage() {
   return image;
 }
 
-GLVideoWidget::~GLVideoWidget() {}
+void GLVideoWidget::setImage(const QImage& image_) {
+  image = image_;
+  if (in.size() != image.size()) {
+    in = image.rect();
+    QResizeEvent nochange(size(), size());
+    resizeEvent(&nochange);
+  }
+  update();
+}
 
-void GLVideoWidget::paintGL() {
-  QPainter painter(this);
+void GLVideoWidget::resizeEvent(QResizeEvent* event) {
+  QGLWidget::resizeEvent(event);
   auto view = rect();
-  auto in = image.rect();
-  QRect out(view);
-
+  out = view;
   if (in.size() != view.size()) {
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
     float aspect = in.width() / (float)in.height();
     float vaspect = view.width() / (float)view.height();
     int x, y, w, h;
@@ -60,34 +66,18 @@ void GLVideoWidget::paintGL() {
     }
     out.setRect(x, y, w, h);
   }
+}
 
+void GLVideoWidget::paintGL() {
+  QPainter painter(this);
+  if (in.size() != out.size()) painter.setRenderHint(QPainter::SmoothPixmapTransform);
   painter.drawImage(out, image);
 
   if (drawRectangle) {
-    static bool penned = false;
-    static QPen whitepen, blackpen;
-    if (!penned) {
-      whitepen = QPen(Qt::white);
-      whitepen.setWidth(0);
-      whitepen.setStyle(Qt::DotLine);
-      blackpen = QPen(Qt::black);
-      blackpen.setWidth(0);
-    }
-
-    QRect rec(corner1, corner2);
-    rec &= out;
-
     painter.setPen(blackpen);
-    painter.drawRect(rec);
+    painter.drawRect(drawnRectangle);
     painter.setPen(whitepen);
-    painter.drawRect(rec);
-
-    float scale = out.width() / (float)in.width();
-    rec = rec.normalized();
-    QPoint corner = rec.topLeft(), outcorner = out.topLeft();
-    corner = (corner - outcorner) / scale;
-    int width = rec.width() / scale, height = rec.height() / scale;
-    rectangle.setRect(corner.x(), corner.y(), width, height);
+    painter.drawRect(drawnRectangle);
   }
 }
 
@@ -113,6 +103,15 @@ void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
   if (selecting) {
     drawRectangle = true;
     corner2 = event->pos();
+    QRect rec(corner1, corner2);
+    rec &= out;
+    float scale = out.width() / (float)in.width();
+    rec = rec.normalized();
+    QPoint corner = rec.topLeft(), outcorner = out.topLeft();
+    corner = (corner - outcorner) / scale;
+    int width = rec.width() / scale, height = rec.height() / scale;
+    rectangle.setRect(corner.x(), corner.y(), width, height);
+    drawnRectangle = rec;
   }
 }
 
