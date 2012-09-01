@@ -45,11 +45,16 @@ MainWindow::MainWindow():
   video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
 
-  QTimer::singleShot(100, this, SLOT(on_refreshCamerasButton_clicked()));
+  QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 }
 
 void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   cameraSelector->blockSignals(true);
+  cameraSelector->clear();
+  cameraSelector->setEnabled(false);
+  cameraSelector->addItem("Looking for cameras...");
+  QApplication::processEvents();
+  QApplication::flush();
   cameraSelector->clear();
   auto cameras = ArCam::listCameras();
   foreach (auto cam, cameras) {
@@ -57,6 +62,7 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
     display = display + cam.vendor + " (" + cam.model + ")";
     cameraSelector->addItem(display, QVariant::fromValue<ArCamId>(cam));
   }
+  cameraSelector->setEnabled(true);
   cameraSelector->blockSignals(false);
   cameraSelector->setCurrentIndex(0);
   on_cameraSelector_currentIndexChanged(0);
