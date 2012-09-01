@@ -76,8 +76,6 @@ public:
     img.setColorTable(graymap);
     const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
     const int h = size.height(), w = size.width();
-    assert(frame.size() % 2 == 0);
-    assert(h*w % 2 == 0);
 
     int line = 0;
     uchar* linestart = img.scanLine(0);
