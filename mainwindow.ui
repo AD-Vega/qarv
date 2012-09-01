@@ -463,6 +463,9 @@
           <property name="text">
            <string>Drop incomplete/invalid frames</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
