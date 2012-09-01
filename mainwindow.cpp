@@ -168,12 +168,14 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   auto formats = camera->getPixelFormats();
   auto formatnames = camera->getPixelFormatNames();
   int noofframes = formats.length();
+  pixelFormatSelector->blockSignals(true);
   pixelFormatSelector->clear();
   for (int i=0; i<noofframes; i++)
     pixelFormatSelector->addItem(formatnames.at(i), formats.at(i));
   auto format = camera->getPixelFormat();
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
   pixelFormatSelector->setEnabled(noofframes > 1);
+  pixelFormatSelector->blockSignals(false);
 
   on_resetROIButton_clicked(true);
   QSize binsize = camera->getBinning();

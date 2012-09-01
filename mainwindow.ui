@@ -386,7 +386,11 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="exposureSpinbox"/>
+              <widget class="QDoubleSpinBox" name="exposureSpinbox">
+               <property name="suffix">
+                <string> μs</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QPushButton" name="exposureAutoButton">
@@ -407,7 +411,7 @@
       </widget>
       <widget class="QWidget" name="recordingTab">
        <attribute name="title">
-        <string>Recording settings</string>
+        <string>Recording</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout_4">
         <item row="0" column="0">
