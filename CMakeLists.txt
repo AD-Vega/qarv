@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 
 find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL QtNetwork)
 include(FindPkgConfig)
-set( ENV{PKG_CONFIG_PATH} "/home/exzombie/src/aravis-prefix/lib/pkgconfig/")
 pkg_check_modules(ARAVIS REQUIRED aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 
