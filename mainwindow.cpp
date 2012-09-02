@@ -325,7 +325,7 @@ void MainWindow::startVideo(bool start) {
         }
         pixelFormatSelector->setEnabled(false);
       }
-    } else if (!start && started && !playing && !recording) {
+    } else if (!start && started) {
       QApplication::processEvents();
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
@@ -341,7 +341,7 @@ void MainWindow::startVideo(bool start) {
 
 void MainWindow::on_playButton_clicked(bool checked) {
   playing = checked;
-  startVideo(checked);
+  startVideo(playing || recording);
   playing = checked && started;
   playButton->setChecked(playing);
   if (!playing) video->setImage(idleImage);
@@ -363,7 +363,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
     }
   }
   recording = checked;
-  startVideo(checked);
+  startVideo(recording || playing);
   //qDebug() << "started checked" << started << checked;
   recording = checked && started;
   recordButton->setChecked(recording);
