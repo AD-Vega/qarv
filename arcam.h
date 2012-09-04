@@ -95,6 +95,10 @@ public:
 
   //! \name Choose pixel format
   /**@{*/
+  /*!
+   * The lists returned by ::getPixelFormat() and ::getPixelFormatNames()
+   * are congruent.
+   */
   QList<QString> getPixelFormats();
   QList<QString> getPixelFormatNames();
   QString getPixelFormat();
@@ -139,8 +143,13 @@ public:
 
   //! \name Manipulate network parameters of an ethernet camera
   /**@{*/
-  int getMTU();
+  /*!
+   * MTU corresponds to "GevSCPSPacketSize", which should be set to the
+   * MTU of the network interface. getHostIP() can be used to detect the
+   * interface's address.
+   */
   void setMTU(int mtu);
+  int getMTU();
   QHostAddress getIP();
   QHostAddress getHostIP();
   int getEstimatedBW();

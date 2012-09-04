@@ -54,6 +54,9 @@ ArCamId::~ArCamId() {
   if(model != NULL) free((void*)model);
 }
 
+/*!
+ * Acquisition mode is set to CONTINUOUS when the camera is opened.
+ */
 ArCam::ArCam(ArCamId id, QObject* parent):
   QObject(parent), acquiring(false) {
   camera = arv_camera_new(id.id);
@@ -66,6 +69,12 @@ ArCam::~ArCam() {
   g_object_unref(camera);
 }
 
+/*!
+ * A list of camera IDs is created by opening each camera to obtain the vendor
+ * and model names.
+ *
+ * TODO: see if this info can be obtained using a lower level API.
+ */
 QList<ArCamId> ArCam::listCameras() {
   cameraList.clear();
   arv_update_device_list();
@@ -219,16 +228,22 @@ void ArCam::setAutoGain(bool enable) {
     arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
 }
 
+//! Store the pointer to the current frame.
 void ArCam::swapBuffers() {
   arv_stream_push_buffer(stream, currentFrame);
   currentFrame = arv_stream_pop_buffer(stream);
   emit frameReady();
 }
 
+//! A wrapper that calls cam's private callback to accept frames.
 void streamCallback(ArvStream* stream, ArCam* cam) {
   cam->swapBuffers();
 }
 
+/*!
+ * This function not only starts acquisition, but also pushes a number of
+ * frames onto the stream and sets up the callback which accepts frames.
+ */
 void ArCam::startAcquisition() {
   if (acquiring) return;
   unsigned int framesize = arv_camera_get_payload(camera);
@@ -255,6 +270,10 @@ QSize ArCam::getFrameSize() {
   return getROI().size();
 }
 
+/*!
+ * \param dropInvalid If true, return an empty QByteArray on an invalid frame.
+ * \return A QByteArray with raw frame data of size given by getFrameSize().
+ */
 QByteArray ArCam::getFrame(bool dropInvalid) {
   if(currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
@@ -262,6 +281,7 @@ QByteArray ArCam::getFrame(bool dropInvalid) {
     return QByteArray(static_cast<char*>(currentFrame->data), currentFrame->size);
 }
 
+//! Translates betwen the glib and Qt address types via a native sockaddr.
 QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
   sockaddr addr;
   int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
