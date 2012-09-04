@@ -22,6 +22,7 @@
 #include <QNetworkInterface>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QSettings>
 
 #include "getmtu_linux.h"
 
@@ -32,6 +33,10 @@ MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), recordingfile(NULL), decoder(NULL) {
   setupUi(this);
+
+  QSettings settings;
+  restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
+  restoreState(settings.value("mainWindowState").toByteArray());
 
   QIcon idle = QIcon::fromTheme("video-display");
   idleImage = idle.pixmap(video->size()).toImage();
@@ -448,4 +453,11 @@ void MainWindow::updateBandwidthEstimation() {
     }
     bandwidthDescription->setText(QString::number(bw) + unit);
   }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  QSettings settings;
+  settings.setValue("mainWindowGeometry", saveGeometry());
+  settings.setValue("mainWindowState", saveState());
+  QMainWindow::closeEvent(event);
 }

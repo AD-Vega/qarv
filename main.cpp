@@ -24,6 +24,11 @@
 int main(int argc, char **argv) {
   arcamInit();
   QApplication a(argc, argv);
+
+  QCoreApplication::setOrganizationDomain("ad-vega.si");
+  QCoreApplication::setOrganizationName("AD Vega");
+  QCoreApplication::setApplicationName("qarv");
+
   MainWindow w;
   w.show();
   return a.exec();
