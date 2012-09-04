@@ -35,8 +35,8 @@ MainWindow::MainWindow():
   setupUi(this);
 
   QSettings settings;
-  restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
-  restoreState(settings.value("mainWindowState").toByteArray());
+  restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
+  restoreState(settings.value("mainwindow/state").toByteArray());
 
   QIcon idle = QIcon::fromTheme("video-display");
   idleImage = idle.pixmap(video->size()).toImage();
@@ -457,7 +457,7 @@ void MainWindow::updateBandwidthEstimation() {
 
 void MainWindow::closeEvent(QCloseEvent *event) {
   QSettings settings;
-  settings.setValue("mainWindowGeometry", saveGeometry());
-  settings.setValue("mainWindowState", saveState());
+  settings.setValue("mainwindow/geometry", saveGeometry());
+  settings.setValue("mainwindow/state", saveState());
   QMainWindow::closeEvent(event);
 }
