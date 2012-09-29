@@ -31,7 +31,8 @@ const int sliderUpdateMsec = 300;
 
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
-  started(false), recordingfile(NULL), decoder(NULL) {
+  started(false), recordingfile(NULL), decoder(NULL),
+  imageTransform() {
 
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
@@ -65,6 +66,17 @@ MainWindow::MainWindow():
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
+
+  rotationSelector->addItem(tr("No rotation"));
+  rotationSelector->addItem(tr("90"));
+  rotationSelector->addItem(tr("180"));
+  rotationSelector->addItem(tr("270"));
+  this->connect(rotationSelector,
+                SIGNAL(currentIndexChanged(int)),
+                SLOT(updateImageTransform()));
+  this->connect(invertColors, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
+  this->connect(flipHorizontal, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
+  this->connect(flipVertical, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 }
@@ -311,10 +323,14 @@ void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
     if (playing) {
-      if (frame.isEmpty())
-        video->setImage(invalidImage);
-      else
-        video->setImage(decoder->decode(frame));
+      QImage img;
+      if (frame.isEmpty()) img = invalidImage;
+      else img = decoder->decode(frame);
+
+      if (imageTransform.type() != QTransform::TxNone)
+        img = img.transformed(imageTransform);
+      if (invertColors->isChecked()) img.invertPixels();
+      video->setImage(img);
     }
     if (recording && !frame.isEmpty()) {
       qint64 written = recordingfile->write(frame, frame.size());
@@ -475,4 +491,15 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   settings.setValue("mainwindow/geometry", saveGeometry());
   settings.setValue("mainwindow/state", saveState());
   QMainWindow::closeEvent(event);
+}
+
+void MainWindow::updateImageTransform() {
+  imageTransform.reset();
+  imageTransform.scale(flipHorizontal->isChecked() ? -1 : 1,
+                       flipVertical->isChecked() ? -1 : 1);
+  int angle;
+  if (rotationSelector->currentText() == tr("90")) angle = 90;
+  else if (rotationSelector->currentText() == tr("180")) angle = 180;
+  else if (rotationSelector->currentText() == tr("270")) angle = 270;
+  imageTransform.rotate(angle);
 }

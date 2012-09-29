@@ -28,6 +28,7 @@
 
 #include <QTimer>
 #include <QFile>
+#include <QTransform>
 
 class MainWindow : public QMainWindow, private Ui::MainWindowUI {
   Q_OBJECT
@@ -60,6 +61,7 @@ private slots:
   void takeNextFrame();
   void updateBandwidthEstimation();
   void closeEvent(QCloseEvent *event);
+  void updateImageTransform();
 
 private:
   void enableNotouchWidgets(bool enabled);
@@ -73,6 +75,7 @@ private:
   QTimer *autoreadexposure;
   bool playing, recording, started;
   QFile* recordingfile;
+  QTransform imageTransform;
 };
 
 #endif
