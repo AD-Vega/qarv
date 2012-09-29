@@ -32,8 +32,10 @@ const int sliderUpdateMsec = 300;
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), recordingfile(NULL), decoder(NULL) {
-  setupUi(this);
 
+  qDebug() << "Please ignore \"Could not resolve property\" warnings "
+           "unless icons look bad.";
+  setupUi(this);
   showVideoButton->setIcon(QIcon::fromTheme("video-display",
                            QIcon(":/icons/icons/video-display.svgz")));
   unzoomButton->setIcon(QIcon::fromTheme("zoom-original",
