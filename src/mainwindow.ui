@@ -128,51 +128,6 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_9">
-               <property name="text">
-                <string>FPS:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QSpinBox" name="fpsSpinbox">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>999</number>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Pixel format:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QComboBox" name="pixelFormatSelector">
-               <property name="minimumContentsLength">
-                <number>30</number>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QLabel" name="cameraMTUDescription">
-               <property name="text">
-                <string>Not an ethernet camera.</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Ethernet MTU:</string>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
@@ -195,6 +150,41 @@
                </item>
               </layout>
              </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>FPS:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Pixel format:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="pixelFormatSelector">
+               <property name="minimumContentsLength">
+                <number>30</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Ethernet MTU:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="cameraMTUDescription">
+               <property name="text">
+                <string>Not an ethernet camera.</string>
+               </property>
+              </widget>
+             </item>
              <item row="5" column="0">
               <widget class="QLabel" name="label_13">
                <property name="text">
@@ -208,6 +198,30 @@
                 <string>Not an ethernet camera.</string>
                </property>
               </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QSpinBox" name="fpsSpinbox">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_14">
+                 <property name="text">
+                  <string>Actual:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="actualFPS"/>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>

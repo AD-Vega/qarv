@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QSettings>
+#include <qdatetime.h>
 
 #include "getmtu_linux.h"
 
@@ -32,7 +33,7 @@ const int sliderUpdateMsec = 300;
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), recordingfile(NULL), decoder(NULL),
-  imageTransform() {
+  imageTransform(), framecounter(0) {
 
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
@@ -77,6 +78,11 @@ MainWindow::MainWindow():
   this->connect(invertColors, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
   this->connect(flipHorizontal, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
+
+  auto timer = new QTimer(this);
+  timer->setInterval(1000);
+  this->connect(timer, SIGNAL(timeout()), SLOT(showFPS()));
+  timer->start();
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 }
@@ -322,6 +328,7 @@ void MainWindow::on_binSpinBox_valueChanged(int value) {
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
+    if (!frame.isEmpty()) framecounter++;
     if (playing) {
       QImage img;
       if (frame.isEmpty()) img = invalidImage;
@@ -502,4 +509,9 @@ void MainWindow::updateImageTransform() {
   else if (rotationSelector->currentText() == tr("180")) angle = 180;
   else if (rotationSelector->currentText() == tr("270")) angle = 270;
   imageTransform.rotate(angle);
+}
+
+void MainWindow::showFPS() {
+  actualFPS->setValue(framecounter);
+  framecounter = 0;
 }

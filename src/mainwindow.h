@@ -62,6 +62,7 @@ private slots:
   void updateBandwidthEstimation();
   void closeEvent(QCloseEvent *event);
   void updateImageTransform();
+  void showFPS();
 
 private:
   void enableNotouchWidgets(bool enabled);
@@ -76,6 +77,7 @@ private:
   bool playing, recording, started;
   QFile* recordingfile;
   QTransform imageTransform;
+  uint framecounter;
 };
 
 #endif
