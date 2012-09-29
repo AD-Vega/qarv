@@ -36,18 +36,17 @@ MainWindow::MainWindow():
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
   setupUi(this);
-  showVideoButton->setIcon(QIcon::fromTheme("video-display",
-                           QIcon(":/icons/icons/video-display.svgz")));
-  unzoomButton->setIcon(QIcon::fromTheme("zoom-original",
-                        QIcon(":/icons/icons/zoom-original.svgz")));
-  recordButton->setIcon(QIcon::fromTheme("media-record",
-                        QIcon(":/icons/icons/media-record.svgz")));
-  playButton->setIcon(QIcon::fromTheme("media-playback-start",
-                      QIcon(":/icons/icons/media-playback-start.svgz")));
-  refreshCamerasButton->setIcon(QIcon::fromTheme("view-refresh",
-                                QIcon(":/icons/icons/view-refresh.svgz")));
-  chooseFilenameButton->setIcon(QIcon::fromTheme("document-open",
-                                QIcon(":/icons/icons/document-open.svgz")));
+
+  // Setup theme icons if available.
+  QMap<QAbstractButton*, QString> icons;
+  icons[showVideoButton] = "video-display";
+  icons[unzoomButton] = "zoom-original";
+  icons[recordButton] = "media-record";
+  icons[playButton] = "media-playback-start";
+  icons[refreshCamerasButton] = "view-refresh";
+  icons[chooseFilenameButton] = "document-open";
+  for (auto i = icons.begin(); i != icons.end(); i++)
+    i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/icons/") + *i + ".svgz")));
 
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
