@@ -22,11 +22,13 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -O3")
 
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
+set_prefixed(qarv_RCS_pre res/ icons.qrc)
+qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h mainwindow.h arcam.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/ framedecoders.cpp arcam.cpp mainwindow.cpp
   main.cpp glvideowidget.cpp)
-add_executable(qarv ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS})
+add_executable(qarv ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
 
 install(TARGETS qarv

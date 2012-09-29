@@ -34,11 +34,25 @@ MainWindow::MainWindow():
   started(false), recordingfile(NULL), decoder(NULL) {
   setupUi(this);
 
+  showVideoButton->setIcon(QIcon::fromTheme("video-display",
+                           QIcon(":/icons/icons/video-display.svgz")));
+  unzoomButton->setIcon(QIcon::fromTheme("zoom-original",
+                        QIcon(":/icons/icons/zoom-original.svgz")));
+  recordButton->setIcon(QIcon::fromTheme("media-record",
+                        QIcon(":/icons/icons/media-record.svgz")));
+  playButton->setIcon(QIcon::fromTheme("media-playback-start",
+                      QIcon(":/icons/icons/media-playback-start.svgz")));
+  refreshCamerasButton->setIcon(QIcon::fromTheme("view-refresh",
+                                QIcon(":/icons/icons/view-refresh.svgz")));
+  chooseFilenameButton->setIcon(QIcon::fromTheme("document-open",
+                                QIcon(":/icons/icons/document-open.svgz")));
+
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
   restoreState(settings.value("mainwindow/state").toByteArray());
 
-  QIcon idle = QIcon::fromTheme("video-display");
+  QIcon idle = QIcon::fromTheme("video-display",
+                                QIcon(":/icons/icons/video-display.svgz"));
   idleImage = idle.pixmap(video->size()).toImage();
   video->setImage(idleImage);
 

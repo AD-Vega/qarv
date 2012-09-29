@@ -55,4 +55,8 @@ LICENSING INFORMATION
 qarv is provided under the GNU General Public License, version 3 or
 later. See COPYING for more information.
 
+The icons included with qarv are part of the oxygen theme from the KDE
+project (www.kde.org). See res/icons/COPYING for licensing
+information.
+
 Copyright 2012 Jure Varlec
