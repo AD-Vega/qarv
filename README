@@ -1,0 +1,58 @@
+qarv - a Qt interface to Aravis
+===============================
+
+DESCRIPTION
+-----------
+
+qarv provides a graphical user interface to GeniCam ethernet cameras
+via the Aravis library. It allows viewing the video and recording it
+in the original format. OpenGL is used for video output. The network
+interface used by the camera is automatically detected and camera's
+packet size is set to match the interface MTU, providing usable
+(hopefully) performance with minimal interaction, unlike the default
+settings on some cameras. Basic controls, such as frames-per-second,
+pixel format and exposure/gain are provided. Region-of-interest can be
+selected via manual entry or by drawing it directly in the video
+display. Full access to all camera features is planned for a future
+release.
+
+For a programmer, qarv provides the ArCam and ArCamId classes which
+isolate the Qt program from Aravis internals, thus avoiding clashes
+between Qt and Glib/GTK. This interface is provided in
+src/ArCam.{h,cpp} files and may be used in other projects. If you do
+use it, drop us a mail; we will create a stand-alone library if there
+is sufficient interest.
+
+Homepage: http://gitorious.org/adv-staging/qarv
+Aravis: https://live.gnome.org/Aravis
+
+
+REQUIREMENTS AND INSTALLATION
+-----------------------------
+
+qarv requires Qt-4.8 and aravis-0.2. At the time of this writing, the
+API-frozen version or aravis has not yet been released, so use the
+latest git version.
+
+qarv is built using CMake with no special configuration
+options. If you are not familiar with CMake, refer to any
+tutorial. But for starters, run these commands from the qarv
+directory:
+
+  mkdir build
+  cd build
+  cmake ..
+  make
+  sudo make install  # optional!
+
+You can skip the "make install" step and run qarv from the build
+directory directly.
+
+
+LICENSING INFORMATION
+---------------------
+
+qarv is provided under the GNU General Public License, version 3 or
+later. See COPYING for more information.
+
+Copyright 2012 Jure Varlec
