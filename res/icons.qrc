@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/document-save.svgz</file>
     <file>icons/document-open.svgz</file>
     <file>icons/media-playback-start.svgz</file>
     <file>icons/media-record.svgz</file>

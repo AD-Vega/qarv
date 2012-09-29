@@ -47,6 +47,8 @@ MainWindow::MainWindow():
   icons[playButton] = "media-playback-start";
   icons[refreshCamerasButton] = "view-refresh";
   icons[chooseFilenameButton] = "document-open";
+  icons[snapButton] = "document-save";
+  icons[chooseSnappathButton] = "document-open";
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/icons/") + *i + ".svgz")));
 
@@ -329,7 +331,7 @@ void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
     if (!frame.isEmpty()) framecounter++;
-    if (playing) {
+    if (playing || saveNextFrame) {
       QImage img;
       if (frame.isEmpty()) img = invalidImage;
       else img = decoder->decode(frame);
@@ -337,7 +339,13 @@ void MainWindow::takeNextFrame() {
       if (imageTransform.type() != QTransform::TxNone)
         img = img.transformed(imageTransform);
       if (invertColors->isChecked()) img.invertPixels();
-      video->setImage(img);
+      if (saveNextFrame) {
+        saveNextFrame = false;
+        img.save(snappathEdit->text() + "/"
+                 + QString::number(QDateTime::currentMSecsSinceEpoch())
+                 + ".png");
+      }
+      if (playing) video->setImage(img);
     }
     if (recording && !frame.isEmpty()) {
       qint64 written = recordingfile->write(frame, frame.size());
@@ -380,6 +388,8 @@ void MainWindow::startVideo(bool start) {
       pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1);
     }
   }
+  // Enable the snapshot button if possible.
+  on_snappathEdit_textChanged();
 }
 
 void MainWindow::on_playButton_clicked(bool checked) {
@@ -417,6 +427,10 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   //qDebug() << "checked started recording:" << checked << started << recording;
 }
 
+void MainWindow::on_snapButton_clicked(bool checked) {
+  saveNextFrame = true;
+}
+
 void MainWindow::on_filenameEdit_textChanged(QString name) {
   recordButton->setEnabled(true);
   delete recordingfile;
@@ -427,9 +441,21 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
   qDebug() << "Recording file reopened.";
 }
 
+
+void MainWindow::on_snappathEdit_textChanged() {
+  QString name = snappathEdit->text();
+  QDir dir(name);
+  snapButton->setEnabled(!name.isEmpty() && dir.exists() && started);
+}
+
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
   auto name = QFileDialog::getSaveFileName(this, "Open file");
   if(!name.isNull()) filenameEdit->setText(name);
+}
+
+void MainWindow::on_chooseSnappathButton_clicked(bool checked) {
+  auto name = QFileDialog::getExistingDirectory(this, "Choose directory");
+  if(!name.isNull()) snappathEdit->setText(name);
 }
 
 void MainWindow::on_fpsSpinbox_valueChanged(int value) {

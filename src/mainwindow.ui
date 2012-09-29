@@ -55,6 +55,23 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="snapButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Store a snapshot</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../res/icons.qrc">
+          <normaloff>:/icons/icons/document-save.svgz</normaloff>:/icons/icons/document-save.svgz</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="recordButton">
         <property name="enabled">
          <bool>false</bool>
@@ -489,14 +506,60 @@
         <string>Recording</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout_4">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_12">
+        <item row="6" column="1">
+         <widget class="QPushButton" name="dumpSettingsButton">
           <property name="text">
-           <string>Destination:</string>
+           <string>Dump camera settings</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="dropInvalidFrames">
+          <property name="text">
+           <string>Drop incomplete/invalid frames</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QLineEdit" name="snappathEdit">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="chooseSnappathButton">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../res/icons.qrc">
+              <normaloff>:/icons/icons/document-open.svgz</normaloff>:/icons/icons/document-open.svgz</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_15">
+          <property name="text">
+           <string>Snapshot directory:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="recordApendCheck">
+          <property name="text">
+           <string>Append to existing file instead of truncating</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QLineEdit" name="filenameEdit">
@@ -518,27 +581,10 @@
           </item>
          </layout>
         </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="recordApendCheck">
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>Append to existing file instead of truncating</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QPushButton" name="dumpSettingsButton">
-          <property name="text">
-           <string>Dump camera settings</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="dropInvalidFrames">
-          <property name="text">
-           <string>Drop incomplete/invalid frames</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
+           <string>Video file:</string>
           </property>
          </widget>
         </item>
