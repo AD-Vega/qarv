@@ -378,7 +378,32 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="gainSpinbox"/>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QDoubleSpinBox" name="gainSpinbox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="editGainButton">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../res/icons.qrc">
+                   <normaloff>:/icons/icons/edit-clear.svgz</normaloff>:/icons/icons/edit-clear.svgz</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="QPushButton" name="gainAutoButton">
@@ -412,11 +437,35 @@
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="exposureSpinbox">
-               <property name="suffix">
-                <string> μs</string>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <item>
+                <widget class="QDoubleSpinBox" name="exposureSpinbox">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="suffix">
+                  <string> μs</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="editExposureButton">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../res/icons.qrc">
+                   <normaloff>:/icons/icons/edit-clear.svgz</normaloff>:/icons/icons/edit-clear.svgz</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="QPushButton" name="exposureAutoButton">

@@ -49,6 +49,8 @@ MainWindow::MainWindow():
   icons[chooseFilenameButton] = "document-open";
   icons[snapButton] = "document-save";
   icons[chooseSnappathButton] = "document-open";
+  icons[editGainButton] = "edit-clear";
+  icons[editExposureButton] = "edit-clear";
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/icons/") + *i + ".svgz")));
 
@@ -540,4 +542,32 @@ void MainWindow::updateImageTransform() {
 void MainWindow::showFPS() {
   actualFPS->setValue(framecounter);
   framecounter = 0;
+}
+
+void MainWindow::on_editExposureButton_clicked(bool checked) {
+  autoreadexposure->stop();
+  exposureSpinbox->setReadOnly(false);
+  exposureSpinbox->setFocus(Qt::OtherFocusReason);
+  exposureSpinbox->selectAll();
+}
+
+void MainWindow::on_editGainButton_clicked(bool checked) {
+  autoreadexposure->stop();
+  gainSpinbox->setReadOnly(false);
+  gainSpinbox->setFocus(Qt::OtherFocusReason);
+  gainSpinbox->selectAll();
+}
+
+void MainWindow::on_gainSpinbox_editingFinished() {
+  camera->setGain(gainSpinbox->value());
+  gainSpinbox->setReadOnly(true);
+  readGain();
+  autoreadexposure->start();
+}
+
+void MainWindow::on_exposureSpinbox_editingFinished() {
+  camera->setExposure(exposureSpinbox->value());
+  gainSpinbox->setReadOnly(true);
+  readExposure();
+  autoreadexposure->start();
 }

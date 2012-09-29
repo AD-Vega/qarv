@@ -57,6 +57,10 @@ private slots:
   void on_applyROIButton_clicked(bool clicked);
   void on_binSpinBox_valueChanged(int value);
   void on_dumpSettingsButton_clicked(bool checked);
+  void on_editExposureButton_clicked(bool checked);
+  void on_editGainButton_clicked(bool checked);
+  void on_exposureSpinbox_editingFinished();
+  void on_gainSpinbox_editingFinished();
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
