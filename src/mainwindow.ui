@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>595</width>
-    <height>620</height>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -696,22 +696,6 @@
   <include location="../res/icons.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>videodock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>showVideoButton</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>24</x>
-     <y>19</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>24</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>showVideoButton</sender>
    <signal>toggled(bool)</signal>

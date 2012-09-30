@@ -563,3 +563,9 @@ void MainWindow::on_exposureSpinbox_editingFinished() {
   readExposure();
   autoreadexposure->start();
 }
+
+void MainWindow::on_videodock_visibilityChanged(bool visible) {
+  showVideoButton->blockSignals(true);
+  showVideoButton->setChecked(visible);
+  showVideoButton->blockSignals(false);
+}
