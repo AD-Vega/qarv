@@ -67,10 +67,10 @@ MainWindow::MainWindow():
   video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
 
-  rotationSelector->addItem(tr("No rotation"));
-  rotationSelector->addItem(tr("90"));
-  rotationSelector->addItem(tr("180"));
-  rotationSelector->addItem(tr("270"));
+  rotationSelector->addItem("No rotation", 0);
+  rotationSelector->addItem("90 degrees", 90);
+  rotationSelector->addItem("180 degrees", 180);
+  rotationSelector->addItem("270 degrees", 270);
   this->connect(rotationSelector,
                 SIGNAL(currentIndexChanged(int)),
                 SLOT(updateImageTransform()));
@@ -557,10 +557,8 @@ void MainWindow::updateImageTransform() {
   imageTransform.reset();
   imageTransform.scale(flipHorizontal->isChecked() ? -1 : 1,
                        flipVertical->isChecked() ? -1 : 1);
-  int angle;
-  if (rotationSelector->currentText() == tr("90")) angle = 90;
-  else if (rotationSelector->currentText() == tr("180")) angle = 180;
-  else if (rotationSelector->currentText() == tr("270")) angle = 270;
+  int angle = rotationSelector->itemData(rotationSelector->
+                                         currentIndex()).toInt();
   imageTransform.rotate(angle);
 }
 
