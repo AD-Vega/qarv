@@ -22,11 +22,14 @@
 
 GLVideoWidget::GLVideoWidget(QWidget* parent):
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
-  image(), corner1(), corner2(), rectangle(), selecting(false),
-  drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black) {
+  corner1(), corner2(), rectangle(), selecting(false),
+  drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black),
+  idleImageIcon(":/icons/icons/video-display.svgz") {
   whitepen.setWidth(0);
   whitepen.setStyle(Qt::DotLine);
   blackpen.setWidth(0);
+  setImage(idleImageIcon.pixmap(size()).toImage());
+  idling = true;
 }
 
 GLVideoWidget::~GLVideoWidget() {}
@@ -36,17 +39,24 @@ QImage GLVideoWidget::getImage() {
 }
 
 void GLVideoWidget::setImage(const QImage& image_) {
-  image = image_;
-  if (in.size() != image.size()) {
-    in = image.rect();
-    QResizeEvent nochange(size(), size());
-    resizeEvent(&nochange);
+  if (image_.isNull()) {
+    idling = true;
+    image = idleImageIcon.pixmap(size()).toImage();
+  } else {
+    idling = false;
+    image = image_;
+    if (in.size() != image.size()) {
+      in = image.rect();
+      QResizeEvent nochange(size(), size());
+      resizeEvent(&nochange);
+    }
   }
   update();
 }
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {
   QGLWidget::resizeEvent(event);
+  if (idling) setImage();
   auto view = rect();
   out = view;
   if (in.size() != view.size()) {

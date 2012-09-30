@@ -58,11 +58,6 @@ MainWindow::MainWindow():
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
   restoreState(settings.value("mainwindow/state").toByteArray());
 
-  QIcon idle = QIcon::fromTheme("video-display",
-                                QIcon(":/icons/icons/video-display.svgz"));
-  idleImage = idle.pixmap(video->size()).toImage();
-  video->setImage(idleImage);
-
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateMsec);
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
@@ -119,7 +114,7 @@ void MainWindow::on_unzoomButton_toggled(bool checked) {
     video->setFixedSize(newsize);
   } else {
     video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-    video->setMinimumSize(idleImage.size());
+    video->setMinimumSize(QSize(64, 64));
   }
 }
 
@@ -399,7 +394,7 @@ void MainWindow::on_playButton_clicked(bool checked) {
   startVideo(playing || recording);
   playing = checked && started;
   playButton->setChecked(playing);
-  if (!playing) video->setImage(idleImage);
+  if (!playing) video->setImage();
 }
 
 void MainWindow::on_recordButton_clicked(bool checked) {

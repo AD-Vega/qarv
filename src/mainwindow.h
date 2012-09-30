@@ -75,7 +75,7 @@ private:
   void enableNotouchWidgets(bool enabled);
   void readROILimits();
 
-  QImage idleImage, invalidImage;
+  QImage invalidImage;
   ArCam* camera;
   FrameDecoder* decoder;
   QRect roirange, roidefault;

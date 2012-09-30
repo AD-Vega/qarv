@@ -23,6 +23,7 @@
 #include <QGLWidget>
 #include <QImage>
 #include <QMouseEvent>
+#include <QIcon>
 
 class GLVideoWidget: public QGLWidget {
   Q_OBJECT
@@ -30,7 +31,7 @@ class GLVideoWidget: public QGLWidget {
 public:
   GLVideoWidget(QWidget* parent = NULL);
   ~GLVideoWidget();
-  void setImage(const QImage& image);
+  void setImage(const QImage& image = QImage());
   QImage getImage();
   void paintGL();
 
@@ -48,8 +49,9 @@ private:
 
   QImage image;
   QRect in, out;
+  QIcon idleImageIcon;
 
-  bool selecting, drawRectangle;
+  bool idling, selecting, drawRectangle;
   QPoint corner1, corner2;
   QRect rectangle, drawnRectangle;
   QPen whitepen, blackpen;
