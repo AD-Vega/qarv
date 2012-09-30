@@ -324,6 +324,15 @@ void MainWindow::on_binSpinBox_valueChanged(int value) {
   startVideo(tostart);
 }
 
+static QVector<QRgb> initHighlightColors() {
+  QVector<QRgb> colors(2);
+  colors[0] = qRgba(255, 0, 200, 0);
+  colors[1] = qRgba(255, 0, 200, 255);
+  return colors;
+}
+
+static QVector<QRgb> highlightColors = initHighlightColors();
+
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
@@ -339,6 +348,20 @@ void MainWindow::takeNextFrame() {
       if (imageTransform.type() != QTransform::TxNone)
         img = img.transformed(imageTransform);
       if (invertColors->isChecked()) img.invertPixels();
+
+      if (markClipped->isChecked()) {
+        if (img.format() == QImage::Format_Indexed8) {
+          auto colors = img.colorTable();
+          colors[255] = qRgb(255, 0, 200);
+          img.setColorTable(colors);
+        } else {
+          auto mask = img.createMaskFromColor(qRgb(255, 255, 255));
+          mask.setColorTable(highlightColors);
+          QPainter painter(&img);
+          painter.drawImage(img.rect(), mask);
+        }
+      }
+
       video->setImage(img);
     }
     if (recording && !frame.isEmpty()) {
