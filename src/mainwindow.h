@@ -81,7 +81,7 @@ private:
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer *autoreadexposure;
-  bool playing, recording, started, saveNextFrame;
+  bool playing, recording, started;
   QFile* recordingfile;
   QTransform imageTransform;
   uint framecounter;

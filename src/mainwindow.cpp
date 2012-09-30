@@ -328,7 +328,7 @@ void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
     if (!frame.isEmpty()) framecounter++;
-    if (playing || saveNextFrame) {
+    if (playing) {
       QImage img;
       if (frame.isEmpty()) img = invalidImage;
       else img = decoder->decode(frame);
@@ -336,13 +336,7 @@ void MainWindow::takeNextFrame() {
       if (imageTransform.type() != QTransform::TxNone)
         img = img.transformed(imageTransform);
       if (invertColors->isChecked()) img.invertPixels();
-      if (saveNextFrame) {
-        saveNextFrame = false;
-        img.save(snappathEdit->text() + "/"
-                 + QString::number(QDateTime::currentMSecsSinceEpoch())
-                 + ".png");
-      }
-      if (playing) video->setImage(img);
+      video->setImage(img);
     }
     if (recording && !frame.isEmpty()) {
       qint64 written = recordingfile->write(frame, frame.size());
@@ -425,7 +419,10 @@ void MainWindow::on_recordButton_clicked(bool checked) {
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
-  saveNextFrame = true;
+  auto img = video->getImage();
+  img.save(snappathEdit->text() + "/"
+           + QString::number(QDateTime::currentMSecsSinceEpoch())
+           + ".png");
 }
 
 void MainWindow::on_filenameEdit_textChanged(QString name) {
