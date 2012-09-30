@@ -24,7 +24,7 @@ GLVideoWidget::GLVideoWidget(QWidget* parent):
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   corner1(), corner2(), rectangle(), selecting(false),
   drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black),
-  idleImageIcon(":/icons/icons/video-display.svgz") {
+  idleImageIcon(":/icons/video-display.svgz") {
   whitepen.setWidth(0);
   whitepen.setStyle(Qt::DotLine);
   blackpen.setWidth(0);

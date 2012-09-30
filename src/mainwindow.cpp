@@ -52,7 +52,7 @@ MainWindow::MainWindow():
   icons[editGainButton] = "edit-clear";
   icons[editExposureButton] = "edit-clear";
   for (auto i = icons.begin(); i != icons.end(); i++)
-    i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/icons/") + *i + ".svgz")));
+    i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/") + *i + ".svgz")));
 
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());

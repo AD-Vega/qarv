@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -O3")
 
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
-set_prefixed(qarv_RCS_pre res/ icons.qrc)
+set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h mainwindow.h arcam.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})

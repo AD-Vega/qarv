@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>edit-clear.svgz</file>
+    <file>document-save.svgz</file>
+    <file>document-open.svgz</file>
+    <file>media-playback-start.svgz</file>
+    <file>media-record.svgz</file>
+    <file>video-display.svgz</file>
+    <file>view-refresh.svgz</file>
+    <file>zoom-original.svgz</file>
+  </qresource>
+</RCC>

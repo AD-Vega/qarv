@@ -26,8 +26,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons.qrc">
-          <normaloff>:/icons/icons/video-display.svgz</normaloff>:/icons/icons/video-display.svgz</iconset>
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/video-display.svgz</normaloff>:/icons/video-display.svgz</iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -46,8 +46,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons.qrc">
-          <normaloff>:/icons/icons/zoom-original.svgz</normaloff>:/icons/icons/zoom-original.svgz</iconset>
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/zoom-original.svgz</normaloff>:/icons/zoom-original.svgz</iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -66,8 +66,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons.qrc">
-          <normaloff>:/icons/icons/document-save.svgz</normaloff>:/icons/icons/document-save.svgz</iconset>
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/document-save.svgz</normaloff>:/icons/document-save.svgz</iconset>
         </property>
        </widget>
       </item>
@@ -83,8 +83,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons.qrc">
-          <normaloff>:/icons/icons/media-record.svgz</normaloff>:/icons/icons/media-record.svgz</iconset>
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/media-record.svgz</normaloff>:/icons/media-record.svgz</iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -100,8 +100,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons.qrc">
-          <normaloff>:/icons/icons/media-playback-start.svgz</normaloff>:/icons/icons/media-playback-start.svgz</iconset>
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/media-playback-start.svgz</normaloff>:/icons/media-playback-start.svgz</iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -160,8 +160,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons.qrc">
-                   <normaloff>:/icons/icons/view-refresh.svgz</normaloff>:/icons/icons/view-refresh.svgz</iconset>
+                  <iconset resource="../res/icons/icons.qrc">
+                   <normaloff>:/icons/view-refresh.svgz</normaloff>:/icons/view-refresh.svgz</iconset>
                  </property>
                 </widget>
                </item>
@@ -398,8 +398,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons.qrc">
-                   <normaloff>:/icons/icons/edit-clear.svgz</normaloff>:/icons/icons/edit-clear.svgz</iconset>
+                  <iconset resource="../res/icons/icons.qrc">
+                   <normaloff>:/icons/edit-clear.svgz</normaloff>:/icons/edit-clear.svgz</iconset>
                  </property>
                 </widget>
                </item>
@@ -460,8 +460,8 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons.qrc">
-                   <normaloff>:/icons/icons/edit-clear.svgz</normaloff>:/icons/icons/edit-clear.svgz</iconset>
+                  <iconset resource="../res/icons/icons.qrc">
+                   <normaloff>:/icons/edit-clear.svgz</normaloff>:/icons/edit-clear.svgz</iconset>
                  </property>
                 </widget>
                </item>
@@ -606,8 +606,8 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../res/icons.qrc">
-              <normaloff>:/icons/icons/document-open.svgz</normaloff>:/icons/icons/document-open.svgz</iconset>
+             <iconset resource="../res/icons/icons.qrc">
+              <normaloff>:/icons/document-open.svgz</normaloff>:/icons/document-open.svgz</iconset>
             </property>
            </widget>
           </item>
@@ -669,8 +669,8 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../res/icons.qrc">
-              <normaloff>:/icons/icons/document-open.svgz</normaloff>:/icons/icons/document-open.svgz</iconset>
+             <iconset resource="../res/icons/icons.qrc">
+              <normaloff>:/icons/document-open.svgz</normaloff>:/icons/document-open.svgz</iconset>
             </property>
            </widget>
           </item>
@@ -746,7 +746,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../res/icons.qrc"/>
+  <include location="../res/icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>
