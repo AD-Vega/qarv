@@ -223,7 +223,8 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   gainSlider->setRange(0, slidersteps);
   exposureSlider->setRange(0, slidersteps);
   gainSpinbox->setRange(gainrange.first, gainrange.second);
-  exposureSpinbox->setRange(exposurerange.first, exposurerange.second);
+  exposureSpinbox->setRange(exposurerange.first/1000.,
+                            exposurerange.second/1000.);
   readGain();
   readExposure();
 
@@ -240,7 +241,7 @@ void MainWindow::readExposure() {
   exposureSlider->setValue(value2slider_log(camera->getExposure(),
                                             exposurerange));
   exposureSlider->blockSignals(blocked);
-  exposureSpinbox->setValue(camera->getExposure());
+  exposureSpinbox->setValue(camera->getExposure()/1000.);
 }
 
 void MainWindow::readGain() {
@@ -521,7 +522,7 @@ void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
          << "Gain: " << gainSpinbox->value();
     file << (gainAutoButton->isChecked() ? " (Auto)" : " (Manual)");
     file << endl
-         << "Exposure: " << exposureSpinbox->value();
+         << "Exposure: " << exposureSpinbox->value()*1000.;
     file << (exposureAutoButton->isChecked() ? " (Auto)" : " (Manual)");
     file << endl;
     outfile.close();
@@ -589,7 +590,7 @@ void MainWindow::on_gainSpinbox_editingFinished() {
 }
 
 void MainWindow::on_exposureSpinbox_editingFinished() {
-  camera->setExposure(exposureSpinbox->value());
+  camera->setExposure(exposureSpinbox->value()*1000);
   gainSpinbox->setReadOnly(true);
   readExposure();
   autoreadexposure->start();
