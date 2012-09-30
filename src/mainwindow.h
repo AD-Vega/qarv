@@ -85,6 +85,7 @@ private:
   QFile* recordingfile;
   QTransform imageTransform;
   uint framecounter;
+  QByteArray currentFrame;
 };
 
 #endif

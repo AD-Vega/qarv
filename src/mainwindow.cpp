@@ -33,7 +33,7 @@ const int sliderUpdateMsec = 300;
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), recordingfile(NULL), decoder(NULL),
-  imageTransform(), framecounter(0) {
+  imageTransform(), framecounter(0), currentFrame() {
 
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
@@ -327,7 +327,10 @@ void MainWindow::on_binSpinBox_valueChanged(int value) {
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
-    if (!frame.isEmpty()) framecounter++;
+    if (!frame.isEmpty()) {
+      framecounter++;
+      currentFrame = frame;
+    }
     if (playing) {
       QImage img;
       if (frame.isEmpty()) img = invalidImage;
@@ -339,7 +342,7 @@ void MainWindow::takeNextFrame() {
       video->setImage(img);
     }
     if (recording && !frame.isEmpty()) {
-      qint64 written = recordingfile->write(frame, frame.size());
+      qint64 written = recordingfile->write(frame);
       if (written != frame.size())
         qDebug() << "Incomplete write!";
     }
@@ -419,10 +422,17 @@ void MainWindow::on_recordButton_clicked(bool checked) {
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
-  auto img = video->getImage();
-  img.save(snappathEdit->text() + "/"
-           + QString::number(QDateTime::currentMSecsSinceEpoch())
-           + ".png");
+  if (snapshotPNG->isChecked()) {
+    auto img = video->getImage();
+    img.save(snappathEdit->text() + "/"
+             + QString::number(QDateTime::currentMSecsSinceEpoch())
+             + ".png");
+  } else if (snapshotRaw->isChecked()) {
+    QFile file(snappathEdit->text() + "/"
+               + QString::number(QDateTime::currentMSecsSinceEpoch())
+               + ".frame");
+    if (file.open(QIODevice::WriteOnly)) file.write(currentFrame);
+  }
 }
 
 void MainWindow::on_filenameEdit_textChanged(QString name) {
