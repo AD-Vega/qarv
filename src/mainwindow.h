@@ -73,7 +73,6 @@ private slots:
   void showFPS();
 
 private:
-  void enableNotouchWidgets(bool enabled);
   void readROILimits();
 
   QImage invalidImage;
