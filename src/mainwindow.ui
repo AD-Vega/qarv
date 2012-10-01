@@ -231,12 +231,16 @@
                <item>
                 <widget class="QLabel" name="label_14">
                  <property name="text">
-                  <string>Actual:</string>
+                  <string>Actual: </string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="actualFPS"/>
+                <widget class="QLabel" name="actualFPS">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>

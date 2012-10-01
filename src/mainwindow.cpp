@@ -564,7 +564,7 @@ void MainWindow::updateImageTransform() {
 }
 
 void MainWindow::showFPS() {
-  actualFPS->setValue(framecounter);
+  actualFPS->setText(QString::number(framecounter));
   framecounter = 0;
 }
 
