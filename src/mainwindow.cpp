@@ -494,6 +494,16 @@ void MainWindow::on_fpsSpinbox_valueChanged(int value) {
 void MainWindow::pickedROI(QRect roi) {
   pickROIButton->setChecked(false);
   QRect current = camera->getROI();
+
+  // Compensate for the transform of the image. The actual transform must
+  // be calculated using the size of the actual image, so we get this size
+  // from the image prepared for invalid frames.
+  auto imagesize = invalidImage.size();
+  auto truexform = QImage::trueMatrix(imageTransform,
+                                      imagesize.width(),
+                                      imagesize.height());
+  roi = truexform.inverted().map(QRegion(roi)).boundingRect();
+
   xSpinbox->setValue(current.x() + roi.x());
   ySpinbox->setValue(current.y() + roi.y());
   wSpinbox->setValue(roi.width());
