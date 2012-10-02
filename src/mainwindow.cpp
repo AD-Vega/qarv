@@ -33,7 +33,8 @@ const int sliderUpdateMsec = 300;
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), recordingfile(NULL), decoder(NULL),
-  imageTransform(), framecounter(0), currentFrame() {
+  imageTransform(), framecounter(0), currentFrame(),
+  toDisableWhenPlaying(), toDisableWhenRecording() {
 
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
@@ -107,9 +108,6 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
 }
 
 void MainWindow::on_unzoomButton_toggled(bool checked) {
-  static QByteArray oldstate = QByteArray();
-  static QByteArray oldgeometry = QByteArray();
-  static QSize oldsize = QSize();
   if (checked) {
     oldstate = saveState();
     oldgeometry = saveGeometry();
@@ -387,7 +385,6 @@ void MainWindow::takeNextFrame() {
 }
 
 void MainWindow::startVideo(bool start) {
-  static QList<QWidget*> toDisableWhenPlaying;
   if (toDisableWhenPlaying.isEmpty()) toDisableWhenPlaying << cameraSelector;
   if (camera != NULL) {
     if (start && !started) {
@@ -432,7 +429,6 @@ void MainWindow::on_playButton_clicked(bool checked) {
 }
 
 void MainWindow::on_recordButton_clicked(bool checked) {
-  static QList<QWidget*> toDisableWhenRecording;
   if (toDisableWhenRecording.isEmpty()) toDisableWhenRecording << fpsSpinbox <<
          xSpinbox << wSpinbox << ySpinbox << hSpinbox << applyROIButton <<
          resetROIButton << pickROIButton << binSpinBox;

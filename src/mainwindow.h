@@ -87,6 +87,10 @@ private:
   QTransform imageTransform;
   uint framecounter;
   QByteArray currentFrame;
+  QByteArray oldstate, oldgeometry;
+  QSize oldsize;
+  QList<QWidget*> toDisableWhenPlaying;
+  QList<QWidget*> toDisableWhenRecording;
 };
 
 #endif
