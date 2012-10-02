@@ -62,6 +62,7 @@ private slots:
   void on_exposureSpinbox_editingFinished();
   void on_gainSpinbox_editingFinished();
   void on_videodock_visibilityChanged(bool visible);
+  void on_videodock_topLevelChanged(bool floating);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();

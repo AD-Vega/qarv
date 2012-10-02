@@ -611,3 +611,10 @@ void MainWindow::on_videodock_visibilityChanged(bool visible) {
   showVideoButton->setChecked(visible);
   showVideoButton->blockSignals(false);
 }
+
+void MainWindow::on_videodock_topLevelChanged(bool floating) {
+  if (floating) {
+    videodock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    videodock->setVisible(true);
+  }
+}
