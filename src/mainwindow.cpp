@@ -107,14 +107,27 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
 }
 
 void MainWindow::on_unzoomButton_toggled(bool checked) {
+  static QByteArray oldstate = QByteArray();
+  static QByteArray oldgeometry = QByteArray();
+  static QSize oldsize = QSize();
   if (checked) {
+    oldstate = saveState();
+    oldgeometry = saveGeometry();
+    oldsize = video->size();
     QSize newsize = video->getImage().size();
-    video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-    video->resize(newsize);
     video->setFixedSize(newsize);
   } else {
     video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    restoreState(oldstate);
+    restoreGeometry(oldgeometry);
+    video->setFixedSize(oldsize);
+    videodock->resize(1, 1);
+    QApplication::processEvents();
+    video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     video->setMinimumSize(QSize(64, 64));
+    QApplication::processEvents();
+    QApplication::flush();
+    on_videodock_topLevelChanged(videodock->isFloating());
   }
 }
 
