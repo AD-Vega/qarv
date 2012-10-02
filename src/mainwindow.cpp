@@ -429,9 +429,23 @@ void MainWindow::on_playButton_clicked(bool checked) {
 }
 
 void MainWindow::on_recordButton_clicked(bool checked) {
-  if (toDisableWhenRecording.isEmpty()) toDisableWhenRecording << fpsSpinbox <<
-         xSpinbox << wSpinbox << ySpinbox << hSpinbox << applyROIButton <<
-         resetROIButton << pickROIButton << binSpinBox;
+  if (toDisableWhenRecording.isEmpty()) {
+    toDisableWhenRecording = {
+      fpsSpinbox,
+      xSpinbox,
+      wSpinbox,
+      ySpinbox,
+      hSpinbox,
+      applyROIButton,
+      resetROIButton,
+      pickROIButton,
+      binSpinBox,
+      manipulationTab,
+      filenameEdit,
+      chooseFilenameButton,
+      recordApendCheck
+    };
+  }
   if (checked && !recordingfile->isOpen()) {
     QIODevice::OpenMode openflags =
       recordApendCheck->isChecked() ? QIODevice::Append : QIODevice::WriteOnly;
@@ -444,14 +458,11 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   }
   recording = checked;
   startVideo(recording || playing);
-  //qDebug() << "started checked" << started << checked;
   recording = checked && started;
   recordButton->setChecked(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
   }
-  recordingTab->setEnabled(!recording);
-  //qDebug() << "checked started recording:" << checked << started << recording;
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
