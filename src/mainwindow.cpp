@@ -55,6 +55,10 @@ MainWindow::MainWindow():
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/") + *i + ".svgz")));
 
+  videoFormatSelector->addItem("Raw data");
+  videoFormatSelector->addItem("AVI (raw)");
+  videoFormatSelector->addItem("AVI (processed)");
+
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
   restoreState(settings.value("mainwindow/state").toByteArray());
@@ -446,6 +450,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       recordApendCheck
     };
   }
+
   if (checked && !recordingfile->isOpen()) {
     QIODevice::OpenMode openflags =
       recordApendCheck->isChecked() ? QIODevice::Append : QIODevice::WriteOnly;
@@ -453,16 +458,20 @@ void MainWindow::on_recordButton_clicked(bool checked) {
     if (!open) {
       recordButton->setChecked(false);
       recordButton->setEnabled(false);
+      closeFileButton->setEnabled(false);
       return;
     }
+    videoFormatSelector->setEnabled(false);
   }
   recording = checked;
   startVideo(recording || playing);
   recording = checked && started;
   recordButton->setChecked(recording);
+
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
   }
+  closeFileButton->setEnabled(!recording && recordingfile->isOpen());
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
@@ -486,7 +495,6 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
   auto info = QFileInfo(*recordingfile);
   auto dir = info.dir();
   recordButton->setEnabled(dir.exists());
-  qDebug() << "Recording file reopened.";
 }
 
 
@@ -637,4 +645,10 @@ void MainWindow::on_videodock_topLevelChanged(bool floating) {
     videodock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     videodock->setVisible(true);
   }
+}
+
+void MainWindow::on_closeFileButton_clicked(bool checked) {
+  recordingfile->close();
+  videoFormatSelector->setEnabled(true);
+  closeFileButton->setEnabled(false);
 }
