@@ -33,6 +33,8 @@ class Mono8: public FrameDecoder {
 public:
   Mono8(QSize size_): size(size_) {}
   ~Mono8() {}
+  QString ffmpegPixfmtRaw() { return "gray"; }
+  bool isGrayscale() { return true; }
   QImage decode(QByteArray frame) {
     QImage img(size, QImage::Format_Indexed8);
     img.setColorTable(graymap);
@@ -51,6 +53,8 @@ class Mono12: public FrameDecoder {
 public:
   Mono12(QSize size_): size(size_) {};
   ~Mono12() {}
+  QString ffmpegPixfmtRaw() { return QString(); }
+  bool isGrayscale() { return true; }
   QImage decode(QByteArray frame) {
     QImage img(size, QImage::Format_Indexed8);
     img.setColorTable(graymap);
@@ -71,6 +75,8 @@ class Mono12Packed: public FrameDecoder {
 public:
   Mono12Packed(QSize size_): size(size_) {};
   ~Mono12Packed() {}
+  QString ffmpegPixfmtRaw() { return QString(); }
+  bool isGrayscale() { return true; }
   QImage decode(QByteArray frame) {
     QImage img(size, QImage::Format_Indexed8);
     img.setColorTable(graymap);

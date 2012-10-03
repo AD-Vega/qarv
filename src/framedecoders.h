@@ -28,6 +28,8 @@ class FrameDecoder {
 public:
   virtual ~FrameDecoder() {};
   virtual QImage decode(QByteArray frame) = 0;
+  virtual QString ffmpegPixfmtRaw() = 0;
+  virtual bool isGrayscale() = 0;
 };
 
 FrameDecoder* makeFrameDecoder(QString format, QSize size);
