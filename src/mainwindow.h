@@ -84,7 +84,7 @@ private:
   QPair<double, double> gainrange, exposurerange;
   QTimer *autoreadexposure;
   bool playing, recording, started;
-  QFile* recordingfile;
+  QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;
   QByteArray currentFrame;

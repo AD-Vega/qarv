@@ -491,8 +491,9 @@ void MainWindow::on_snapButton_clicked(bool checked) {
 void MainWindow::on_filenameEdit_textChanged(QString name) {
   recordButton->setEnabled(true);
   delete recordingfile;
-  recordingfile = new QFile(name, this);
-  auto info = QFileInfo(*recordingfile);
+  auto thefile = new QFile(name, this);
+  recordingfile = thefile;
+  auto info = QFileInfo(*thefile);
   auto dir = info.dir();
   recordButton->setEnabled(dir.exists());
 }
