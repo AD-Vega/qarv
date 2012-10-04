@@ -18,12 +18,17 @@
 
 
 #include <QtGui/QApplication>
+#include <QTranslator>
 #include "mainwindow.h"
 #include "arcam.h"
 
 int main(int argc, char **argv) {
   arcamInit();
   QApplication a(argc, argv);
+  QTranslator trans;
+  auto locale = QLocale::system().name();
+  trans.load(QString("qarv_") + locale);
+  a.installTranslator(&trans);
 
   QCoreApplication::setOrganizationDomain("ad-vega.si");
   QCoreApplication::setOrganizationName("AD Vega");
