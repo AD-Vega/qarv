@@ -34,9 +34,14 @@ const int sliderUpdateMsec = 300;
 
 static QHash<QString, QString> initFfmpegOutputCommands() {
   QHash<QString, QString> cmd;
-  cmd["Raw data"] = QString();
-  cmd["AVI (raw)"] = "-f avi -codec rawvideo";
-  cmd["AVI (processed)"] = "-f avi -codec huffyuv";
+  static const char* keys[] = {
+    QT_TRANSLATE_NOOP("Video formats", "Raw data"),
+    QT_TRANSLATE_NOOP("Video formats", "AVI (raw)"),
+    QT_TRANSLATE_NOOP("Video formats", "AVI (processed)")
+  };
+  cmd[QApplication::tr("Video formats", keys[0])] = QString();
+  cmd[QApplication::tr("Video formats", keys[1])] = "-f avi -codec rawvideo";
+  cmd[QApplication::tr("Video formats", keys[2])] = "-f avi -codec huffyuv";
   return cmd;
 }
 
