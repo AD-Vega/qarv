@@ -87,10 +87,10 @@ MainWindow::MainWindow():
   video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
 
-  rotationSelector->addItem("No rotation", 0);
-  rotationSelector->addItem("90 degrees", 90);
-  rotationSelector->addItem("180 degrees", 180);
-  rotationSelector->addItem("270 degrees", 270);
+  rotationSelector->addItem(tr("No rotation"), 0);
+  rotationSelector->addItem(tr("90 degrees"), 90);
+  rotationSelector->addItem(tr("180 degrees"), 180);
+  rotationSelector->addItem(tr("270 degrees"), 270);
   this->connect(rotationSelector,
                 SIGNAL(currentIndexChanged(int)),
                 SLOT(updateImageTransform()));
@@ -114,7 +114,7 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   cameraSelector->blockSignals(true);
   cameraSelector->clear();
   cameraSelector->setEnabled(false);
-  cameraSelector->addItem("Looking for cameras...");
+  cameraSelector->addItem(tr("Looking for cameras..."));
   QApplication::processEvents();
   QApplication::flush();
   cameraSelector->clear();
@@ -225,14 +225,15 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   }
 
   if (camera->getMTU() == 0)
-    cameraMTUDescription->setText("Not an ethernet camera.");
+    cameraMTUDescription->setText(tr("Not an ethernet camera."));
   else {
     int mtu = camera->getMTU();
     QString ifname = cameraIface.name();
-    QString description = "Camera on interface " + ifname +
-                          ",\nMTU set to " + QString::number(mtu) + ".";
+    QString description = tr("Camera is on interface %1,\nMTU set to %2.");
+    description = description.arg(ifname);
+    description = description.arg(QString::number(mtu));
     if (mtu < 3000)
-      description += "\nConsider increasing the MTU!";
+      description += tr("\nConsider increasing the MTU!");
     cameraMTUDescription->setText(description);
   }
 
@@ -486,7 +487,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
     else
       openflags = QIODevice::Truncate | QIODevice::WriteOnly;
     bool open = false;
-    if (videoFormatSelector->currentText() == "Raw data") {
+    if (videoFormatSelector->currentIndex() == 0) {
       open = recordingfile->open(openflags);
     } else {
       auto ffmpeg = new QProcess(this);
@@ -495,9 +496,9 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       if (videoFormatSelector->currentIndex() == 1) {
         fmt = decoder->ffmpegPixfmtRaw();
         if (fmt.isNull()) {
-          QMessageBox::information(this, "Unable to record",
-                                   "AVI cannot store this pixel format in raw form."
-                                   " Use processed form instead.");
+          QMessageBox::information(this, tr("Unable to record"),
+                                   tr("AVI cannot store this pixel format in raw"
+                                      " form. Use processed form instead."));
           open = false;
         }
       } else {
@@ -587,12 +588,12 @@ void MainWindow::on_snappathEdit_textChanged() {
 }
 
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
-  auto name = QFileDialog::getSaveFileName(this, "Open file");
+  auto name = QFileDialog::getSaveFileName(this, tr("Open file"));
   if(!name.isNull()) filenameEdit->setText(name);
 }
 
 void MainWindow::on_chooseSnappathButton_clicked(bool checked) {
-  auto name = QFileDialog::getExistingDirectory(this, "Choose directory");
+  auto name = QFileDialog::getExistingDirectory(this, tr("Choose directory"));
   if(!name.isNull()) snappathEdit->setText(name);
 }
 
@@ -622,7 +623,8 @@ void MainWindow::pickedROI(QRect roi) {
 
 void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
   QFileInfo fle(filenameEdit->text());
-  auto name = QFileDialog::getSaveFileName(this, "Open file", fle.dir().dirName());
+  auto name = QFileDialog::getSaveFileName(this, tr("Open file"),
+                                           fle.dir().dirName());
   QFile outfile(name);
   bool open = outfile.open(QIODevice::WriteOnly);
   if (open) {
@@ -652,7 +654,7 @@ void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
 void MainWindow::updateBandwidthEstimation() {
   int bw = camera->getEstimatedBW();
   if (bw == 0) {
-    bandwidthDescription->setText("Not an ethernet camera.");
+    bandwidthDescription->setText(tr("Not an ethernet camera."));
   } else {
     QString unit(" B/s");
     if (bw >= 1024) {
