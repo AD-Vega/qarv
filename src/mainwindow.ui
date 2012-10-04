@@ -20,7 +20,7 @@
       <item>
        <widget class="QPushButton" name="showVideoButton">
         <property name="toolTip">
-         <string>Show or hide video</string>
+         <string>Show or hide video display.</string>
         </property>
         <property name="text">
          <string/>
@@ -40,7 +40,7 @@
       <item>
        <widget class="QPushButton" name="unzoomButton">
         <property name="toolTip">
-         <string>Fix video size to original</string>
+         <string>Fix display size to video size.</string>
         </property>
         <property name="text">
          <string/>
@@ -60,7 +60,7 @@
          <bool>false</bool>
         </property>
         <property name="toolTip">
-         <string>Store a snapshot</string>
+         <string>Store a snapshot.</string>
         </property>
         <property name="text">
          <string/>
@@ -77,7 +77,7 @@
          <bool>false</bool>
         </property>
         <property name="toolTip">
-         <string>Start or stop recording of video</string>
+         <string>Record video. Depress to pause recording, press again to resume.</string>
         </property>
         <property name="text">
          <string/>
@@ -94,7 +94,7 @@
       <item>
        <widget class="QPushButton" name="playButton">
         <property name="toolTip">
-         <string>Start or stop video display</string>
+         <string>Display video.</string>
         </property>
         <property name="text">
          <string/>
@@ -149,6 +149,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
                 <widget class="QComboBox" name="cameraSelector">
+                 <property name="toolTip">
+                  <string>Select camera.</string>
+                 </property>
                  <property name="minimumContentsLength">
                   <number>30</number>
                  </property>
@@ -156,6 +159,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="refreshCamerasButton">
+                 <property name="toolTip">
+                  <string>Refresh camera list.</string>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -183,6 +189,9 @@
              </item>
              <item row="3" column="1">
               <widget class="QComboBox" name="pixelFormatSelector">
+               <property name="toolTip">
+                <string>Select the camera's pixel format.</string>
+               </property>
                <property name="minimumContentsLength">
                 <number>30</number>
                </property>
@@ -220,6 +229,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
                 <widget class="QSpinBox" name="fpsSpinbox">
+                 <property name="toolTip">
+                  <string>Camera's frame rate setting.</string>
+                 </property>
                  <property name="minimum">
                   <number>1</number>
                  </property>
@@ -230,6 +242,9 @@
                </item>
                <item>
                 <widget class="QLabel" name="label_14">
+                 <property name="toolTip">
+                  <string>Actual frame rate.</string>
+                 </property>
                  <property name="text">
                   <string>Actual: </string>
                  </property>
@@ -237,6 +252,9 @@
                </item>
                <item>
                 <widget class="QLabel" name="actualFPS">
+                 <property name="toolTip">
+                  <string>Actual frame rate.</string>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -318,6 +336,9 @@
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
                 <widget class="QPushButton" name="pickROIButton">
+                 <property name="toolTip">
+                  <string>Draw a rectangle on the video display, then click Apply.</string>
+                 </property>
                  <property name="text">
                   <string>Pick</string>
                  </property>
@@ -328,6 +349,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="resetROIButton">
+                 <property name="toolTip">
+                  <string>Reset ROI to the maximum, effective immediately.</string>
+                 </property>
                  <property name="text">
                   <string>Reset</string>
                  </property>
@@ -337,6 +361,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="applyROIButton">
+               <property name="toolTip">
+                <string>Set the camera's ROI.</string>
+               </property>
                <property name="text">
                 <string>Apply</string>
                </property>
@@ -398,6 +425,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="editGainButton">
+                 <property name="toolTip">
+                  <string>Enter value manually.</string>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -411,6 +441,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="gainAutoButton">
+               <property name="toolTip">
+                <string>Let camera control sensor gain.</string>
+               </property>
                <property name="text">
                 <string>Auto</string>
                </property>
@@ -466,6 +499,9 @@
                </item>
                <item>
                 <widget class="QPushButton" name="editExposureButton">
+                 <property name="toolTip">
+                  <string>Enter value manually.</string>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
@@ -479,6 +515,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="exposureAutoButton">
+               <property name="toolTip">
+                <string>Let camera control exposure time.</string>
+               </property>
                <property name="text">
                 <string>Auto</string>
                </property>
@@ -566,6 +605,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
             <widget class="QCheckBox" name="dropInvalidFrames">
+             <property name="toolTip">
+              <string>Invalid frames will not be recorded and will be displayed as pure red.</string>
+             </property>
              <property name="text">
               <string>Drop incomplete/invalid frames</string>
              </property>
@@ -576,6 +618,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="markClipped">
+             <property name="toolTip">
+              <string>Overexposed pixels are colored pink.</string>
+             </property>
              <property name="text">
               <string>Mark clipped highlights</string>
              </property>
@@ -605,6 +650,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
            <widget class="QLineEdit" name="snappathEdit">
+            <property name="toolTip">
+             <string>Snapshot will be put in this directory. Unique timestamps will be used as file names.</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -612,6 +660,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="chooseSnappathButton">
+            <property name="toolTip">
+             <string>Open directory.</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -634,6 +685,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
            <widget class="QRadioButton" name="snapshotRaw">
+            <property name="toolTip">
+             <string>Frame data is simply dumped into the file undecoded.</string>
+            </property>
             <property name="text">
              <string>Raw data</string>
             </property>
@@ -644,6 +698,9 @@
           </item>
           <item>
            <widget class="QRadioButton" name="snapshotPNG">
+            <property name="toolTip">
+             <string>The saved snapshot is as shown in the Video Display.</string>
+            </property>
             <property name="text">
              <string>PNG image</string>
             </property>
@@ -668,6 +725,9 @@
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QLineEdit" name="filenameEdit">
+            <property name="toolTip">
+             <string>The file to store recorded video.</string>
+            </property>
             <property name="readOnly">
              <bool>true</bool>
             </property>
@@ -675,6 +735,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="chooseFilenameButton">
+            <property name="toolTip">
+             <string>Open file.</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -688,6 +751,9 @@
         </item>
         <item row="6" column="1">
          <widget class="QCheckBox" name="recordApendCheck">
+          <property name="toolTip">
+           <string>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</string>
+          </property>
           <property name="text">
            <string>Append to existing file instead of truncating</string>
           </property>
@@ -695,6 +761,9 @@
         </item>
         <item row="8" column="1">
          <widget class="QPushButton" name="dumpSettingsButton">
+          <property name="toolTip">
+           <string>Choose a file to store camera settings.</string>
+          </property>
           <property name="text">
            <string>Dump camera settings</string>
           </property>
@@ -710,12 +779,19 @@
         <item row="5" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <widget class="QComboBox" name="videoFormatSelector"/>
+           <widget class="QComboBox" name="videoFormatSelector">
+            <property name="toolTip">
+             <string>Choose format of recorded video.</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="closeFileButton">
             <property name="enabled">
              <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
             </property>
             <property name="text">
              <string>Close file</string>
@@ -728,6 +804,9 @@
          <widget class="QCheckBox" name="recordLogCheck">
           <property name="enabled">
            <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Unless the video format is &quot;Raw data&quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &quot;.log&quot; suffix.</string>
           </property>
           <property name="text">
            <string>Log encoder messages</string>
@@ -760,7 +839,7 @@
   </widget>
   <widget class="QDockWidget" name="videodock">
    <property name="windowTitle">
-    <string>Video Display</string>
+    <string>qarv Video Display</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
