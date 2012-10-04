@@ -22,19 +22,35 @@
 #include <QNetworkInterface>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QSettings>
 #include <qdatetime.h>
+#include <QProcess>
 
 #include "getmtu_linux.h"
 
 const int slidersteps = 1000;
 const int sliderUpdateMsec = 300;
 
+static QHash<QString, QString> initFfmpegOutputCommands() {
+  QHash<QString, QString> cmd;
+  cmd["Raw data"] = QString();
+  cmd["AVI (raw)"] = "-f avi -codec rawvideo";
+  cmd["AVI (processed)"] = "-f avi -codec huffyuv";
+  return cmd;
+}
+
+QHash<QString, QString> ffmpegOutputCommands = initFfmpegOutputCommands();
+QString ffmpegInputCommand = "-pixel_format %1 -f rawvideo -s %2x%3 -i - ";
+
+
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
-  started(false), recordingfile(NULL), decoder(NULL),
+  started(false), decoder(NULL),
   imageTransform(), framecounter(0), currentFrame(),
   toDisableWhenPlaying(), toDisableWhenRecording() {
+
+  recordingfile = new QFile(this);
 
   qDebug() << "Please ignore \"Could not resolve property\" warnings "
            "unless icons look bad.";
@@ -55,9 +71,8 @@ MainWindow::MainWindow():
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/") + *i + ".svgz")));
 
-  videoFormatSelector->addItem("Raw data");
-  videoFormatSelector->addItem("AVI (raw)");
-  videoFormatSelector->addItem("AVI (processed)");
+  for (auto i = ffmpegOutputCommands.begin(); i != ffmpegOutputCommands.end(); i++)
+    videoFormatSelector->addItem(i.key());
 
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
@@ -89,6 +104,10 @@ MainWindow::MainWindow():
   timer->start();
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
+}
+
+MainWindow::~MainWindow() {
+  on_closeFileButton_clicked(true);
 }
 
 void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
@@ -356,8 +375,9 @@ void MainWindow::takeNextFrame() {
       framecounter++;
       currentFrame = frame;
     }
-    if (playing) {
-      QImage img;
+
+    QImage img;
+    if (playing || videoFormatSelector->currentIndex() >= 2) {
       if (frame.isEmpty()) img = invalidImage;
       else img = decoder->decode(frame);
 
@@ -378,12 +398,17 @@ void MainWindow::takeNextFrame() {
         }
       }
 
-      video->setImage(img);
+      if (playing) video->setImage(img);
     }
+
     if (recording && !frame.isEmpty()) {
-      qint64 written = recordingfile->write(frame);
-      if (written != frame.size())
-        qDebug() << "Incomplete write!";
+      if (videoFormatSelector->currentIndex() < 2) {
+        recordingfile->write(frame);
+      } else {
+        img = img.convertToFormat(QImage::Format_RGB888);
+        for (int i=0; i<img.height(); i++)
+          recordingfile->write((char*)(img.scanLine(i)), img.bytesPerLine());
+      }
     }
   }
 }
@@ -447,31 +472,71 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       manipulationTab,
       filenameEdit,
       chooseFilenameButton,
-      recordApendCheck
+      recordApendCheck,
+      videoFormatSelector
     };
   }
 
   if (checked && !recordingfile->isOpen()) {
-    QIODevice::OpenMode openflags =
-      recordApendCheck->isChecked() ? QIODevice::Append : QIODevice::WriteOnly;
-    bool open = recordingfile->open(openflags);
+    startVideo(true); // Initialize the decoder and all that.
+    QIODevice::OpenMode openflags;
+    if (recordApendCheck->isChecked())
+      openflags = QIODevice::Append;
+    else
+      openflags = QIODevice::Truncate | QIODevice::WriteOnly;
+    bool open = false;
+    if (videoFormatSelector->currentText() == "Raw data") {
+      open = recordingfile->open(openflags);
+    } else {
+      auto ffmpeg = new QProcess(this);
+      QString cmd = ffmpegInputCommand;
+      QString fmt;
+      if (videoFormatSelector->currentIndex() == 1) {
+        fmt = decoder->ffmpegPixfmtRaw();
+        if (fmt.isNull()) {
+          QMessageBox::information(this, "Unable to record",
+                                   "AVI cannot store this pixel format in raw form."
+                                   " Use processed form instead.");
+          open = false;
+        }
+      } else {
+        fmt = "rgb24";
+        open = true;
+      }
+      if (open) {
+        cmd = cmd.arg(fmt);
+        cmd = cmd.arg(camera->getFrameSize().width());
+        cmd = cmd.arg(camera->getFrameSize().height());
+        cmd += ffmpegOutputCommands[videoFormatSelector->currentText()];
+        cmd += QString(" -r %1 -").arg(fpsSpinbox->value());
+
+        auto fname = qobject_cast<QFile*>(recordingfile)->fileName();
+        ffmpeg->setStandardOutputFile(fname, openflags);
+        ffmpeg->setStandardErrorFile(fname + ".log", QIODevice::Truncate);
+        qDebug() << "ffmpeg" << cmd;
+        ffmpeg->start("ffmpeg", cmd.split(' ', QString::SkipEmptyParts));
+        open = ffmpeg->waitForStarted(10000);
+      }
+      if (open) {
+        delete recordingfile;
+        recordingfile = ffmpeg;
+      }
+    }
+
     if (!open) {
       recordButton->setChecked(false);
-      recordButton->setEnabled(false);
-      closeFileButton->setEnabled(false);
-      return;
+      checked = false;
     }
-    videoFormatSelector->setEnabled(false);
   }
   recording = checked;
   startVideo(recording || playing);
   recording = checked && started;
   recordButton->setChecked(recording);
 
-  foreach (auto wgt, toDisableWhenRecording) {
-    wgt->setEnabled(!recording);
-  }
   closeFileButton->setEnabled(!recording && recordingfile->isOpen());
+  foreach (auto wgt, toDisableWhenRecording) {
+    wgt->setEnabled(!recordingfile->isOpen());
+  }
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
@@ -490,12 +555,24 @@ void MainWindow::on_snapButton_clicked(bool checked) {
 
 void MainWindow::on_filenameEdit_textChanged(QString name) {
   recordButton->setEnabled(true);
+  auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
+  if (ffmpeg != NULL) {
+    ffmpeg->closeWriteChannel();
+    ffmpeg->waitForFinished();
+  } else {
+    recordingfile->close();
+  }
+  videoFormatSelector->setEnabled(true);
+  closeFileButton->setEnabled(false);
   delete recordingfile;
   auto thefile = new QFile(name, this);
   recordingfile = thefile;
   auto info = QFileInfo(*thefile);
   auto dir = info.dir();
   recordButton->setEnabled(dir.exists());
+  foreach (auto wgt, toDisableWhenRecording) {
+    wgt->setEnabled(true);
+  }
 }
 
 
@@ -649,7 +726,14 @@ void MainWindow::on_videodock_topLevelChanged(bool floating) {
 }
 
 void MainWindow::on_closeFileButton_clicked(bool checked) {
-  recordingfile->close();
-  videoFormatSelector->setEnabled(true);
-  closeFileButton->setEnabled(false);
+  on_filenameEdit_textChanged(filenameEdit->text());
+}
+
+void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
+  if (index != 0) {
+    recordApendCheck->setChecked(false);
+    recordApendCheck->setEnabled(false);
+  } else {
+    recordApendCheck->setEnabled(true);
+  }
 }

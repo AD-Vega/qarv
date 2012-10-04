@@ -35,6 +35,7 @@ class MainWindow : public QMainWindow, private Ui::MainWindowUI {
 
 public:
   MainWindow();
+  ~MainWindow();
 
 private slots:
   void on_refreshCamerasButton_clicked(bool clicked = false);
@@ -64,6 +65,7 @@ private slots:
   void on_videodock_visibilityChanged(bool visible);
   void on_videodock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
+  void on_videoFormatSelector_currentIndexChanged(int index);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
