@@ -473,6 +473,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       filenameEdit,
       chooseFilenameButton,
       recordApendCheck,
+      recordLogCheck,
       videoFormatSelector
     };
   }
@@ -480,7 +481,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   if (checked && !recordingfile->isOpen()) {
     startVideo(true); // Initialize the decoder and all that.
     QIODevice::OpenMode openflags;
-    if (recordApendCheck->isChecked())
+    if (recordApendCheck->isChecked() && recordApendCheck->isEnabled())
       openflags = QIODevice::Append;
     else
       openflags = QIODevice::Truncate | QIODevice::WriteOnly;
@@ -512,7 +513,8 @@ void MainWindow::on_recordButton_clicked(bool checked) {
 
         auto fname = qobject_cast<QFile*>(recordingfile)->fileName();
         ffmpeg->setStandardOutputFile(fname, openflags);
-        ffmpeg->setStandardErrorFile(fname + ".log", QIODevice::Truncate);
+        if (recordLogCheck->isChecked() && recordLogCheck->isEnabled())
+          ffmpeg->setStandardErrorFile(fname + ".log", QIODevice::Truncate);
         qDebug() << "ffmpeg" << cmd;
         ffmpeg->start("ffmpeg", cmd.split(' ', QString::SkipEmptyParts));
         open = ffmpeg->waitForStarted(10000);
@@ -537,6 +539,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recordingfile->isOpen());
   }
+  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
@@ -573,6 +576,7 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(true);
   }
+  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 }
 
 
@@ -731,9 +735,10 @@ void MainWindow::on_closeFileButton_clicked(bool checked) {
 
 void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
   if (index != 0) {
-    recordApendCheck->setChecked(false);
     recordApendCheck->setEnabled(false);
+    recordLogCheck->setEnabled(true);
   } else {
     recordApendCheck->setEnabled(true);
+    recordLogCheck->setEnabled(false);
   }
 }
