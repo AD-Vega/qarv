@@ -32,22 +32,25 @@
 const int slidersteps = 1000;
 const int sliderUpdateMsec = 300;
 
-static QHash<QString, QString> initFfmpegOutputCommands() {
-  QHash<QString, QString> cmd;
+auto ffmpegOutputOptions = QStringList();
+auto ffmpegOutputCommands = QHash<QString, QString>();
+QString ffmpegInputCommand = "-pixel_format %1 -f rawvideo -s %2x%3 -i - ";
+
+static void initFfmpegOutputCommands() {
   static const char* keys[] = {
     QT_TRANSLATE_NOOP("Video formats", "Raw data"),
     QT_TRANSLATE_NOOP("Video formats", "AVI (raw)"),
     QT_TRANSLATE_NOOP("Video formats", "AVI (processed)")
   };
-  cmd[QApplication::tr("Video formats", keys[0])] = QString();
-  cmd[QApplication::tr("Video formats", keys[1])] = "-f avi -codec rawvideo";
-  cmd[QApplication::tr("Video formats", keys[2])] = "-f avi -codec huffyuv";
-  return cmd;
+  ffmpegOutputOptions = {
+    QApplication::translate("Video formats", keys[0]),
+    QApplication::translate("Video formats", keys[1]),
+    QApplication::translate("Video formats", keys[2])
+  };
+  ffmpegOutputCommands[ffmpegOutputOptions[0]] = QString();
+  ffmpegOutputCommands[ffmpegOutputOptions[1]] = "-f avi -codec rawvideo";
+  ffmpegOutputCommands[ffmpegOutputOptions[2]] = "-f avi -codec huffyuv";
 }
-
-QHash<QString, QString> ffmpegOutputCommands = initFfmpegOutputCommands();
-QString ffmpegInputCommand = "-pixel_format %1 -f rawvideo -s %2x%3 -i - ";
-
 
 MainWindow::MainWindow():
   QMainWindow(), camera(NULL), playing(false), recording(false),
@@ -76,8 +79,8 @@ MainWindow::MainWindow():
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/") + *i + ".svgz")));
 
-  for (auto i = ffmpegOutputCommands.begin(); i != ffmpegOutputCommands.end(); i++)
-    videoFormatSelector->addItem(i.key());
+  if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
+  videoFormatSelector->addItems(ffmpegOutputOptions);
 
   QSettings settings;
   restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
