@@ -60,8 +60,8 @@ MainWindow::MainWindow():
 
   recordingfile = new QFile(this);
 
-  qDebug() << "Please ignore \"Could not resolve property\" warnings "
-           "unless icons look bad.";
+  qWarning() << "Please ignore \"Could not resolve property\" warnings "
+             "unless icons look bad.";
   setupUi(this);
 
   // Setup theme icons if available.
@@ -432,7 +432,7 @@ void MainWindow::startVideo(bool start) {
       invalidImage = QImage(camera->getFrameSize(), QImage::Format_RGB32);
       invalidImage.fill(Qt::red);
       if (decoder == NULL)
-        qDebug() << "Decoder for" << camera->getPixelFormat() <<
+        qCritical() << "Decoder for" << camera->getPixelFormat() <<
         "doesn't exist!";
       else {
         camera->startAcquisition();
