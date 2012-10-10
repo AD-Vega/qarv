@@ -27,6 +27,7 @@
 #include <QMetaType>
 #include <QImage>
 #include <QHostAddress>
+#include <QAbstractItemModel>
 
 //! Initialize glib and aravis. Call this once in the main program.
 void arcamInit();
@@ -41,6 +42,9 @@ struct _ArvBuffer;
 typedef _ArvBuffer ArvBuffer;
 struct _ArvStream;
 typedef _ArvStream ArvStream;
+struct _ArvGc;
+typedef _ArvGc ArvGc;
+class ArFeatureTree;
 /**@}*/
 
 //! Objects of this class are used to identify cameras.
@@ -68,7 +72,7 @@ Q_DECLARE_METATYPE(ArCamId)
  * The arcamInit() function must be called once in the main program before
  * this class is used.
  */
-class ArCam : public QObject {
+class ArCam : public QAbstractItemModel {
   Q_OBJECT
 
 public:
@@ -169,6 +173,22 @@ private:
   bool acquiring;
 
   friend void streamCallback(ArvStream* stream, ArCam* cam);
+
+public:
+  //! \name QAbstractItemModel implementation
+  /**@{*/
+  QModelIndex index(int row, int column,
+                    const QModelIndex& parent = QModelIndex()) const;
+  QModelIndex parent(const QModelIndex& index) const;
+  int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const;
+  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+  Qt::ItemFlags flags ( const QModelIndex & index ) const;
+  /**@}*/
+
+private:
+  ArvGc* genicam;
+  ArFeatureTree* featuretree;
 };
 
 #endif // ARCAM_H

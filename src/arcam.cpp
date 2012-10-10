@@ -54,17 +54,23 @@ ArCamId::~ArCamId() {
   if(model != NULL) free((void*)model);
 }
 
+ArFeatureTree* createFeaturetree(ArvGc* cam);
+void freeFeaturetree(ArFeatureTree* tree);
+
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
  */
 ArCam::ArCam(ArCamId id, QObject* parent):
-  QObject(parent), acquiring(false) {
+  QAbstractItemModel(parent), acquiring(false) {
   camera = arv_camera_new(id.id);
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
   device = arv_camera_get_device(camera);
+  genicam = arv_device_get_genicam(device);
+  featuretree = createFeaturetree(genicam);
 }
 
 ArCam::~ArCam() {
+  freeFeaturetree(featuretree);
   stopAcquisition();
   g_object_unref(camera);
 }
@@ -309,3 +315,168 @@ QHostAddress ArCam::getHostIP() {
 int ArCam::getEstimatedBW() {
   return arv_device_get_integer_feature_value(device, "GevSCDCT");
 }
+
+/* QAbstractItemModel implementation ######################################## */
+
+class ArFeatureTree {
+public:
+  ArFeatureTree(ArFeatureTree* parent = NULL, const char* feature = NULL);
+  ~ArFeatureTree();
+  ArFeatureTree* parent();
+  QList<ArFeatureTree*> children();
+  const char* feature();
+  int row();
+
+private:
+  void addChild(ArFeatureTree* child);
+  void removeChild(ArFeatureTree* child);
+  ArFeatureTree* parent_;
+  QList<ArFeatureTree*> children_;
+  const char* feature_;
+};
+
+ArFeatureTree::ArFeatureTree(ArFeatureTree* parent, const char* feature):
+  children_() {
+  if (feature == NULL) feature_ = strdup("");
+  else feature_ = strdup(feature);
+  parent_ = parent;
+  if (parent_ != NULL) parent_->addChild(this);
+}
+
+ArFeatureTree::~ArFeatureTree() {
+  delete feature_;
+  if (parent_ != NULL) parent_->removeChild(this);
+  for (auto child = children_.begin(); child != children_.end(); child++)
+    delete *child;
+}
+
+void ArFeatureTree::addChild(ArFeatureTree* child) {
+  children_ << child;
+}
+
+QList< ArFeatureTree* > ArFeatureTree::children() {
+  return children_;
+}
+
+const char* ArFeatureTree::feature() {
+  return feature_;
+}
+
+ArFeatureTree* ArFeatureTree::parent() {
+  return parent_;
+}
+
+void ArFeatureTree::removeChild(ArFeatureTree* child) {
+  children_.removeAll(child);
+}
+
+int ArFeatureTree::row() {
+  if (parent_ == NULL) return 0;
+  auto litter = parent_->children();
+  return litter.indexOf(this);
+}
+
+void recursiveMerge(ArvGc* cam, ArFeatureTree* tree, ArvGcNode* node) {
+  const GSList* child = arv_gc_category_get_features(ARV_GC_CATEGORY(node));
+  for (; child != NULL; child = child->next) {
+    ArvGcNode* newnode = arv_gc_get_node(cam, (const char*)(child->data));
+    auto newtree = new ArFeatureTree(tree, (const char*)(child->data));
+    if (ARV_IS_GC_CATEGORY(newnode)) recursiveMerge(cam, newtree, newnode);
+  }
+}
+
+ArFeatureTree* createFeaturetree(ArvGc* cam) {
+  ArFeatureTree* tree = new ArFeatureTree(NULL, "Root");
+  ArvGcNode* node = arv_gc_get_node(cam, tree->feature());
+  recursiveMerge(cam, tree, node);
+  return tree;
+}
+
+void freeFeaturetree(ArFeatureTree* tree) {
+  auto children = tree->children();
+  for (auto child = children.begin(); child != children.end(); child++)
+    freeFeaturetree(*child);
+  delete tree;
+}
+
+QModelIndex ArCam::index(int row, int column, const QModelIndex& parent) const {
+  if(column != 0) return QModelIndex();
+  ArFeatureTree* treenode;
+  if (!parent.isValid()) treenode = featuretree;
+  else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
+  auto children = treenode->children();
+  if (row < 0 || row >= children.size()) return QModelIndex();
+  return createIndex(row, column, children.at(row));
+}
+
+QModelIndex ArCam::parent(const QModelIndex& index) const {
+  ArFeatureTree* treenode;
+  if (!index.isValid()) treenode = featuretree;
+  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  if (treenode->parent() == NULL) return QModelIndex();
+  auto parent = treenode->parent();
+  return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
+}
+
+int ArCam::columnCount(const QModelIndex& parent) const {
+  return 1;
+}
+
+int ArCam::rowCount(const QModelIndex& parent) const {
+  ArFeatureTree* treenode;
+  if (!parent.isValid()) treenode = featuretree;
+  else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
+  return treenode->children().count();
+}
+
+QVariant ArCam::data(const QModelIndex& index, int role) const {
+  ArFeatureTree* treenode;
+  if (!index.isValid()) treenode = featuretree;
+  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
+  
+  if (!ARV_IS_GC_FEATURE_NODE(node)) {
+    qDebug() << "data:" << "Node" << treenode->feature() << "is not valid!";
+    return QVariant();
+  }
+
+  const char* string;
+  ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
+
+  switch (role) {
+  case Qt::DisplayRole:
+    string =
+      arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(node), NULL);
+    if (string == NULL)
+      string = arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+    if (string == NULL) {
+      qDebug() << "Node has no name!?";
+      return QVariant();
+    }
+    return QVariant(string);
+  case Qt::ToolTipRole:
+  case Qt::StatusTipRole:
+  case Qt::WhatsThisRole:
+    string =
+      arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
+    if (string == NULL) return QVariant();
+    return QVariant(string);
+  case Qt::UserRole:
+    if (ARV_IS_GC_INTEGER(node)) return QVariant("int");
+    if (ARV_IS_GC_FLOAT(node)) return QVariant("float");
+    if (ARV_IS_GC_STRING(node)) return QVariant("string");
+    if (ARV_IS_GC_ENUMERATION(node)) return QVariant("enum");
+    if (ARV_IS_GC_COMMAND(node)) return QVariant("command");
+    if (ARV_IS_GC_BOOLEAN(node)) return QVariant("bool");
+    if (ARV_IS_GC_REGISTER(node)) return QVariant("register");
+    if (ARV_IS_GC_CATEGORY(node)) return QVariant("category");
+    if (ARV_IS_GC_PORT(node)) return QVariant("port");
+  default:
+    return QVariant();
+  }
+}
+
+Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
+  return QAbstractItemModel::flags(index);
+}
+

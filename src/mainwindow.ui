@@ -14,8 +14,8 @@
    <string>qarv</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="showVideoButton">
@@ -110,14 +110,14 @@
       </item>
      </layout>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item>
+    <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -819,10 +819,22 @@
        <attribute name="title">
         <string>Advanced settings</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QTreeView" name="advancedTree">
+          <property name="animated">
+           <bool>true</bool>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
-    <item>
+    <item row="3" column="0">
      <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
