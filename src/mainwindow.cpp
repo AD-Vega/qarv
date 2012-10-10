@@ -276,10 +276,8 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   camera->setAutoGain(false);
   camera->setAutoExposure(false);
 
-  auto indexx = camera->index(1, 0, QModelIndex());
-  qDebug() << camera->parent(camera->index(2,0,indexx));
-
   advancedTree->setModel(camera);
+  advancedTree->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   autoreadexposure->start();
 }
