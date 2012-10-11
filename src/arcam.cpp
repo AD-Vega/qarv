@@ -465,16 +465,6 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
         arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
       if (string == NULL) return QVariant();
       return QVariant(string);
-    case Qt::UserRole:
-      if (ARV_IS_GC_INTEGER(node)) return QVariant("int");
-      if (ARV_IS_GC_FLOAT(node)) return QVariant("float");
-      if (ARV_IS_GC_STRING(node)) return QVariant("string");
-      if (ARV_IS_GC_ENUMERATION(node)) return QVariant("enum");
-      if (ARV_IS_GC_COMMAND(node)) return QVariant("command");
-      if (ARV_IS_GC_BOOLEAN(node)) return QVariant("bool");
-      if (ARV_IS_GC_REGISTER(node)) return QVariant("register");
-      if (ARV_IS_GC_CATEGORY(node)) return QVariant("category");
-      if (ARV_IS_GC_PORT(node)) return QVariant("port");
     default:
       return QVariant();
     }
@@ -482,17 +472,96 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
     switch (role) {
       case Qt::DisplayRole:
       case Qt::EditRole:
-      if (ARV_IS_GC_ENUMERATION(node))
-        return QVariant(arv_gc_feature_node_get_value_as_string(fnode, NULL));
-      if (ARV_IS_GC_STRING(node))
-        return arv_gc_string_get_value(ARV_GC_STRING(node), NULL);
-      if (ARV_IS_GC_FLOAT(node))
-        return arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
-      if (ARV_IS_GC_INTEGER(node))
-        return (quint64)(arv_gc_integer_get_value(ARV_GC_INTEGER(node), NULL));
-      if (ARV_IS_GC_BOOLEAN(node))
-        return (bool)(arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node), NULL));
-      return QVariant(arv_gc_feature_node_get_value_as_string(fnode, NULL));
+      if (ARV_IS_GC_REGISTER_NODE(node) &&
+          QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) == "IntReg") {
+        ArRegister r;
+        r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
+        r.value = QByteArray(r.length, 0);
+        arv_gc_register_get(ARV_GC_REGISTER(node), r.value.data(), r.length, NULL);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)r);
+        else
+          return QVariant::fromValue(r);
+      }
+        if (ARV_IS_GC_ENUMERATION(node)) {
+        ArEnumeration e;
+        const GSList* entry =
+          arv_gc_enumeration_get_entries(ARV_GC_ENUMERATION(node));
+        for (; entry != NULL; entry = entry->next) {
+          bool isAvailable =
+          arv_gc_feature_node_is_available(ARV_GC_FEATURE_NODE(entry->data),
+                                           NULL);
+          bool isImplemented =
+          arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
+                                             NULL);
+          e.values << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
+          const char* name =
+            arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->data),
+                                                 NULL);
+          if (name == NULL)
+            e.names << e.values.last();
+          else
+            e.names << name;
+          if (isAvailable && isImplemented)
+            e.isAvailable << true;
+          else
+            e.isAvailable << false;
+        }
+        const char* current =
+          arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL);
+        e.currentValue = e.values.indexOf(current);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)e);
+        else
+          return QVariant::fromValue(e);
+      }
+      if (ARV_IS_GC_COMMAND(node)) {
+        ArCommand c;
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)c);
+        else
+          return QVariant::fromValue(c);
+      }
+      if (ARV_IS_GC_STRING(node)) {
+        ArString s;
+        s.value = arv_gc_string_get_value(ARV_GC_STRING(node), NULL);
+        s.maxlength = arv_gc_string_get_max_length(ARV_GC_STRING(node), NULL);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)s);
+        else
+          return QVariant::fromValue(s);
+      }
+      if (ARV_IS_GC_FLOAT(node)) {
+        ArFloat f;
+        f.value = arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
+        f.min = arv_gc_float_get_min(ARV_GC_FLOAT(node), NULL);
+        f.max = arv_gc_float_get_max(ARV_GC_FLOAT(node), NULL);
+        f.unit = arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)f);
+        else
+          return QVariant::fromValue(f);
+      }
+      if (ARV_IS_GC_BOOLEAN(node)) {
+        ArBoolean b;
+        b.value = arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node), NULL);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)b);
+        else
+          return QVariant::fromValue(b);
+      }
+      if (ARV_IS_GC_INTEGER(node)) {
+        ArInteger i;
+        i.value = arv_gc_integer_get_value(ARV_GC_INTEGER(node), NULL);
+        i.min = arv_gc_integer_get_min(ARV_GC_INTEGER(node), NULL);
+        i.max = arv_gc_integer_get_max(ARV_GC_INTEGER(node), NULL);
+        i.inc = arv_gc_integer_get_inc(ARV_GC_INTEGER(node), NULL);
+        if (role == Qt::DisplayRole)
+          return QVariant::fromValue((QString)i);
+        else
+          return QVariant::fromValue(i);
+      }
+      return QVariant();
     }
   } else return QVariant();
   return QVariant();
@@ -505,9 +574,9 @@ Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
 QVariant ArCam::headerData(int section, Qt::Orientation orientation, int role) const {
   switch (section) {
   case 0:
-    return QVariant(QString("Feature"));
+    return QVariant::fromValue(QString("Feature"));
   case 1:
-    return QVariant(QString("Value"));
+    return QVariant::fromValue(QString("Value"));
   }
   return QVariant();
 }

@@ -193,4 +193,69 @@ private:
   ArFeatureTree* featuretree;
 };
 
+//! \name Types that correspond to types of feature nodes
+/**@{*/
+/*!
+ * These types are used by the ArCam model and delegate to edit feature
+ * node values. Sometimes, a feature has several possible types (e.g. an
+ * enumeration can be either an enumeration, a string or an integer; an integer
+ * can be cast to a float etc.), but the delegate needs to be able to identify
+ * the type exactly. Therefore, each type is given a distinct class.
+ * When deciding what type to return, the model tries to match the
+ * highest-level type.
+ */
+
+struct ArEnumeration {
+  QList<QString> names;
+  QList<QString> values;
+  QList<bool> isAvailable;
+  int currentValue;
+  ArEnumeration(): values(), isAvailable() {}
+  operator QString() { return names[currentValue]; }
+};
+Q_DECLARE_METATYPE(ArEnumeration)
+
+struct ArString {
+  QString value;
+  qint64 maxlength;
+  ArString(): value() {}
+  operator QString() { return value; }
+};
+Q_DECLARE_METATYPE(ArString)
+
+struct ArFloat {
+  double value, min, max;
+  QString unit;
+  ArFloat(): unit() {}
+  operator QString() { return QString::number(value) + " " + unit; }
+};
+Q_DECLARE_METATYPE(ArFloat)
+
+struct ArInteger {
+  qint64 value, min, max, inc;
+  operator QString() { return QString::number(value); }
+};
+Q_DECLARE_METATYPE(ArInteger)
+
+struct ArBoolean {
+  bool value;
+  operator QString() { return value ? "on/true" : "off/false"; }
+};
+Q_DECLARE_METATYPE(ArBoolean)
+
+struct ArCommand {
+  operator QString() { return "<command>"; }
+};
+Q_DECLARE_METATYPE(ArCommand)
+
+struct ArRegister {
+  QByteArray value;
+  qint64 length;
+  ArRegister(): value() {}
+  operator QString() { return QString("0x") + value.toHex(); }
+};
+Q_DECLARE_METATYPE(ArRegister)
+
+/**@}*/
+
 #endif // ARCAM_H
