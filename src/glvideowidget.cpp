@@ -14,13 +14,13 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 #include "glvideowidget.h"
 #include <QDebug>
 
-GLVideoWidget::GLVideoWidget(QWidget* parent):
+GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   corner1(), corner2(), rectangle(), selecting(false),
   drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black),
@@ -63,7 +63,7 @@ void GLVideoWidget::resizeEvent(QResizeEvent* event) {
     float aspect = in.width() / (float)in.height();
     float vaspect = view.width() / (float)view.height();
     int x, y, w, h;
-    if(vaspect > aspect) {
+    if (vaspect > aspect) {
       h = view.height();
       w = aspect * h;
       y = view.y();
@@ -80,7 +80,8 @@ void GLVideoWidget::resizeEvent(QResizeEvent* event) {
 
 void GLVideoWidget::paintGL() {
   QPainter painter(this);
-  if (in.size() != out.size()) painter.setRenderHint(QPainter::SmoothPixmapTransform);
+  if (in.size() != out.size()) painter.setRenderHint(
+      QPainter::SmoothPixmapTransform);
   painter.drawImage(out, image);
 
   if (drawRectangle) {

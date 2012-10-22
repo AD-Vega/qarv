@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 #ifndef ARCAM_H
@@ -59,7 +59,7 @@ public:
   ArCamId(const char* id, const char* vendor, const char* model);
   ArCamId(const ArCamId& camid);
   ~ArCamId();
-  const char *id, *vendor, *model;
+  const char* id, * vendor, * model;
 };
 
 Q_DECLARE_METATYPE(ArCamId)
@@ -184,8 +184,8 @@ public:
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex & index) const;
-  QVariant headerData (int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const;
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role = Qt::DisplayRole) const;
   /**@}*/
 
 private:
@@ -210,7 +210,7 @@ struct ArEnumeration {
   QList<QString> values;
   QList<bool> isAvailable;
   int currentValue;
-  ArEnumeration(): values(), isAvailable() {}
+  ArEnumeration() : values(), isAvailable() {}
   operator QString() { return names[currentValue]; }
 };
 Q_DECLARE_METATYPE(ArEnumeration)
@@ -218,7 +218,7 @@ Q_DECLARE_METATYPE(ArEnumeration)
 struct ArString {
   QString value;
   qint64 maxlength;
-  ArString(): value() {}
+  ArString() : value() {}
   operator QString() { return value; }
 };
 Q_DECLARE_METATYPE(ArString)
@@ -226,7 +226,7 @@ Q_DECLARE_METATYPE(ArString)
 struct ArFloat {
   double value, min, max;
   QString unit;
-  ArFloat(): unit() {}
+  ArFloat() : unit() {}
   operator QString() { return QString::number(value) + " " + unit; }
 };
 Q_DECLARE_METATYPE(ArFloat)
@@ -251,7 +251,7 @@ Q_DECLARE_METATYPE(ArCommand)
 struct ArRegister {
   QByteArray value;
   qint64 length;
-  ArRegister(): value() {}
+  ArRegister() : value() {}
   operator QString() { return QString("0x") + value.toHex(); }
 };
 Q_DECLARE_METATYPE(ArRegister)

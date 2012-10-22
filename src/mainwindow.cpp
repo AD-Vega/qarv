@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 #include "mainwindow.h"
 
@@ -52,7 +52,7 @@ static void initFfmpegOutputCommands() {
   ffmpegOutputCommands[ffmpegOutputOptions[2]] = "-f avi -codec huffyuv";
 }
 
-MainWindow::MainWindow():
+MainWindow::MainWindow() :
   QMainWindow(), camera(NULL), playing(false), recording(false),
   started(false), decoder(NULL),
   imageTransform(), framecounter(0), currentFrame(),
@@ -61,7 +61,7 @@ MainWindow::MainWindow():
   recordingfile = new QFile(this);
 
   qWarning() << "Please ignore \"Could not resolve property\" warnings "
-             "unless icons look bad.";
+                "unless icons look bad.";
   setupUi(this);
 
   // Setup theme icons if available.
@@ -77,7 +77,8 @@ MainWindow::MainWindow():
   icons[editGainButton] = "edit-clear";
   icons[editExposureButton] = "edit-clear";
   for (auto i = icons.begin(); i != icons.end(); i++)
-    i.key()->setIcon(QIcon::fromTheme(*i, QIcon(QString(":/icons/") + *i + ".svgz")));
+    i.key()->setIcon(QIcon::fromTheme(*i,
+                                      QIcon(QString(":/icons/") + *i + ".svgz")));
 
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);
@@ -90,9 +91,11 @@ MainWindow::MainWindow():
   autoreadexposure->setInterval(sliderUpdateMsec);
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
-  this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(updateBandwidthEstimation()));
+  this->connect(autoreadexposure, SIGNAL(timeout()),
+                SLOT(updateBandwidthEstimation()));
 
-  video->connect(pickROIButton, SIGNAL(toggled(bool)), SLOT(enableSelection(bool)));
+  video->connect(pickROIButton, SIGNAL(toggled(bool)),
+                 SLOT(enableSelection(bool)));
   this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
 
   rotationSelector->addItem(tr("No rotation"), 0);
@@ -102,9 +105,12 @@ MainWindow::MainWindow():
   this->connect(rotationSelector,
                 SIGNAL(currentIndexChanged(int)),
                 SLOT(updateImageTransform()));
-  this->connect(invertColors, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
-  this->connect(flipHorizontal, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
-  this->connect(flipVertical, SIGNAL(stateChanged(int)), SLOT(updateImageTransform()));
+  this->connect(invertColors, SIGNAL(stateChanged(int)),
+                SLOT(updateImageTransform()));
+  this->connect(flipHorizontal, SIGNAL(stateChanged(int)),
+                SLOT(updateImageTransform()));
+  this->connect(flipVertical, SIGNAL(stateChanged(int)),
+                SLOT(updateImageTransform()));
 
   auto timer = new QTimer(this);
   timer->setInterval(1000);
@@ -174,19 +180,19 @@ static inline int value2slider_log(double value,
 }
 
 static inline double slider2value(int slidervalue,
-                                      QPair<double, double>& range) {
+                                  QPair<double, double>& range) {
   return range.first + (range.second - range.first) *
          slidervalue / slidersteps;
 }
 
 static inline int value2slider(double value,
-                                   QPair<double, double>& range) {
+                               QPair<double, double>& range) {
   return (value - range.first) / (range.second - range.first) * slidersteps;
 }
 
 void MainWindow::readROILimits() {
   auto roisize = camera->getROIMaxSize();
-  roirange = QRect(QPoint(0,0), roisize.size());
+  roirange = QRect(QPoint(0, 0), roisize.size());
   xSpinbox->setRange(0, roisize.width());
   ySpinbox->setRange(0, roisize.height());
   wSpinbox->setRange(roisize.x(), roisize.width());
@@ -223,7 +229,7 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
       }
     }
 
-    if(cameraIface.isValid()) {
+    if (cameraIface.isValid()) {
       int mtu = getMTU(cameraIface.name());
       camera->setMTU(mtu);
     }
@@ -250,7 +256,7 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   int noofframes = formats.length();
   pixelFormatSelector->blockSignals(true);
   pixelFormatSelector->clear();
-  for (int i=0; i<noofframes; i++)
+  for (int i = 0; i < noofframes; i++)
     pixelFormatSelector->addItem(formatnames.at(i), formats.at(i));
   auto format = camera->getPixelFormat();
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
@@ -418,7 +424,7 @@ void MainWindow::takeNextFrame() {
         recordingfile->write(frame);
       } else {
         img = img.convertToFormat(QImage::Format_RGB888);
-        for (int i=0; i<img.height(); i++)
+        for (int i = 0; i < img.height(); i++)
           recordingfile->write((char*)(img.scanLine(i)), img.bytesPerLine());
       }
     }
@@ -508,8 +514,9 @@ void MainWindow::on_recordButton_clicked(bool checked) {
         fmt = decoder->ffmpegPixfmtRaw();
         if (fmt.isNull()) {
           QMessageBox::information(this, tr("Unable to record"),
-                                   tr("AVI cannot store this pixel format in raw"
-                                      " form. Use processed form instead."));
+                                   tr(
+                                     "AVI cannot store this pixel format in raw"
+                                     " form. Use processed form instead."));
           open = false;
         }
       } else {
@@ -600,12 +607,12 @@ void MainWindow::on_snappathEdit_textChanged() {
 
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
   auto name = QFileDialog::getSaveFileName(this, tr("Open file"));
-  if(!name.isNull()) filenameEdit->setText(name);
+  if (!name.isNull()) filenameEdit->setText(name);
 }
 
 void MainWindow::on_chooseSnappathButton_clicked(bool checked) {
   auto name = QFileDialog::getExistingDirectory(this, tr("Choose directory"));
-  if(!name.isNull()) snappathEdit->setText(name);
+  if (!name.isNull()) snappathEdit->setText(name);
 }
 
 void MainWindow::on_fpsSpinbox_valueChanged(int value) {
@@ -680,7 +687,7 @@ void MainWindow::updateBandwidthEstimation() {
   }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
+void MainWindow::closeEvent(QCloseEvent* event) {
   QSettings settings;
   settings.setValue("mainwindow/geometry", saveGeometry());
   settings.setValue("mainwindow/state", saveState());

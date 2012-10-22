@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 #ifndef MAINWINDOW_H
@@ -72,7 +72,7 @@ private slots:
   void startVideo(bool start);
   void takeNextFrame();
   void updateBandwidthEstimation();
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent* event);
   void updateImageTransform();
   void showFPS();
 
@@ -84,7 +84,7 @@ private:
   FrameDecoder* decoder;
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
-  QTimer *autoreadexposure;
+  QTimer* autoreadexposure;
   bool playing, recording, started;
   QIODevice* recordingfile;
   QTransform imageTransform;

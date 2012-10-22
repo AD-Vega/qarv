@@ -14,7 +14,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 extern "C" {
   #include <arv.h>
@@ -34,7 +34,7 @@ void arcamInit() {
   arv_enable_interface("Fake");
 }
 
-ArCamId::ArCamId(): id(NULL), vendor(NULL), model(NULL) {}
+ArCamId::ArCamId() : id(NULL), vendor(NULL), model(NULL) {}
 
 ArCamId::ArCamId(const char* id_, const char* vendor_, const char* model_) {
   id = strdup(id_);
@@ -49,9 +49,9 @@ ArCamId::ArCamId(const ArCamId& camid) {
 }
 
 ArCamId::~ArCamId() {
-  if(id != NULL) free((void*)id);
-  if(vendor != NULL) free((void*)vendor);
-  if(model != NULL) free((void*)model);
+  if (id != NULL) free((void*)id);
+  if (vendor != NULL) free((void*)vendor);
+  if (model != NULL) free((void*)model);
 }
 
 ArFeatureTree* createFeaturetree(ArvGc* cam);
@@ -60,7 +60,7 @@ void freeFeaturetree(ArFeatureTree* tree);
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
  */
-ArCam::ArCam(ArCamId id, QObject* parent):
+ArCam::ArCam(ArCamId id, QObject* parent) :
   QAbstractItemModel(parent), acquiring(false) {
   camera = arv_camera_new(id.id);
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
@@ -97,7 +97,7 @@ QList<ArCamId> ArCam::listCameras() {
 }
 
 ArCamId ArCam::getId() {
-  const char *id, *vendor, *model;
+  const char* id, * vendor, * model;
   id = arv_camera_get_device_id(camera);
   vendor = arv_camera_get_vendor_name(camera);
   model = arv_camera_get_model_name(camera);
@@ -121,7 +121,7 @@ QRect ArCam::getROIMaxSize() {
 
 void ArCam::setROI(QRect roi) {
   int x, y, width, height;
-  roi.getRect(&x,&y, &width, &height);
+  roi.getRect(&x, &y, &width, &height);
   arv_camera_set_region(camera, x, y, width, height);
 }
 
@@ -137,10 +137,10 @@ void ArCam::setBinning(QSize bin) {
 
 QList< QString > ArCam::getPixelFormats() {
   unsigned int numformats;
-  const char ** formats =
+  const char** formats =
     arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
   QList<QString> list;
-  for (int i=0; i<numformats; i++)
+  for (int i = 0; i < numformats; i++)
     list << formats[i];
   free(formats);
   return list;
@@ -148,10 +148,10 @@ QList< QString > ArCam::getPixelFormats() {
 
 QList< QString > ArCam::getPixelFormatNames() {
   unsigned int numformats;
-  const char ** formats =
+  const char** formats =
     arv_camera_get_available_pixel_formats_as_display_names(camera, &numformats);
   QList<QString> list;
-  for (int i=0; i<numformats; i++) {
+  for (int i = 0; i < numformats; i++) {
     list << formats[i];
   }
   free(formats);
@@ -228,7 +228,7 @@ bool ArCam::hasAutoGain() {
 }
 
 void ArCam::setAutoGain(bool enable) {
-  if(enable)
+  if (enable)
     arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
   else
     arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
@@ -257,7 +257,7 @@ void ArCam::startAcquisition() {
   stream = arv_camera_create_stream(camera, NULL, NULL);
   arv_stream_set_emit_signals(stream, TRUE);
   g_signal_connect(stream, "new-buffer", G_CALLBACK(streamCallback), this);
-  for (int i=0; i<100; i++) {
+  for (int i = 0; i < 100; i++) {
     arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
   }
   arv_camera_start_acquisition(camera);
@@ -281,10 +281,11 @@ QSize ArCam::getFrameSize() {
  * \return A QByteArray with raw frame data of size given by getFrameSize().
  */
 QByteArray ArCam::getFrame(bool dropInvalid) {
-  if(currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
+  if (currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
   else
-    return QByteArray(static_cast<char*>(currentFrame->data), currentFrame->size);
+    return QByteArray(static_cast<char*>(currentFrame->data),
+                      currentFrame->size);
 }
 
 //! Translates betwen the glib and Qt address types via a native sockaddr.
@@ -335,7 +336,7 @@ private:
   const char* feature_;
 };
 
-ArFeatureTree::ArFeatureTree(ArFeatureTree* parent, const char* feature):
+ArFeatureTree::ArFeatureTree(ArFeatureTree* parent, const char* feature) :
   children_() {
   if (feature == NULL) feature_ = strdup("");
   else feature_ = strdup(feature);
@@ -399,8 +400,9 @@ void freeFeaturetree(ArFeatureTree* tree) {
   delete tree;
 }
 
-QModelIndex ArCam::index(int row, int column, const QModelIndex& parent) const {
-  if(column > 1) return QModelIndex();
+QModelIndex ArCam::index(int row, int column,
+                         const QModelIndex& parent) const {
+  if (column > 1) return QModelIndex();
   ArFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
   else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
@@ -458,6 +460,7 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
         return QVariant();
       }
       return QVariant(string);
+
     case Qt::ToolTipRole:
     case Qt::StatusTipRole:
     case Qt::WhatsThisRole:
@@ -465,38 +468,43 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
         arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
       if (string == NULL) return QVariant();
       return QVariant(string);
+
     default:
       return QVariant();
     }
   } else if (index.column() == 1) {
     switch (role) {
-      case Qt::DisplayRole:
-      case Qt::EditRole:
+    case Qt::DisplayRole:
+    case Qt::EditRole:
       if (ARV_IS_GC_REGISTER_NODE(node) &&
-          QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) == "IntReg") {
+          QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
+          "IntReg") {
         ArRegister r;
         r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
         r.value = QByteArray(r.length, 0);
-        arv_gc_register_get(ARV_GC_REGISTER(node), r.value.data(), r.length, NULL);
+        arv_gc_register_get(ARV_GC_REGISTER(node),
+                            r.value.data(), r.length, NULL);
         if (role == Qt::DisplayRole)
           return QVariant::fromValue((QString)r);
         else
           return QVariant::fromValue(r);
       }
-        if (ARV_IS_GC_ENUMERATION(node)) {
+      if (ARV_IS_GC_ENUMERATION(node)) {
         ArEnumeration e;
         const GSList* entry =
           arv_gc_enumeration_get_entries(ARV_GC_ENUMERATION(node));
         for (; entry != NULL; entry = entry->next) {
           bool isAvailable =
-          arv_gc_feature_node_is_available(ARV_GC_FEATURE_NODE(entry->data),
-                                           NULL);
-          bool isImplemented =
-          arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
+            arv_gc_feature_node_is_available(ARV_GC_FEATURE_NODE(entry->data),
                                              NULL);
-          e.values << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
+          bool isImplemented =
+            arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
+                                               NULL);
+          e.values <<
+          arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
           const char* name =
-            arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->data),
+            arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->
+                                                                     data),
                                                  NULL);
           if (name == NULL)
             e.names << e.values.last();
@@ -571,10 +579,12 @@ Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
   return QAbstractItemModel::flags(index);
 }
 
-QVariant ArCam::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant ArCam::headerData(int section, Qt::Orientation orientation,
+                           int role) const {
   switch (section) {
   case 0:
     return QVariant::fromValue(QString("Feature"));
+
   case 1:
     return QVariant::fromValue(QString("Value"));
   }
