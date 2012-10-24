@@ -28,6 +28,7 @@
 #include <QImage>
 #include <QHostAddress>
 #include <QAbstractItemModel>
+#include <QStyledItemDelegate>
 
 //! Initialize glib and aravis. Call this once in the main program.
 void arcamInit();
@@ -183,7 +184,10 @@ public:
   int rowCount(const QModelIndex& parent = QModelIndex()) const;
   int columnCount(const QModelIndex& parent = QModelIndex()) const;
   QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  Qt::ItemFlags flags(const QModelIndex & index) const;
+  bool setData(const QModelIndex& index,
+               const QVariant& value,
+               int role = Qt::EditRole);
+  Qt::ItemFlags flags(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const;
   /**@}*/
@@ -191,6 +195,31 @@ public:
 private:
   ArvGc* genicam;
   ArFeatureTree* featuretree;
+};
+
+//! ArCamDelegate provides editing widgets to go with the ArCam model.
+/*!
+ * Once a view is created for the data model provided by ArCam, use this
+ * delegate to provide editing widgets for the view.
+ */
+class ArCamDelegate : public QStyledItemDelegate {
+  Q_OBJECT
+
+public:
+  explicit ArCamDelegate(QObject* parent = 0);
+  QWidget* createEditor(QWidget* parent,
+                        const QStyleOptionViewItem& option,
+                        const QModelIndex& index) const;
+  void setEditorData(QWidget* editor, const QModelIndex& index) const;
+  void setModelData(QWidget* editor,
+                    QAbstractItemModel* model,
+                    const QModelIndex & index) const;
+  void updateEditorGeometry(QWidget* editor,
+                            const QStyleOptionViewItem& option,
+                            const QModelIndex & index) const;
+
+private slots:
+  void finishEditing();
 };
 
 //! \name Types that correspond to types of feature nodes
@@ -205,54 +234,104 @@ private:
  * highest-level type.
  */
 
-struct ArEnumeration {
+struct ArEditor : QWidget {
+  Q_OBJECT
+
+public:
+  ArEditor(QWidget* parent = 0) : QWidget(parent) {}
+
+signals:
+  void editingFinished();
+
+private slots:
+  void editingComplete() { emit editingFinished(); }
+
+  friend class ArEnumeration;
+  friend class ArString;
+  friend class ArFloat;
+  friend class ArInteger;
+  friend class ArBoolean;
+  friend class ArCommand;
+  friend class ArRegister;
+};
+
+struct ArType {
+  virtual operator QString() const = 0;
+  virtual ArEditor* createEditor(QWidget* parent = NULL) const = 0;
+  virtual void populateEditor(QWidget* editor) const = 0;
+  virtual void readFromEditor(QWidget* editor) = 0;
+};
+Q_DECLARE_METATYPE(ArType*)
+
+struct ArEnumeration : ArType {
   QList<QString> names;
   QList<QString> values;
   QList<bool> isAvailable;
   int currentValue;
   ArEnumeration() : values(), isAvailable() {}
-  operator QString() { return names[currentValue]; }
+  operator QString()  const { return names[currentValue]; }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArEnumeration)
 
-struct ArString {
+struct ArString : ArType {
   QString value;
   qint64 maxlength;
   ArString() : value() {}
-  operator QString() { return value; }
+  operator QString() const { return value; }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArString)
 
-struct ArFloat {
+struct ArFloat : ArType {
   double value, min, max;
   QString unit;
   ArFloat() : unit() {}
-  operator QString() { return QString::number(value) + " " + unit; }
+  operator QString() const { return QString::number(value) + " " + unit; }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArFloat)
 
-struct ArInteger {
+struct ArInteger : ArType {
   qint64 value, min, max, inc;
-  operator QString() { return QString::number(value); }
+  operator QString() const { return QString::number(value); }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArInteger)
 
-struct ArBoolean {
+struct ArBoolean : ArType {
   bool value;
-  operator QString() { return value ? "on/true" : "off/false"; }
+  operator QString() const { return value ? "on/true" : "off/false"; }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArBoolean)
 
-struct ArCommand {
-  operator QString() { return "<command>"; }
+struct ArCommand : ArType {
+  operator QString() const { return "<command>"; }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArCommand)
 
-struct ArRegister {
+struct ArRegister : ArType {
   QByteArray value;
   qint64 length;
   ArRegister() : value() {}
-  operator QString() { return QString("0x") + value.toHex(); }
+  operator QString() const { return QString("0x") + value.toHex(); }
+  ArEditor* createEditor(QWidget* parent) const;
+  void populateEditor(QWidget* editor) const;
+  void readFromEditor(QWidget* editor);
 };
 Q_DECLARE_METATYPE(ArRegister)
 

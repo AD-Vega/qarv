@@ -284,6 +284,7 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
   advancedTree->setModel(camera);
   advancedTree->header()->setResizeMode(QHeaderView::ResizeToContents);
+  advancedTree->setItemDelegate(new ArCamDelegate);
 
   autoreadexposure->start();
 }

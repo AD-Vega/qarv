@@ -23,9 +23,16 @@ extern "C" {
 }
 #include <cstdlib>
 #include <cstring>
+#include <cassert>
 
 #include "arcam.h"
 #include <QDebug>
+#include <QComboBox>
+#include <QLayout>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QPushButton>
 
 QList<ArCamId> ArCam::cameraList;
 
@@ -575,8 +582,72 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
+bool ArCam::setData(const QModelIndex& index, const QVariant& value,
+                    int role) {
+  QAbstractItemModel::setData(index, value, role);
+  if (!(index.model()->flags(index) & Qt::ItemIsEnabled) ||
+      !(index.model()->flags(index) & Qt::ItemIsEditable))
+    return false;
+
+  ArFeatureTree* treenode;
+  if (!index.isValid()) treenode = featuretree;
+  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  ArvGcFeatureNode* node =
+    ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+
+  if (value.canConvert<ArRegister>()) {
+    auto r = qvariant_cast<ArRegister>(value);
+    arv_gc_register_set(ARV_GC_REGISTER(node), r.value.data(), r.length, NULL);
+  } else if (value.canConvert<ArEnumeration>()) {
+    auto e = qvariant_cast<ArEnumeration>(value);
+    if (e.isAvailable.at(e.currentValue)) {
+      arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
+                                          e.values.at(
+                                            e.currentValue).toAscii().data(),
+                                          NULL);
+    } else return false;
+  } else if (value.canConvert<ArCommand>()) {
+    arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
+  } else if (value.canConvert<ArString>()) {
+    auto s = qvariant_cast<ArString>(value);
+    arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(), NULL);
+  } else if (value.canConvert<ArFloat>()) {
+    auto f = qvariant_cast<ArFloat>(value);
+    arv_gc_float_set_value(ARV_GC_FLOAT(node), f.value, NULL);
+  } else if (value.canConvert<ArBoolean>()) {
+    auto b = qvariant_cast<ArBoolean>(value);
+    arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), b.value, NULL);
+  } else if (value.canConvert<ArInteger>()) {
+    auto i = qvariant_cast<ArInteger>(value);
+    arv_gc_integer_set_value(ARV_GC_INTEGER(node), i.value, NULL);
+  } else
+    return false;
+
+  emit dataChanged(index, index);
+  return true;
+}
+
 Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
-  return QAbstractItemModel::flags(index);
+  auto f = QAbstractItemModel::flags(index);
+  if (index.column() != 1) return f;
+  else {
+    ArFeatureTree* treenode;
+    if (!index.isValid()) treenode = featuretree;
+    else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+    ArvGcFeatureNode* node =
+      ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+    int enabled =
+      arv_gc_feature_node_is_available(node, NULL) &&
+      arv_gc_feature_node_is_implemented(node, NULL) &&
+      !arv_gc_feature_node_is_locked(node, NULL);
+    if (!enabled) {
+      f &= ~Qt::ItemIsEnabled;
+      f &= ~Qt::ItemIsEditable;
+      qDebug() << QString(treenode->feature()) + "  is disabled";
+    } else
+      f |= Qt::ItemIsEditable;
+    return f;
+  }
 }
 
 QVariant ArCam::headerData(int section, Qt::Orientation orientation,
@@ -589,4 +660,221 @@ QVariant ArCam::headerData(int section, Qt::Orientation orientation,
     return QVariant::fromValue(QString("Value"));
   }
   return QVariant();
+}
+
+ArCamDelegate::ArCamDelegate(QObject* parent) : QStyledItemDelegate(parent) {}
+
+QWidget* ArCamDelegate::createEditor(QWidget* parent,
+                                     const QStyleOptionViewItem& option,
+                                     const QModelIndex& index) const {
+  auto var = index.model()->data(index, Qt::EditRole);
+  assert(var.isValid());
+  auto val = static_cast<ArType*>(var.data());
+  auto editor = val->createEditor(parent);
+  this->connect(editor, SIGNAL(editingFinished()), SLOT(finishEditing()));
+  return editor;
+}
+
+void ArCamDelegate::setEditorData(QWidget* editor,
+                                  const QModelIndex& index) const {
+  auto var = index.model()->data(index, Qt::EditRole);
+  assert(var.isValid());
+  auto val = static_cast<ArType*>(var.data());
+  val->populateEditor(editor);
+}
+
+void ArCamDelegate::setModelData(QWidget* editor,
+                                 QAbstractItemModel* model,
+                                 const QModelIndex& index) const {
+  auto var = model->data(index, Qt::EditRole);
+  assert(var.isValid());
+  auto val = static_cast<ArType*>(var.data());
+  val->readFromEditor(editor);
+  model->setData(index, var);
+}
+
+void ArCamDelegate::updateEditorGeometry(QWidget* editor,
+                                         const QStyleOptionViewItem& option,
+                                         const QModelIndex& index) const {
+  editor->layout()->setContentsMargins(0, 0, 0, 0);
+  editor->setGeometry(option.rect);
+}
+
+void ArCamDelegate::finishEditing() {
+  auto editor = qobject_cast<QWidget*>(sender());
+  emit commitData(editor);
+  emit closeEditor(editor);
+}
+
+ArEditor* ArEnumeration::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto select = new QComboBox(editor);
+  select->setObjectName("selectEnum");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(select);
+  editor->connect(select, SIGNAL(activated(int)), SLOT(editingComplete()));
+  return editor;
+}
+
+void ArEnumeration::populateEditor(QWidget* editor) const {
+  auto select = editor->findChild<QComboBox*>("selectEnum");
+  assert(select);
+  select->clear();
+  int choose = 0;
+  for (int i = 0; i < names.size(); i++) {
+    if (isAvailable.at(i)) {
+      select->addItem(names.at(i), QVariant::fromValue(values.at(i)));
+      if (i < currentValue) choose++;
+    }
+  }
+  select->setCurrentIndex(choose);
+}
+
+void ArEnumeration::readFromEditor(QWidget* editor) {
+  auto select = editor->findChild<QComboBox*>("selectEnum");
+  assert(select);
+  auto val = select->itemData(select->currentIndex());
+  currentValue = values.indexOf(val.toString());
+}
+
+ArEditor* ArString::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto edline = new QLineEdit(editor);
+  edline->setObjectName("editString");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(edline);
+  editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
+  return editor;
+}
+
+void ArString::populateEditor(QWidget* editor) const {
+  auto edline = editor->findChild<QLineEdit*>("editString");
+  assert(edline);
+  edline->setMaxLength(maxlength);
+  edline->setText(value);
+}
+
+void ArString::readFromEditor(QWidget* editor) {
+  auto edline = editor->findChild<QLineEdit*>("editString");
+  assert(edline);
+  value = edline->text();
+}
+
+ArEditor* ArFloat::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto edbox = new QDoubleSpinBox(editor);
+  edbox->setObjectName("editFloat");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(edbox);
+  editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
+  return editor;  
+}
+
+void ArFloat::populateEditor(QWidget* editor) const {
+  auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
+  assert(edbox);
+  edbox->setMaximum(max);
+  edbox->setMinimum(min);
+  edbox->setValue(value);
+  edbox->setSuffix(QString(" ") + unit);
+}
+
+void ArFloat::readFromEditor(QWidget* editor) {
+  auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
+  assert(edbox);
+  value = edbox->value();
+}
+
+ArEditor* ArInteger::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto edbox = new QSpinBox(editor);
+  edbox->setObjectName("editInteger");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(edbox);
+  editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
+  return editor;  
+}
+
+void ArInteger::populateEditor(QWidget* editor) const {
+  auto edbox = editor->findChild<QSpinBox*>("editInteger");
+  assert(edbox);
+  edbox->setMaximum(max < INT_MAX ? max : INT_MAX);
+  edbox->setMinimum(min > INT_MIN ? min : INT_MIN);
+  edbox->setValue(value);
+}
+
+void ArInteger::readFromEditor(QWidget* editor) {
+  auto edbox = editor->findChild<QSpinBox*>("editInteger");
+  assert(edbox);
+  value = edbox->value();
+}
+
+ArEditor* ArBoolean::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto check = new QCheckBox(editor);
+  check->setObjectName("editBool");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(check);
+  editor->connect(check, SIGNAL(clicked(bool)), SLOT(editingComplete()));
+  return editor;
+}
+
+void ArBoolean::populateEditor(QWidget* editor) const {
+  auto check = editor->findChild<QCheckBox*>("editBool");
+  assert(check);
+  check->setChecked(value);
+}
+
+void ArBoolean::readFromEditor(QWidget* editor) {
+  auto check = editor->findChild<QCheckBox*>("editBool");
+  assert(check);
+  value = check->isChecked();
+}
+
+ArEditor* ArCommand::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto button = new QPushButton(editor);
+  button->setObjectName("execCommand");
+  button->setText(QObject::tr("Execute"));
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(button);
+  editor->connect(button, SIGNAL(clicked(bool)), SLOT(editingComplete()));
+  return editor;
+}
+
+void ArCommand::populateEditor(QWidget* editor) const {}
+
+void ArCommand::readFromEditor(QWidget* editor) {}
+
+ArEditor* ArRegister::createEditor(QWidget* parent) const {
+  auto editor = new ArEditor(parent);
+  auto edline = new QLineEdit(editor);
+  edline->setObjectName("editRegister");
+  auto layout = new QHBoxLayout;
+  editor->setLayout(layout);
+  layout->addWidget(edline);
+  editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
+  return editor;
+}
+
+void ArRegister::populateEditor(QWidget* editor) const {
+  auto edline = editor->findChild<QLineEdit*>("editRegister");
+  assert(edline);
+  auto hexval = value.toHex();
+  QString imask("");
+  for (int i = 0; i < hexval.length(); i++) imask += "H";
+  edline->setInputMask(imask);
+  edline->setText(hexval);
+}
+
+void ArRegister::readFromEditor(QWidget* editor) {
+  auto edline = editor->findChild<QLineEdit*>("editRegister");
+  assert(edline);
+  value.fromHex(edline->text().toAscii());
 }
