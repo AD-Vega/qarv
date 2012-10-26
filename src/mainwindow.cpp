@@ -531,6 +531,8 @@ void MainWindow::on_recordButton_clicked(bool checked) {
                                      "AVI cannot store this pixel format in raw"
                                      " form. Use processed form instead."));
           open = false;
+        } else {
+          open = true;
         }
       } else {
         fmt = "rgb24";
