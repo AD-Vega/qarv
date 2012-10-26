@@ -649,6 +649,7 @@ void MainWindow::pickedROI(QRect roi) {
   ySpinbox->setValue(current.y() + roi.y());
   wSpinbox->setValue(roi.width());
   hSpinbox->setValue(roi.height());
+  on_applyROIButton_clicked(true);
 }
 
 void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
