@@ -21,10 +21,7 @@
 #include <QTranslator>
 #include "mainwindow.h"
 #include "arcam.h"
-
-#ifndef QARV_PREFIX
-#define QARV_PREFIX "/usr/local/"
-#endif
+#include "globals.h"
 
 int main(int argc, char** argv) {
   arcamInit();
@@ -32,7 +29,7 @@ int main(int argc, char** argv) {
   QTranslator trans;
   auto locale = QLocale::system().name();
   qDebug() << "Detected locale:" << locale;
-  if (!trans.load(QString("qarv_") + locale, QARV_PREFIX "/share/qarv/"))
+  if (!trans.load(QString("qarv_") + locale, qarv_datafiles))
     qDebug() << "No translation found for selected locale.";
   a.installTranslator(&trans);
 

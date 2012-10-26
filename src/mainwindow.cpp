@@ -28,6 +28,7 @@
 #include <QProcess>
 
 #include "getmtu_linux.h"
+#include "globals.h"
 
 const int slidersteps = 1000;
 const int sliderUpdateMsec = 300;
@@ -78,7 +79,7 @@ MainWindow::MainWindow() :
   icons[editExposureButton] = "edit-clear";
   for (auto i = icons.begin(); i != icons.end(); i++)
     i.key()->setIcon(QIcon::fromTheme(*i,
-                                      QIcon(QString(":/icons/") + *i + ".svgz")));
+                                      QIcon(QString(qarv_datafiles) + *i + ".svgz")));
 
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);

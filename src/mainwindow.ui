@@ -26,8 +26,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/video-display.svgz</normaloff>:/icons/video-display.svgz</iconset>
+         <iconset theme="video-display"/>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -46,8 +45,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/zoom-original.svgz</normaloff>:/icons/zoom-original.svgz</iconset>
+         <iconset theme="zoom-original"/>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -66,8 +64,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/document-save.svgz</normaloff>:/icons/document-save.svgz</iconset>
+         <iconset theme="document-save"/>
         </property>
        </widget>
       </item>
@@ -83,8 +80,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/media-record.svgz</normaloff>:/icons/media-record.svgz</iconset>
+         <iconset theme="media-record"/>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -100,8 +96,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/media-playback-start.svgz</normaloff>:/icons/media-playback-start.svgz</iconset>
+         <iconset theme="media-playback-start"/>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -166,8 +161,7 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons/icons.qrc">
-                   <normaloff>:/icons/view-refresh.svgz</normaloff>:/icons/view-refresh.svgz</iconset>
+                  <iconset theme="view-refresh"/>
                  </property>
                 </widget>
                </item>
@@ -432,8 +426,7 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons/icons.qrc">
-                   <normaloff>:/icons/edit-clear.svgz</normaloff>:/icons/edit-clear.svgz</iconset>
+                  <iconset theme="edit-clear"/>
                  </property>
                 </widget>
                </item>
@@ -506,8 +499,7 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset resource="../res/icons/icons.qrc">
-                   <normaloff>:/icons/edit-clear.svgz</normaloff>:/icons/edit-clear.svgz</iconset>
+                  <iconset theme="edit-clear"/>
                  </property>
                 </widget>
                </item>
@@ -667,8 +659,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../res/icons/icons.qrc">
-              <normaloff>:/icons/document-open.svgz</normaloff>:/icons/document-open.svgz</iconset>
+             <iconset theme="document-open"/>
             </property>
            </widget>
           </item>
@@ -742,8 +733,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../res/icons/icons.qrc">
-              <normaloff>:/icons/document-open.svgz</normaloff>:/icons/document-open.svgz</iconset>
+             <iconset theme="document-open"/>
             </property>
            </widget>
           </item>
@@ -877,9 +867,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../res/icons/icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>showVideoButton</sender>
