@@ -30,7 +30,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="243"/>
-        <location filename="../src/mainwindow.cpp" line="677"/>
+        <location filename="../src/mainwindow.cpp" line="688"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
@@ -49,23 +49,23 @@ Consider increasing the MTU!</source>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="518"/>
+        <location filename="../src/mainwindow.cpp" line="520"/>
         <source>Unable to record</source>
         <translation>Snemanje ni mogoče</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="519"/>
+        <location filename="../src/mainwindow.cpp" line="521"/>
         <source>AVI cannot store this pixel format in raw form. Use processed form instead.</source>
         <translation>Surov AVI video ne podpira izbranega tipa pikslov. Namesto tega uporabi obdelano obliko AVI videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="611"/>
-        <location filename="../src/mainwindow.cpp" line="646"/>
+        <location filename="../src/mainwindow.cpp" line="621"/>
+        <location filename="../src/mainwindow.cpp" line="657"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="616"/>
+        <location filename="../src/mainwindow.cpp" line="626"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
@@ -205,34 +205,34 @@ Predlagamo večji MTU.</translation>
         <translation>Združevanje:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="334"/>
-        <source>Draw a rectangle on the video display, then click Apply.</source>
-        <translation>Nariši pravokotnik na prikazovalniku videa in pritisni &quot;Uveljavi&quot;.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="337"/>
+        <location filename="../src/mainwindow.ui" line="347"/>
         <source>Pick</source>
         <translation>Izberi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="347"/>
+        <location filename="../src/mainwindow.ui" line="357"/>
         <source>Reset ROI to the maximum, effective immediately.</source>
         <translation>Nastavi izrez na največjo možno velikost. Izrez se uveljavi takoj.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="350"/>
+        <location filename="../src/mainwindow.ui" line="360"/>
         <source>Reset</source>
         <translation>Maksimiraj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="359"/>
+        <location filename="../src/mainwindow.ui" line="332"/>
         <source>Set the camera&apos;s ROI.</source>
         <translation>Nastavi izbrani izrez.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="362"/>
+        <location filename="../src/mainwindow.ui" line="335"/>
         <source>Apply</source>
         <translation>Uveljavi</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="344"/>
+        <source>Select ROI by drawing a rectangle on the video display.</source>
+        <translation>Za izbiro izreza nariši pravokotnik na prikazu videa.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="380"/>
@@ -318,8 +318,8 @@ Predlagamo večji MTU.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="614"/>
-        <source>Overexposed pixels are colored pink.</source>
-        <translation>Preosvetljeni piksli bodo obarvani rožnato.</translation>
+        <source>Overexposed pixels are colored pink. Very fast for grayscale frames, slow for color frames.</source>
+        <translation>Preosvetljeni piksli se obarvajo rožnato. Postopek je zelo hiter za črno-bel video, a počasen za barven video.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="617"/>
