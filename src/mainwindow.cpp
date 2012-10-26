@@ -746,6 +746,7 @@ void MainWindow::on_editGainButton_clicked(bool checked) {
 void MainWindow::on_gainSpinbox_editingFinished() {
   camera->setGain(gainSpinbox->value());
   gainSpinbox->setReadOnly(true);
+  gainSpinbox->clearFocus();
   readGain();
   autoreadexposure->start();
 }
@@ -753,6 +754,7 @@ void MainWindow::on_gainSpinbox_editingFinished() {
 void MainWindow::on_exposureSpinbox_editingFinished() {
   camera->setExposure(exposureSpinbox->value()*1000);
   exposureSpinbox->setReadOnly(true);
+  exposureSpinbox->clearFocus();
   readExposure();
   autoreadexposure->start();
 }
