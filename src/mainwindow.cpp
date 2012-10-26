@@ -337,17 +337,18 @@ void MainWindow::on_pixelFormatSelector_currentIndexChanged(int index) {
 void MainWindow::on_applyROIButton_clicked(bool clicked) {
   QRect ROI(xSpinbox->value(), ySpinbox->value(),
             wSpinbox->value(), hSpinbox->value());
-  if (roirange.contains(ROI)) {
-    bool tostart = started;
-    startVideo(false);
-    camera->setROI(ROI);
-    QRect roi = camera->getROI();
-    xSpinbox->setValue(roi.x());
-    ySpinbox->setValue(roi.y());
-    wSpinbox->setValue(roi.width());
-    hSpinbox->setValue(roi.height());
-    startVideo(tostart);
-  }
+
+  ROI = roirange.intersect(ROI);
+
+  bool tostart = started;
+  startVideo(false);
+  camera->setROI(ROI);
+  QRect roi = camera->getROI();
+  xSpinbox->setValue(roi.x());
+  ySpinbox->setValue(roi.y());
+  wSpinbox->setValue(roi.width());
+  hSpinbox->setValue(roi.height());
+  startVideo(tostart);
 }
 
 void MainWindow::on_resetROIButton_clicked(bool clicked) {
