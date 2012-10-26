@@ -22,12 +22,18 @@
 #include "mainwindow.h"
 #include "arcam.h"
 
+#ifndef QARV_PREFIX
+#define QARV_PREFIX "/usr/local/"
+#endif
+
 int main(int argc, char** argv) {
   arcamInit();
   QApplication a(argc, argv);
   QTranslator trans;
   auto locale = QLocale::system().name();
-  trans.load(QString("qarv_") + locale);
+  qDebug() << "Detected locale:" << locale;
+  if (!trans.load(QString("qarv_") + locale, QARV_PREFIX "/share/qarv/"))
+    qDebug() << "No translation found for selected locale.";
   a.installTranslator(&trans);
 
   QCoreApplication::setOrganizationDomain("ad-vega.si");

@@ -19,6 +19,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src ${ARAVIS_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "-std=c++0x -O3")
+add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
@@ -35,3 +36,5 @@ target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
 
 install(TARGETS qarv
         RUNTIME DESTINATION bin/)
+install(FILES ${qarv_TRANS}
+        DESTINATION share/qarv/)
