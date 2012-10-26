@@ -78,8 +78,8 @@ MainWindow::MainWindow() :
   icons[editGainButton] = "edit-clear";
   icons[editExposureButton] = "edit-clear";
   for (auto i = icons.begin(); i != icons.end(); i++)
-    i.key()->setIcon(QIcon::fromTheme(*i,
-                                      QIcon(QString(qarv_datafiles) + *i + ".svgz")));
+    if (!QIcon::hasThemeIcon(*i))
+      i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
 
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);
