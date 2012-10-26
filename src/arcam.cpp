@@ -852,7 +852,7 @@ ArEditor* ArCommand::createEditor(QWidget* parent) const {
   auto editor = new ArEditor(parent);
   auto button = new QPushButton(editor);
   button->setObjectName("execCommand");
-  button->setText(QObject::tr("Execute"));
+  button->setText(QObject::tr("Execute", "ArCam"));
   auto layout = new QHBoxLayout;
   editor->setLayout(layout);
   layout->addWidget(button);
