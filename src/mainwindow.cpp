@@ -197,9 +197,9 @@ static inline int value2slider(double value,
 
 void MainWindow::readROILimits() {
   auto roisize = camera->getROIMaxSize();
-  roirange = QRect(QPoint(0, 0), roisize.size());
-  xSpinbox->setRange(0, roisize.width());
-  ySpinbox->setRange(0, roisize.height());
+  roirange = QRect(QPoint(1, 1), roisize.size());
+  xSpinbox->setRange(1, roisize.width());
+  ySpinbox->setRange(1, roisize.height());
   wSpinbox->setRange(roisize.x(), roisize.width());
   hSpinbox->setRange(roisize.y(), roisize.height());
 }
