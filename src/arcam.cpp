@@ -326,6 +326,15 @@ int ArCam::getEstimatedBW() {
 
 /* QAbstractItemModel implementation ######################################## */
 
+//! A class that stores the hirearchy of camera features.
+/*! String identifiers are used to get feature nodes from Aravis. At first it
+ * seems that a QAbstractItemModel can be implemented by only using Aravis
+ * functions to walk the feature hirearchy, but it turns out there is no way
+ * to find a feature's parent that way. Also, string identifiers returned by
+ * Aravis are not persistent and need to be copied. Therefore, a tree to store
+ * feature identifiers is used by the model. It is assumed that the hirearchy
+ * is static.
+ */
 class ArFeatureTree {
 public:
   ArFeatureTree(ArFeatureTree* parent = NULL, const char* feature = NULL);
@@ -384,6 +393,8 @@ int ArFeatureTree::row() {
   return litter.indexOf(this);
 }
 
+//! Walk the Aravis feature tree and copy it as an ArFeatureTree.
+/**@{*/
 void recursiveMerge(ArvGc* cam, ArFeatureTree* tree, ArvGcNode* node) {
   const GSList* child = arv_gc_category_get_features(ARV_GC_CATEGORY(node));
   for (; child != NULL; child = child->next) {
@@ -399,6 +410,7 @@ ArFeatureTree* createFeaturetree(ArvGc* cam) {
   recursiveMerge(cam, tree, node);
   return tree;
 }
+/**@}*/
 
 void freeFeaturetree(ArFeatureTree* tree) {
   auto children = tree->children();

@@ -72,6 +72,12 @@ Q_DECLARE_METATYPE(ArCamId)
  * Only the parts that differ significantly from that interface are documented.
  * The arcamInit() function must be called once in the main program before
  * this class is used.
+ *
+ * This class implements the QAbstractItemModel interface. This means that it
+ * can be used as a data source for widgets such as QTreeView. An ArCamDelegate
+ * is also provided to facilitate direct access to all camera features. The
+ * model has two columns, the first being the name of the feature and the
+ * second being the (editable) feature value.
  */
 class ArCam : public QAbstractItemModel {
   Q_OBJECT
@@ -101,7 +107,7 @@ public:
   //! \name Choose pixel format
   /**@{*/
   /*!
-   * The lists returned by ::getPixelFormat() and ::getPixelFormatNames()
+   * The lists returned by getPixelFormat() and getPixelFormatNames()
    * are congruent.
    */
   QList<QString> getPixelFormats();
@@ -222,18 +228,11 @@ private slots:
   void finishEditing();
 };
 
-//! \name Types that correspond to types of feature nodes
-/**@{*/
-/*!
- * These types are used by the ArCam model and delegate to edit feature
- * node values. Sometimes, a feature has several possible types (e.g. an
- * enumeration can be either an enumeration, a string or an integer; an integer
- * can be cast to a float etc.), but the delegate needs to be able to identify
- * the type exactly. Therefore, each type is given a distinct class.
- * When deciding what type to return, the model tries to match the
- * highest-level type.
+//! ArEditor is a QWidget that contains the actual editing widgets.
+/*! It is used to translate whichever signal is emitted by the actual widgets
+ * when editig is finished into the editingFinished() signal which can be
+ * used by ArCamDelegate.
  */
-
 struct ArEditor : QWidget {
   Q_OBJECT
 
@@ -254,6 +253,18 @@ private slots:
   friend class ArCommand;
   friend class ArRegister;
 };
+
+//! \name Types that correspond to types of feature nodes
+/**@{*/
+/*!
+ * These types are used by the ArCam model and delegate to edit feature
+ * node values. Sometimes, a feature has several possible types (e.g. an
+ * enumeration can be either an enumeration, a string or an integer; an integer
+ * can be cast to a float etc.), but the delegate needs to be able to identify
+ * the type exactly. Therefore, each type is given a distinct class.
+ * When deciding what type to return, the model tries to match the
+ * highest-level type. Each type also provides its own editing widget.
+ */
 
 struct ArType {
   virtual operator QString() const = 0;
