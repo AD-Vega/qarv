@@ -388,6 +388,25 @@ static QVector<QRgb> initHighlightColors() {
 
 static QVector<QRgb> highlightColors = initHighlightColors();
 
+void MainWindow::transformImage(QImage& img) {
+  if (imageTransform.type() != QTransform::TxNone)
+    img = img.transformed(imageTransform);
+  if (invertColors->isChecked()) img.invertPixels();
+
+  if (markClipped->isChecked()) {
+    if (img.format() == QImage::Format_Indexed8) {
+      auto colors = img.colorTable();
+      colors[255] = qRgb(255, 0, 200);
+      img.setColorTable(colors);
+    } else {
+      auto mask = img.createMaskFromColor(qRgb(255, 255, 255));
+      mask.setColorTable(highlightColors);
+      QPainter painter(&img);
+      painter.drawImage(img.rect(), mask);
+    }
+  }
+}
+
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
@@ -400,24 +419,7 @@ void MainWindow::takeNextFrame() {
     if (playing || videoFormatSelector->currentIndex() >= 2) {
       if (frame.isEmpty()) img = invalidImage;
       else img = decoder->decode(frame);
-
-      if (imageTransform.type() != QTransform::TxNone)
-        img = img.transformed(imageTransform);
-      if (invertColors->isChecked()) img.invertPixels();
-
-      if (markClipped->isChecked()) {
-        if (img.format() == QImage::Format_Indexed8) {
-          auto colors = img.colorTable();
-          colors[255] = qRgb(255, 0, 200);
-          img.setColorTable(colors);
-        } else {
-          auto mask = img.createMaskFromColor(qRgb(255, 255, 255));
-          mask.setColorTable(highlightColors);
-          QPainter painter(&img);
-          painter.drawImage(img.rect(), mask);
-        }
-      }
-
+      transformImage(img);
       if (playing) video->setImage(img);
     }
 
@@ -527,8 +529,16 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       }
       if (open) {
         cmd = cmd.arg(fmt);
-        cmd = cmd.arg(camera->getFrameSize().width());
-        cmd = cmd.arg(camera->getFrameSize().height());
+        if (videoFormatSelector->currentIndex() < 2) {
+          cmd = cmd.arg(camera->getFrameSize().width());
+          cmd = cmd.arg(camera->getFrameSize().height());
+        } else {
+          QImage emptyimg(camera->getFrameSize().width(),
+                          camera->getFrameSize().height(), QImage::Format_Mono);
+	  transformImage(emptyimg);
+          cmd = cmd.arg(emptyimg.width());
+          cmd = cmd.arg(emptyimg.height());
+        }
         cmd += ffmpegOutputCommands[videoFormatSelector->currentText()];
         cmd += QString(" -r %1 -").arg(fpsSpinbox->value());
 

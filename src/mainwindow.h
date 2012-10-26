@@ -78,6 +78,7 @@ private slots:
 
 private:
   void readROILimits();
+  void transformImage(QImage& img);
 
   QImage invalidImage;
   ArCam* camera;
