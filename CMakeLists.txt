@@ -23,7 +23,7 @@ add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
-#set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
+set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h mainwindow.h arcam.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
@@ -36,7 +36,7 @@ target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
 
 set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
   edit-clear.svgz media-playback-start.svgz media-record.svgz video-display.svgz
-  view-refresh.svgz zoom-original.svgz)
+  view-refresh.svgz zoom-original.svgz qarv.svgz)
 
 install(TARGETS qarv
         RUNTIME DESTINATION bin/)

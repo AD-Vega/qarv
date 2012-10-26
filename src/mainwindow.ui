@@ -7,111 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>624</width>
-    <height>624</height>
+    <height>612</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>qarv</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../res/icons/icons.qrc">
+    <normaloff>:/icons/qarv.svgz</normaloff>:/icons/qarv.svgz</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="showVideoButton">
-        <property name="toolTip">
-         <string>Show or hide video display.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="video-display"/>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="unzoomButton">
-        <property name="toolTip">
-         <string>Fix display size to video size.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="zoom-original"/>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="snapButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Store a snapshot.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="document-save"/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="recordButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Record video. Depress to pause recording, press again to resume.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="media-record"/>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="playButton">
-        <property name="toolTip">
-         <string>Display video.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="media-playback-start"/>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -161,7 +68,9 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="view-refresh"/>
+                  <iconset theme="view-refresh">
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -369,6 +278,19 @@
          </layout>
         </item>
         <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QGroupBox" name="Exposure">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -426,7 +348,9 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="edit-clear"/>
+                  <iconset theme="edit-clear">
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -499,7 +423,9 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="edit-clear"/>
+                  <iconset theme="edit-clear">
+                   <normaloff/>
+                  </iconset>
                  </property>
                 </widget>
                </item>
@@ -659,7 +585,9 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset theme="document-open"/>
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
             </property>
            </widget>
           </item>
@@ -733,7 +661,9 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset theme="document-open"/>
+             <iconset theme="document-open">
+              <normaloff/>
+             </iconset>
             </property>
            </widget>
           </item>
@@ -819,20 +749,147 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="aboutTab">
+       <attribute name="title">
+        <string>About</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_19">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012 Jure Varlec, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_18">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="../res/icons/icons.qrc">:/icons/qarv.svgz</pixmap>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
-    <item row="3" column="0">
-     <spacer name="verticalSpacer_2">
+    <item row="1" column="0">
+     <widget class="Line" name="line">
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Horizontal</enum>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="showVideoButton">
+        <property name="toolTip">
+         <string>Show or hide video display.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="video-display">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="unzoomButton">
+        <property name="toolTip">
+         <string>Fix display size to video size.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="zoom-original">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="snapButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Store a snapshot.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save">
+          <normaloff/>
+         </iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="recordButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Record video. Depress to pause recording, press again to resume.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="media-record">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="playButton">
+        <property name="toolTip">
+         <string>Display video.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="media-playback-start">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -867,7 +924,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../res/icons/icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>showVideoButton</sender>
