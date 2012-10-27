@@ -30,7 +30,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="247"/>
-        <location filename="../src/mainwindow.cpp" line="696"/>
+        <location filename="../src/mainwindow.cpp" line="699"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
@@ -49,23 +49,23 @@ Consider increasing the MTU!</source>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="528"/>
+        <location filename="../src/mainwindow.cpp" line="529"/>
         <source>Unable to record</source>
         <translation>Snemanje ni mogoče</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="530"/>
         <source>AVI cannot store this pixel format in raw form. Use processed form instead.</source>
         <translation>Surov AVI video ne podpira izbranega tipa pikslov. Namesto tega uporabi obdelano obliko AVI videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
-        <location filename="../src/mainwindow.cpp" line="665"/>
+        <location filename="../src/mainwindow.cpp" line="632"/>
+        <location filename="../src/mainwindow.cpp" line="668"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="634"/>
+        <location filename="../src/mainwindow.cpp" line="637"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
@@ -77,40 +77,137 @@ Predlagamo večji MTU.</translation>
         <source>qarv</source>
         <translation></translation>
     </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="55"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select camera.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Izberi kamero.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="65"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Refresh camera list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Osveži seznam kamer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="96"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the camera&apos;s pixel format.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Izberi tip zapisa pikslov.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="136"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera&apos;s frame rate setting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastavitev števila slik na sekundo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="149"/>
+        <location filename="../src/mainwindow.ui" line="159"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Actual frame rate.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dejansko število slik na sekundo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="241"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the camera&apos;s ROI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastavi izbrani izrez.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="253"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select ROI by drawing a rectangle on the video display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Za izbiro izreza nariši pravokotnik na prikazu videa.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="266"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset ROI to the maximum, effective immediately.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastavi izrez na največjo možno velikost. Izrez se uveljavi takoj.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="345"/>
+        <location filename="../src/mainwindow.ui" line="420"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter value manually.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ročni vnos.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="362"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let camera control sensor gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Naj kamera sama nadzoruje ojačanje.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="437"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let camera control exposure time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Naj kamera sama nadzoruje čas osvetlitve.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="527"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Invalid frames will not be recorded and will be displayed as pure red.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Okvarjene slike ne bodo posnete, bodo pa prikazane v rdeči barvi.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="540"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overexposed pixels are colored pink. Very fast for grayscale frames, slow for color frames.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preosvetljeni piksli se obarvajo rožnato. Postopek je zelo hiter za črno-bel video, a počasen za barven video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="572"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Snapshot will be put in this directory. Unique timestamps will be used as file names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Posnetki bodo shranjeni v ta direktorij. Ime posamezne slike bo čas posnetka.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="582"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Odpri direktorij.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="608"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Frame data is simply dumped into the file undecoded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Slika bo shranjena v obliki, ki jo pošlje kamera.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="621"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The saved snapshot is as shown in the Video Display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shranjena bo slika, ki je na prikazovalniku.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="648"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The file to store recorded video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Datoteka, kamor se bo snemal video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="658"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Odpri datoteko.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="675"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Označi to možnost, če naj snemanje dopolnjuje obstoječo datoteko, namesto da bi jo prepisalo. To je mogoče le pri surovem tipu videa. Nastavitve kamere morajo ustrezati obstoječemu videu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="685"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose a file to store camera settings.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Izberi datoteko za izpis nastavitev kamere.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="704"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose format of recorded video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Izberi tip videa za snemanje.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="714"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Izklop gumba &quot;Snemaj&quot; običajno le začasno ustavi snemanje. Ta gumb snemanje zaključi ter dokonča in zapre datoteko z videom.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="729"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Unless the video format is &amp;quot;Raw data&amp;quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &amp;quot;.log&amp;quot; suffix.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Če ni izbran tip videa &amp;quot;Surovi podatki&amp;quot;, snemanje teče preko zunanjega programa. Označi to možnost, če naj ta program beleži svoja sporočila. Datoteka s sporočili bo imela enako ime kot datoteka za video, z dodatno končnico &amp;quot;.log&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
     <message utf8="true">
         <location filename="../src/mainwindow.ui" line="760"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012 Jure Varlec, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012 Jure Varlec, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;qarv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona qarv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="799"/>
-        <source>Show or hide video display.</source>
-        <translation>Prikaži ali skrij prikazovalnik videa.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="820"/>
-        <source>Show or hide histogram display.</source>
-        <translation>Prikaži ali skrij histogram.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="839"/>
-        <source>Fix display size to video size.</source>
-        <translation>Fiksiraj prikazovalnik na izvorno velikost videa.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="860"/>
-        <source>Store a snapshot.</source>
-        <translation>Shrani trenutno sliko.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="878"/>
-        <source>Record video. Depress to pause recording, press again to resume.</source>
-        <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="896"/>
-        <source>Display video.</source>
-        <translation>Prikaži video.</translation>
+        <location filename="../src/mainwindow.ui" line="953"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logarithmic histogram.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logaritemski histogram.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="29"/>
@@ -128,16 +225,6 @@ Predlagamo večji MTU.</translation>
         <translation>Kamera:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="55"/>
-        <source>Select camera.</source>
-        <translation>Izberi kamero.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="65"/>
-        <source>Refresh camera list.</source>
-        <translation>Osveži seznam kamer.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="82"/>
         <source>FPS:</source>
         <translation>Slik na sekundo:</translation>
@@ -146,11 +233,6 @@ Predlagamo večji MTU.</translation>
         <location filename="../src/mainwindow.ui" line="89"/>
         <source>Pixel format:</source>
         <translation>Tip zapisa pikslov:</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="96"/>
-        <source>Select the camera&apos;s pixel format.</source>
-        <translation>Izberi tip zapisa pikslov.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="106"/>
@@ -167,17 +249,6 @@ Predlagamo večji MTU.</translation>
         <location filename="../src/mainwindow.ui" line="120"/>
         <source>Bandwidth:</source>
         <translation>Pasovna širina:</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="136"/>
-        <source>Camera&apos;s frame rate setting.</source>
-        <translation>Nastavitev števila slik na sekundo.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="149"/>
-        <location filename="../src/mainwindow.ui" line="159"/>
-        <source>Actual frame rate.</source>
-        <translation>Dejansko število slik na sekundo.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="152"/>
@@ -220,29 +291,14 @@ Predlagamo večji MTU.</translation>
         <translation>Izberi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="266"/>
-        <source>Reset ROI to the maximum, effective immediately.</source>
-        <translation>Nastavi izrez na največjo možno velikost. Izrez se uveljavi takoj.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="269"/>
         <source>Reset</source>
         <translation>Maksimiraj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="241"/>
-        <source>Set the camera&apos;s ROI.</source>
-        <translation>Nastavi izbrani izrez.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="244"/>
         <source>Apply</source>
         <translation>Uveljavi</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="253"/>
-        <source>Select ROI by drawing a rectangle on the video display.</source>
-        <translation>Za izbiro izreza nariši pravokotnik na prikazu videa.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="302"/>
@@ -253,17 +309,6 @@ Predlagamo večji MTU.</translation>
         <location filename="../src/mainwindow.ui" line="313"/>
         <source>Gain:</source>
         <translation>Ojačanje:</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="345"/>
-        <location filename="../src/mainwindow.ui" line="420"/>
-        <source>Enter value manually.</source>
-        <translation>Ročni vnos.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="362"/>
-        <source>Let camera control sensor gain.</source>
-        <translation>Naj kamera sama nadzoruje ojačanje.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="365"/>
@@ -280,11 +325,6 @@ Predlagamo večji MTU.</translation>
         <location filename="../src/mainwindow.ui" line="407"/>
         <source> ms</source>
         <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="437"/>
-        <source>Let camera control exposure time.</source>
-        <translation>Naj kamera sama nadzoruje čas osvetlitve.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="456"/>
@@ -317,19 +357,9 @@ Predlagamo večji MTU.</translation>
         <translation>Razno</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="527"/>
-        <source>Invalid frames will not be recorded and will be displayed as pure red.</source>
-        <translation>Okvarjene slike ne bodo posnete, bodo pa prikazane v rdeči barvi.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="530"/>
         <source>Drop incomplete/invalid frames</source>
         <translation>Zavrzi okvarjene slike</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="540"/>
-        <source>Overexposed pixels are colored pink. Very fast for grayscale frames, slow for color frames.</source>
-        <translation>Preosvetljeni piksli se obarvajo rožnato. Postopek je zelo hiter za črno-bel video, a počasen za barven video.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="543"/>
@@ -347,34 +377,14 @@ Predlagamo večji MTU.</translation>
         <translation>Direktorij za slike:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="572"/>
-        <source>Snapshot will be put in this directory. Unique timestamps will be used as file names.</source>
-        <translation>Posnetki bodo shranjeni v ta direktorij. Ime posamezne slike bo čas posnetka.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="582"/>
-        <source>Open directory.</source>
-        <translation>Odpri direktorij.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="599"/>
         <source>Snapshot format:</source>
         <translation>Tip slike:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="608"/>
-        <source>Frame data is simply dumped into the file undecoded.</source>
-        <translation>Slika bo shranjena v obliki, ki jo pošlje kamera.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="611"/>
         <source>Raw data</source>
         <translation>Surovi podatki</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="621"/>
-        <source>The saved snapshot is as shown in the Video Display.</source>
-        <translation>Shranjena bo slika, ki je na prikazovalniku.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="624"/>
@@ -387,29 +397,9 @@ Predlagamo večji MTU.</translation>
         <translation>Datoteka za video:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="648"/>
-        <source>The file to store recorded video.</source>
-        <translation>Datoteka, kamor se bo snemal video.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="658"/>
-        <source>Open file.</source>
-        <translation>Odpri datoteko.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="675"/>
-        <source>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</source>
-        <translation>Označi to možnost, če naj snemanje dopolnjuje obstoječo datoteko, namesto da bi jo prepisalo. To je mogoče le pri surovem tipu videa. Nastavitve kamere morajo ustrezati obstoječemu videu.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="678"/>
         <source>Append to existing file instead of truncating</source>
         <translation>Dopolnjuj obstoječo datoteko</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="685"/>
-        <source>Choose a file to store camera settings.</source>
-        <translation>Izberi datoteko za izpis nastavitev kamere.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="688"/>
@@ -422,24 +412,9 @@ Predlagamo večji MTU.</translation>
         <translation>Tip videa:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="704"/>
-        <source>Choose format of recorded video.</source>
-        <translation>Izberi tip videa.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="714"/>
-        <source>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</source>
-        <translation>Izklop gumba &quot;Snemaj&quot; običajno le začasno ustavi snemanje. Ta gumb snemanje zaključi ter dokonča in zapre datoteko z videom.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="717"/>
         <source>Close file</source>
         <translation>Zaključi snemanje</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="729"/>
-        <source>Unless the video format is &quot;Raw data&quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &quot;.log&quot; suffix.</source>
-        <translation>Če ni izbran tip videa &quot;Surovi podatki&quot;, snemanje teče preko zunanjega programa. Označi to možnost, če naj ta program beleži svoja sporočila. Datoteka s sporočili bo imela enako ime kot datoteka za video, z dodatno končnico &quot;.log&quot;.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="732"/>
@@ -457,21 +432,42 @@ Predlagamo večji MTU.</translation>
         <translation>O programu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="939"/>
+        <location filename="../src/mainwindow.ui" line="799"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show or hide video display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prikaži ali skrij prikazovalnik videa.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="820"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show or hide histogram display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prikaži ali skrij histogram.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="841"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fix display size to video size.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fiksiraj prikazovalnik na izvorno velikost videa.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="862"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Store a snapshot.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shrani trenutno sliko.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="880"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Record video. Depress to pause recording, press again to resume.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="898"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prikaži video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="941"/>
         <source>qarv Histogram</source>
         <translation>qarv Histogram</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="951"/>
-        <source>Logarithmic histogram.</source>
-        <translation>Logaritemski histogram.</translation>
-    </message>
-    <message utf8="true">
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;h2&gt;qarv&lt;/h2&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012 Jure Varlec, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;h2&gt;qarv&lt;/h2&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012 Jure Varlec, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="917"/>
+        <location filename="../src/mainwindow.ui" line="919"/>
         <source>qarv Video Display</source>
         <translation>qarv Prikaz videa</translation>
     </message>
