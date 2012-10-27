@@ -55,7 +55,7 @@ static void initFfmpegOutputCommands() {
 
 MainWindow::MainWindow() :
   QMainWindow(), camera(NULL), playing(false), recording(false),
-  started(false), decoder(NULL),
+  started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), currentFrame(),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
@@ -77,6 +77,8 @@ MainWindow::MainWindow() :
   icons[chooseSnappathButton] = "document-open";
   icons[editGainButton] = "edit-clear";
   icons[editExposureButton] = "edit-clear";
+  icons[showHistogramButton] = "office-chart-bar";
+  icons[histogramLog] = "view-object-histogram-logarithmic";
   for (auto i = icons.begin(); i != icons.end(); i++)
     if (!QIcon::hasThemeIcon(*i))
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
@@ -94,6 +96,8 @@ MainWindow::MainWindow() :
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
   this->connect(autoreadexposure, SIGNAL(timeout()),
                 SLOT(updateBandwidthEstimation()));
+  this->connect(autoreadexposure, SIGNAL(timeout()),
+		SLOT(histogramNextFrame()));
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
                  SLOT(enableSelection(bool)));
@@ -416,11 +420,15 @@ void MainWindow::takeNextFrame() {
     }
 
     QImage img;
-    if (playing || videoFormatSelector->currentIndex() >= 2) {
+    if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2) {
       if (frame.isEmpty()) img = invalidImage;
       else img = decoder->decode(frame);
       transformImage(img);
       if (playing) video->setImage(img);
+      if (drawHistogram) {
+	histogram->fromImage(img);
+	drawHistogram = false;
+      }
     }
 
     if (recording && !frame.isEmpty()) {
@@ -762,6 +770,19 @@ void MainWindow::on_videodock_topLevelChanged(bool floating) {
   }
 }
 
+void MainWindow::on_histogramdock_visibilityChanged(bool visible) {
+  showHistogramButton->blockSignals(true);
+  showHistogramButton->setChecked(visible);
+  showHistogramButton->blockSignals(false);
+}
+
+void MainWindow::on_histogramdock_topLevelChanged(bool floating) {
+  if (floating) {
+    histogramdock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    histogramdock->setVisible(true);
+  }
+}
+
 void MainWindow::on_closeFileButton_clicked(bool checked) {
   on_filenameEdit_textChanged(filenameEdit->text());
 }
@@ -774,4 +795,8 @@ void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
     recordApendCheck->setEnabled(true);
     recordLogCheck->setEnabled(false);
   }
+}
+
+void MainWindow::histogramNextFrame() {
+  drawHistogram = true;
 }

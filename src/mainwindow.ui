@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
+    <width>738</width>
     <height>612</height>
    </rect>
   </property>
@@ -815,6 +815,25 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="showHistogramButton">
+        <property name="toolTip">
+         <string>Show or hide histogram display.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="office-chart-bar"/>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="unzoomButton">
         <property name="toolTip">
          <string>Fix display size to video size.</string>
@@ -915,6 +934,61 @@
     </property>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="histogramdock">
+   <property name="windowTitle">
+    <string>qarv Histogram</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="widget">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QPushButton" name="histogramLog">
+         <property name="toolTip">
+          <string>Logarithmic histogram.</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset theme="view-object-histogram-logarithmic"/>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="GLHistogramWidget" name="histogram" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -922,6 +996,15 @@
    <extends>QWidget</extends>
    <header>glvideowidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GLHistogramWidget</class>
+   <extends>QWidget</extends>
+   <header>glhistogramwidget.h</header>
+   <container>1</container>
+   <slots>
+    <slot>setLogarithmic(bool)</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -941,6 +1024,38 @@
     <hint type="destinationlabel">
      <x>58</x>
      <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showHistogramButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>histogramdock</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>182</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>676</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>histogramLog</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>histogram</receiver>
+   <slot>setLogarithmic(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>657</x>
+     <y>200</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>283</y>
     </hint>
    </hints>
   </connection>

@@ -64,6 +64,8 @@ private slots:
   void on_gainSpinbox_editingFinished();
   void on_videodock_visibilityChanged(bool visible);
   void on_videodock_topLevelChanged(bool floating);
+  void on_histogramdock_visibilityChanged(bool visible);
+  void on_histogramdock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
   void on_videoFormatSelector_currentIndexChanged(int index);
   void pickedROI(QRect roi);
@@ -75,6 +77,7 @@ private slots:
   void closeEvent(QCloseEvent* event);
   void updateImageTransform();
   void showFPS();
+  void histogramNextFrame();
 
 private:
   void readROILimits();
@@ -86,7 +89,7 @@ private:
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer* autoreadexposure;
-  bool playing, recording, started;
+  bool playing, recording, started, drawHistogram;
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;
