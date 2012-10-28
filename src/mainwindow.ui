@@ -929,7 +929,7 @@
   </widget>
   <widget class="QDockWidget" name="videodock">
    <property name="windowTitle">
-    <string>qarv Video Display</string>
+    <string>Video Display – qarv</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>
@@ -951,7 +951,7 @@
   </widget>
   <widget class="QDockWidget" name="histogramdock">
    <property name="windowTitle">
-    <string>qarv Histogram</string>
+    <string>Histogram – qarv</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

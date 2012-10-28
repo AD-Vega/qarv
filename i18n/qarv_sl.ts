@@ -470,15 +470,15 @@ Predlagamo večji MTU.</translation>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prikaži video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="954"/>
-        <source>qarv Histogram</source>
-        <translation>qarv Histogram</translation>
-    </message>
-    <message>
+    <message utf8="true">
         <location filename="../src/mainwindow.ui" line="932"/>
-        <source>qarv Video Display</source>
-        <translation>qarv Prikaz videa</translation>
+        <source>Video Display – qarv</source>
+        <translation>Prikaz videa – qarv</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../src/mainwindow.ui" line="954"/>
+        <source>Histogram – qarv</source>
+        <translation>Histogram – qarv</translation>
     </message>
 </context>
 <context>
