@@ -320,8 +320,10 @@ Q_DECLARE_METATYPE(ArInteger)
 
 struct ArBoolean : ArType {
   bool value;
-  operator QString() const { 
-    return value ? QObject::tr("on/true", "ArCam") : QObject::tr("off/false", "ArCam");
+  operator QString() const {
+    return value ?
+           QObject::tr("on/true", "ArCam") :
+           QObject::tr("off/false", "ArCam");
   }
   ArEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;

@@ -97,7 +97,7 @@ MainWindow::MainWindow() :
   this->connect(autoreadexposure, SIGNAL(timeout()),
                 SLOT(updateBandwidthEstimation()));
   this->connect(autoreadexposure, SIGNAL(timeout()),
-		SLOT(histogramNextFrame()));
+                SLOT(histogramNextFrame()));
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
                  SLOT(enableSelection(bool)));
@@ -427,8 +427,8 @@ void MainWindow::takeNextFrame() {
       transformImage(img);
       if (playing) video->setImage(img);
       if (drawHistogram) {
-	histogram->fromImage(img);
-	drawHistogram = false;
+        histogram->fromImage(img);
+        drawHistogram = false;
       }
     }
 
@@ -546,7 +546,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
         } else {
           QImage emptyimg(camera->getFrameSize().width(),
                           camera->getFrameSize().height(), QImage::Format_Mono);
-	  transformImage(emptyimg);
+          transformImage(emptyimg);
           cmd = cmd.arg(emptyimg.width());
           cmd = cmd.arg(emptyimg.height());
         }

@@ -32,7 +32,7 @@ public:
 
   void paintGL();
   void fromImage(QImage& image);
-  
+
 public slots:
   void setLogarithmic(bool logarithmic);
 

@@ -793,7 +793,7 @@ ArEditor* ArFloat::createEditor(QWidget* parent) const {
   editor->setLayout(layout);
   layout->addWidget(edbox);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
-  return editor;  
+  return editor;
 }
 
 void ArFloat::populateEditor(QWidget* editor) const {
@@ -819,7 +819,7 @@ ArEditor* ArInteger::createEditor(QWidget* parent) const {
   editor->setLayout(layout);
   layout->addWidget(edbox);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
-  return editor;  
+  return editor;
 }
 
 void ArInteger::populateEditor(QWidget* editor) const {

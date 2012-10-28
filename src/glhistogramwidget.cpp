@@ -49,12 +49,12 @@ void GLHistogramWidget::fromImage(QImage& image) {
     for (int i = 0; i < image.height(); i++) {
       const uchar* line = image.scanLine(i);
       for (int j = 0; j < image.width(); j++) {
-	histRed[line[j]] += 1;
+        histRed[line[j]] += 1;
       }
     }
     if (logarithmic)
       for (int i = 0; i < 256; i++)
-	histRed[i] = log2(histRed[i] + 1);
+        histRed[i] = log2(histRed[i] + 1);
   } else {
     indexed = false;
     for (int i = 0; i < 256; i++)
@@ -63,18 +63,18 @@ void GLHistogramWidget::fromImage(QImage& image) {
     for (int i = 0; i < img.height(); i++) {
       const uchar* line = img.scanLine(i);
       for (int j = 0; j < 3*img.width(); j += 3) {
-	histRed[line[j]] += 1;
-	histGreen[line[j+1]] += 1;
-	histBlue[line[j+2]] += 1;
+        histRed[line[j]] += 1;
+        histGreen[line[j+1]] += 1;
+        histBlue[line[j+2]] += 1;
       }
     }
     if (logarithmic) {
       float* histograms[] = { histRed, histGreen, histBlue };
       for (int c = 0; c < 3; c++)
-	for (int i = 0; i < 256; i++) {
-	  float* h = histograms[c] + i;
-	  *h = log2(*h + 1);
-	}
+        for (int i = 0; i < 256; i++) {
+          float* h = histograms[c] + i;
+          *h = log2(*h + 1);
+        }
     }
   }
   update();
