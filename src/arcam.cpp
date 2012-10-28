@@ -273,7 +273,7 @@ void ArCam::startAcquisition() {
   stream = arv_camera_create_stream(camera, NULL, NULL);
   arv_stream_set_emit_signals(stream, TRUE);
   g_signal_connect(stream, "new-buffer", G_CALLBACK(streamCallback), this);
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 30; i++) {
     arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
   }
   arv_camera_start_acquisition(camera);
