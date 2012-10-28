@@ -130,6 +130,7 @@ void ArCam::setROI(QRect roi) {
   int x, y, width, height;
   roi.getRect(&x, &y, &width, &height);
   arv_camera_set_region(camera, x, y, width, height);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QSize ArCam::getBinning() {
@@ -140,6 +141,7 @@ QSize ArCam::getBinning() {
 
 void ArCam::setBinning(QSize bin) {
   arv_camera_set_binning(camera, bin.width(), bin.height());
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QList< QString > ArCam::getPixelFormats() {
@@ -172,6 +174,7 @@ QString ArCam::getPixelFormat() {
 void ArCam::setPixelFormat(QString format) {
   auto tmp = format.toAscii();
   arv_camera_set_pixel_format_from_string(camera, tmp.constData());
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double ArCam::getFPS() {
@@ -180,6 +183,7 @@ double ArCam::getFPS() {
 
 void ArCam::setFPS(double fps) {
   arv_camera_set_frame_rate(camera, fps);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 int ArCam::getMTU() {
@@ -189,6 +193,7 @@ int ArCam::getMTU() {
 void ArCam::setMTU(int mtu) {
   arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
   arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double ArCam::getExposure() {
@@ -197,6 +202,7 @@ double ArCam::getExposure() {
 
 void ArCam::setExposure(double exposure) {
   arv_camera_set_exposure_time(camera, exposure);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 bool ArCam::hasAutoExposure() {
@@ -208,6 +214,7 @@ void ArCam::setAutoExposure(bool enable) {
     arv_camera_set_exposure_time_auto(camera, ARV_AUTO_CONTINUOUS);
   else
     arv_camera_set_exposure_time_auto(camera, ARV_AUTO_OFF);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double ArCam::getGain() {
@@ -216,6 +223,7 @@ double ArCam::getGain() {
 
 void ArCam::setGain(double gain) {
   arv_camera_set_gain(camera, gain);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QPair< double, double > ArCam::getExposureLimits() {
@@ -239,6 +247,7 @@ void ArCam::setAutoGain(bool enable) {
     arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
   else
     arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 //! Store the pointer to the current frame.
@@ -269,6 +278,7 @@ void ArCam::startAcquisition() {
   }
   arv_camera_start_acquisition(camera);
   acquiring = true;
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 void ArCam::stopAcquisition() {
@@ -277,6 +287,7 @@ void ArCam::stopAcquisition() {
   g_object_unref(currentFrame);
   g_object_unref(stream);
   acquiring = false;
+  emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QSize ArCam::getFrameSize() {
