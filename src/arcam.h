@@ -280,7 +280,9 @@ struct ArEnumeration : ArType {
   QList<bool> isAvailable;
   int currentValue;
   ArEnumeration() : values(), isAvailable() {}
-  operator QString()  const { return names[currentValue]; }
+  operator QString()  const {
+    return currentValue >= 0 ? names[currentValue] : QString();
+  }
   ArEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
