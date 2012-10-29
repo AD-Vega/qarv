@@ -98,6 +98,7 @@ private:
   QSize oldsize;
   QList<QWidget*> toDisableWhenPlaying;
   QList<QWidget*> toDisableWhenRecording;
+  QIcon recordIcon, pauseIcon, playIcon;
 };
 
 #endif

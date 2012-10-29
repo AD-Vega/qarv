@@ -39,7 +39,8 @@ target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
 set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
   edit-clear.svgz media-playback-start.svgz media-record.svgz video-display.svgz
   view-refresh.svgz zoom-original.svgz office-chart-bar.svgz
-  view-object-histogram-linear.svgz view-object-histogram-logarithmic.svgz)
+  view-object-histogram-linear.svgz view-object-histogram-logarithmic.svgz
+  edit-clear-locationbar-rtl.svgz edit-select.svgz)
 
 install(TARGETS qarv
         RUNTIME DESTINATION bin/)

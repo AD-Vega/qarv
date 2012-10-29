@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>snapshot.svgz</file>
     <file>qarv.svgz</file>
   </qresource>
 </RCC>

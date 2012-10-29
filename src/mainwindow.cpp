@@ -73,15 +73,21 @@ MainWindow::MainWindow() :
   icons[playButton] = "media-playback-start";
   icons[refreshCamerasButton] = "view-refresh";
   icons[chooseFilenameButton] = "document-open";
-  icons[snapButton] = "document-save";
   icons[chooseSnappathButton] = "document-open";
-  icons[editGainButton] = "edit-clear";
-  icons[editExposureButton] = "edit-clear";
+  icons[editGainButton] = "edit-clear-locationbar-rtl";
+  icons[editExposureButton] = "edit-clear-locationbar-rtl";
   icons[showHistogramButton] = "office-chart-bar";
   icons[histogramLog] = "view-object-histogram-logarithmic";
+  icons[pickROIButton] = "edit-select";
   for (auto i = icons.begin(); i != icons.end(); i++)
     if (!QIcon::hasThemeIcon(*i))
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+  playIcon = playButton->icon();
+  recordIcon = recordButton->icon();
+  if (QIcon::hasThemeIcon("media-playback-pause"))
+    pauseIcon = QIcon::fromTheme("media-playback-pause");
+  else
+    pauseIcon = QIcon(QString(qarv_datafiles) + "media-playback-pause" + ".svgz");
 
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);
@@ -576,6 +582,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
   startVideo(recording || playing);
   recording = checked && started;
   recordButton->setChecked(recording);
+  recordButton->setIcon(recording ? pauseIcon : recordIcon);
 
   closeFileButton->setEnabled(!recording && recordingfile->isOpen());
   foreach (auto wgt, toDisableWhenRecording) {
