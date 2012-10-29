@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=qarv
+Icon=qarv
+TryExec=qarv
+Exec=qarv
+Terminal=false
+Categories=Qt;AudioVideo;Video;Network;
+Comment=A viewer and video recorder for Genicam ethernet cameras
+Comment[sl]=Predvajalnik in snemalnik za Genicam mrežne kamere
+GenericName=Genicam ethernet camera interface
+GenericName[sl]=Vmesnik za Genicam mrežno kamero
