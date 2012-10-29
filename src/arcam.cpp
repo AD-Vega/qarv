@@ -652,13 +652,15 @@ bool ArCam::setData(const QModelIndex& index, const QVariant& value,
 
 Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
   auto f = QAbstractItemModel::flags(index);
-  if (index.column() != 1) return f;
-  else {
-    ArFeatureTree* treenode;
-    if (!index.isValid()) treenode = featuretree;
-    else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
-    ArvGcFeatureNode* node =
-      ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+  if (!index.isValid()) return f;
+  ArFeatureTree* treenode;
+  treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  ArvGcFeatureNode* node =
+    ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+  if (index.column() != 1 && !ARV_IS_GC_CATEGORY(node)) {
+    f = flags(sibling(index.row(), 1, index));
+    f &= ~Qt::ItemIsEditable;
+  } else {
     int enabled =
       arv_gc_feature_node_is_available(node, NULL) &&
       arv_gc_feature_node_is_implemented(node, NULL) &&
@@ -666,11 +668,10 @@ Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
     if (!enabled) {
       f &= ~Qt::ItemIsEnabled;
       f &= ~Qt::ItemIsEditable;
-      qDebug() << QString(treenode->feature()) + "  is disabled";
     } else
       f |= Qt::ItemIsEditable;
-    return f;
   }
+  return f;
 }
 
 QVariant ArCam::headerData(int section, Qt::Orientation orientation,
