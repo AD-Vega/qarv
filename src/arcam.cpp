@@ -646,7 +646,7 @@ bool ArCam::setData(const QModelIndex& index, const QVariant& value,
   } else
     return false;
 
-  emit dataChanged(index, index);
+  emit dataChanged(QModelIndex(), QModelIndex());
   return true;
 }
 
