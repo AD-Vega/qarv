@@ -33,6 +33,7 @@
 
 const int slidersteps = 1000;
 const int sliderUpdateMsec = 300;
+const int histogramUpdateMsec = 100;
 
 auto ffmpegOutputOptions = QStringList();
 auto ffmpegOutputCommands = QHash<QString, QString>();
@@ -104,8 +105,12 @@ MainWindow::MainWindow() :
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
   this->connect(autoreadexposure, SIGNAL(timeout()),
                 SLOT(updateBandwidthEstimation()));
-  this->connect(autoreadexposure, SIGNAL(timeout()),
+
+  auto autoreadhistogram = new QTimer(this);
+  autoreadhistogram->setInterval(histogramUpdateMsec);
+  this->connect(autoreadhistogram, SIGNAL(timeout()),
                 SLOT(histogramNextFrame()));
+  autoreadhistogram->start();
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
                  SLOT(enableSelection(bool)));
