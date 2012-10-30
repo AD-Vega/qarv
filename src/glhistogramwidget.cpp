@@ -17,6 +17,7 @@
  */
 
 #include "glhistogramwidget.h"
+#include "globals.h"
 #include <QStyleOption>
 #include <QDebug>
 
@@ -26,9 +27,12 @@ GLHistogramWidget::GLHistogramWidget(QWidget* parent) : QGLWidget() {
   histRed = new float[256];
   histGreen = new float[256];
   histBlue = new float[256];
-  uchar nullimg[] = { 0 };
-  QImage img(nullimg, 1, 1, 1, QImage::Format_Indexed8);
-  fromImage(img);
+  QFile iconfile(QString(qarv_datafiles) + "/view-object-histogram-linear.svgz");
+  if (iconfile.exists())
+    idleImageIcon = QIcon(iconfile.fileName());
+  else
+    idleImageIcon = QIcon::fromTheme("view-object-histogram-linear");
+  fromImage();
 }
 
 GLHistogramWidget::~GLHistogramWidget() {
@@ -41,7 +45,14 @@ void GLHistogramWidget::setLogarithmic(bool logarithmic_) {
   logarithmic = logarithmic_;
 }
 
-void GLHistogramWidget::fromImage(QImage& image) {
+void GLHistogramWidget::fromImage(const QImage& image) {
+  if  (image.isNull()) {
+    idle = true;
+    update();
+    return;
+  }
+  idle = false;
+  
   if (image.format() == QImage::Format_Indexed8) {
     indexed = true;
     for (int i = 0; i < 256; i++)
@@ -81,6 +92,12 @@ void GLHistogramWidget::fromImage(QImage& image) {
 }
 
 void GLHistogramWidget::paintGL() {
+  if (idle) {
+    QPainter painter(this);
+    painter.drawPixmap(rect(), idleImageIcon.pixmap(rect().size()));
+    return;
+  }
+
   QStyleOption opt;
   opt.initFrom(this);
   QPainter painter(this);

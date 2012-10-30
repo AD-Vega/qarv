@@ -22,6 +22,7 @@
 
 #include <QGLWidget>
 #include <QMouseEvent>
+#include <QIcon>
 
 class GLHistogramWidget : public QGLWidget {
   Q_OBJECT
@@ -31,13 +32,14 @@ public:
   ~GLHistogramWidget();
 
   void paintGL();
-  void fromImage(QImage& image);
+  void fromImage(const QImage& image = QImage());
 
 public slots:
   void setLogarithmic(bool logarithmic);
 
 private:
-  bool indexed, logarithmic;
+  QIcon idleImageIcon;
+  bool indexed, logarithmic, idle;
   float* histRed;
   float* histGreen;
   float* histBlue;

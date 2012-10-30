@@ -484,6 +484,8 @@ void MainWindow::startVideo(bool start) {
       pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1);
     }
   }
+  // Set idle image on the histogram.
+  histogram->fromImage();
   // Enable the snapshot button if possible.
   on_snappathEdit_textChanged();
 }
