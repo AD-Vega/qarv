@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>738</width>
-    <height>629</height>
+    <width>926</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -848,24 +848,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="unzoomButton">
-        <property name="toolTip">
-         <string>Fix display size to video size.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="zoom-original">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QPushButton" name="snapButton">
         <property name="enabled">
          <bool>false</bool>
@@ -903,24 +885,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="playButton">
-        <property name="toolTip">
-         <string>Display live image.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="media-playback-start">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -930,21 +894,80 @@
     <string>Video Display – qarv</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>2</number>
    </attribute>
-   <widget class="GLVideoWidget" name="video">
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>128</width>
-      <height>128</height>
-     </size>
-    </property>
+   <widget class="QWidget" name="widget_2">
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_14">
+       <item>
+        <widget class="QPushButton" name="playButton">
+         <property name="toolTip">
+          <string>Display live image.</string>
+         </property>
+         <property name="text">
+          <string>Display image</string>
+         </property>
+         <property name="icon">
+          <iconset theme="media-playback-start">
+           <normaloff/>
+          </iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="unzoomButton">
+         <property name="toolTip">
+          <string>Fix display size to video size.</string>
+         </property>
+         <property name="text">
+          <string>Actual size</string>
+         </property>
+         <property name="icon">
+          <iconset theme="zoom-original">
+           <normaloff/>
+          </iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="GLVideoWidget" name="video" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>128</width>
+         <height>128</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QDockWidget" name="histogramdock">
@@ -964,7 +987,7 @@
           <string>Logarithmic histogram.</string>
          </property>
          <property name="text">
-          <string/>
+          <string>Logarithmic</string>
          </property>
          <property name="icon">
           <iconset theme="view-object-histogram-logarithmic">
