@@ -26,6 +26,7 @@
 #include <QSettings>
 #include <qdatetime.h>
 #include <QProcess>
+#include <QTextDocument>
 
 #include "getmtu_linux.h"
 #include "globals.h"
@@ -87,7 +88,8 @@ MainWindow::MainWindow() :
   if (QIcon::hasThemeIcon("media-playback-pause"))
     pauseIcon = QIcon::fromTheme("media-playback-pause");
   else
-    pauseIcon = QIcon(QString(qarv_datafiles) + "media-playback-pause" + ".svgz");
+    pauseIcon = QIcon(QString(
+                        qarv_datafiles) + "media-playback-pause" + ".svgz");
 
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);
@@ -811,4 +813,23 @@ void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
 
 void MainWindow::histogramNextFrame() {
   drawHistogram = true;
+}
+
+ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold,
+                                                 QObject* parent) :
+  size_threshold(size_threshold), QObject(parent) {}
+
+bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
+  if (evt->type() == QEvent::ToolTipChange) {
+    QWidget* widget = static_cast<QWidget*>(obj);
+    QString tooltip = widget->toolTip();
+    if (!Qt::mightBeRichText(tooltip) && tooltip.size() > size_threshold) {
+      // Prefix <qt/> to make sure Qt detects this as rich text
+      // Escape the current message as HTML and replace \n by <br>
+      tooltip = "<qt/>" + Qt::escape(tooltip);
+      widget->setToolTip(tooltip);
+      return true;
+    }
+  }
+  return QObject::eventFilter(obj, evt);
 }

@@ -33,6 +33,10 @@ int main(int argc, char** argv) {
     qDebug() << "No translation found for selected locale.";
   a.installTranslator(&trans);
 
+  // Install a global event filter that makes sure that long tooltips can be word-wrapped
+  const int tooltip_wrap_threshold = 70;
+  a.installEventFilter(new ToolTipToRichTextFilter(tooltip_wrap_threshold, &a));
+
   QCoreApplication::setOrganizationDomain("ad-vega.si");
   QCoreApplication::setOrganizationName("AD Vega");
   QCoreApplication::setApplicationName("qarv");
