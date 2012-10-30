@@ -362,132 +362,127 @@ Predlagamo večji MTU.</translation>
         <translation>Odpri datoteko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="674"/>
+        <location filename="../src/mainwindow.ui" line="681"/>
         <source>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</source>
         <translation>Označi to možnost, če naj snemanje dopolnjuje obstoječo datoteko, namesto da bi jo prepisalo. To je mogoče le pri surovem tipu videa. Nastavitve kamere morajo ustrezati obstoječemu videu.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="677"/>
+        <location filename="../src/mainwindow.ui" line="684"/>
         <source>Append to existing file instead of truncating</source>
         <translation>Dopolnjuj obstoječo datoteko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="684"/>
+        <location filename="../src/mainwindow.ui" line="704"/>
         <source>Choose a file to store camera settings.</source>
         <translation>Izberi datoteko za izpis nastavitev kamere.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="687"/>
+        <location filename="../src/mainwindow.ui" line="707"/>
         <source>Dump camera settings</source>
         <translation>Zapiši nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="694"/>
+        <location filename="../src/mainwindow.ui" line="674"/>
         <source>Video format:</source>
         <translation>Tip videa:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="703"/>
+        <location filename="../src/mainwindow.ui" line="714"/>
         <source>Choose format of recorded video.</source>
         <translation>Izberi tip videa za snemanje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="713"/>
+        <location filename="../src/mainwindow.ui" line="877"/>
         <source>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</source>
         <translation>Izklop gumba &quot;Snemaj&quot; običajno le začasno ustavi snemanje. Ta gumb snemanje zaključi ter dokonča in zapre datoteko z videom.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="716"/>
-        <source>Close file</source>
-        <translation>Zaključi snemanje</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="728"/>
+        <location filename="../src/mainwindow.ui" line="694"/>
         <source>Unless the video format is &amp;quot;Raw data&amp;quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &amp;quot;.log&amp;quot; suffix.</source>
         <translation>Če ni izbran tip videa &amp;quot;Surovi podatki&amp;quot;, snemanje teče preko zunanjega programa. Označi to možnost, če naj ta program beleži svoja sporočila. Datoteka s sporočili bo imela enako ime kot datoteka za video, z dodatno končnico &amp;quot;.log&amp;quot;.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="731"/>
+        <location filename="../src/mainwindow.ui" line="697"/>
         <source>Log encoder messages</source>
         <translation>Shrani enkoderjeva sporočila</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="739"/>
+        <location filename="../src/mainwindow.ui" line="722"/>
         <source>Advanced settings</source>
         <translation>Napredne nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="752"/>
+        <location filename="../src/mainwindow.ui" line="735"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This view provides direct access to the camera. Changes may not be reflected in the rest of the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gornji pogled predstavlja neposreden dostop do kamere. Spremembe morda v drugih delih programa ne bodo vidne.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="763"/>
+        <location filename="../src/mainwindow.ui" line="746"/>
         <source>About</source>
         <translation>O programu</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="769"/>
+        <location filename="../src/mainwindow.ui" line="752"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012 Jure Varlec, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012 Jure Varlec, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;qarv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona qarv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="811"/>
+        <location filename="../src/mainwindow.ui" line="794"/>
         <source>Show or hide video display.</source>
         <translation>Prikaži ali skrij prikazovalnik videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="832"/>
+        <location filename="../src/mainwindow.ui" line="815"/>
         <source>Show or hide histogram display.</source>
         <translation>Prikaži ali skrij histogram.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="909"/>
+        <location filename="../src/mainwindow.ui" line="905"/>
         <source>Display image</source>
         <translation>Prikaži sliko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="924"/>
+        <location filename="../src/mainwindow.ui" line="920"/>
         <source>Fix display size to video size.</source>
         <translation>Fiksiraj prikazovalnik na izvorno velikost videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="990"/>
+        <location filename="../src/mainwindow.ui" line="986"/>
         <source>Logarithmic</source>
         <translation>Logaritemski</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="856"/>
+        <location filename="../src/mainwindow.ui" line="839"/>
         <source>Store a snapshot.</source>
         <translation>Shrani trenutno sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="873"/>
+        <location filename="../src/mainwindow.ui" line="856"/>
         <source>Record video. Depress to pause recording, press again to resume.</source>
         <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="906"/>
+        <location filename="../src/mainwindow.ui" line="902"/>
         <source>Display live image.</source>
         <translation>Prikaži živo sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="927"/>
+        <location filename="../src/mainwindow.ui" line="923"/>
         <source>Actual size</source>
         <translation>Dejanska velikost</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="987"/>
+        <location filename="../src/mainwindow.ui" line="983"/>
         <source>Logarithmic histogram.</source>
         <translation>Logaritemski histogram.</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="894"/>
+        <location filename="../src/mainwindow.ui" line="890"/>
         <source>Video Display – qarv</source>
         <translation>Prikaz videa – qarv</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="975"/>
+        <location filename="../src/mainwindow.ui" line="971"/>
         <source>Histogram – qarv</source>
         <translation>Histogram – qarv</translation>
     </message>

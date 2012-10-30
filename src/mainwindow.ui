@@ -668,7 +668,14 @@
           </item>
          </layout>
         </item>
-        <item row="6" column="1">
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_17">
+          <property name="text">
+           <string>Video format:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
          <widget class="QCheckBox" name="recordApendCheck">
           <property name="toolTip">
            <string>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</string>
@@ -679,47 +686,6 @@
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QPushButton" name="dumpSettingsButton">
-          <property name="toolTip">
-           <string>Choose a file to store camera settings.</string>
-          </property>
-          <property name="text">
-           <string>Dump camera settings</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_17">
-          <property name="text">
-           <string>Video format:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <item>
-           <widget class="QComboBox" name="videoFormatSelector">
-            <property name="toolTip">
-             <string>Choose format of recorded video.</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="closeFileButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
-            </property>
-            <property name="text">
-             <string>Close file</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="7" column="1">
          <widget class="QCheckBox" name="recordLogCheck">
           <property name="enabled">
            <bool>false</bool>
@@ -729,6 +695,23 @@
           </property>
           <property name="text">
            <string>Log encoder messages</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QPushButton" name="dumpSettingsButton">
+          <property name="toolTip">
+           <string>Choose a file to store camera settings.</string>
+          </property>
+          <property name="text">
+           <string>Dump camera settings</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QComboBox" name="videoFormatSelector">
+          <property name="toolTip">
+           <string>Choose format of recorded video.</string>
           </property>
          </widget>
         </item>
@@ -882,6 +865,19 @@
         </property>
         <property name="checkable">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="closeFileButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
+        </property>
+        <property name="icon">
+         <iconset theme="media-playback-stop"/>
         </property>
        </widget>
       </item>
