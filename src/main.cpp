@@ -30,6 +30,8 @@ int main(int argc, char** argv) {
   QCoreApplication::setOrganizationName("AD Vega");
   QCoreApplication::setApplicationName("qarv");
 
+  qRegisterMetaType<QVector<double>>("QVector<double>");
+  
   QArvGui g;
   g.widget()->show();
   return a.exec();

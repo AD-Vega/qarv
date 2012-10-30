@@ -16,11 +16,13 @@ include(FindPkgConfig)
 pkg_check_modules(ARAVIS REQUIRED aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
+pkg_check_modules(FFTW REQUIRED fftw3)
 
 include(${QT_USE_FILE})
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/src ${ARAVIS_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS})
+  ${CMAKE_CURRENT_SOURCE_DIR}/src ${ARAVIS_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS}
+  ${FFTW_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "-std=c++0x")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
@@ -32,12 +34,11 @@ qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
 set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h qarvmainwindow.h
-  roicombobox.h api/qarvgui.h api/qarvcamera.h)
+  roicombobox.h glfftwidget.h fftprocessor.h api/qarvgui.h api/qarvcamera.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
-set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
-  glvideowidget.cpp glhistogramwidget.cpp globals.cpp
-  roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp
-  api/qarvdecoder.cpp)
+set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp fftprocessor.cpp
+  glfftwidget.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
+  roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp api/qarvdecoder.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono8.h mono12.h mono12packed.h uyvy422.h yuyv422.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
@@ -49,7 +50,7 @@ qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS}
   ${qarv_TRANS} ${qarv_decoders_SRC} ${qarv_decoders_MOCD})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS}
-  ${SWSCALE_LDFLAGS})
+  ${SWSCALE_LDFLAGS} ${FFTW_LDFLAGS})
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
 
 add_executable(qarvexe src/main.cpp)

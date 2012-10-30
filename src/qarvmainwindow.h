@@ -84,6 +84,9 @@ private slots:
   void updateImageTransform();
   void showFPS();
   void histogramNextFrame();
+  void FFTTimerElapsed();
+  void FFTSetIdle();
+  void checkFFTCondition();
   void readAllValues();
 
 private:
@@ -103,6 +106,7 @@ private:
   QTimer* autoreadexposure;
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
+  bool timeForFFT, FFTIdle, drawFFT;
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;

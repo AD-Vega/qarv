@@ -58,7 +58,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), playing(false), recording(false),
   started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), standalone(standalone_),
-  toDisableWhenPlaying(), toDisableWhenRecording() {
+  toDisableWhenPlaying(), toDisableWhenRecording(), timeForFFT(false),
+  FFTIdle(true), drawFFT(false) {
 
   recordingfile = new QFile(this);
 
@@ -112,6 +113,13 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   this->connect(autoreadhistogram, SIGNAL(timeout()),
                 SLOT(histogramNextFrame()));
   autoreadhistogram->start();
+
+  auto autoreadfft = new QTimer(this);
+  autoreadfft->setInterval(100);
+  this->connect(autoreadfft, SIGNAL(timeout()),
+                SLOT(FFTTimerElapsed()));
+  this->connect(fft, SIGNAL(fftIdle()), this, SLOT(FFTSetIdle()));
+  autoreadfft->start();
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
                  SLOT(enableSelection(bool)));
@@ -497,7 +505,7 @@ void QArvMainWindow::takeNextFrame() {
     QByteArray frame;
     QImage image;
 
-    if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2)
+    if (playing || drawHistogram || drawFFT || videoFormatSelector->currentIndex() >= 2)
       getNextFrame(&image, NULL, &frame, NULL, nocopyCheck->isChecked());
     else
       getNextFrame(NULL, NULL, &frame, NULL, nocopyCheck->isChecked());
@@ -507,6 +515,11 @@ void QArvMainWindow::takeNextFrame() {
     if (drawHistogram && !frame.isEmpty()) {
       histogram->fromImage(image);
       drawHistogram = false;
+    }
+
+    if (drawFFT) {
+      fft->fromImage(image);
+      drawFFT = false;
     }
 
     if (recording && !frame.isEmpty()) {
@@ -983,6 +996,27 @@ void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
 
 void QArvMainWindow::histogramNextFrame() {
   drawHistogram = true;
+}
+
+void QArvMainWindow::FFTTimerElapsed() {
+  timeForFFT = true;
+  checkFFTCondition();
+}
+
+void QArvMainWindow::FFTSetIdle() {
+  FFTIdle = true;
+  checkFFTCondition();
+}
+  
+void QArvMainWindow::checkFFTCondition() {
+  if (drawFFT)
+    return;
+
+  drawFFT = timeForFFT && FFTIdle;
+  if (drawFFT) {
+    timeForFFT = false;
+    FFTIdle = false;
+  }
 }
 
 ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold,

@@ -1180,6 +1180,22 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="fftdock">
+   <property name="windowTitle">
+    <string>FFT – qarv</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="GLFFTWidget" name="fft">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1201,6 +1217,12 @@
    <class>ROIcomboBox</class>
    <extends>QComboBox</extends>
    <header>roicombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GLFFTWidget</class>
+   <extends>QWidget</extends>
+   <header>glfftwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
