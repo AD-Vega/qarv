@@ -52,7 +52,7 @@
                <item>
                 <widget class="QComboBox" name="cameraSelector">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select camera.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Select camera.</string>
                  </property>
                  <property name="minimumContentsLength">
                   <number>30</number>
@@ -62,7 +62,7 @@
                <item>
                 <widget class="QPushButton" name="refreshCamerasButton">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Refresh camera list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Refresh camera list.</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -93,7 +93,7 @@
              <item row="3" column="1">
               <widget class="QComboBox" name="pixelFormatSelector">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the camera's pixel format.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Select the camera's pixel format.</string>
                </property>
                <property name="minimumContentsLength">
                 <number>30</number>
@@ -133,7 +133,7 @@
                <item>
                 <widget class="QSpinBox" name="fpsSpinbox">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Camera's frame rate setting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Camera's frame rate setting.</string>
                  </property>
                  <property name="minimum">
                   <number>1</number>
@@ -146,7 +146,7 @@
                <item>
                 <widget class="QLabel" name="label_14">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Actual frame rate.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Actual frame rate.</string>
                  </property>
                  <property name="text">
                   <string>Actual: </string>
@@ -156,7 +156,7 @@
                <item>
                 <widget class="QLabel" name="actualFPS">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Actual frame rate.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Actual frame rate.</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -238,7 +238,7 @@
              <item>
               <widget class="QPushButton" name="applyROIButton">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the camera's ROI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Set the camera's ROI.</string>
                </property>
                <property name="text">
                 <string>Apply</string>
@@ -248,7 +248,7 @@
              <item>
               <widget class="QPushButton" name="pickROIButton">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select ROI by drawing a rectangle on the video display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Select ROI by drawing a rectangle on the video display.</string>
                </property>
                <property name="text">
                 <string>Pick</string>
@@ -264,7 +264,7 @@
              <item>
               <widget class="QPushButton" name="resetROIButton">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset ROI to the maximum, effective immediately.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Reset ROI to the maximum, effective immediately.</string>
                </property>
                <property name="text">
                 <string>Whole image</string>
@@ -328,7 +328,7 @@
                <item>
                 <widget class="QPushButton" name="editGainButton">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter value manually.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Enter value manually.</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -345,7 +345,7 @@
              <item>
               <widget class="QPushButton" name="gainAutoButton">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let camera control sensor gain.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Let camera control sensor gain.</string>
                </property>
                <property name="text">
                 <string>Auto</string>
@@ -403,7 +403,7 @@
                <item>
                 <widget class="QPushButton" name="editExposureButton">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter value manually.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>Enter value manually.</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -420,7 +420,7 @@
              <item>
               <widget class="QPushButton" name="exposureAutoButton">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Let camera control exposure time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>Let camera control exposure time.</string>
                </property>
                <property name="text">
                 <string>Auto</string>
@@ -523,7 +523,7 @@
            <item>
             <widget class="QCheckBox" name="dropInvalidFrames">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Invalid frames will not be recorded and will be displayed as pure red.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Invalid frames will not be recorded and will be displayed as pure red.</string>
              </property>
              <property name="text">
               <string>Drop incomplete/invalid frames</string>
@@ -536,7 +536,7 @@
            <item>
             <widget class="QCheckBox" name="markClipped">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overexposed pixels are colored pink. Very fast for grayscale frames, slow for color frames.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>Overexposed pixels are colored pink. Very fast for grayscale frames, slow for color frames.</string>
              </property>
              <property name="text">
               <string>Mark clipped highlights</string>
@@ -568,7 +568,7 @@
           <item>
            <widget class="QLineEdit" name="snappathEdit">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Snapshot will be put in this directory. Unique timestamps will be used as file names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Snapshot will be put in this directory. Unique timestamps will be used as file names.</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
@@ -578,7 +578,7 @@
           <item>
            <widget class="QPushButton" name="chooseSnappathButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Open directory.</string>
             </property>
             <property name="text">
              <string/>
@@ -604,7 +604,7 @@
           <item>
            <widget class="QRadioButton" name="snapshotRaw">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Frame data is simply dumped into the file undecoded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Frame data is simply dumped into the file undecoded.</string>
             </property>
             <property name="text">
              <string>Raw data</string>
@@ -617,7 +617,7 @@
           <item>
            <widget class="QRadioButton" name="snapshotPNG">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The saved snapshot is as shown in the Video Display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>The saved snapshot is as shown in the Video Display.</string>
             </property>
             <property name="text">
              <string>PNG image</string>
@@ -644,7 +644,7 @@
           <item>
            <widget class="QLineEdit" name="filenameEdit">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The file to store recorded video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>The file to store recorded video.</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
@@ -654,7 +654,7 @@
           <item>
            <widget class="QPushButton" name="chooseFilenameButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Open file.</string>
             </property>
             <property name="text">
              <string/>
@@ -671,7 +671,7 @@
         <item row="6" column="1">
          <widget class="QCheckBox" name="recordApendCheck">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</string>
           </property>
           <property name="text">
            <string>Append to existing file instead of truncating</string>
@@ -681,7 +681,7 @@
         <item row="8" column="1">
          <widget class="QPushButton" name="dumpSettingsButton">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose a file to store camera settings.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Choose a file to store camera settings.</string>
           </property>
           <property name="text">
            <string>Dump camera settings</string>
@@ -700,7 +700,7 @@
           <item>
            <widget class="QComboBox" name="videoFormatSelector">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose format of recorded video.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Choose format of recorded video.</string>
             </property>
            </widget>
           </item>
@@ -710,7 +710,7 @@
              <bool>false</bool>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
             </property>
             <property name="text">
              <string>Close file</string>
@@ -725,7 +725,7 @@
            <bool>false</bool>
           </property>
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Unless the video format is &amp;quot;Raw data&amp;quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &amp;quot;.log&amp;quot; suffix.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>Unless the video format is &amp;quot;Raw data&amp;quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &amp;quot;.log&amp;quot; suffix.</string>
           </property>
           <property name="text">
            <string>Log encoder messages</string>
@@ -808,7 +808,7 @@
       <item>
        <widget class="QPushButton" name="showVideoButton">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show or hide video display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Show or hide video display.</string>
         </property>
         <property name="text">
          <string/>
@@ -829,7 +829,7 @@
       <item>
        <widget class="QPushButton" name="showHistogramButton">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show or hide histogram display.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Show or hide histogram display.</string>
         </property>
         <property name="text">
          <string/>
@@ -850,7 +850,7 @@
       <item>
        <widget class="QPushButton" name="unzoomButton">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fix display size to video size.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Fix display size to video size.</string>
         </property>
         <property name="text">
          <string/>
@@ -871,7 +871,7 @@
          <bool>false</bool>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Store a snapshot.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Store a snapshot.</string>
         </property>
         <property name="text">
          <string/>
@@ -888,7 +888,7 @@
          <bool>false</bool>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Record video. Depress to pause recording, press again to resume.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Record video. Depress to pause recording, press again to resume.</string>
         </property>
         <property name="text">
          <string/>
@@ -906,7 +906,7 @@
       <item>
        <widget class="QPushButton" name="playButton">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display live image.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Display live image.</string>
         </property>
         <property name="text">
          <string/>
@@ -961,7 +961,7 @@
        <item>
         <widget class="QPushButton" name="histogramLog">
          <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logarithmic histogram.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Logarithmic histogram.</string>
          </property>
          <property name="text">
           <string/>
