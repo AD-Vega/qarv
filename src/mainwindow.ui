@@ -346,6 +346,16 @@
               </widget>
              </item>
              <item>
+              <widget class="QFrame" name="frame">
+               <property name="frameShape">
+                <enum>QFrame::HLine</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="pickROIButton">
                <property name="toolTip">
                 <string>Select ROI by drawing a rectangle on the video display.</string>
