@@ -47,8 +47,6 @@ private slots:
   void on_playButton_clicked(bool checked);
   void on_recordButton_clicked(bool checked);
   void on_snapButton_clicked(bool checked);
-  void on_filenameEdit_textChanged(QString name);
-  void on_snappathEdit_textChanged();
   void on_chooseSnappathButton_clicked(bool checked);
   void on_chooseFilenameButton_clicked(bool checked);
   void on_fpsSpinbox_valueChanged(int value);

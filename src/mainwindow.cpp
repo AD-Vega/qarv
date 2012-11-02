@@ -524,8 +524,6 @@ void MainWindow::startVideo(bool start) {
   }
   // Set idle image on the histogram.
   histogram->fromImage();
-  // Enable the snapshot button if possible.
-  on_snappathEdit_textChanged();
 }
 
 void MainWindow::on_playButton_clicked(bool checked) {
@@ -557,6 +555,14 @@ void MainWindow::on_recordButton_clicked(bool checked) {
     };
   }
 
+  if (filenameEdit->text().isEmpty()) {
+    tabWidget->setCurrentWidget(recordingTab);
+    statusBar()->showMessage(tr("Please set the video file name."),
+                             statusTimeoutMsec);
+    recordButton->setChecked(false);
+    return;
+  }
+
   if (checked && !recordingfile->isOpen()) {
     startVideo(true); // Initialize the decoder and all that.
     QIODevice::OpenMode openflags;
@@ -565,8 +571,22 @@ void MainWindow::on_recordButton_clicked(bool checked) {
     else
       openflags = QIODevice::Truncate | QIODevice::WriteOnly;
     bool open = false;
+    {
+      auto thefile = qobject_cast<QFile*>(recordingfile);
+      thefile->setFileName(filenameEdit->text());
+      auto info = QFileInfo(*thefile);
+      auto dir = info.dir();
+      if (!dir.exists()) {
+        statusBar()->showMessage(tr("Video directory does not exist."),
+                                 statusTimeoutMsec);
+        goto skip_file_opening;
+      }
+    }
     if (videoFormatSelector->currentIndex() == 0) {
       open = recordingfile->open(openflags);
+      if (!open)
+        statusBar()->showMessage(tr("Cannot open video file for recording."),
+                                 statusTimeoutMsec);
     } else {
       auto ffmpeg = new QProcess(this);
       QString cmd = ffmpegInputCommand;
@@ -574,10 +594,10 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       if (videoFormatSelector->currentIndex() == 1) {
         fmt = decoder->ffmpegPixfmtRaw();
         if (fmt.isNull()) {
-          QMessageBox::information(this, tr("Unable to record"),
-                                   tr(
-                                     "AVI cannot store this pixel format in raw"
-                                     " form. Use processed form instead."));
+          statusBar()->showMessage(tr("Unable to record. "
+                                      "AVI cannot store this pixel format in raw "
+                                      "form. Use processed form instead."),
+                                   statusTimeoutMsec);
           open = false;
         } else {
           open = true;
@@ -615,10 +635,13 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       }
     }
 
+skip_file_opening:
+
     if (!open) {
       recordButton->setChecked(false);
       checked = false;
-    }
+    } else
+      statusBar()->clearMessage();
   }
   recording = checked;
   startVideo(recording || playing);
@@ -634,51 +657,43 @@ void MainWindow::on_recordButton_clicked(bool checked) {
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
+  if (snappathEdit->text().isEmpty() || snapbasenameEdit->text().isEmpty()) {
+    tabWidget->setCurrentWidget(recordingTab);
+    statusBar()->showMessage(tr("Please set the snapshot directory and name."),
+                             statusTimeoutMsec);
+    return;
+  }
+  QString name = snappathEdit->text();
+  QDir dir(name);
+  if (!dir.exists()) {
+    tabWidget->setCurrentWidget(recordingTab);
+    statusBar()->showMessage(tr("Snapshot directory does not exist."),
+                             statusTimeoutMsec);
+    return;
+  }
+  if (!playing) {
+    statusBar()->showMessage(tr("Video is not playing, no image to save."),
+                             statusTimeoutMsec);
+    return;
+  }
+  statusBar()->clearMessage();
+
   auto time = QDateTime::currentDateTime();
   QString fileName = snappathEdit->text() + "/" +
                      snapbasenameEdit->text() +
                      time.toString("yyyy-MM-dd-hh:mm:ss:zzz");
   if (snapshotPNG->isChecked()) {
     auto img = video->getImage();
-    img.save(fileName + ".png");
+    if (!img.save(fileName + ".png"))
+      statusBar()->showMessage(tr("Snapshot cannot be written."),
+                               statusTimeoutMsec);
   } else if (snapshotRaw->isChecked()) {
     QFile file(fileName + ".frame");
     if (file.open(QIODevice::WriteOnly)) file.write(currentFrame);
+    else
+      statusBar()->showMessage(tr("Snapshot cannot be written."),
+                               statusTimeoutMsec);
   }
-}
-
-void MainWindow::on_filenameEdit_textChanged(QString name) {
-  recordButton->setEnabled(true);
-  auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
-  if (ffmpeg != NULL) {
-    statusBar()->showMessage(tr("Finalizing video recording, please wait..."));
-    QApplication::processEvents();
-    QApplication::flush();
-    ffmpeg->closeWriteChannel();
-    ffmpeg->waitForFinished();
-    statusBar()->clearMessage();
-  } else {
-    recordingfile->close();
-  }
-  videoFormatSelector->setEnabled(true);
-  closeFileButton->setEnabled(false);
-  delete recordingfile;
-  auto thefile = new QFile(name, this);
-  recordingfile = thefile;
-  auto info = QFileInfo(*thefile);
-  auto dir = info.dir();
-  recordButton->setEnabled(dir.exists());
-  foreach (auto wgt, toDisableWhenRecording) {
-    wgt->setEnabled(true);
-  }
-  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
-}
-
-
-void MainWindow::on_snappathEdit_textChanged() {
-  QString name = snappathEdit->text();
-  QDir dir(name);
-  snapButton->setEnabled(!name.isEmpty() && dir.exists() && started);
 }
 
 void MainWindow::on_chooseFilenameButton_clicked(bool checked) {
@@ -842,12 +857,30 @@ void MainWindow::on_histogramdock_topLevelChanged(bool floating) {
 }
 
 void MainWindow::on_closeFileButton_clicked(bool checked) {
-  on_filenameEdit_textChanged(filenameEdit->text());
+  auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
+  statusBar()->showMessage(tr("Finalizing video recording, please wait..."));
+  QApplication::processEvents();
+  QApplication::flush();
+  if (ffmpeg != NULL) {
+    ffmpeg->closeWriteChannel();
+    ffmpeg->waitForFinished();
+  } else {
+    recordingfile->close();
+  }
+  delete recordingfile;
+  recordingfile = new QFile(this);
+  statusBar()->clearMessage();
+
+  closeFileButton->setEnabled(recording);
+  foreach (auto wgt, toDisableWhenRecording) {
+    wgt->setEnabled(!recording);
+  }
   foreach (auto wgt, toDisableWhenPlaying) {
     wgt->setEnabled(!started);
   }
   pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1 &&
                                   !started);
+  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 }
 
 void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {

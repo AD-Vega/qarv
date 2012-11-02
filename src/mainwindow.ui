@@ -572,9 +572,6 @@
             <property name="toolTip">
              <string>Snapshots will be put in this directory.</string>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
@@ -647,9 +644,6 @@
            <widget class="QLineEdit" name="filenameEdit">
             <property name="toolTip">
              <string>The file to store recorded video.</string>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -851,9 +845,6 @@
       </item>
       <item>
        <widget class="QPushButton" name="snapButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
         <property name="toolTip">
          <string>Store a snapshot.</string>
         </property>
@@ -868,9 +859,6 @@
       </item>
       <item>
        <widget class="QPushButton" name="recordButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
         <property name="toolTip">
          <string>Record video. Depress to pause recording, press again to resume.</string>
         </property>
