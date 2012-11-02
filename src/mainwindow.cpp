@@ -27,6 +27,7 @@
 #include <qdatetime.h>
 #include <QProcess>
 #include <QTextDocument>
+#include <QStatusBar>
 
 #include "getmtu_linux.h"
 #include "globals.h"
@@ -34,6 +35,7 @@
 const int slidersteps = 1000;
 const int sliderUpdateMsec = 300;
 const int histogramUpdateMsec = 100;
+const int statusTimeoutMsec = 10000;
 
 auto ffmpegOutputOptions = QStringList();
 auto ffmpegOutputCommands = QHash<QString, QString>();
@@ -137,6 +139,8 @@ MainWindow::MainWindow() :
   timer->start();
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
+
+  statusBar()->showMessage(tr("Welcome to qarv!"));
 }
 
 MainWindow::~MainWindow() {
@@ -160,6 +164,11 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   cameraSelector->setEnabled(true);
   cameraSelector->blockSignals(false);
   cameraSelector->setCurrentIndex(0);
+  QString message = tr(" Found %n cameras.",
+                       "Number of cameras",
+                       cameraSelector->count());
+  statusBar()->showMessage(statusBar()->currentMessage() + message,
+                           statusTimeoutMsec);
   on_cameraSelector_currentIndexChanged(0);
 }
 
@@ -289,8 +298,10 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
       camera->setMTU(mtu);
     }
   } else {
-    // No ip found; try best effort MTU in case it's still an eth cam
-    camera->setMTU(1500);
+    QString message = tr("Network address not found, trying best-effort MTU %1.");
+    int mtu = 1500;
+    statusBar()->showMessage(message.arg(mtu), statusTimeoutMsec);
+    camera->setMTU(mtu);
   }
 
   if (camera->getMTU() == 0)
@@ -365,7 +376,13 @@ void MainWindow::on_applyROIButton_clicked(bool clicked) {
   QRect ROI(xSpinbox->value(), ySpinbox->value(),
             wSpinbox->value(), hSpinbox->value());
 
-  ROI = roirange.intersect(ROI);
+  {
+    auto ROI2 = roirange.intersect(ROI);
+    if (ROI2 != ROI)
+      statusBar()->showMessage(tr("Region of interest too large, shrinking."),
+                               statusTimeoutMsec);
+    ROI = ROI2;
+  }
 
   bool tostart = started;
   startVideo(false);
@@ -634,8 +651,12 @@ void MainWindow::on_filenameEdit_textChanged(QString name) {
   recordButton->setEnabled(true);
   auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
   if (ffmpeg != NULL) {
+    statusBar()->showMessage(tr("Finalizing video recording, please wait..."));
+    QApplication::processEvents();
+    QApplication::flush();
     ffmpeg->closeWriteChannel();
     ffmpeg->waitForFinished();
+    statusBar()->clearMessage();
   } else {
     recordingfile->close();
   }

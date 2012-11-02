@@ -4,68 +4,99 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="120"/>
+        <location filename="../src/mainwindow.cpp" line="122"/>
         <source>No rotation</source>
         <translation>Brez zasuka</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="121"/>
+        <location filename="../src/mainwindow.cpp" line="123"/>
         <source>90 degrees</source>
         <translation>90 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="122"/>
+        <location filename="../src/mainwindow.cpp" line="124"/>
         <source>180 degrees</source>
         <translation>180 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="123"/>
+        <location filename="../src/mainwindow.cpp" line="125"/>
         <source>270 degrees</source>
         <translation>270 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="150"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
+        <source>Welcome to qarv!</source>
+        <translation>Dobrodošel v qarv!</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="154"/>
         <source>Looking for cameras...</source>
         <translation>Iščem kamere...</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../src/mainwindow.cpp" line="167"/>
+        <source> Found %n cameras.</source>
+        <comment>Number of cameras</comment>
+        <translation>
+            <numerusform> Našel sem %n kamero.</numerusform>
+            <numerusform> Našel sem %n kameri.</numerusform>
+            <numerusform> Našel sem %n kamere.</numerusform>
+            <numerusform> Našel sem %n kamere.</numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="261"/>
-        <location filename="../src/mainwindow.cpp" line="718"/>
+        <location filename="../src/mainwindow.cpp" line="301"/>
+        <source>Network address not found, trying best-effort MTU %1.</source>
+        <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="752"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="265"/>
+        <location filename="../src/mainwindow.cpp" line="312"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="269"/>
+        <location filename="../src/mainwindow.cpp" line="316"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="547"/>
+        <location filename="../src/mainwindow.cpp" line="382"/>
+        <source>Region of interest too large, shrinking.</source>
+        <translation>Izrez slike je prevelik, zmanjšujem.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="577"/>
         <source>Unable to record</source>
         <translation>Snemanje ni mogoče</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="548"/>
+        <location filename="../src/mainwindow.cpp" line="578"/>
         <source>AVI cannot store this pixel format in raw form. Use processed form instead.</source>
         <translation>Surov AVI video ne podpira izbranega tipa pikslov. Namesto tega uporabi obdelano obliko AVI videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="651"/>
-        <location filename="../src/mainwindow.cpp" line="687"/>
+        <location filename="../src/mainwindow.cpp" line="654"/>
+        <source>Finalizing video recording, please wait...</source>
+        <translation>Dokončujem video posnetek, prosim počakaj...</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="685"/>
+        <location filename="../src/mainwindow.cpp" line="721"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="656"/>
+        <location filename="../src/mainwindow.cpp" line="690"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
@@ -312,10 +343,6 @@ Predlagamo večji MTU.</translation>
         <translation>Direktorij za slike:</translation>
     </message>
     <message>
-        <source>Snapshot will be put in this directory. Unique timestamps will be used as file names.</source>
-        <translation type="obsolete">Posnetki bodo shranjeni v ta direktorij. Ime posamezne slike bo čas posnetka.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="583"/>
         <source>Open directory.</source>
         <translation>Odpri direktorij.</translation>
@@ -531,17 +558,17 @@ Predlagamo večji MTU.</translation>
 <context>
     <name>Video formats</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="44"/>
+        <location filename="../src/mainwindow.cpp" line="46"/>
         <source>Raw data</source>
         <translation>Surovi podatki</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="45"/>
+        <location filename="../src/mainwindow.cpp" line="47"/>
         <source>AVI (raw)</source>
         <translation>AVI (surov)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="46"/>
+        <location filename="../src/mainwindow.cpp" line="48"/>
         <source>AVI (processed)</source>
         <translation>AVI (obdelan)</translation>
     </message>
