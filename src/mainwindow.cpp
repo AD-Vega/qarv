@@ -486,9 +486,10 @@ void MainWindow::startVideo(bool start) {
       decoder = NULL;
       started = false;
       foreach (auto wgt, toDisableWhenPlaying) {
-        wgt->setEnabled(true);
+        wgt->setEnabled(!recordingfile->isOpen());
       }
-      pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1);
+      pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1 &&
+                                      !recordingfile->isOpen());
     }
   }
   // Set idle image on the histogram.
@@ -808,6 +809,11 @@ void MainWindow::on_histogramdock_topLevelChanged(bool floating) {
 
 void MainWindow::on_closeFileButton_clicked(bool checked) {
   on_filenameEdit_textChanged(filenameEdit->text());
+  foreach (auto wgt, toDisableWhenPlaying) {
+    wgt->setEnabled(!started);
+  }
+  pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1 &&
+                                  !started);
 }
 
 void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
