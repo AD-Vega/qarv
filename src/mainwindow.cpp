@@ -459,7 +459,8 @@ void MainWindow::takeNextFrame() {
 }
 
 void MainWindow::startVideo(bool start) {
-  if (toDisableWhenPlaying.isEmpty()) toDisableWhenPlaying << cameraSelector;
+  if (toDisableWhenPlaying.isEmpty()) toDisableWhenPlaying << cameraSelector <<
+    refreshCamerasButton;
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
