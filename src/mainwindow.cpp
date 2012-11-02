@@ -604,15 +604,15 @@ void MainWindow::on_recordButton_clicked(bool checked) {
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {
+  auto time = QDateTime::currentDateTime();
+  QString fileName = snappathEdit->text() + "/" +
+                     snapbasenameEdit->text() +
+                     time.toString("yyyy-MM-dd-hh:mm:ss:zzz");
   if (snapshotPNG->isChecked()) {
     auto img = video->getImage();
-    img.save(snappathEdit->text() + "/"
-             + QString::number(QDateTime::currentMSecsSinceEpoch())
-             + ".png");
+    img.save(fileName + ".png");
   } else if (snapshotRaw->isChecked()) {
-    QFile file(snappathEdit->text() + "/"
-               + QString::number(QDateTime::currentMSecsSinceEpoch())
-               + ".frame");
+    QFile file(fileName + ".frame");
     if (file.open(QIODevice::WriteOnly)) file.write(currentFrame);
   }
 }
