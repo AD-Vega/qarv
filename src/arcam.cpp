@@ -335,6 +335,61 @@ int ArCam::getEstimatedBW() {
   return arv_device_get_integer_feature_value(device, "GevSCDCT");
 }
 
+QTextStream& operator<<(QTextStream& out, ArCam* camera) {
+  auto id = camera->getId();
+  out << id.vendor << endl <<
+    id.model << endl <<
+    id.id << endl;
+  recursiveSerialization(out, camera, camera->featuretree);
+  return out;
+}
+
+/*!
+ * This operator simply reads settings into the camera in the order they are
+ * provided. This means that dependencies between features are not honored.
+ * Because of this, loading may fail.
+ */
+QTextStream& operator>>(QTextStream& in, ArCam* camera) {
+  auto ID = camera->getId();
+  QString vendor, model, id;
+  in >> vendor >> model >> id;
+  if (!(vendor == ID.vendor && model == ID.model && id == ID.id)) {
+    qWarning() << QObject::tr("Incompatible camera settings", "ArCam");
+    return in;
+  }
+
+  while (!in.atEnd()) {
+    QString name, type, v;
+    in >> name;
+    if (name == "Category") continue;
+    ArvGcFeatureNode* node =
+      ARV_GC_FEATURE_NODE(arv_gc_get_node(camera->genicam, name.toAscii()));
+
+    in >> type;
+    in >> v;
+    if (type == "Register") {
+      QString hex;
+      in >> hex;
+      auto b = QByteArray::fromHex(hex.toAscii());
+      arv_gc_register_set(ARV_GC_REGISTER(node), v.data(), v.toLongLong(),
+                          NULL);
+    } else if (type == "Enumeration") {
+      arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
+                                          v.toAscii().data(), NULL);
+    } else if (type == "String") {
+      arv_gc_string_set_value(ARV_GC_STRING(node), v.toAscii().data(), NULL);
+    } else if (type == "Float") {
+      arv_gc_float_set_value(ARV_GC_FLOAT(node), v.toDouble(), NULL);
+    } else if (type == "Boolean") {
+      arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), v.toInt(), NULL);
+    } else if (type == "Integer") {
+      arv_gc_integer_set_value(ARV_GC_INTEGER(node), v.toLongLong(), NULL);
+    }
+  }
+
+  return in;
+}
+
 /* QAbstractItemModel implementation ######################################## */
 
 //! A class that stores the hirearchy of camera features.
@@ -428,6 +483,52 @@ void freeFeaturetree(ArFeatureTree* tree) {
   for (auto child = children.begin(); child != children.end(); child++)
     freeFeaturetree(*child);
   delete tree;
+}
+
+//! Serialize the tree, used by ArCam stream operators.
+void recursiveSerialization(QTextStream& out, ArCam* camera,
+                            ArFeatureTree* tree) {
+  auto node = arv_gc_get_node(camera->genicam, tree->feature());
+  ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
+
+  if (tree->children().count() != 0) {
+    if (QString("Root") != tree->feature())
+      out << "Category: " << tree->feature() << endl;
+    foreach (auto child, tree->children())
+      recursiveSerialization(out, camera, child);
+    return;
+  }
+
+  if (ARV_IS_GC_COMMAND(node)) return;
+
+  out << "\t" << tree->feature() << "\t";
+  if (ARV_IS_GC_REGISTER_NODE(node) &&
+      QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
+      "IntReg") {
+    ArRegister r;
+    r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
+    r.value = QByteArray(r.length, 0);
+    arv_gc_register_get(ARV_GC_REGISTER(node),
+                        r.value.data(), r.length, NULL);
+    out << "Register\t" << QString::number(r.length) << "\t" <<
+      QString("0x") + r.value.toHex() << endl;
+  } else if (ARV_IS_GC_ENUMERATION(node)) {
+    out << "Enumeration\t" <<
+      arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL) <<
+      endl;
+  } else if (ARV_IS_GC_STRING(node)) {
+    out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL) <<
+      endl;
+  } else if (ARV_IS_GC_FLOAT(node)) {
+    out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL) <<
+      "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
+  } else if (ARV_IS_GC_BOOLEAN(node)) {
+    out << "Boolean\t" << arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node),
+                                                   NULL) << endl;
+  } else if (ARV_IS_GC_INTEGER(node)) {
+    out << "Integer\t" << arv_gc_integer_get_value(ARV_GC_INTEGER(node),
+                                                   NULL) << endl;
+  }
 }
 
 QModelIndex ArCam::index(int row, int column,

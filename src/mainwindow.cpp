@@ -731,7 +731,7 @@ void MainWindow::pickedROI(QRect roi) {
   on_applyROIButton_clicked(true);
 }
 
-void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
+void MainWindow::on_saveSettingsButton_clicked(bool checked) {
   QFileInfo fle(filenameEdit->text());
   auto name = QFileDialog::getSaveFileName(this, tr("Open file"),
                                            fle.dir().dirName());
@@ -739,26 +739,56 @@ void MainWindow::on_dumpSettingsButton_clicked(bool checked) {
   bool open = outfile.open(QIODevice::WriteOnly);
   if (open) {
     QTextStream file(&outfile);
-    auto id = camera->getId();
-    file << "Camera: " << id.id << endl
-         << "Vendor: " << id.vendor << endl
-         << "Model: " << id.model << endl
-         << "Pixel format: " << pixelFormatSelector->currentText() << endl
-         << "FPS: " << fpsSpinbox->value() << endl
-         << "Region of interest: "
-         << xSpinbox->value() << "+"
-         << ySpinbox->value() << "+"
-         << wSpinbox->value() << "x"
-         << hSpinbox->value() << endl
-         << "Binning: " << binSpinBox->value() << endl
-         << "Gain: " << gainSpinbox->value();
-    file << (gainAutoButton->isChecked() ? " (Auto)" : " (Manual)");
-    file << endl
-         << "Exposure: " << exposureSpinbox->value()*1000.;
-    file << (exposureAutoButton->isChecked() ? " (Auto)" : " (Manual)");
-    file << endl;
-    outfile.close();
-  }
+    file << camera;
+  } else
+    statusBar()->showMessage(tr("Could not open settings file."),
+                             statusTimeoutMsec);
+}
+
+void MainWindow::on_loadSettingsButton_clicked(bool checked) {
+  QFileInfo fle(filenameEdit->text());
+  auto name = QFileDialog::getOpenFileName(this, tr("Open file"),
+                                           fle.dir().dirName());
+  QFile infile(name);
+  bool open = infile.open(QIODevice::ReadOnly);
+  if (open) {
+    QTextStream file(&infile);
+    auto wholefile_ = file.readAll();
+    QString readBack_;
+    QTextStream wholefile(&wholefile_);
+    QTextStream readBack(&readBack_);
+
+    // Try setting it several times, then check if successful.
+    for (int i = 0; i < 10; i++) {
+      wholefile.seek(0);
+      readBack.seek(0);
+      wholefile >> camera;
+      readBack << camera;
+      readBack << endl << endl;
+    }
+    QStringList failures;
+    wholefile.seek(0);
+    while (!wholefile.atEnd()) {
+      QString wanted = wholefile.readLine();
+      QString actual = readBack.readLine();
+      if (wanted != actual) {
+	qDebug() << "wanted:" << wanted << endl << "actual:" << actual;
+	failures << wanted;
+      }
+    }
+    if (failures.count() != 0) {
+      QString message = "<html><head/><body><p>" +
+        tr("Settings could not be completely loaded. "
+        "This can happen because camera features are interdependent and may "
+        "require a specific loading order. The following settings failed:") +
+        "</p>";
+      foreach (auto fail, failures) message += fail;
+      message += "</body></html>";
+      QMessageBox::warning(this, tr("Loading settings failed"), message);
+    }
+  } else
+    statusBar()->showMessage(tr("Could not open settings file."),
+                             statusTimeoutMsec);
 }
 
 void MainWindow::updateBandwidthEstimation() {

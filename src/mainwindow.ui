@@ -19,6 +19,106 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="showVideoButton">
+        <property name="toolTip">
+         <string>Show or hide video display.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="video-display">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="showHistogramButton">
+        <property name="toolTip">
+         <string>Show or hide histogram display.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="office-chart-bar">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="snapButton">
+        <property name="toolTip">
+         <string>Store a snapshot.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../res/icons/icons.qrc">
+          <normaloff>:/icons/snapshot.svgz</normaloff>:/icons/snapshot.svgz</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="recordButton">
+        <property name="toolTip">
+         <string>Record video. Depress to pause recording, press again to resume.</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="media-record">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="closeFileButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
+        </property>
+        <property name="icon">
+         <iconset theme="media-playback-stop">
+          <normaloff/>
+         </iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -591,6 +691,23 @@
           </item>
          </layout>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>Snapshot basename:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="snapbasenameEdit">
+          <property name="toolTip">
+           <string>Snapshot file names will begin with this basename and will have the current date and time appended.</string>
+          </property>
+          <property name="text">
+           <string notr="true">qarv_snapshot-</string>
+          </property>
+         </widget>
+        </item>
         <item row="4" column="0">
          <widget class="QLabel" name="label_16">
           <property name="text">
@@ -671,6 +788,13 @@
           </property>
          </widget>
         </item>
+        <item row="6" column="1">
+         <widget class="QComboBox" name="videoFormatSelector">
+          <property name="toolTip">
+           <string>Choose format of recorded video.</string>
+          </property>
+         </widget>
+        </item>
         <item row="8" column="1">
          <widget class="QCheckBox" name="recordApendCheck">
           <property name="toolTip">
@@ -694,55 +818,21 @@
           </property>
          </widget>
         </item>
-        <item row="10" column="1">
-         <widget class="QPushButton" name="dumpSettingsButton">
-          <property name="toolTip">
-           <string>Choose a file to store camera settings.</string>
-          </property>
-          <property name="text">
-           <string>Dump camera settings</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QComboBox" name="videoFormatSelector">
-          <property name="toolTip">
-           <string>Choose format of recorded video.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="snapbasenameEdit">
-          <property name="toolTip">
-           <string>Snapshot file names will begin with this basename and will have the current date and time appended.</string>
-          </property>
-          <property name="text">
-           <string notr="true">qarv_snapshot-</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>Snapshot basename:</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="advancedTab">
        <attribute name="title">
         <string>Advanced settings</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
          <widget class="QTreeView" name="advancedTree">
           <property name="animated">
            <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item>
          <widget class="QLabel" name="label_20">
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This view provides direct access to the camera. Changes may not be reflected in the rest of the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -751,6 +841,30 @@
            <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QPushButton" name="saveSettingsButton">
+            <property name="toolTip">
+             <string>Choose a file to store camera settings.</string>
+            </property>
+            <property name="text">
+             <string>Save settings</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="loadSettingsButton">
+            <property name="toolTip">
+             <string>Choose a file to load camera settings.</string>
+            </property>
+            <property name="text">
+             <string>Load Settings</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -791,106 +905,6 @@
        </layout>
       </widget>
      </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="showVideoButton">
-        <property name="toolTip">
-         <string>Show or hide video display.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="video-display">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="showHistogramButton">
-        <property name="toolTip">
-         <string>Show or hide histogram display.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="office-chart-bar">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="snapButton">
-        <property name="toolTip">
-         <string>Store a snapshot.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/snapshot.svgz</normaloff>:/icons/snapshot.svgz</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="recordButton">
-        <property name="toolTip">
-         <string>Record video. Depress to pause recording, press again to resume.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="media-record">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="closeFileButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
-        </property>
-        <property name="icon">
-         <iconset theme="media-playback-stop">
-          <normaloff/>
-         </iconset>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>

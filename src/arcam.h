@@ -180,6 +180,11 @@ private:
   bool acquiring;
 
   friend void streamCallback(ArvStream* stream, ArCam* cam);
+  friend QTextStream& operator<<(QTextStream& out, ArCam* camera);
+  friend QTextStream& operator>>(QTextStream& in, ArCam* camera);
+  friend void recursiveSerialization(QTextStream& out,
+                                     ArCam* camera,
+                                     ArFeatureTree* tree);
 
 public:
   //! \name QAbstractItemModel implementation
@@ -202,6 +207,12 @@ private:
   ArvGc* genicam;
   ArFeatureTree* featuretree;
 };
+
+//! Serializes camera settings in text form.
+QTextStream& operator<<(QTextStream& out, ArCam* camera);
+
+//! Reads the textual representation of cammera settings. May not succeed.
+QTextStream& operator>>(QTextStream& in, ArCam* camera);
 
 //! ArCamDelegate provides editing widgets to go with the ArCam model.
 /*!
