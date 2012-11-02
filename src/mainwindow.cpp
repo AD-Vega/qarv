@@ -218,6 +218,44 @@ void MainWindow::readROILimits() {
   hSpinbox->setRange(roisize.y(), roisize.height());
 }
 
+void MainWindow::readAllValues() {
+  fpsSpinbox->setValue(camera->getFPS());
+
+  auto formats = camera->getPixelFormats();
+  auto formatnames = camera->getPixelFormatNames();
+  int noofframes = formats.length();
+  pixelFormatSelector->blockSignals(true);
+  pixelFormatSelector->clear();
+  for (int i = 0; i < noofframes; i++)
+    pixelFormatSelector->addItem(formatnames.at(i), formats.at(i));
+  auto format = camera->getPixelFormat();
+  pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
+  pixelFormatSelector->setEnabled(noofframes > 1);
+  pixelFormatSelector->blockSignals(false);
+
+  QSize binsize = camera->getBinning();
+  binSpinBox->setValue(binsize.width());
+
+  gainrange = camera->getGainLimits();
+  exposurerange = camera->getExposureLimits();
+  gainSlider->setRange(0, slidersteps);
+  exposureSlider->setRange(0, slidersteps);
+  gainSpinbox->setRange(gainrange.first, gainrange.second);
+  exposureSpinbox->setRange(exposurerange.first/1000.,
+                            exposurerange.second/1000.);
+  readGain();
+  readExposure();
+  gainAutoButton->setEnabled(camera->hasAutoGain());
+  exposureAutoButton->setEnabled(camera->hasAutoExposure());
+
+  readROILimits();
+  QRect roi = camera->getROI();
+  xSpinbox->setValue(roi.x());
+  ySpinbox->setValue(roi.y());
+  wSpinbox->setValue(roi.width());
+  hSpinbox->setValue(roi.height());
+}
+
 void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
 
@@ -228,8 +266,6 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   }
   camera = new ArCam(camid);
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
-
-  fpsSpinbox->setValue(camera->getFPS());
 
   auto ifaceIP = camera->getHostIP();
   QNetworkInterface cameraIface;
@@ -270,42 +306,19 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
     cameraMTUDescription->setText(description);
   }
 
-  auto formats = camera->getPixelFormats();
-  auto formatnames = camera->getPixelFormatNames();
-  int noofframes = formats.length();
-  pixelFormatSelector->blockSignals(true);
-  pixelFormatSelector->clear();
-  for (int i = 0; i < noofframes; i++)
-    pixelFormatSelector->addItem(formatnames.at(i), formats.at(i));
-  auto format = camera->getPixelFormat();
-  pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
-  pixelFormatSelector->setEnabled(noofframes > 1);
-  pixelFormatSelector->blockSignals(false);
-
   on_resetROIButton_clicked(true);
-  QSize binsize = camera->getBinning();
-  binSpinBox->setValue(binsize.width());
-
-  gainrange = camera->getGainLimits();
-  exposurerange = camera->getExposureLimits();
-  gainSlider->setRange(0, slidersteps);
-  exposureSlider->setRange(0, slidersteps);
-  gainSpinbox->setRange(gainrange.first, gainrange.second);
-  exposureSpinbox->setRange(exposurerange.first/1000.,
-                            exposurerange.second/1000.);
-  readGain();
-  readExposure();
-
-  gainAutoButton->setEnabled(camera->hasAutoGain());
-  exposureAutoButton->setEnabled(camera->hasAutoExposure());
   camera->setAutoGain(false);
   camera->setAutoExposure(false);
+  readAllValues();
 
   advancedTree->setModel(camera);
   advancedTree->header()->setResizeMode(QHeaderView::ResizeToContents);
   advancedTree->setItemDelegate(new ArCamDelegate);
 
   autoreadexposure->start();
+  this->connect(camera,
+                SIGNAL(dataChanged(QModelIndex,
+                                   QModelIndex)), SLOT(readAllValues()));
 }
 
 void MainWindow::readExposure() {

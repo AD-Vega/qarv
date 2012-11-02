@@ -78,6 +78,7 @@ private slots:
   void updateImageTransform();
   void showFPS();
   void histogramNextFrame();
+  void readAllValues();
 
 private:
   void readROILimits();
