@@ -110,7 +110,7 @@ Predlagamo večji MTU.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Please set the video file name.</source>
-        <translation>Prosim nastavi ime video datoteke.</translation>
+        <translation>Izberi ime video datoteke.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="589"/>
@@ -130,7 +130,7 @@ Predlagamo večji MTU.</translation>
     <message>
         <location filename="../src/mainwindow.cpp" line="671"/>
         <source>Please set the snapshot directory and name.</source>
-        <translation>Prosim nastavi direktorij in ime za slike.</translation>
+        <translation>Izberi direktorij in ime za slike.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="679"/>
