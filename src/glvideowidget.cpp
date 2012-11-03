@@ -24,8 +24,8 @@
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   corner1(), corner2(), rectangle(), selecting(false),
-  drawRectangle(false), whitepen(Qt::white), blackpen(Qt::black),
-  idleImageIcon() {
+  drawRectangle(false), fixedSelection(false), whitepen(Qt::white),
+  blackpen(Qt::black), idleImageIcon() {
   QFile iconfile(QString(qarv_datafiles) + "/video-display.svgz");
   if (iconfile.exists())
     idleImageIcon = QIcon(iconfile.fileName());
@@ -102,27 +102,73 @@ void GLVideoWidget::enableSelection(bool enable) {
   if (enable) {
     selecting = true;
     setCursor(Qt::CrossCursor);
+
+    if (fixedSelection)
+      setMouseTracking(true);
   } else {
     selecting = false;
     drawRectangle = false;
     rectangle = QRect();
     setCursor(Qt::ArrowCursor);
+    setMouseTracking(false);
+  }
+}
+
+void GLVideoWidget::setSelectionSize(QSize size) {
+  if (size.width() == 0 || size.height() == 0)
+    fixedSelection = false;
+  else {
+    fixedSelection = true;
+    fixedSize = size;
   }
 }
 
 void GLVideoWidget::mousePressEvent(QMouseEvent* event) {
   QWidget::mousePressEvent(event);
+  if (fixedSelection) return;
   if (selecting) corner1 = event->pos();
 }
 
 void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
   QWidget::mouseMoveEvent(event);
-  if (selecting) {
-    drawRectangle = true;
+
+  if (!selecting)
+    return;
+
+  drawRectangle = true;
+  float scale = out.width() / (float)in.width();
+
+  if (fixedSelection) {
+    if ((fixedSize.width() > in.width()) || (fixedSize.height() > in.height())) {
+      rectangle = in;
+      drawnRectangle = out;
+      return;
+    }
+
+    rectangle.setSize(fixedSize);
+    rectangle.moveCenter((event->pos() - out.topLeft())/scale);
+
+    if (rectangle.x() < 0)
+      rectangle.translate(-rectangle.x(), 0);
+
+    if (rectangle.y() < 0)
+      rectangle.translate(0, -rectangle.y());
+
+    int hmargin = (rectangle.x() + rectangle.width()) - in.width();
+    if (hmargin > 0)
+      rectangle.translate(-hmargin, 0);
+
+    int vmargin = (rectangle.y() + rectangle.height()) - in.height();
+    if (vmargin > 0)
+      rectangle.translate(0, -vmargin);
+
+    drawnRectangle.moveTopLeft(out.topLeft() + rectangle.topLeft()*scale);
+    drawnRectangle.setSize(rectangle.size()*scale);
+  }
+  else {
     corner2 = event->pos();
     QRect rec(corner1, corner2);
     rec &= out;
-    float scale = out.width() / (float)in.width();
     rec = rec.normalized();
     QPoint corner = rec.topLeft(), outcorner = out.topLeft();
     corner = (corner - outcorner) / scale;

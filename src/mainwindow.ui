@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>926</width>
-    <height>532</height>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -346,6 +346,16 @@
               </widget>
              </item>
              <item>
+              <widget class="QPushButton" name="resetROIButton">
+               <property name="toolTip">
+                <string>Reset ROI to the maximum, effective immediately.</string>
+               </property>
+               <property name="text">
+                <string>Whole image</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QFrame" name="frame">
                <property name="frameShape">
                 <enum>QFrame::HLine</enum>
@@ -374,12 +384,9 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="resetROIButton">
+              <widget class="QComboBox" name="ROIsizeCombo">
                <property name="toolTip">
-                <string>Reset ROI to the maximum, effective immediately.</string>
-               </property>
-               <property name="text">
-                <string>Whole image</string>
+                <string>Choose a size of ROI used for picking.</string>
                </property>
               </widget>
              </item>

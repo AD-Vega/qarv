@@ -67,6 +67,7 @@ private slots:
   void on_histogramdock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
   void on_videoFormatSelector_currentIndexChanged(int index);
+  void on_ROIsizeCombo_currentIndexChanged(int index);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
@@ -99,6 +100,7 @@ private:
   QList<QWidget*> toDisableWhenPlaying;
   QList<QWidget*> toDisableWhenRecording;
   QIcon recordIcon, pauseIcon, playIcon;
+  QList<QSize> ROIsizes;
 };
 
 /* Qt event filter that intercepts ToolTipChange events and replaces the

@@ -37,6 +37,7 @@ public:
 
 public slots:
   void enableSelection(bool enable);
+  void setSelectionSize(QSize size);
 
 signals:
   void selectionComplete(QRect region);
@@ -51,9 +52,10 @@ private:
   QRect in, out;
   QIcon idleImageIcon;
 
-  bool idling, selecting, drawRectangle;
+  bool idling, selecting, drawRectangle, fixedSelection;
   QPoint corner1, corner2;
   QRect rectangle, drawnRectangle;
+  QSize fixedSize;
   QPen whitepen, blackpen;
 };
 
