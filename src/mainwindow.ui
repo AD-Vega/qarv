@@ -384,9 +384,12 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="ROIsizeCombo">
+              <widget class="ROIcomboBox" name="ROIsizeCombo">
                <property name="toolTip">
                 <string>Choose a size of ROI used for picking.</string>
+               </property>
+               <property name="insertPolicy">
+                <enum>QComboBox::NoInsert</enum>
                </property>
               </widget>
              </item>
@@ -1079,6 +1082,11 @@
    <slots>
     <slot>setLogarithmic(bool)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>ROIcomboBox</class>
+   <extends>QComboBox</extends>
+   <header>roicombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

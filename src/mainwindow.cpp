@@ -133,15 +133,6 @@ MainWindow::MainWindow() :
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
 
-  ROIsizes << QSize(0, 0) << QSize(1024, 768) << QSize(800, 600)
-           << QSize(640, 480) << QSize(480, 360) << QSize(320, 240);
-  ROIsizeCombo->addItem(tr("No size constraint"));
-  for (int i = 1; i < ROIsizes.length(); i++) {
-    ROIsizeCombo->addItem(QString::number(ROIsizes[i].width())
-                          + "x"
-                          + QString::number(ROIsizes[i].height()));
-  }
-
   auto timer = new QTimer(this);
   timer->setInterval(1000);
   this->connect(timer, SIGNAL(timeout()), SLOT(showFPS()));
@@ -932,11 +923,8 @@ void MainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
   }
 }
 
-void MainWindow::on_ROIsizeCombo_currentIndexChanged(int index) {
-  if (index < 0)
-    index = 0;
-
-  video->setSelectionSize(ROIsizes[index]);
+void MainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
+  video->setSelectionSize(size);
 }
 
 void MainWindow::histogramNextFrame() {
