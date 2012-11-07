@@ -155,11 +155,11 @@ void MainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   QApplication::processEvents();
   QApplication::flush();
   cameraSelector->clear();
-  auto cameras = ArCam::listCameras();
+  auto cameras = QArvCamera::listCameras();
   foreach (auto cam, cameras) {
     QString display;
     display = display + cam.vendor + " (" + cam.model + ")";
-    cameraSelector->addItem(display, QVariant::fromValue<ArCamId>(cam));
+    cameraSelector->addItem(display, QVariant::fromValue<QArvCameraId>(cam));
   }
   cameraSelector->setEnabled(true);
   cameraSelector->blockSignals(false);
@@ -268,12 +268,12 @@ void MainWindow::readAllValues() {
 void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
 
-  auto camid = cameraSelector->itemData(index).value<ArCamId>();
+  auto camid = cameraSelector->itemData(index).value<QArvCameraId>();
   if (camera != NULL) {
     startVideo(false);
     delete camera;
   }
-  camera = new ArCam(camid);
+  camera = new QArvCamera(camid);
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
 
   auto ifaceIP = camera->getHostIP();
@@ -324,7 +324,7 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
   advancedTree->setModel(camera);
   advancedTree->header()->setResizeMode(QHeaderView::ResizeToContents);
-  advancedTree->setItemDelegate(new ArCamDelegate);
+  advancedTree->setItemDelegate(new QArvCameraDelegate);
 
   autoreadexposure->start();
   this->connect(camera,

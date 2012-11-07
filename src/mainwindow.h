@@ -85,7 +85,7 @@ private:
   void transformImage(QImage& img);
 
   QImage invalidImage;
-  ArCam* camera;
+  QArvCamera* camera;
   FrameDecoder* decoder;
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;

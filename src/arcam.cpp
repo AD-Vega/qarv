@@ -34,28 +34,28 @@ extern "C" {
 #include <QCheckBox>
 #include <QPushButton>
 
-QList<ArCamId> ArCam::cameraList;
+QList<QArvCameraId> QArvCamera::cameraList;
 
 void arcamInit() {
   g_type_init();
   arv_enable_interface("Fake");
 }
 
-ArCamId::ArCamId() : id(NULL), vendor(NULL), model(NULL) {}
+QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
 
-ArCamId::ArCamId(const char* id_, const char* vendor_, const char* model_) {
+QArvCameraId::QArvCameraId(const char* id_, const char* vendor_, const char* model_) {
   id = strdup(id_);
   vendor = strdup(vendor_);
   model = strdup(model_);
 }
 
-ArCamId::ArCamId(const ArCamId& camid) {
+QArvCameraId::QArvCameraId(const QArvCameraId& camid) {
   id = strdup(camid.id);
   vendor = strdup(camid.vendor);
   model = strdup(camid.model);
 }
 
-ArCamId::~ArCamId() {
+QArvCameraId::~QArvCameraId() {
   if (id != NULL) free((void*)id);
   if (vendor != NULL) free((void*)vendor);
   if (model != NULL) free((void*)model);
@@ -67,7 +67,7 @@ void freeFeaturetree(ArFeatureTree* tree);
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
  */
-ArCam::ArCam(ArCamId id, QObject* parent) :
+QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
   QAbstractItemModel(parent), acquiring(false) {
   camera = arv_camera_new(id.id);
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
@@ -76,7 +76,7 @@ ArCam::ArCam(ArCamId id, QObject* parent) :
   featuretree = createFeaturetree(genicam);
 }
 
-ArCam::~ArCam() {
+QArvCamera::~QArvCamera() {
   freeFeaturetree(featuretree);
   stopAcquisition();
   g_object_unref(camera);
@@ -88,36 +88,36 @@ ArCam::~ArCam() {
  *
  * TODO: see if this info can be obtained using a lower level API.
  */
-QList<ArCamId> ArCam::listCameras() {
+QList<QArvCameraId> QArvCamera::listCameras() {
   cameraList.clear();
   arv_update_device_list();
   unsigned int N = arv_get_n_devices();
   for (unsigned int i = 0; i < N; i++) {
     const char* camid = arv_get_device_id(i);
     ArvCamera* camera = arv_camera_new(camid);
-    ArCamId id(camid, arv_camera_get_vendor_name(camera),
+    QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
                arv_camera_get_model_name(camera));
     g_object_unref(camera);
     cameraList << id;
   }
-  return QList<ArCamId>(cameraList);
+  return QList<QArvCameraId>(cameraList);
 }
 
-ArCamId ArCam::getId() {
+QArvCameraId QArvCamera::getId() {
   const char* id, * vendor, * model;
   id = arv_camera_get_device_id(camera);
   vendor = arv_camera_get_vendor_name(camera);
   model = arv_camera_get_model_name(camera);
-  return ArCamId(id, vendor, model);
+  return QArvCameraId(id, vendor, model);
 }
 
-QRect ArCam::getROI() {
+QRect QArvCamera::getROI() {
   int x, y, width, height;
   arv_camera_get_region(camera, &x, &y, &width, &height);
   return QRect(x, y, width, height);
 }
 
-QRect ArCam::getROIMaxSize() {
+QRect QArvCamera::getROIMaxSize() {
   int xmin, xmax, ymin, ymax;
   arv_camera_get_width_bounds(camera, &xmin, &xmax);
   arv_camera_get_height_bounds(camera, &ymin, &ymax);
@@ -126,25 +126,25 @@ QRect ArCam::getROIMaxSize() {
   return retval;
 }
 
-void ArCam::setROI(QRect roi) {
+void QArvCamera::setROI(QRect roi) {
   int x, y, width, height;
   roi.getRect(&x, &y, &width, &height);
   arv_camera_set_region(camera, x, y, width, height);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-QSize ArCam::getBinning() {
+QSize QArvCamera::getBinning() {
   int x, y;
   arv_camera_get_binning(camera, &x, &y);
   return QSize(x, y);
 }
 
-void ArCam::setBinning(QSize bin) {
+void QArvCamera::setBinning(QSize bin) {
   arv_camera_set_binning(camera, bin.width(), bin.height());
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-QList< QString > ArCam::getPixelFormats() {
+QList< QString > QArvCamera::getPixelFormats() {
   unsigned int numformats;
   const char** formats =
     arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
@@ -155,7 +155,7 @@ QList< QString > ArCam::getPixelFormats() {
   return list;
 }
 
-QList< QString > ArCam::getPixelFormatNames() {
+QList< QString > QArvCamera::getPixelFormatNames() {
   unsigned int numformats;
   const char** formats =
     arv_camera_get_available_pixel_formats_as_display_names(camera, &numformats);
@@ -167,49 +167,49 @@ QList< QString > ArCam::getPixelFormatNames() {
   return list;
 }
 
-QString ArCam::getPixelFormat() {
+QString QArvCamera::getPixelFormat() {
   return QString(arv_camera_get_pixel_format_as_string(camera));
 }
 
-void ArCam::setPixelFormat(QString format) {
+void QArvCamera::setPixelFormat(QString format) {
   auto tmp = format.toAscii();
   arv_camera_set_pixel_format_from_string(camera, tmp.constData());
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-double ArCam::getFPS() {
+double QArvCamera::getFPS() {
   return arv_camera_get_frame_rate(camera);
 }
 
-void ArCam::setFPS(double fps) {
+void QArvCamera::setFPS(double fps) {
   arv_camera_set_frame_rate(camera, fps);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-int ArCam::getMTU() {
+int QArvCamera::getMTU() {
   return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
 }
 
-void ArCam::setMTU(int mtu) {
+void QArvCamera::setMTU(int mtu) {
   arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
   arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-double ArCam::getExposure() {
+double QArvCamera::getExposure() {
   return arv_camera_get_exposure_time(camera);
 }
 
-void ArCam::setExposure(double exposure) {
+void QArvCamera::setExposure(double exposure) {
   arv_camera_set_exposure_time(camera, exposure);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-bool ArCam::hasAutoExposure() {
+bool QArvCamera::hasAutoExposure() {
   return arv_camera_is_exposure_auto_available(camera);
 }
 
-void ArCam::setAutoExposure(bool enable) {
+void QArvCamera::setAutoExposure(bool enable) {
   if (enable)
     arv_camera_set_exposure_time_auto(camera, ARV_AUTO_CONTINUOUS);
   else
@@ -217,32 +217,32 @@ void ArCam::setAutoExposure(bool enable) {
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-double ArCam::getGain() {
+double QArvCamera::getGain() {
   return arv_camera_get_gain(camera);
 }
 
-void ArCam::setGain(double gain) {
+void QArvCamera::setGain(double gain) {
   arv_camera_set_gain(camera, gain);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-QPair< double, double > ArCam::getExposureLimits() {
+QPair< double, double > QArvCamera::getExposureLimits() {
   double expomin, expomax;
   arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax);
   return QPair<double, double>(expomin, expomax);
 }
 
-QPair< double, double > ArCam::getGainLimits() {
+QPair< double, double > QArvCamera::getGainLimits() {
   double gainmin, gainmax;
   arv_camera_get_gain_bounds(camera, &gainmin, &gainmax);
   return QPair<double, double>(gainmin, gainmax);
 }
 
-bool ArCam::hasAutoGain() {
+bool QArvCamera::hasAutoGain() {
   return arv_camera_is_gain_auto_available(camera);
 }
 
-void ArCam::setAutoGain(bool enable) {
+void QArvCamera::setAutoGain(bool enable) {
   if (enable)
     arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
   else
@@ -251,14 +251,14 @@ void ArCam::setAutoGain(bool enable) {
 }
 
 //! Store the pointer to the current frame.
-void ArCam::swapBuffers() {
+void QArvCamera::swapBuffers() {
   arv_stream_push_buffer(stream, currentFrame);
   currentFrame = arv_stream_pop_buffer(stream);
   emit frameReady();
 }
 
 //! A wrapper that calls cam's private callback to accept frames.
-void streamCallback(ArvStream* stream, ArCam* cam) {
+void streamCallback(ArvStream* stream, QArvCamera* cam) {
   cam->swapBuffers();
 }
 
@@ -266,7 +266,7 @@ void streamCallback(ArvStream* stream, ArCam* cam) {
  * This function not only starts acquisition, but also pushes a number of
  * frames onto the stream and sets up the callback which accepts frames.
  */
-void ArCam::startAcquisition() {
+void QArvCamera::startAcquisition() {
   if (acquiring) return;
   unsigned int framesize = arv_camera_get_payload(camera);
   currentFrame = arv_buffer_new(framesize, NULL);
@@ -281,7 +281,7 @@ void ArCam::startAcquisition() {
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-void ArCam::stopAcquisition() {
+void QArvCamera::stopAcquisition() {
   if (!acquiring) return;
   arv_camera_stop_acquisition(camera);
   g_object_unref(currentFrame);
@@ -290,7 +290,7 @@ void ArCam::stopAcquisition() {
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-QSize ArCam::getFrameSize() {
+QSize QArvCamera::getFrameSize() {
   return getROI().size();
 }
 
@@ -298,7 +298,7 @@ QSize ArCam::getFrameSize() {
  * \param dropInvalid If true, return an empty QByteArray on an invalid frame.
  * \return A QByteArray with raw frame data of size given by getFrameSize().
  */
-QByteArray ArCam::getFrame(bool dropInvalid) {
+QByteArray QArvCamera::getFrame(bool dropInvalid) {
   if (currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
   else
@@ -317,25 +317,25 @@ QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
   return QHostAddress(&addr);
 }
 
-QHostAddress ArCam::getIP() {
+QHostAddress QArvCamera::getIP() {
   if (ARV_IS_GV_DEVICE(device)) {
     auto gaddr = arv_gv_device_get_device_address(ARV_GV_DEVICE(device));
     return GSocketAddress_to_QHostAddress(gaddr);
   } else return QHostAddress();
 }
 
-QHostAddress ArCam::getHostIP() {
+QHostAddress QArvCamera::getHostIP() {
   if (ARV_IS_GV_DEVICE(device)) {
     auto gaddr = arv_gv_device_get_interface_address(ARV_GV_DEVICE(device));
     return GSocketAddress_to_QHostAddress(gaddr);
   } else return QHostAddress();
 }
 
-int ArCam::getEstimatedBW() {
+int QArvCamera::getEstimatedBW() {
   return arv_device_get_integer_feature_value(device, "GevSCDCT");
 }
 
-QTextStream& operator<<(QTextStream& out, ArCam* camera) {
+QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
   auto id = camera->getId();
   out << id.vendor << endl <<
     id.model << endl <<
@@ -349,12 +349,12 @@ QTextStream& operator<<(QTextStream& out, ArCam* camera) {
  * provided. This means that dependencies between features are not honored.
  * Because of this, loading may fail.
  */
-QTextStream& operator>>(QTextStream& in, ArCam* camera) {
+QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
   auto ID = camera->getId();
   QString vendor, model, id;
   in >> vendor >> model >> id;
   if (!(vendor == ID.vendor && model == ID.model && id == ID.id)) {
-    qWarning() << QObject::tr("Incompatible camera settings", "ArCam");
+    qWarning() << QObject::tr("Incompatible camera settings", "QArvCamera");
     return in;
   }
 
@@ -485,8 +485,8 @@ void freeFeaturetree(ArFeatureTree* tree) {
   delete tree;
 }
 
-//! Serialize the tree, used by ArCam stream operators.
-void recursiveSerialization(QTextStream& out, ArCam* camera,
+//! Serialize the tree, used by QArvCamera stream operators.
+void recursiveSerialization(QTextStream& out, QArvCamera* camera,
                             ArFeatureTree* tree) {
   auto node = arv_gc_get_node(camera->genicam, tree->feature());
   ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
@@ -531,7 +531,7 @@ void recursiveSerialization(QTextStream& out, ArCam* camera,
   }
 }
 
-QModelIndex ArCam::index(int row, int column,
+QModelIndex QArvCamera::index(int row, int column,
                          const QModelIndex& parent) const {
   if (column > 1) return QModelIndex();
   ArFeatureTree* treenode;
@@ -545,7 +545,7 @@ QModelIndex ArCam::index(int row, int column,
   return createIndex(row, column, child);
 }
 
-QModelIndex ArCam::parent(const QModelIndex& index) const {
+QModelIndex QArvCamera::parent(const QModelIndex& index) const {
   ArFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
   else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
@@ -554,18 +554,18 @@ QModelIndex ArCam::parent(const QModelIndex& index) const {
   return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
 }
 
-int ArCam::columnCount(const QModelIndex& parent) const {
+int QArvCamera::columnCount(const QModelIndex& parent) const {
   return 2;
 }
 
-int ArCam::rowCount(const QModelIndex& parent) const {
+int QArvCamera::rowCount(const QModelIndex& parent) const {
   ArFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
   else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
   return treenode->children().count();
 }
 
-QVariant ArCam::data(const QModelIndex& index, int role) const {
+QVariant QArvCamera::data(const QModelIndex& index, int role) const {
   ArFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
   else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
@@ -706,7 +706,7 @@ QVariant ArCam::data(const QModelIndex& index, int role) const {
   return QVariant();
 }
 
-bool ArCam::setData(const QModelIndex& index, const QVariant& value,
+bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
                     int role) {
   QAbstractItemModel::setData(index, value, role);
   if (!(index.model()->flags(index) & Qt::ItemIsEnabled) ||
@@ -751,7 +751,7 @@ bool ArCam::setData(const QModelIndex& index, const QVariant& value,
   return true;
 }
 
-Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
+Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
   auto f = QAbstractItemModel::flags(index);
   if (!index.isValid()) return f;
   ArFeatureTree* treenode;
@@ -775,7 +775,7 @@ Qt::ItemFlags ArCam::flags(const QModelIndex& index) const {
   return f;
 }
 
-QVariant ArCam::headerData(int section, Qt::Orientation orientation,
+QVariant QArvCamera::headerData(int section, Qt::Orientation orientation,
                            int role) const {
   switch (section) {
   case 0:
@@ -787,9 +787,9 @@ QVariant ArCam::headerData(int section, Qt::Orientation orientation,
   return QVariant();
 }
 
-ArCamDelegate::ArCamDelegate(QObject* parent) : QStyledItemDelegate(parent) {}
+QArvCameraDelegate::QArvCameraDelegate(QObject* parent) : QStyledItemDelegate(parent) {}
 
-QWidget* ArCamDelegate::createEditor(QWidget* parent,
+QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
                                      const QStyleOptionViewItem& option,
                                      const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
@@ -800,7 +800,7 @@ QWidget* ArCamDelegate::createEditor(QWidget* parent,
   return editor;
 }
 
-void ArCamDelegate::setEditorData(QWidget* editor,
+void QArvCameraDelegate::setEditorData(QWidget* editor,
                                   const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
   assert(var.isValid());
@@ -808,7 +808,7 @@ void ArCamDelegate::setEditorData(QWidget* editor,
   val->populateEditor(editor);
 }
 
-void ArCamDelegate::setModelData(QWidget* editor,
+void QArvCameraDelegate::setModelData(QWidget* editor,
                                  QAbstractItemModel* model,
                                  const QModelIndex& index) const {
   auto var = model->data(index, Qt::EditRole);
@@ -818,14 +818,14 @@ void ArCamDelegate::setModelData(QWidget* editor,
   model->setData(index, var);
 }
 
-void ArCamDelegate::updateEditorGeometry(QWidget* editor,
+void QArvCameraDelegate::updateEditorGeometry(QWidget* editor,
                                          const QStyleOptionViewItem& option,
                                          const QModelIndex& index) const {
   editor->layout()->setContentsMargins(0, 0, 0, 0);
   editor->setGeometry(option.rect);
 }
 
-void ArCamDelegate::finishEditing() {
+void QArvCameraDelegate::finishEditing() {
   auto editor = qobject_cast<QWidget*>(sender());
   emit commitData(editor);
   emit closeEditor(editor);
@@ -965,7 +965,7 @@ ArEditor* ArCommand::createEditor(QWidget* parent) const {
   auto editor = new ArEditor(parent);
   auto button = new QPushButton(editor);
   button->setObjectName("execCommand");
-  button->setText(QObject::tr("Execute", "ArCam"));
+  button->setText(QObject::tr("Execute", "QArvCamera"));
   auto layout = new QHBoxLayout;
   editor->setLayout(layout);
   layout->addWidget(button);

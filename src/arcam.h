@@ -54,19 +54,19 @@ class ArFeatureTree;
  * Aravis id of the camera and the name of the camera vendor and model.
  * These strings are owned by the instance, not by Aravis.
  */
-class ArCamId {
+class QArvCameraId {
 public:
-  ArCamId();
-  ArCamId(const char* id, const char* vendor, const char* model);
-  ArCamId(const ArCamId& camid);
-  ~ArCamId();
+  QArvCameraId();
+  QArvCameraId(const char* id, const char* vendor, const char* model);
+  QArvCameraId(const QArvCameraId& camid);
+  ~QArvCameraId();
   const char* id, * vendor, * model;
 };
 
-Q_DECLARE_METATYPE(ArCamId)
+Q_DECLARE_METATYPE(QArvCameraId)
 
 
-//! ArCam provides an interface to an Aravis camera.
+//! QArvCamera provides an interface to an Aravis camera.
 /*!
  * This class is mostly a thin wrapper around the arv_camera interface.
  * Only the parts that differ significantly from that interface are documented.
@@ -74,22 +74,22 @@ Q_DECLARE_METATYPE(ArCamId)
  * this class is used.
  *
  * This class implements the QAbstractItemModel interface. This means that it
- * can be used as a data source for widgets such as QTreeView. An ArCamDelegate
+ * can be used as a data source for widgets such as QTreeView. An QArvCameraDelegate
  * is also provided to facilitate direct access to all camera features. The
  * model has two columns, the first being the name of the feature and the
  * second being the (editable) feature value.
  */
-class ArCam : public QAbstractItemModel {
+class QArvCamera : public QAbstractItemModel {
   Q_OBJECT
 
 public:
   //! A camera with the given ID is opened.
-  ArCam(ArCamId id, QObject* parent = NULL);
-  ~ArCam();
+  QArvCamera(QArvCameraId id, QObject* parent = NULL);
+  ~QArvCamera();
 
-  static QList<ArCamId> listCameras(); //!< Returns a list of all cameras found.
+  static QList<QArvCameraId> listCameras(); //!< Returns a list of all cameras found.
 
-  ArCamId getId(); //!< Returns the ID of the camera.
+  QArvCameraId getId(); //!< Returns the ID of the camera.
 
   //! \name Manipulate region of interest
   //@{
@@ -172,18 +172,18 @@ signals:
 
 private:
   void swapBuffers();
-  static QList<ArCamId> cameraList;
+  static QList<QArvCameraId> cameraList;
   ArvCamera* camera;
   ArvDevice* device;
   ArvStream* stream;
   ArvBuffer* currentFrame;
   bool acquiring;
 
-  friend void streamCallback(ArvStream* stream, ArCam* cam);
-  friend QTextStream& operator<<(QTextStream& out, ArCam* camera);
-  friend QTextStream& operator>>(QTextStream& in, ArCam* camera);
+  friend void streamCallback(ArvStream* stream, QArvCamera* cam);
+  friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
+  friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
   friend void recursiveSerialization(QTextStream& out,
-                                     ArCam* camera,
+                                     QArvCamera* camera,
                                      ArFeatureTree* tree);
 
 public:
@@ -209,21 +209,21 @@ private:
 };
 
 //! Serializes camera settings in text form.
-QTextStream& operator<<(QTextStream& out, ArCam* camera);
+QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
 
 //! Reads the textual representation of cammera settings. May not succeed.
-QTextStream& operator>>(QTextStream& in, ArCam* camera);
+QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
 
-//! ArCamDelegate provides editing widgets to go with the ArCam model.
+//! QArvCameraDelegate provides editing widgets to go with the QArvCamera model.
 /*!
- * Once a view is created for the data model provided by ArCam, use this
+ * Once a view is created for the data model provided by QArvCamera, use this
  * delegate to provide editing widgets for the view.
  */
-class ArCamDelegate : public QStyledItemDelegate {
+class QArvCameraDelegate : public QStyledItemDelegate {
   Q_OBJECT
 
 public:
-  explicit ArCamDelegate(QObject* parent = 0);
+  explicit QArvCameraDelegate(QObject* parent = 0);
   QWidget* createEditor(QWidget* parent,
                         const QStyleOptionViewItem& option,
                         const QModelIndex& index) const;
@@ -242,7 +242,7 @@ private slots:
 //! ArEditor is a QWidget that contains the actual editing widgets.
 /*! It is used to translate whichever signal is emitted by the actual widgets
  * when editig is finished into the editingFinished() signal which can be
- * used by ArCamDelegate.
+ * used by QArvCameraDelegate.
  */
 struct ArEditor : QWidget {
   Q_OBJECT
@@ -268,7 +268,7 @@ private slots:
 //! \name Types that correspond to types of feature nodes
 /**@{*/
 /*!
- * These types are used by the ArCam model and delegate to edit feature
+ * These types are used by the QArvCamera model and delegate to edit feature
  * node values. Sometimes, a feature has several possible types (e.g. an
  * enumeration can be either an enumeration, a string or an integer; an integer
  * can be cast to a float etc.), but the delegate needs to be able to identify
@@ -335,8 +335,8 @@ struct ArBoolean : ArType {
   bool value;
   operator QString() const {
     return value ?
-           QObject::tr("on/true", "ArCam") :
-           QObject::tr("off/false", "ArCam");
+           QObject::tr("on/true", "QArvCamera") :
+           QObject::tr("off/false", "QArvCamera");
   }
   ArEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
@@ -345,7 +345,7 @@ struct ArBoolean : ArType {
 Q_DECLARE_METATYPE(ArBoolean)
 
 struct ArCommand : ArType {
-  operator QString() const { return QObject::tr("<command>", "ArCam"); }
+  operator QString() const { return QObject::tr("<command>", "QArvCamera"); }
   ArEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
