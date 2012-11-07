@@ -117,7 +117,8 @@ MainWindow::MainWindow() :
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
                  SLOT(enableSelection(bool)));
-  this->connect(video, SIGNAL(selectionComplete(QRect)), SLOT(pickedROI(QRect)));
+  this->connect(video, SIGNAL(selectionComplete(QRect)),
+                SLOT(pickedROI(QRect)));
 
   rotationSelector->addItem(tr("No rotation"), 0);
   rotationSelector->addItem(tr("90 degrees"), 90);
@@ -202,15 +203,15 @@ static inline double slider2value_log(int slidervalue,
 
 static inline int value2slider_log(double value,
                                    QPair<double, double>& range) {
-  return slidersteps *
-         (log2(value) - log2(range.first)) /
-         (log2(range.second) - log2(range.first));
+  return slidersteps
+         * (log2(value) - log2(range.first))
+         / (log2(range.second) - log2(range.first));
 }
 
 static inline double slider2value(int slidervalue,
                                   QPair<double, double>& range) {
-  return range.first + (range.second - range.first) *
-         slidervalue / slidersteps;
+  return range.first + (range.second - range.first)
+         * slidervalue / slidersteps;
 }
 
 static inline int value2slider(double value,
@@ -298,7 +299,8 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
       camera->setMTU(mtu);
     }
   } else {
-    QString message = tr("Network address not found, trying best-effort MTU %1.");
+    QString message = tr("Network address not found, "
+                         "trying best-effort MTU %1.");
     int mtu = 1500;
     statusBar()->showMessage(message.arg(mtu), statusTimeoutMsec);
     camera->setMTU(mtu);
@@ -489,8 +491,8 @@ void MainWindow::takeNextFrame() {
 }
 
 void MainWindow::startVideo(bool start) {
-  if (toDisableWhenPlaying.isEmpty()) toDisableWhenPlaying << cameraSelector <<
-    refreshCamerasButton;
+  if (toDisableWhenPlaying.isEmpty())
+    toDisableWhenPlaying << cameraSelector << refreshCamerasButton;
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
@@ -499,8 +501,8 @@ void MainWindow::startVideo(bool start) {
       invalidImage = QImage(camera->getFrameSize(), QImage::Format_RGB32);
       invalidImage.fill(Qt::red);
       if (decoder == NULL)
-        qCritical() << "Decoder for" << camera->getPixelFormat() <<
-        "doesn't exist!";
+        qCritical() << "Decoder for" << camera->getPixelFormat()
+                    << "doesn't exist!";
       else {
         camera->startAcquisition();
         started = true;
@@ -518,8 +520,8 @@ void MainWindow::startVideo(bool start) {
       foreach (auto wgt, toDisableWhenPlaying) {
         wgt->setEnabled(!recordingfile->isOpen());
       }
-      pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1 &&
-                                      !recordingfile->isOpen());
+      pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
+                                      && !recordingfile->isOpen());
     }
   }
   // Set idle image on the histogram.
@@ -679,9 +681,9 @@ void MainWindow::on_snapButton_clicked(bool checked) {
   statusBar()->clearMessage();
 
   auto time = QDateTime::currentDateTime();
-  QString fileName = snappathEdit->text() + "/" +
-                     snapbasenameEdit->text() +
-                     time.toString("yyyy-MM-dd-hh:mm:ss:zzz");
+  QString fileName = snappathEdit->text() + "/"
+                     + snapbasenameEdit->text()
+                     + time.toString("yyyy-MM-dd-hh:mm:ss:zzz");
   if (snapshotPNG->isChecked()) {
     auto img = video->getImage();
     if (!img.save(fileName + ".png"))
@@ -772,16 +774,16 @@ void MainWindow::on_loadSettingsButton_clicked(bool checked) {
       QString wanted = wholefile.readLine();
       QString actual = readBack.readLine();
       if (wanted != actual) {
-	qDebug() << "wanted:" << wanted << endl << "actual:" << actual;
-	failures << wanted;
+        qDebug() << "wanted:" << wanted << endl << "actual:" << actual;
+        failures << wanted;
       }
     }
     if (failures.count() != 0) {
-      QString message = "<html><head/><body><p>" +
-        tr("Settings could not be completely loaded. "
-        "This can happen because camera features are interdependent and may "
-        "require a specific loading order. The following settings failed:") +
-        "</p>";
+      QString message = "<html><head/><body><p>"
+                        + tr("Settings could not be completely loaded. "
+                             "This can happen because camera features are interdependent and may "
+                             "require a specific loading order. The following settings failed:")
+                        + "</p>";
       foreach (auto fail, failures) message += fail;
       message += "</body></html>";
       QMessageBox::warning(this, tr("Loading settings failed"), message);
@@ -908,8 +910,8 @@ void MainWindow::on_closeFileButton_clicked(bool checked) {
   foreach (auto wgt, toDisableWhenPlaying) {
     wgt->setEnabled(!started);
   }
-  pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1 &&
-                                  !started);
+  pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
+                                  && !started);
   on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 }
 

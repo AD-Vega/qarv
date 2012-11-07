@@ -27,7 +27,8 @@ GLHistogramWidget::GLHistogramWidget(QWidget* parent) : QGLWidget() {
   histRed = new float[256];
   histGreen = new float[256];
   histBlue = new float[256];
-  QFile iconfile(QString(qarv_datafiles) + "/view-object-histogram-linear.svgz");
+  QFile iconfile(QString(qarv_datafiles)
+                 + "/view-object-histogram-linear.svgz");
   if (iconfile.exists())
     idleImageIcon = QIcon(iconfile.fileName());
   else
@@ -46,13 +47,13 @@ void GLHistogramWidget::setLogarithmic(bool logarithmic_) {
 }
 
 void GLHistogramWidget::fromImage(const QImage& image) {
-  if  (image.isNull()) {
+  if (image.isNull()) {
     idle = true;
     update();
     return;
   }
   idle = false;
-  
+
   if (image.format() == QImage::Format_Indexed8) {
     indexed = true;
     for (int i = 0; i < 256; i++)

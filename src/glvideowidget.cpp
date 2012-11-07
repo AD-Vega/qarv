@@ -139,7 +139,8 @@ void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
   float scale = out.width() / (float)in.width();
 
   if (fixedSelection) {
-    if ((fixedSize.width() > in.width()) || (fixedSize.height() > in.height())) {
+    if ((fixedSize.width() > in.width())
+        || (fixedSize.height() > in.height())) {
       rectangle = in;
       drawnRectangle = out;
       return;
@@ -164,8 +165,7 @@ void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
 
     drawnRectangle.moveTopLeft(out.topLeft() + rectangle.topLeft()*scale);
     drawnRectangle.setSize(rectangle.size()*scale);
-  }
-  else {
+  } else {
     corner2 = event->pos();
     QRect rec(corner1, corner2);
     rec &= out;

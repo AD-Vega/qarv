@@ -43,7 +43,9 @@ void QArvCamera::init() {
 
 QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
 
-QArvCameraId::QArvCameraId(const char* id_, const char* vendor_, const char* model_) {
+QArvCameraId::QArvCameraId(const char* id_,
+                           const char* vendor_,
+                           const char* model_) {
   id = strdup(id_);
   vendor = strdup(vendor_);
   model = strdup(model_);
@@ -96,7 +98,7 @@ QList<QArvCameraId> QArvCamera::listCameras() {
     const char* camid = arv_get_device_id(i);
     ArvCamera* camera = arv_camera_new(camid);
     QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
-               arv_camera_get_model_name(camera));
+                    arv_camera_get_model_name(camera));
     g_object_unref(camera);
     cameraList << id;
   }
@@ -158,7 +160,8 @@ QList< QString > QArvCamera::getPixelFormats() {
 QList< QString > QArvCamera::getPixelFormatNames() {
   unsigned int numformats;
   const char** formats =
-    arv_camera_get_available_pixel_formats_as_display_names(camera, &numformats);
+    arv_camera_get_available_pixel_formats_as_display_names(camera,
+                                                            &numformats);
   QList<QString> list;
   for (int i = 0; i < numformats; i++) {
     list << formats[i];
@@ -337,9 +340,9 @@ int QArvCamera::getEstimatedBW() {
 
 QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
   auto id = camera->getId();
-  out << id.vendor << endl <<
-    id.model << endl <<
-    id.id << endl;
+  out << id.vendor << endl
+      << id.model << endl
+      << id.id << endl;
   recursiveSerialization(out, camera, camera->featuretree);
   return out;
 }
@@ -418,7 +421,8 @@ private:
   const char* feature_;
 };
 
-QArvFeatureTree::QArvFeatureTree(QArvFeatureTree* parent, const char* feature) :
+QArvFeatureTree::QArvFeatureTree(QArvFeatureTree* parent,
+                                 const char* feature) :
   children_() {
   if (feature == NULL) feature_ = strdup("");
   else feature_ = strdup(feature);
@@ -494,34 +498,35 @@ void recursiveSerialization(QTextStream& out, QArvCamera* camera,
   if (tree->children().count() != 0) {
     if (QString("Root") != tree->feature())
       out << "Category: " << tree->feature() << endl;
-    foreach (auto child, tree->children())
+    foreach (auto child, tree->children()) {
       recursiveSerialization(out, camera, child);
+    }
     return;
   }
 
   if (ARV_IS_GC_COMMAND(node)) return;
 
   out << "\t" << tree->feature() << "\t";
-  if (ARV_IS_GC_REGISTER_NODE(node) &&
-      QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
-      "IntReg") {
+  if (ARV_IS_GC_REGISTER_NODE(node)
+      && QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node)))
+      == "IntReg") {
     QArvRegister r;
     r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
     r.value = QByteArray(r.length, 0);
     arv_gc_register_get(ARV_GC_REGISTER(node),
                         r.value.data(), r.length, NULL);
-    out << "Register\t" << QString::number(r.length) << "\t" <<
-      QString("0x") + r.value.toHex() << endl;
+    out << "Register\t" << QString::number(r.length) << "\t"
+        << QString("0x") + r.value.toHex() << endl;
   } else if (ARV_IS_GC_ENUMERATION(node)) {
-    out << "Enumeration\t" <<
-      arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL) <<
-      endl;
+    out << "Enumeration\t"
+        << arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL)
+        << endl;
   } else if (ARV_IS_GC_STRING(node)) {
-    out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL) <<
-      endl;
+    out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL)
+        << endl;
   } else if (ARV_IS_GC_FLOAT(node)) {
-    out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL) <<
-      "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
+    out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
+        << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
   } else if (ARV_IS_GC_BOOLEAN(node)) {
     out << "Boolean\t" << arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node),
                                                    NULL) << endl;
@@ -532,7 +537,7 @@ void recursiveSerialization(QTextStream& out, QArvCamera* camera,
 }
 
 QModelIndex QArvCamera::index(int row, int column,
-                         const QModelIndex& parent) const {
+                              const QModelIndex& parent) const {
   if (column > 1) return QModelIndex();
   QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
@@ -607,9 +612,9 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-      if (ARV_IS_GC_REGISTER_NODE(node) &&
-          QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
-          "IntReg") {
+      if (ARV_IS_GC_REGISTER_NODE(node)
+          && QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node)))
+          == "IntReg") {
         QArvRegister r;
         r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
         r.value = QByteArray(r.length, 0);
@@ -631,8 +636,8 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           bool isImplemented =
             arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
                                                NULL);
-          e.values <<
-          arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
+          e.values
+            << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
           const char* name =
             arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->
                                                                      data),
@@ -707,10 +712,10 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
 }
 
 bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
-                    int role) {
+                         int role) {
   QAbstractItemModel::setData(index, value, role);
-  if (!(index.model()->flags(index) & Qt::ItemIsEnabled) ||
-      !(index.model()->flags(index) & Qt::ItemIsEditable))
+  if (!(index.model()->flags(index) & Qt::ItemIsEnabled)
+      || !(index.model()->flags(index) & Qt::ItemIsEditable))
     return false;
 
   QArvFeatureTree* treenode;
@@ -734,7 +739,8 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
     arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
   } else if (value.canConvert<QArvString>()) {
     auto s = qvariant_cast<QArvString>(value);
-    arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(), NULL);
+    arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(),
+                            NULL);
   } else if (value.canConvert<QArvFloat>()) {
     auto f = qvariant_cast<QArvFloat>(value);
     arv_gc_float_set_value(ARV_GC_FLOAT(node), f.value, NULL);
@@ -763,9 +769,9 @@ Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
     f &= ~Qt::ItemIsEditable;
   } else {
     int enabled =
-      arv_gc_feature_node_is_available(node, NULL) &&
-      arv_gc_feature_node_is_implemented(node, NULL) &&
-      !arv_gc_feature_node_is_locked(node, NULL);
+      arv_gc_feature_node_is_available(node, NULL)
+      && arv_gc_feature_node_is_implemented(node, NULL)
+      && !arv_gc_feature_node_is_locked(node, NULL);
     if (!enabled) {
       f &= ~Qt::ItemIsEnabled;
       f &= ~Qt::ItemIsEditable;
@@ -776,7 +782,7 @@ Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
 }
 
 QVariant QArvCamera::headerData(int section, Qt::Orientation orientation,
-                           int role) const {
+                                int role) const {
   switch (section) {
   case 0:
     return QVariant::fromValue(QString("Feature"));
@@ -787,11 +793,12 @@ QVariant QArvCamera::headerData(int section, Qt::Orientation orientation,
   return QVariant();
 }
 
-QArvCameraDelegate::QArvCameraDelegate(QObject* parent) : QStyledItemDelegate(parent) {}
+QArvCameraDelegate::QArvCameraDelegate(QObject* parent) :
+  QStyledItemDelegate(parent) {}
 
 QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
-                                     const QStyleOptionViewItem& option,
-                                     const QModelIndex& index) const {
+                                          const QStyleOptionViewItem& option,
+                                          const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
   assert(var.isValid());
   auto val = static_cast<QArvType*>(var.data());
@@ -801,7 +808,7 @@ QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
 }
 
 void QArvCameraDelegate::setEditorData(QWidget* editor,
-                                  const QModelIndex& index) const {
+                                       const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
   assert(var.isValid());
   auto val = static_cast<QArvType*>(var.data());
@@ -809,8 +816,8 @@ void QArvCameraDelegate::setEditorData(QWidget* editor,
 }
 
 void QArvCameraDelegate::setModelData(QWidget* editor,
-                                 QAbstractItemModel* model,
-                                 const QModelIndex& index) const {
+                                      QAbstractItemModel* model,
+                                      const QModelIndex& index) const {
   auto var = model->data(index, Qt::EditRole);
   assert(var.isValid());
   auto val = static_cast<QArvType*>(var.data());
@@ -819,8 +826,8 @@ void QArvCameraDelegate::setModelData(QWidget* editor,
 }
 
 void QArvCameraDelegate::updateEditorGeometry(QWidget* editor,
-                                         const QStyleOptionViewItem& option,
-                                         const QModelIndex& index) const {
+                                              const QStyleOptionViewItem& option,
+                                              const QModelIndex& index) const {
   editor->layout()->setContentsMargins(0, 0, 0, 0);
   editor->setGeometry(option.rect);
 }

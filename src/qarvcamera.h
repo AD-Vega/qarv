@@ -334,9 +334,9 @@ Q_DECLARE_METATYPE(QArvInteger)
 struct QArvBoolean : QArvType {
   bool value;
   operator QString() const {
-    return value ?
-           QObject::tr("on/true", "QArvCamera") :
-           QObject::tr("off/false", "QArvCamera");
+    return value
+           ? QObject::tr("on/true", "QArvCamera")
+           : QObject::tr("off/false", "QArvCamera");
   }
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;

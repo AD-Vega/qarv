@@ -38,7 +38,7 @@ private slots:
   void customSizeEntered();
 
 private:
-  QValidator *ROIsizeValidator;
+  QValidator* ROIsizeValidator;
 };
 
 #endif

@@ -29,21 +29,22 @@ ROIcomboBox::ROIcomboBox(QWidget* parent) : QComboBox(parent) {
   this->addItem("480x360", QVariant(QSize(480, 360)));
   this->addItem("320x240", QVariant(QSize(320, 240)));
   this->addItem(tr("Custom"), QVariant(QSize(-1, -1)));
-  
+
   QRegExp ROIregExp("[1-9][0-9]*x[1-9][0-9]*");
   ROIsizeValidator = new QRegExpValidator(ROIregExp, this);
-  
-  this->connect(this, SIGNAL(currentIndexChanged(int)), SLOT(itemSelected(int)));
+
+  this->connect(this, SIGNAL(currentIndexChanged(int)),
+                SLOT(itemSelected(int)));
 }
 
 
-ROIcomboBox::~ROIcomboBox() { }
+ROIcomboBox::~ROIcomboBox() {}
 
 
 void ROIcomboBox::itemSelected(int index) {
   if (index < 0)
     index = 0;
-  
+
   QSize s = this->itemData(index).toSize();
 
   if (s.width() == -1) {
@@ -53,9 +54,9 @@ void ROIcomboBox::itemSelected(int index) {
     // Line editor is reset when we call setEditable(false) so the following
     // must be repeated everytime we enable editing.
     this->setValidator(ROIsizeValidator);
-    this->connect(this->lineEdit(), SIGNAL(editingFinished()), SLOT(customSizeEntered()));
-  }
-  else {
+    this->connect(this->lineEdit(), SIGNAL(editingFinished()),
+                  SLOT(customSizeEntered()));
+  } else {
     this->setEditable(false);
     emit newSizeSelected(s);
   }
