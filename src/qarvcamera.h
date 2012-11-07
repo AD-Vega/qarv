@@ -30,9 +30,6 @@
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
 
-//! Initialize glib and aravis. Call this once in the main program.
-void arcamInit();
-
 //! \name Forward declarations to avoid exposing arv.h
 /**@{*/
 struct _ArvCamera;
@@ -70,8 +67,8 @@ Q_DECLARE_METATYPE(QArvCameraId)
 /*!
  * This class is mostly a thin wrapper around the arv_camera interface.
  * Only the parts that differ significantly from that interface are documented.
- * The arcamInit() function must be called once in the main program before
- * this class is used.
+ * The QArvCamera::init() function must be called once in the main program
+ * before this class is used.
  *
  * This class implements the QAbstractItemModel interface. This means that it
  * can be used as a data source for widgets such as QTreeView. An QArvCameraDelegate
@@ -83,6 +80,9 @@ class QArvCamera : public QAbstractItemModel {
   Q_OBJECT
 
 public:
+  //! Initialize glib and aravis. Call this once in the main program.
+  static void init();
+
   //! A camera with the given ID is opened.
   QArvCamera(QArvCameraId id, QObject* parent = NULL);
   ~QArvCamera();

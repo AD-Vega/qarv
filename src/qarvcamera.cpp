@@ -36,7 +36,7 @@ extern "C" {
 
 QList<QArvCameraId> QArvCamera::cameraList;
 
-void arcamInit() {
+void QArvCamera::init() {
   g_type_init();
   arv_enable_interface("Fake");
 }

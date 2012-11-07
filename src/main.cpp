@@ -24,7 +24,7 @@
 #include "globals.h"
 
 int main(int argc, char** argv) {
-  arcamInit();
+  QArvCamera::init();
   QApplication a(argc, argv);
   QTranslator trans;
   auto locale = QLocale::system().name();
