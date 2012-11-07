@@ -45,7 +45,7 @@ struct _ArvStream;
 typedef _ArvStream ArvStream;
 struct _ArvGc;
 typedef _ArvGc ArvGc;
-class ArFeatureTree;
+class QArvFeatureTree;
 /**@}*/
 
 //! Objects of this class are used to identify cameras.
@@ -184,7 +184,7 @@ private:
   friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
   friend void recursiveSerialization(QTextStream& out,
                                      QArvCamera* camera,
-                                     ArFeatureTree* tree);
+                                     QArvFeatureTree* tree);
 
 public:
   //! \name QAbstractItemModel implementation
@@ -205,7 +205,7 @@ public:
 
 private:
   ArvGc* genicam;
-  ArFeatureTree* featuretree;
+  QArvFeatureTree* featuretree;
 };
 
 //! Serializes camera settings in text form.
@@ -239,16 +239,16 @@ private slots:
   void finishEditing();
 };
 
-//! ArEditor is a QWidget that contains the actual editing widgets.
+//! QArvEditor is a QWidget that contains the actual editing widgets.
 /*! It is used to translate whichever signal is emitted by the actual widgets
  * when editig is finished into the editingFinished() signal which can be
  * used by QArvCameraDelegate.
  */
-struct ArEditor : QWidget {
+struct QArvEditor : QWidget {
   Q_OBJECT
 
 public:
-  ArEditor(QWidget* parent = 0) : QWidget(parent) {}
+  QArvEditor(QWidget* parent = 0) : QWidget(parent) {}
 
 signals:
   void editingFinished();
@@ -256,13 +256,13 @@ signals:
 private slots:
   void editingComplete() { emit editingFinished(); }
 
-  friend class ArEnumeration;
-  friend class ArString;
-  friend class ArFloat;
-  friend class ArInteger;
-  friend class ArBoolean;
-  friend class ArCommand;
-  friend class ArRegister;
+  friend class QArvEnumeration;
+  friend class QArvString;
+  friend class QArvFloat;
+  friend class QArvInteger;
+  friend class QArvBoolean;
+  friend class QArvCommand;
+  friend class QArvRegister;
 };
 
 //! \name Types that correspond to types of feature nodes
@@ -277,91 +277,91 @@ private slots:
  * highest-level type. Each type also provides its own editing widget.
  */
 
-struct ArType {
+struct QArvType {
   virtual operator QString() const = 0;
-  virtual ArEditor* createEditor(QWidget* parent = NULL) const = 0;
+  virtual QArvEditor* createEditor(QWidget* parent = NULL) const = 0;
   virtual void populateEditor(QWidget* editor) const = 0;
   virtual void readFromEditor(QWidget* editor) = 0;
 };
-Q_DECLARE_METATYPE(ArType*)
+Q_DECLARE_METATYPE(QArvType*)
 
-struct ArEnumeration : ArType {
+struct QArvEnumeration : QArvType {
   QList<QString> names;
   QList<QString> values;
   QList<bool> isAvailable;
   int currentValue;
-  ArEnumeration() : values(), isAvailable() {}
+  QArvEnumeration() : values(), isAvailable() {}
   operator QString()  const {
     return currentValue >= 0 ? names[currentValue] : QString();
   }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArEnumeration)
+Q_DECLARE_METATYPE(QArvEnumeration)
 
-struct ArString : ArType {
+struct QArvString : QArvType {
   QString value;
   qint64 maxlength;
-  ArString() : value() {}
+  QArvString() : value() {}
   operator QString() const { return value; }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArString)
+Q_DECLARE_METATYPE(QArvString)
 
-struct ArFloat : ArType {
+struct QArvFloat : QArvType {
   double value, min, max;
   QString unit;
-  ArFloat() : unit() {}
+  QArvFloat() : unit() {}
   operator QString() const { return QString::number(value) + " " + unit; }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArFloat)
+Q_DECLARE_METATYPE(QArvFloat)
 
-struct ArInteger : ArType {
+struct QArvInteger : QArvType {
   qint64 value, min, max, inc;
   operator QString() const { return QString::number(value); }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArInteger)
+Q_DECLARE_METATYPE(QArvInteger)
 
-struct ArBoolean : ArType {
+struct QArvBoolean : QArvType {
   bool value;
   operator QString() const {
     return value ?
            QObject::tr("on/true", "QArvCamera") :
            QObject::tr("off/false", "QArvCamera");
   }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArBoolean)
+Q_DECLARE_METATYPE(QArvBoolean)
 
-struct ArCommand : ArType {
+struct QArvCommand : QArvType {
   operator QString() const { return QObject::tr("<command>", "QArvCamera"); }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArCommand)
+Q_DECLARE_METATYPE(QArvCommand)
 
-struct ArRegister : ArType {
+struct QArvRegister : QArvType {
   QByteArray value;
   qint64 length;
-  ArRegister() : value() {}
+  QArvRegister() : value() {}
   operator QString() const { return QString("0x") + value.toHex(); }
-  ArEditor* createEditor(QWidget* parent) const;
+  QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(ArRegister)
+Q_DECLARE_METATYPE(QArvRegister)
 
 /**@}*/
 

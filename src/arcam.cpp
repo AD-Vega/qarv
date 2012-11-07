@@ -61,8 +61,8 @@ QArvCameraId::~QArvCameraId() {
   if (model != NULL) free((void*)model);
 }
 
-ArFeatureTree* createFeaturetree(ArvGc* cam);
-void freeFeaturetree(ArFeatureTree* tree);
+QArvFeatureTree* createFeaturetree(ArvGc* cam);
+void freeFeaturetree(QArvFeatureTree* tree);
 
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
@@ -401,24 +401,24 @@ QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
  * feature identifiers is used by the model. It is assumed that the hirearchy
  * is static.
  */
-class ArFeatureTree {
+class QArvFeatureTree {
 public:
-  ArFeatureTree(ArFeatureTree* parent = NULL, const char* feature = NULL);
-  ~ArFeatureTree();
-  ArFeatureTree* parent();
-  QList<ArFeatureTree*> children();
+  QArvFeatureTree(QArvFeatureTree* parent = NULL, const char* feature = NULL);
+  ~QArvFeatureTree();
+  QArvFeatureTree* parent();
+  QList<QArvFeatureTree*> children();
   const char* feature();
   int row();
 
 private:
-  void addChild(ArFeatureTree* child);
-  void removeChild(ArFeatureTree* child);
-  ArFeatureTree* parent_;
-  QList<ArFeatureTree*> children_;
+  void addChild(QArvFeatureTree* child);
+  void removeChild(QArvFeatureTree* child);
+  QArvFeatureTree* parent_;
+  QList<QArvFeatureTree*> children_;
   const char* feature_;
 };
 
-ArFeatureTree::ArFeatureTree(ArFeatureTree* parent, const char* feature) :
+QArvFeatureTree::QArvFeatureTree(QArvFeatureTree* parent, const char* feature) :
   children_() {
   if (feature == NULL) feature_ = strdup("");
   else feature_ = strdup(feature);
@@ -426,59 +426,59 @@ ArFeatureTree::ArFeatureTree(ArFeatureTree* parent, const char* feature) :
   if (parent_ != NULL) parent_->addChild(this);
 }
 
-ArFeatureTree::~ArFeatureTree() {
+QArvFeatureTree::~QArvFeatureTree() {
   delete feature_;
   if (parent_ != NULL) parent_->removeChild(this);
   for (auto child = children_.begin(); child != children_.end(); child++)
     delete *child;
 }
 
-void ArFeatureTree::addChild(ArFeatureTree* child) {
+void QArvFeatureTree::addChild(QArvFeatureTree* child) {
   children_ << child;
 }
 
-QList< ArFeatureTree* > ArFeatureTree::children() {
+QList< QArvFeatureTree* > QArvFeatureTree::children() {
   return children_;
 }
 
-const char* ArFeatureTree::feature() {
+const char* QArvFeatureTree::feature() {
   return feature_;
 }
 
-ArFeatureTree* ArFeatureTree::parent() {
+QArvFeatureTree* QArvFeatureTree::parent() {
   return parent_;
 }
 
-void ArFeatureTree::removeChild(ArFeatureTree* child) {
+void QArvFeatureTree::removeChild(QArvFeatureTree* child) {
   children_.removeAll(child);
 }
 
-int ArFeatureTree::row() {
+int QArvFeatureTree::row() {
   if (parent_ == NULL) return 0;
   auto litter = parent_->children();
   return litter.indexOf(this);
 }
 
-//! Walk the Aravis feature tree and copy it as an ArFeatureTree.
+//! Walk the Aravis feature tree and copy it as an QArvFeatureTree.
 /**@{*/
-void recursiveMerge(ArvGc* cam, ArFeatureTree* tree, ArvGcNode* node) {
+void recursiveMerge(ArvGc* cam, QArvFeatureTree* tree, ArvGcNode* node) {
   const GSList* child = arv_gc_category_get_features(ARV_GC_CATEGORY(node));
   for (; child != NULL; child = child->next) {
     ArvGcNode* newnode = arv_gc_get_node(cam, (const char*)(child->data));
-    auto newtree = new ArFeatureTree(tree, (const char*)(child->data));
+    auto newtree = new QArvFeatureTree(tree, (const char*)(child->data));
     if (ARV_IS_GC_CATEGORY(newnode)) recursiveMerge(cam, newtree, newnode);
   }
 }
 
-ArFeatureTree* createFeaturetree(ArvGc* cam) {
-  ArFeatureTree* tree = new ArFeatureTree(NULL, "Root");
+QArvFeatureTree* createFeaturetree(ArvGc* cam) {
+  QArvFeatureTree* tree = new QArvFeatureTree(NULL, "Root");
   ArvGcNode* node = arv_gc_get_node(cam, tree->feature());
   recursiveMerge(cam, tree, node);
   return tree;
 }
 /**@}*/
 
-void freeFeaturetree(ArFeatureTree* tree) {
+void freeFeaturetree(QArvFeatureTree* tree) {
   auto children = tree->children();
   for (auto child = children.begin(); child != children.end(); child++)
     freeFeaturetree(*child);
@@ -487,7 +487,7 @@ void freeFeaturetree(ArFeatureTree* tree) {
 
 //! Serialize the tree, used by QArvCamera stream operators.
 void recursiveSerialization(QTextStream& out, QArvCamera* camera,
-                            ArFeatureTree* tree) {
+                            QArvFeatureTree* tree) {
   auto node = arv_gc_get_node(camera->genicam, tree->feature());
   ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
 
@@ -505,7 +505,7 @@ void recursiveSerialization(QTextStream& out, QArvCamera* camera,
   if (ARV_IS_GC_REGISTER_NODE(node) &&
       QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
       "IntReg") {
-    ArRegister r;
+    QArvRegister r;
     r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
     r.value = QByteArray(r.length, 0);
     arv_gc_register_get(ARV_GC_REGISTER(node),
@@ -534,9 +534,9 @@ void recursiveSerialization(QTextStream& out, QArvCamera* camera,
 QModelIndex QArvCamera::index(int row, int column,
                          const QModelIndex& parent) const {
   if (column > 1) return QModelIndex();
-  ArFeatureTree* treenode;
+  QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
+  else treenode = static_cast<QArvFeatureTree*>(parent.internalPointer());
   auto children = treenode->children();
   if (row < 0 || row >= children.size()) return QModelIndex();
   auto child = children.at(row);
@@ -546,9 +546,9 @@ QModelIndex QArvCamera::index(int row, int column,
 }
 
 QModelIndex QArvCamera::parent(const QModelIndex& index) const {
-  ArFeatureTree* treenode;
+  QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
   if (treenode->parent() == NULL) return QModelIndex();
   auto parent = treenode->parent();
   return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
@@ -559,16 +559,16 @@ int QArvCamera::columnCount(const QModelIndex& parent) const {
 }
 
 int QArvCamera::rowCount(const QModelIndex& parent) const {
-  ArFeatureTree* treenode;
+  QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<ArFeatureTree*>(parent.internalPointer());
+  else treenode = static_cast<QArvFeatureTree*>(parent.internalPointer());
   return treenode->children().count();
 }
 
 QVariant QArvCamera::data(const QModelIndex& index, int role) const {
-  ArFeatureTree* treenode;
+  QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
   ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
 
   if (!ARV_IS_GC_FEATURE_NODE(node)) {
@@ -610,7 +610,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
       if (ARV_IS_GC_REGISTER_NODE(node) &&
           QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node))) ==
           "IntReg") {
-        ArRegister r;
+        QArvRegister r;
         r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
         r.value = QByteArray(r.length, 0);
         arv_gc_register_get(ARV_GC_REGISTER(node),
@@ -621,7 +621,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           return QVariant::fromValue(r);
       }
       if (ARV_IS_GC_ENUMERATION(node)) {
-        ArEnumeration e;
+        QArvEnumeration e;
         const GSList* entry =
           arv_gc_enumeration_get_entries(ARV_GC_ENUMERATION(node));
         for (; entry != NULL; entry = entry->next) {
@@ -655,14 +655,14 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           return QVariant::fromValue(e);
       }
       if (ARV_IS_GC_COMMAND(node)) {
-        ArCommand c;
+        QArvCommand c;
         if (role == Qt::DisplayRole)
           return QVariant::fromValue((QString)c);
         else
           return QVariant::fromValue(c);
       }
       if (ARV_IS_GC_STRING(node)) {
-        ArString s;
+        QArvString s;
         s.value = arv_gc_string_get_value(ARV_GC_STRING(node), NULL);
         s.maxlength = arv_gc_string_get_max_length(ARV_GC_STRING(node), NULL);
         if (role == Qt::DisplayRole)
@@ -671,7 +671,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           return QVariant::fromValue(s);
       }
       if (ARV_IS_GC_FLOAT(node)) {
-        ArFloat f;
+        QArvFloat f;
         f.value = arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
         f.min = arv_gc_float_get_min(ARV_GC_FLOAT(node), NULL);
         f.max = arv_gc_float_get_max(ARV_GC_FLOAT(node), NULL);
@@ -682,7 +682,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           return QVariant::fromValue(f);
       }
       if (ARV_IS_GC_BOOLEAN(node)) {
-        ArBoolean b;
+        QArvBoolean b;
         b.value = arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node), NULL);
         if (role == Qt::DisplayRole)
           return QVariant::fromValue((QString)b);
@@ -690,7 +690,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
           return QVariant::fromValue(b);
       }
       if (ARV_IS_GC_INTEGER(node)) {
-        ArInteger i;
+        QArvInteger i;
         i.value = arv_gc_integer_get_value(ARV_GC_INTEGER(node), NULL);
         i.min = arv_gc_integer_get_min(ARV_GC_INTEGER(node), NULL);
         i.max = arv_gc_integer_get_max(ARV_GC_INTEGER(node), NULL);
@@ -713,36 +713,36 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
       !(index.model()->flags(index) & Qt::ItemIsEditable))
     return false;
 
-  ArFeatureTree* treenode;
+  QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
   ArvGcFeatureNode* node =
     ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
 
-  if (value.canConvert<ArRegister>()) {
-    auto r = qvariant_cast<ArRegister>(value);
+  if (value.canConvert<QArvRegister>()) {
+    auto r = qvariant_cast<QArvRegister>(value);
     arv_gc_register_set(ARV_GC_REGISTER(node), r.value.data(), r.length, NULL);
-  } else if (value.canConvert<ArEnumeration>()) {
-    auto e = qvariant_cast<ArEnumeration>(value);
+  } else if (value.canConvert<QArvEnumeration>()) {
+    auto e = qvariant_cast<QArvEnumeration>(value);
     if (e.isAvailable.at(e.currentValue)) {
       arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
                                           e.values.at(
                                             e.currentValue).toAscii().data(),
                                           NULL);
     } else return false;
-  } else if (value.canConvert<ArCommand>()) {
+  } else if (value.canConvert<QArvCommand>()) {
     arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
-  } else if (value.canConvert<ArString>()) {
-    auto s = qvariant_cast<ArString>(value);
+  } else if (value.canConvert<QArvString>()) {
+    auto s = qvariant_cast<QArvString>(value);
     arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(), NULL);
-  } else if (value.canConvert<ArFloat>()) {
-    auto f = qvariant_cast<ArFloat>(value);
+  } else if (value.canConvert<QArvFloat>()) {
+    auto f = qvariant_cast<QArvFloat>(value);
     arv_gc_float_set_value(ARV_GC_FLOAT(node), f.value, NULL);
-  } else if (value.canConvert<ArBoolean>()) {
-    auto b = qvariant_cast<ArBoolean>(value);
+  } else if (value.canConvert<QArvBoolean>()) {
+    auto b = qvariant_cast<QArvBoolean>(value);
     arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), b.value, NULL);
-  } else if (value.canConvert<ArInteger>()) {
-    auto i = qvariant_cast<ArInteger>(value);
+  } else if (value.canConvert<QArvInteger>()) {
+    auto i = qvariant_cast<QArvInteger>(value);
     arv_gc_integer_set_value(ARV_GC_INTEGER(node), i.value, NULL);
   } else
     return false;
@@ -754,8 +754,8 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
 Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
   auto f = QAbstractItemModel::flags(index);
   if (!index.isValid()) return f;
-  ArFeatureTree* treenode;
-  treenode = static_cast<ArFeatureTree*>(index.internalPointer());
+  QArvFeatureTree* treenode;
+  treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
   ArvGcFeatureNode* node =
     ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
   if (index.column() != 1 && !ARV_IS_GC_CATEGORY(node)) {
@@ -794,7 +794,7 @@ QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
                                      const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
   assert(var.isValid());
-  auto val = static_cast<ArType*>(var.data());
+  auto val = static_cast<QArvType*>(var.data());
   auto editor = val->createEditor(parent);
   this->connect(editor, SIGNAL(editingFinished()), SLOT(finishEditing()));
   return editor;
@@ -804,7 +804,7 @@ void QArvCameraDelegate::setEditorData(QWidget* editor,
                                   const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
   assert(var.isValid());
-  auto val = static_cast<ArType*>(var.data());
+  auto val = static_cast<QArvType*>(var.data());
   val->populateEditor(editor);
 }
 
@@ -813,7 +813,7 @@ void QArvCameraDelegate::setModelData(QWidget* editor,
                                  const QModelIndex& index) const {
   auto var = model->data(index, Qt::EditRole);
   assert(var.isValid());
-  auto val = static_cast<ArType*>(var.data());
+  auto val = static_cast<QArvType*>(var.data());
   val->readFromEditor(editor);
   model->setData(index, var);
 }
@@ -831,8 +831,8 @@ void QArvCameraDelegate::finishEditing() {
   emit closeEditor(editor);
 }
 
-ArEditor* ArEnumeration::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto select = new QComboBox(editor);
   select->setObjectName("selectEnum");
   auto layout = new QHBoxLayout;
@@ -842,7 +842,7 @@ ArEditor* ArEnumeration::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArEnumeration::populateEditor(QWidget* editor) const {
+void QArvEnumeration::populateEditor(QWidget* editor) const {
   auto select = editor->findChild<QComboBox*>("selectEnum");
   assert(select);
   select->clear();
@@ -856,15 +856,15 @@ void ArEnumeration::populateEditor(QWidget* editor) const {
   select->setCurrentIndex(choose);
 }
 
-void ArEnumeration::readFromEditor(QWidget* editor) {
+void QArvEnumeration::readFromEditor(QWidget* editor) {
   auto select = editor->findChild<QComboBox*>("selectEnum");
   assert(select);
   auto val = select->itemData(select->currentIndex());
   currentValue = values.indexOf(val.toString());
 }
 
-ArEditor* ArString::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvString::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto edline = new QLineEdit(editor);
   edline->setObjectName("editString");
   auto layout = new QHBoxLayout;
@@ -874,21 +874,21 @@ ArEditor* ArString::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArString::populateEditor(QWidget* editor) const {
+void QArvString::populateEditor(QWidget* editor) const {
   auto edline = editor->findChild<QLineEdit*>("editString");
   assert(edline);
   edline->setMaxLength(maxlength);
   edline->setText(value);
 }
 
-void ArString::readFromEditor(QWidget* editor) {
+void QArvString::readFromEditor(QWidget* editor) {
   auto edline = editor->findChild<QLineEdit*>("editString");
   assert(edline);
   value = edline->text();
 }
 
-ArEditor* ArFloat::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvFloat::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto edbox = new QDoubleSpinBox(editor);
   edbox->setObjectName("editFloat");
   auto layout = new QHBoxLayout;
@@ -898,7 +898,7 @@ ArEditor* ArFloat::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArFloat::populateEditor(QWidget* editor) const {
+void QArvFloat::populateEditor(QWidget* editor) const {
   auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
   assert(edbox);
   edbox->setMaximum(max);
@@ -907,14 +907,14 @@ void ArFloat::populateEditor(QWidget* editor) const {
   edbox->setSuffix(QString(" ") + unit);
 }
 
-void ArFloat::readFromEditor(QWidget* editor) {
+void QArvFloat::readFromEditor(QWidget* editor) {
   auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
   assert(edbox);
   value = edbox->value();
 }
 
-ArEditor* ArInteger::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvInteger::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto edbox = new QSpinBox(editor);
   edbox->setObjectName("editInteger");
   auto layout = new QHBoxLayout;
@@ -924,7 +924,7 @@ ArEditor* ArInteger::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArInteger::populateEditor(QWidget* editor) const {
+void QArvInteger::populateEditor(QWidget* editor) const {
   auto edbox = editor->findChild<QSpinBox*>("editInteger");
   assert(edbox);
   edbox->setMaximum(max < INT_MAX ? max : INT_MAX);
@@ -932,14 +932,14 @@ void ArInteger::populateEditor(QWidget* editor) const {
   edbox->setValue(value);
 }
 
-void ArInteger::readFromEditor(QWidget* editor) {
+void QArvInteger::readFromEditor(QWidget* editor) {
   auto edbox = editor->findChild<QSpinBox*>("editInteger");
   assert(edbox);
   value = edbox->value();
 }
 
-ArEditor* ArBoolean::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvBoolean::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto check = new QCheckBox(editor);
   check->setObjectName("editBool");
   auto layout = new QHBoxLayout;
@@ -949,20 +949,20 @@ ArEditor* ArBoolean::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArBoolean::populateEditor(QWidget* editor) const {
+void QArvBoolean::populateEditor(QWidget* editor) const {
   auto check = editor->findChild<QCheckBox*>("editBool");
   assert(check);
   check->setChecked(value);
 }
 
-void ArBoolean::readFromEditor(QWidget* editor) {
+void QArvBoolean::readFromEditor(QWidget* editor) {
   auto check = editor->findChild<QCheckBox*>("editBool");
   assert(check);
   value = check->isChecked();
 }
 
-ArEditor* ArCommand::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvCommand::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto button = new QPushButton(editor);
   button->setObjectName("execCommand");
   button->setText(QObject::tr("Execute", "QArvCamera"));
@@ -973,12 +973,12 @@ ArEditor* ArCommand::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArCommand::populateEditor(QWidget* editor) const {}
+void QArvCommand::populateEditor(QWidget* editor) const {}
 
-void ArCommand::readFromEditor(QWidget* editor) {}
+void QArvCommand::readFromEditor(QWidget* editor) {}
 
-ArEditor* ArRegister::createEditor(QWidget* parent) const {
-  auto editor = new ArEditor(parent);
+QArvEditor* QArvRegister::createEditor(QWidget* parent) const {
+  auto editor = new QArvEditor(parent);
   auto edline = new QLineEdit(editor);
   edline->setObjectName("editRegister");
   auto layout = new QHBoxLayout;
@@ -988,7 +988,7 @@ ArEditor* ArRegister::createEditor(QWidget* parent) const {
   return editor;
 }
 
-void ArRegister::populateEditor(QWidget* editor) const {
+void QArvRegister::populateEditor(QWidget* editor) const {
   auto edline = editor->findChild<QLineEdit*>("editRegister");
   assert(edline);
   auto hexval = value.toHex();
@@ -998,7 +998,7 @@ void ArRegister::populateEditor(QWidget* editor) const {
   edline->setText(hexval);
 }
 
-void ArRegister::readFromEditor(QWidget* editor) {
+void QArvRegister::readFromEditor(QWidget* editor) {
   auto edline = editor->findChild<QLineEdit*>("editRegister");
   assert(edline);
   value.fromHex(edline->text().toAscii());
