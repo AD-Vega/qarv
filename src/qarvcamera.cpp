@@ -25,7 +25,7 @@ extern "C" {
 #include <cstring>
 #include <cassert>
 
-#include "arcam.h"
+#include "qarvcamera.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QLayout>

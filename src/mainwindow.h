@@ -24,7 +24,7 @@
 
 #include "glvideowidget.h"
 #include "framedecoders.h"
-#include "arcam.h"
+#include "qarvcamera.h"
 
 #include <QTimer>
 #include <QFile>

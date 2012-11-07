@@ -20,7 +20,7 @@
 #include <QtGui/QApplication>
 #include <QTranslator>
 #include "mainwindow.h"
-#include "arcam.h"
+#include "qarvcamera.h"
 #include "globals.h"
 
 int main(int argc, char** argv) {
