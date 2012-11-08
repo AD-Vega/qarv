@@ -26,25 +26,23 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3")
 add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
 
-set_prefixed(libqarv_MOCS src/ qarvcamera.h)
-qt4_wrap_cpp(libqarv_MOCD ${libqarv_MOCS})
-set_prefixed(libqarv_SRCS src/ qarvcamera.cpp)
-add_library(qarv SHARED ${libqarv_SRCS} ${libqarv_MOCD})
-target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
-set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
-
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
 set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
-set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h mainwindow.h roicombobox.h)
+set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h mainwindow.h
+  roicombobox.h qarvgui.h qarvcamera.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/ framedecoders.cpp mainwindow.cpp
   main.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
-  roicombobox.cpp)
+  roicombobox.cpp qarvgui.cpp qarvcamera.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
-add_executable(qarvexe ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
+add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
+target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
+set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
+
+add_executable(qarvexe src/main.cpp)
 target_link_libraries(qarvexe ${QT_LIBRARIES} qarv)
 set_target_properties(qarvexe PROPERTIES OUTPUT_NAME qarv)
 
@@ -58,7 +56,7 @@ set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
 install(TARGETS qarv qarvexe
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
-install(FILES src/qarvcamera.h
+install(FILES src/qarvcamera.h src/qarvgui.h
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION share/qarv/)

@@ -18,30 +18,19 @@
 
 
 #include <QtGui/QApplication>
-#include <QTranslator>
-#include "mainwindow.h"
 #include "qarvcamera.h"
-#include "globals.h"
+#include "qarvgui.h"
 
 int main(int argc, char** argv) {
-  QArvCamera::init();
   QApplication a(argc, argv);
-  QTranslator trans;
-  auto locale = QLocale::system().name();
-  qDebug() << "Detected locale:" << locale;
-  if (!trans.load(QString("qarv_") + locale, qarv_datafiles))
-    qDebug() << "No translation found for selected locale.";
-  a.installTranslator(&trans);
-
-  // Install a global event filter that makes sure that long tooltips can be word-wrapped
-  const int tooltip_wrap_threshold = 70;
-  a.installEventFilter(new ToolTipToRichTextFilter(tooltip_wrap_threshold, &a));
+  QArvCamera::init();
+  QArvGui::init(&a);
 
   QCoreApplication::setOrganizationDomain("ad-vega.si");
   QCoreApplication::setOrganizationName("AD Vega");
   QCoreApplication::setApplicationName("qarv");
 
-  MainWindow w;
-  w.show();
+  QArvGui g;
+  g.widget()->show();
   return a.exec();
 }

@@ -57,8 +57,8 @@ static void initFfmpegOutputCommands() {
   ffmpegOutputCommands[ffmpegOutputOptions[2]] = "-f avi -codec huffyuv";
 }
 
-MainWindow::MainWindow() :
-  QMainWindow(), camera(NULL), playing(false), recording(false),
+MainWindow::MainWindow(QWidget* parent, bool standalone) :
+  QMainWindow(parent), camera(NULL), playing(false), recording(false),
   started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), currentFrame(),
   toDisableWhenPlaying(), toDisableWhenRecording() {

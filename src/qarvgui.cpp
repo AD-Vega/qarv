@@ -1,0 +1,62 @@
+/*
+    qarv, a Qt interface to aravis.
+    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "qarvgui.h"
+#include "mainwindow.h"
+#include "globals.h"
+
+#include <QTranslator>
+
+class QArvGuiExtension {};
+
+/*! Translations are loaded. An event filter is installed which causes all
+ * plain-text tooltips to wrap at the 70-character threshold.
+ */
+void QArvGui::init(QApplication* a) {
+  auto trans = new QTranslator(a);
+  auto locale = QLocale::system().name();
+  if (trans->load(QString("qarv_") + locale, qarv_datafiles)) {
+    a->installTranslator(trans);
+  } else {
+    delete trans;
+  }
+  
+  // Install a global event filter that makes sure that long tooltips can be word-wrapped
+  const int tooltip_wrap_threshold = 70;
+  a->installEventFilter(new ToolTipToRichTextFilter(tooltip_wrap_threshold, a));
+}
+
+/*! In standalone mode, the GUI presents full recording facilities. When not in
+ * standalone mode, only the record button is available. When toggled, frames
+ * will be decoded and made available as QImage.
+ */
+QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
+  ext = new QArvGuiExtension;
+  thewidget = new MainWindow();
+}
+
+QArvGui::~QArvGui() {
+  delete ext;
+  bool autodelete = thewidget->testAttribute(Qt::WA_DeleteOnClose);
+  bool closed = thewidget->close();
+  if (!(autodelete && closed)) delete thewidget;
+}
+
+QWidget* QArvGui::widget() {
+  return thewidget;
+}

@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow, private Ui::MainWindowUI {
   Q_OBJECT
 
 public:
-  MainWindow();
+  MainWindow(QWidget* parent = 0, bool standalone = true);
   ~MainWindow();
 
 private slots:
