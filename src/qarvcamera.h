@@ -77,6 +77,9 @@ class QArvCameraExtension;
  * is also provided to facilitate direct access to all camera features. The
  * model has two columns, the first being the name of the feature and the
  * second being the (editable) feature value.
+ *
+ * When the QAbstractItemModel::dataChanged() signal is emitted, it currently
+ * fails to specify which data is affected. This may change in the future.
  */
 class QArvCamera : public QAbstractItemModel {
   Q_OBJECT
