@@ -47,7 +47,7 @@ void QArvGui::init(QApplication* a) {
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
   ext = new QArvGuiExtension;
-  thewidget = new MainWindow();
+  thewidget = new MainWindow(0, standalone);
 }
 
 QArvGui::~QArvGui() {
