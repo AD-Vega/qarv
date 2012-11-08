@@ -31,7 +31,7 @@ qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
 set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h mainwindow.h
-  roicombobox.h qarvgui.h qarvcamera.h)
+  roicombobox.h api/qarvgui.h api/qarvcamera.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/ framedecoders.cpp mainwindow.cpp
   main.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
@@ -56,7 +56,7 @@ set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
 install(TARGETS qarv qarvexe
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
-install(FILES src/qarvcamera.h src/qarvgui.h
+install(FILES src/api/qarvcamera.h src/api/qarvgui.h
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION share/qarv/)

@@ -18,8 +18,8 @@
 
 
 #include <QtGui/QApplication>
-#include "qarvcamera.h"
-#include "qarvgui.h"
+#include "api/qarvcamera.h"
+#include "api/qarvgui.h"
 
 int main(int argc, char** argv) {
   QApplication a(argc, argv);
