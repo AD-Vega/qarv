@@ -62,6 +62,8 @@ public:
 
 Q_DECLARE_METATYPE(QArvCameraId)
 
+// Allow ABI-compatible extensions.
+class QArvCameraExtension;
 
 //! QArvCamera provides an interface to an Aravis camera.
 /*!
@@ -171,6 +173,7 @@ signals:
   void frameReady();
 
 private:
+  QArvCameraExtension* ext;
   void swapBuffers();
   static QList<QArvCameraId> cameraList;
   ArvCamera* camera;

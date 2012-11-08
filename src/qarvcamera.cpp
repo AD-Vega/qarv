@@ -34,6 +34,8 @@ extern "C" {
 #include <QCheckBox>
 #include <QPushButton>
 
+class QArvCameraExtension {};
+
 QList<QArvCameraId> QArvCamera::cameraList;
 
 void QArvCamera::init() {
@@ -71,6 +73,7 @@ void freeFeaturetree(QArvFeatureTree* tree);
  */
 QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
   QAbstractItemModel(parent), acquiring(false) {
+  ext = new QArvCameraExtension;
   camera = arv_camera_new(id.id);
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
   device = arv_camera_get_device(camera);
@@ -79,6 +82,7 @@ QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
 }
 
 QArvCamera::~QArvCamera() {
+  delete ext;
   freeFeaturetree(featuretree);
   stopAcquisition();
   g_object_unref(camera);
