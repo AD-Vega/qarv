@@ -308,9 +308,16 @@ QSize QArvCamera::getFrameSize() {
  * used to capture the next image. Only use this if the caller will decode or
  * otherwise copy the data immediately. Note that the array itself is never
  * invalidated after the grace period passes, it is merely overwritten.
+ * \param rawbuffer If not NULL, the pointer to the Aravis' frame struct is
+ * stored here. It can be used to get additional information about the frame,
+ * such as its timestamp. The caller must provide similar guarantees as if the
+ * nocopy parameter were set to true.
  * \return A QByteArray with raw frame data of size given by getFrameSize().
  */
-QByteArray QArvCamera::getFrame(bool dropInvalid, bool nocopy) {
+QByteArray QArvCamera::getFrame(bool dropInvalid,
+                                bool nocopy,
+                                ArvBuffer** rawbuffer) {
+  if (rawbuffer != NULL) *rawbuffer = currentFrame;
   if (currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
   else {
