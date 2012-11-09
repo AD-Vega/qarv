@@ -57,10 +57,10 @@ static void initFfmpegOutputCommands() {
   ffmpegOutputCommands[ffmpegOutputOptions[2]] = "-f avi -codec huffyuv";
 }
 
-MainWindow::MainWindow(QWidget* parent, bool standalone) :
+MainWindow::MainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), playing(false), recording(false),
   started(false), drawHistogram(false), decoder(NULL),
-  imageTransform(), framecounter(0),
+  imageTransform(), framecounter(0), standalone(standalone_),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
   recordingfile = new QFile(this);
@@ -133,6 +133,8 @@ MainWindow::MainWindow(QWidget* parent, bool standalone) :
                 SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
+
+  if (!standalone) tabWidget->removeTab(tabWidget->indexOf(recordingTab));
 
   auto timer = new QTimer(this);
   timer->setInterval(1000);
@@ -458,23 +460,51 @@ void MainWindow::transformImage(QImage& img) {
   }
 }
 
+void MainWindow::getNextFrame(QImage* processed,
+                              QImage* unprocessed,
+                              QByteArray* raw,
+                              ArvBuffer** rawAravisBuffer,
+                              bool nocopy) {
+  if (processed == NULL
+      && unprocessed == NULL
+      && raw == NULL
+      && rawAravisBuffer == NULL)
+    return;
+
+  QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(), nocopy,
+                                      rawAravisBuffer);
+  if (raw != NULL) *raw = frame;
+
+  QImage img;
+  if (unprocessed != NULL
+      || processed != NULL) {
+    if (frame.isEmpty()) img = invalidImage;
+    else img = decoder->decode(frame);
+  }
+
+  if (unprocessed != NULL) *unprocessed = img;
+
+  if (processed != NULL) {
+    transformImage(img);
+    *processed = img;
+  }
+}
+
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
-    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(), true);
-    if (!frame.isEmpty()) {
-      framecounter++;
-    }
+    QByteArray frame;
+    QImage image;
 
-    QImage img;
-    if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2) {
-      if (frame.isEmpty()) img = invalidImage;
-      else img = decoder->decode(frame);
-      transformImage(img);
-      if (playing) video->setImage(img);
-      if (drawHistogram) {
-        histogram->fromImage(img);
-        drawHistogram = false;
-      }
+    if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2)
+      getNextFrame(&image, NULL, &frame, NULL, true);
+    else
+      getNextFrame(NULL, NULL, &frame, NULL, true);
+
+    if (playing) video->setImage(image);
+
+    if (drawHistogram && !frame.isEmpty()) {
+      histogram->fromImage(image);
+      drawHistogram = false;
     }
 
     if (recording && !frame.isEmpty()) {
@@ -483,10 +513,15 @@ void MainWindow::takeNextFrame() {
         outframe.data(); // make deep copy, writing can block
         recordingfile->write(outframe);
       } else {
-        img = img.convertToFormat(QImage::Format_RGB888);
-        for (int i = 0; i < img.height(); i++)
-          recordingfile->write((char*)(img.scanLine(i)), img.bytesPerLine());
+        image = image.convertToFormat(QImage::Format_RGB888);
+        for (int i = 0; i < image.height(); i++)
+          recordingfile->write((char*)(image.scanLine(i)),
+                               image.bytesPerLine());
       }
+    }
+
+    if (!frame.isEmpty()) {
+      framecounter++;
     }
   }
 }
@@ -557,6 +592,8 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       videoFormatSelector
     };
   }
+
+  if (!standalone) goto skip_all_file_opening;
 
   if (filenameEdit->text().isEmpty()) {
     tabWidget->setCurrentWidget(recordingTab);
@@ -646,6 +683,9 @@ skip_file_opening:
     } else
       statusBar()->clearMessage();
   }
+
+skip_all_file_opening:
+
   recording = checked;
   startVideo(recording || playing);
   recording = checked && started;
@@ -657,6 +697,8 @@ skip_file_opening:
     wgt->setEnabled(!recordingfile->isOpen());
   }
   on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
+
+  emit recordingStarted(recording);
 }
 
 void MainWindow::on_snapButton_clicked(bool checked) {

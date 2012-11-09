@@ -22,7 +22,10 @@
 
 #include <QTranslator>
 
-class QArvGuiExtension {};
+class QArvGuiExtension {
+public:
+  MainWindow* mw;
+};
 
 /*! Translations are loaded. An event filter is installed which causes all
  * plain-text tooltips to wrap at the 70-character threshold.
@@ -35,7 +38,7 @@ void QArvGui::init(QApplication* a) {
   } else {
     delete trans;
   }
-  
+
   // Install a global event filter that makes sure that long tooltips can be word-wrapped
   const int tooltip_wrap_threshold = 70;
   a->installEventFilter(new ToolTipToRichTextFilter(tooltip_wrap_threshold, a));
@@ -47,7 +50,9 @@ void QArvGui::init(QApplication* a) {
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
   ext = new QArvGuiExtension;
-  thewidget = new MainWindow(0, standalone);
+  ext->mw = new MainWindow(0, standalone);
+  thewidget = ext->mw;
+  connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
 }
 
 QArvGui::~QArvGui() {
@@ -59,4 +64,19 @@ QArvGui::~QArvGui() {
 
 QWidget* QArvGui::widget() {
   return thewidget;
+}
+
+void QArvGui::signalForwarding(bool enable) {
+  if (enable)
+    connect(ext->mw->camera, SIGNAL(frameReady()), SIGNAL(frameReady()));
+  else
+    disconnect(ext->mw->camera, SIGNAL(frameReady()), this, SIGNAL(frameReady()));
+}
+
+void QArvGui::getFrame(QImage* processed,
+                       QImage* unprocessed,
+                       QByteArray* raw,
+                       ArvBuffer** rawAravisBuffer,
+                       bool nocopy) {
+  ext->mw->getNextFrame(processed, unprocessed, raw, rawAravisBuffer, nocopy);
 }

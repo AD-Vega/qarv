@@ -20,6 +20,7 @@
 #ifndef QARVGUI_H
 #define QARVGUI_H
 
+#include "qarvcamera.h"
 #include <QWidget>
 #include <QApplication>
 
@@ -34,23 +35,35 @@ class QArvGuiExtension;
  */
 class QArvGui : QObject {
   Q_OBJECT
-  
+
 public:
   QArvGui(QWidget* parent = 0, bool standalone = true);
   ~QArvGui();
+
+  //! Fills the non-NULL parameters with the current frame.
+  void getFrame(QImage* processed = 0,
+                QImage* unprocessed = 0,
+                QByteArray* raw = 0,
+                ArvBuffer** rawAravisBuffer = 0,
+                bool nocopy = false);
 
   //! Returns the widget containing the GUI.
   QWidget* widget();
 
   //! Does static initialization.
   static void init(QApplication* a);
-  
+
 signals:
   void frameReady();
-  
+
+private slots:
+  void signalForwarding(bool enable);
+
 private:
   QWidget* thewidget;
   QArvGuiExtension* ext;
+
+  friend class QArvGuiExtension;
 };
 
 #endif

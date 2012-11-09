@@ -37,6 +37,9 @@ public:
   MainWindow(QWidget* parent = 0, bool standalone = true);
   ~MainWindow();
 
+signals:
+  void recordingStarted(bool started);
+
 private slots:
   void on_refreshCamerasButton_clicked(bool clicked = false);
   void on_unzoomButton_toggled(bool checked);
@@ -83,6 +86,11 @@ private slots:
 private:
   void readROILimits();
   void transformImage(QImage& img);
+  void getNextFrame(QImage* processed,
+                    QImage* unprocessed,
+                    QByteArray* raw,
+                    ArvBuffer** rawAravisBuffer,
+                    bool nocopy = false);
 
   QImage invalidImage;
   QArvCamera* camera;
@@ -90,7 +98,7 @@ private:
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer* autoreadexposure;
-  bool playing, recording, started, drawHistogram;
+  bool playing, recording, started, drawHistogram, standalone;
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;
@@ -99,6 +107,8 @@ private:
   QList<QWidget*> toDisableWhenPlaying;
   QList<QWidget*> toDisableWhenRecording;
   QIcon recordIcon, pauseIcon, playIcon;
+
+  friend class QArvGui;
 };
 
 /* Qt event filter that intercepts ToolTipChange events and replaces the
