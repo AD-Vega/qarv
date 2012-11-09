@@ -154,7 +154,7 @@ public:
   //! \name Get a captured frame
   /**@{*/
   QSize getFrameSize();
-  QByteArray getFrame(bool dropInvalid = false);
+  QByteArray getFrame(bool dropInvalid = false, bool nocopy = false);
   /**@}*/
 
   //! \name Manipulate network parameters of an ethernet camera

@@ -94,7 +94,6 @@ private:
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;
-  QByteArray currentFrame;
   QByteArray oldstate, oldgeometry;
   QSize oldsize;
   QList<QWidget*> toDisableWhenPlaying;

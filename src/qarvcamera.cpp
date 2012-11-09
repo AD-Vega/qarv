@@ -303,14 +303,24 @@ QSize QArvCamera::getFrameSize() {
 
 /*!
  * \param dropInvalid If true, return an empty QByteArray on an invalid frame.
+ * \param nocopy If true, the  returned QByteArray doesn't own the data. The
+ * caller guarantees that the frame will be used "quickly", i.e. before it is
+ * used to capture the next image. Only use this if the caller will decode or
+ * otherwise copy the data immediately. Note that the array itself is never
+ * invalidated after the grace period passes, it is merely overwritten.
  * \return A QByteArray with raw frame data of size given by getFrameSize().
  */
-QByteArray QArvCamera::getFrame(bool dropInvalid) {
+QByteArray QArvCamera::getFrame(bool dropInvalid, bool nocopy) {
   if (currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
-  else
-    return QByteArray(static_cast<char*>(currentFrame->data),
-                      currentFrame->size);
+  else {
+    if (nocopy)
+      return QByteArray::fromRawData(static_cast<char*>(currentFrame->data),
+                                     currentFrame->size);
+    else
+      return QByteArray(static_cast<char*>(currentFrame->data),
+                        currentFrame->size);
+  }
 }
 
 //! Translates betwen the glib and Qt address types via a native sockaddr.

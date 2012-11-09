@@ -60,7 +60,7 @@ static void initFfmpegOutputCommands() {
 MainWindow::MainWindow(QWidget* parent, bool standalone) :
   QMainWindow(parent), camera(NULL), playing(false), recording(false),
   started(false), drawHistogram(false), decoder(NULL),
-  imageTransform(), framecounter(0), currentFrame(),
+  imageTransform(), framecounter(0),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
   recordingfile = new QFile(this);
@@ -460,10 +460,9 @@ void MainWindow::transformImage(QImage& img) {
 
 void MainWindow::takeNextFrame() {
   if (playing || recording) {
-    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked());
+    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(), true);
     if (!frame.isEmpty()) {
       framecounter++;
-      currentFrame = frame;
     }
 
     QImage img;
@@ -480,7 +479,9 @@ void MainWindow::takeNextFrame() {
 
     if (recording && !frame.isEmpty()) {
       if (videoFormatSelector->currentIndex() < 2) {
-        recordingfile->write(frame);
+        QByteArray outframe(frame);
+        outframe.data(); // make deep copy, writing can block
+        recordingfile->write(outframe);
       } else {
         img = img.convertToFormat(QImage::Format_RGB888);
         for (int i = 0; i < img.height(); i++)
@@ -690,8 +691,14 @@ void MainWindow::on_snapButton_clicked(bool checked) {
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);
   } else if (snapshotRaw->isChecked()) {
+    auto frame = camera->getFrame(dropInvalidFrames->isChecked(), false);
+    if (frame.isEmpty()) {
+      statusBar()->showMessage(tr("Current frame is invalid, try "
+                                  "snapshotting again."), statusTimeoutMsec);
+      return;
+    }
     QFile file(fileName + ".frame");
-    if (file.open(QIODevice::WriteOnly)) file.write(currentFrame);
+    if (file.open(QIODevice::WriteOnly)) file.write(frame);
     else
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);
