@@ -35,7 +35,7 @@ set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h mainwindow.h
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/ framedecoders.cpp mainwindow.cpp
   main.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
-  roicombobox.cpp qarvgui.cpp qarvcamera.cpp)
+  roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})

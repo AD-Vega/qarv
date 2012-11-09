@@ -300,7 +300,7 @@ void QArvCamera::stopAcquisition() {
 
 //! Set the number of frames on the stream. Takes effect on startAcquisition().
 /*! An Aravis stream has a queue of frame buffers which is cycled as frames are
- * acquired. The getFrame() function returnes the frame that is currently being
+ * acquired. The getFrame() function returns the frame that is currently being
  * cycled. Several frames should be put on the queue for smooth operation. More
  * should be used when using the nocopy facility of getFrame(), as this
  * increases the grace period in which the returned frame is valid. For
