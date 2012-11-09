@@ -74,6 +74,7 @@ void freeFeaturetree(QArvFeatureTree* tree);
 QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
   QAbstractItemModel(parent), acquiring(false) {
   ext = new QArvCameraExtension;
+  setFrameQueueSize();
   camera = arv_camera_new(id.id);
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
   device = arv_camera_get_device(camera);
@@ -280,7 +281,7 @@ void QArvCamera::startAcquisition() {
   stream = arv_camera_create_stream(camera, NULL, NULL);
   arv_stream_set_emit_signals(stream, TRUE);
   g_signal_connect(stream, "new-buffer", G_CALLBACK(streamCallback), this);
-  for (int i = 0; i < 30; i++) {
+  for (uint i = 0; i < frameQueueSize; i++) {
     arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
   }
   arv_camera_start_acquisition(camera);
@@ -295,6 +296,20 @@ void QArvCamera::stopAcquisition() {
   g_object_unref(stream);
   acquiring = false;
   emit dataChanged(QModelIndex(), QModelIndex());
+}
+
+//! Set the number of frames on the stream. Takes effect on startAcquisition().
+/*! An Aravis stream has a queue of frame buffers which is cycled as frames are
+ * acquired. The getFrame() function returnes the frame that is currently being
+ * cycled. Several frames should be put on the queue for smooth operation. More
+ * should be used when using the nocopy facility of getFrame(), as this
+ * increases the grace period in which the returned frame is valid. For
+ * example, with the queue size of 30 and framerate of 60 FPS, the grace period
+ * is approximately one half second. Increasing the queue size increases the
+ * memory usage, as all buffers are allocated when acquisition starts.
+ */
+void QArvCamera::setFrameQueueSize(uint size) {
+  frameQueueSize = size;
 }
 
 QSize QArvCamera::getFrameSize() {

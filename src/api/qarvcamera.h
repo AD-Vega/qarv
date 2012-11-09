@@ -145,10 +145,11 @@ public:
   void setAutoGain(bool enable);
   /**@}*/
 
-  //! \name Start or stop acquisition
+  //! \name Control acquisition
   /**@{*/
   void startAcquisition();
   void stopAcquisition();
+  void setFrameQueueSize(uint size = 30);
   /**@}*/
 
   //! \name Get a captured frame
@@ -185,6 +186,7 @@ private:
   ArvStream* stream;
   ArvBuffer* currentFrame;
   bool acquiring;
+  uint frameQueueSize;
 
   friend void streamCallback(ArvStream* stream, QArvCamera* cam);
   friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
