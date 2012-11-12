@@ -132,7 +132,10 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
 
-  if (!standalone) tabWidget->removeTab(tabWidget->indexOf(recordingTab));
+  if (!standalone) {
+    setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
+    tabWidget->removeTab(tabWidget->indexOf(recordingTab));
+  }
 
   auto timer = new QTimer(this);
   timer->setInterval(1000);
