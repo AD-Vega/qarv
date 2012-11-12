@@ -27,8 +27,9 @@ public:
   MainWindow* mw;
 };
 
-/*! Translations are loaded. An event filter is installed which causes all
- * plain-text tooltips to wrap at the 70-character threshold.
+/*! Translations are loaded. An event filter is installed which converts
+ * plain-text tooltips longer than 70 characters into rich text, allowing
+ * wrapping.
  */
 void QArvGui::init(QApplication* a) {
   auto trans = new QTranslator(a);
@@ -46,7 +47,7 @@ void QArvGui::init(QApplication* a) {
 
 /*! In standalone mode, the GUI presents full recording facilities. When not in
  * standalone mode, only the record button is available. When toggled, frames
- * will be decoded and made available as QImage.
+ * will be decoded and made available using getFrame().
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
   ext = new QArvGuiExtension;
@@ -73,6 +74,13 @@ void QArvGui::signalForwarding(bool enable) {
     disconnect(ext->mw->camera, SIGNAL(frameReady()), this, SIGNAL(frameReady()));
 }
 
+/*!
+ * \param processed The frame as seen in the GUI video display.
+ * \param unprocessed The decoded frame with no transformations applied.
+ * \param raw Undecoded buffer.
+ * \param rawAravisBuffer See QArvCamera::getFrame().
+ * \param nocopy See QArvCamera::getFrame().
+ */
 void QArvGui::getFrame(QImage* processed,
                        QImage* unprocessed,
                        QByteArray* raw,
