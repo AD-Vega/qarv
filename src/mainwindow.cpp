@@ -276,7 +276,7 @@ void MainWindow::on_cameraSelector_currentIndexChanged(int index) {
     startVideo(false);
     delete camera;
   }
-  camera = new QArvCamera(camid);
+  camera = new QArvCamera(camid, this);
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
 
   auto ifaceIP = camera->getHostIP();
