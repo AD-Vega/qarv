@@ -33,6 +33,7 @@ extern "C" {
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QTextDocument>
 
 class QArvCameraExtension {};
 
@@ -639,7 +640,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
       string =
         arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
       if (string == NULL) return QVariant();
-      return QVariant(string);
+      return QVariant("<qt/>" + Qt::escape(string));
 
     default:
       return QVariant();
