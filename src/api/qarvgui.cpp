@@ -51,7 +51,7 @@ void QArvGui::init(QApplication* a) {
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
   ext = new QArvGuiExtension;
-  ext->mw = new MainWindow(0, standalone);
+  ext->mw = new MainWindow(parent, standalone);
   thewidget = ext->mw;
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
 }
