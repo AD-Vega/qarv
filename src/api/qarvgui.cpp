@@ -27,9 +27,7 @@ public:
   QArvMainWindow* mw;
 };
 
-/*! Translations are loaded. An event filter is installed which converts
- * plain-text tooltips longer than 70 characters into rich text, allowing
- * wrapping.
+/*! Translations and event filters are loaded.
  */
 void QArvGui::init(QApplication* a) {
   auto trans = new QTranslator(a);

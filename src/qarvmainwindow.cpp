@@ -988,13 +988,25 @@ ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold,
 bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
   if (evt->type() == QEvent::ToolTipChange) {
     QWidget* widget = static_cast<QWidget*>(obj);
-    QString tooltip = widget->toolTip();
-    if (!Qt::mightBeRichText(tooltip) && tooltip.size() > size_threshold) {
-      // Prefix <qt/> to make sure Qt detects this as rich text
-      // Escape the current message as HTML and replace \n by <br>
-      tooltip = "<qt/>" + Qt::escape(tooltip);
-      widget->setToolTip(tooltip);
-      return true;
+
+    QObject* parent = qobject_cast<QObject*>(widget);
+    bool doEnrich = false;
+    while(NULL != (parent = parent->parent())) {
+      if (parent->metaObject()->className() == QString("QArvMainWindow")) {
+        doEnrich = true;
+        break;
+      }
+    }
+
+    if (doEnrich) {
+      QString tooltip = widget->toolTip();
+      if(!Qt::mightBeRichText(tooltip) && tooltip.size() > size_threshold) {
+        // Prefix <qt/> to make sure Qt detects this as rich text
+        // Escape the current message as HTML and replace \n by <br>
+        tooltip = "<qt/>" + Qt::escape(tooltip);
+        widget->setToolTip(tooltip);
+        return true;
+      }
     }
   }
   return QObject::eventFilter(obj, evt);
