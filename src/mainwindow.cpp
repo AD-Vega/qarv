@@ -538,6 +538,7 @@ void MainWindow::startVideo(bool start) {
         qCritical() << "Decoder for" << camera->getPixelFormat()
                     << "doesn't exist!";
       else {
+        camera->setFrameQueueSize(streamFramesSpinbox->value());
         camera->startAcquisition();
         started = true;
         foreach (auto wgt, toDisableWhenPlaying) {
