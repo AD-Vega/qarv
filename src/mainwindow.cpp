@@ -99,8 +99,8 @@ MainWindow::MainWindow(QWidget* parent, bool standalone_) :
   videoFormatSelector->addItems(ffmpegOutputOptions);
 
   QSettings settings;
-  restoreGeometry(settings.value("mainwindow/geometry").toByteArray());
-  restoreState(settings.value("mainwindow/state").toByteArray());
+  restoreGeometry(settings.value("qarvmainwindow/geometry").toByteArray());
+  restoreState(settings.value("qarvmainwindow/state").toByteArray());
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateMsec);
@@ -862,8 +862,8 @@ void MainWindow::updateBandwidthEstimation() {
 
 void MainWindow::closeEvent(QCloseEvent* event) {
   QSettings settings;
-  settings.setValue("mainwindow/geometry", saveGeometry());
-  settings.setValue("mainwindow/state", saveState());
+  settings.setValue("qarvmainwindow/geometry", saveGeometry());
+  settings.setValue("qarvmainwindow/state", saveState());
   QMainWindow::closeEvent(event);
 }
 
