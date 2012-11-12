@@ -17,14 +17,14 @@
  */
 
 #include "api/qarvgui.h"
-#include "mainwindow.h"
+#include "qarvmainwindow.h"
 #include "globals.h"
 
 #include <QTranslator>
 
 class QArvGuiExtension {
 public:
-  MainWindow* mw;
+  QArvMainWindow* mw;
 };
 
 /*! Translations are loaded. An event filter is installed which converts
@@ -51,7 +51,7 @@ void QArvGui::init(QApplication* a) {
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
   ext = new QArvGuiExtension;
-  ext->mw = new MainWindow(parent, standalone);
+  ext->mw = new QArvMainWindow(parent, standalone);
   thewidget = ext->mw;
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
 }

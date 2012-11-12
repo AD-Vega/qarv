@@ -30,12 +30,12 @@
 #include <QFile>
 #include <QTransform>
 
-class MainWindow : public QMainWindow, private Ui::MainWindowUI {
+class QArvMainWindow : public QMainWindow, private Ui::MainWindowUI {
   Q_OBJECT
 
 public:
-  MainWindow(QWidget* parent = 0, bool standalone = true);
-  ~MainWindow();
+  QArvMainWindow(QWidget* parent = 0, bool standalone = true);
+  ~QArvMainWindow();
 
 signals:
   void recordingStarted(bool started);

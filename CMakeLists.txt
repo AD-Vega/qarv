@@ -30,10 +30,10 @@ set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
 set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
 qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
-set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h mainwindow.h
+set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h qarvmainwindow.h
   roicombobox.h api/qarvgui.h api/qarvcamera.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
-set_prefixed(qarv_SRCS src/ framedecoders.cpp mainwindow.cpp
+set_prefixed(qarv_SRCS src/ framedecoders.cpp qarvmainwindow.cpp
   main.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
   roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
