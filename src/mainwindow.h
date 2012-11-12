@@ -71,6 +71,9 @@ private slots:
   void on_closeFileButton_clicked(bool checked);
   void on_videoFormatSelector_currentIndexChanged(int index);
   void on_ROIsizeCombo_newSizeSelected(QSize size);
+  void on_sliderUpdateSpinbox_valueChanged(int i);
+  void on_histogramUpdateSpinbox_valueChanged(int i);
+  void on_statusTimeoutSpinbox_valueChanged(int i);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
@@ -98,6 +101,7 @@ private:
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer* autoreadexposure;
+  QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
   QIODevice* recordingfile;
   QTransform imageTransform;
@@ -107,6 +111,7 @@ private:
   QList<QWidget*> toDisableWhenPlaying;
   QList<QWidget*> toDisableWhenRecording;
   QIcon recordIcon, pauseIcon, playIcon;
+  int statusTimeoutMsec;
 
   friend class QArvGui;
 };

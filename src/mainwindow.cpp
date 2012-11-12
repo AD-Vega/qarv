@@ -33,9 +33,6 @@
 #include "globals.h"
 
 const int slidersteps = 1000;
-const int sliderUpdateMsec = 300;
-const int histogramUpdateMsec = 100;
-const int statusTimeoutMsec = 10000;
 
 auto ffmpegOutputOptions = QStringList();
 auto ffmpegOutputCommands = QHash<QString, QString>();
@@ -68,6 +65,7 @@ MainWindow::MainWindow(QWidget* parent, bool standalone_) :
   qWarning() << "Please ignore \"Could not resolve property\" warnings "
                 "unless icons look bad.";
   setupUi(this);
+  on_statusTimeoutSpinbox_valueChanged(statusTimeoutSpinbox->value());
 
   // Setup theme icons if available.
   QMap<QAbstractButton*, QString> icons;
@@ -103,14 +101,14 @@ MainWindow::MainWindow(QWidget* parent, bool standalone_) :
   restoreState(settings.value("qarvmainwindow/state").toByteArray());
 
   autoreadexposure = new QTimer(this);
-  autoreadexposure->setInterval(sliderUpdateMsec);
+  autoreadexposure->setInterval(sliderUpdateSpinbox->value());
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readGain()));
   this->connect(autoreadexposure, SIGNAL(timeout()),
                 SLOT(updateBandwidthEstimation()));
 
-  auto autoreadhistogram = new QTimer(this);
-  autoreadhistogram->setInterval(histogramUpdateMsec);
+  autoreadhistogram = new QTimer(this);
+  autoreadhistogram->setInterval(histogramUpdateSpinbox->value());
   this->connect(autoreadhistogram, SIGNAL(timeout()),
                 SLOT(histogramNextFrame()));
   autoreadhistogram->start();
@@ -496,9 +494,9 @@ void MainWindow::takeNextFrame() {
     QImage image;
 
     if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2)
-      getNextFrame(&image, NULL, &frame, NULL, true);
+      getNextFrame(&image, NULL, &frame, NULL, nocopyCheck->isChecked());
     else
-      getNextFrame(NULL, NULL, &frame, NULL, true);
+      getNextFrame(NULL, NULL, &frame, NULL, nocopyCheck->isChecked());
 
     if (playing) video->setImage(image);
 
@@ -584,7 +582,7 @@ void MainWindow::on_recordButton_clicked(bool checked) {
       resetROIButton,
       pickROIButton,
       binSpinBox,
-      manipulationTab,
+      settingsTab,
       filenameEdit,
       chooseFilenameButton,
       recordApendCheck,
@@ -999,4 +997,16 @@ bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
     }
   }
   return QObject::eventFilter(obj, evt);
+}
+
+void MainWindow::on_sliderUpdateSpinbox_valueChanged(int i) {
+  autoreadexposure->setInterval(i);
+}
+
+void MainWindow::on_histogramUpdateSpinbox_valueChanged(int i) {
+  autoreadhistogram->setInterval(i);
+}
+
+void MainWindow::on_statusTimeoutSpinbox_valueChanged(int i){
+  statusTimeoutMsec = 1000*i;
 }
