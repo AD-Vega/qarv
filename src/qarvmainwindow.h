@@ -23,8 +23,8 @@
 #include "ui_mainwindow.h"
 
 #include "glvideowidget.h"
-#include "framedecoders.h"
 #include "api/qarvcamera.h"
+#include "api/qarvdecoder.h"
 
 #include <QTimer>
 #include <QFile>
@@ -97,7 +97,7 @@ private:
 
   QImage invalidImage;
   QArvCamera* camera;
-  FrameDecoder* decoder;
+  QArvDecoder* decoder;
   QRect roirange, roidefault;
   QPair<double, double> gainrange, exposurerange;
   QTimer* autoreadexposure;

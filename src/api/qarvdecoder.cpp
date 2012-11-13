@@ -16,22 +16,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FRAMEDECODERS_H
-#define FRAMEDECODERS_H
+#include "api/qarvdecoder.h"
+#include <QPluginLoader>
 
-#include <QByteArray>
-#include <QString>
-#include <QSize>
-#include <QImage>
+QList< QArvPixelFormat* > QArvPixelFormat::supportedFormats() {
+  auto plugins = QPluginLoader::staticInstances();
+  QList<QArvPixelFormat*> list;
+  foreach (auto plugin, plugins) {
+    auto fmt = qobject_cast<QArvPixelFormat*>(plugin);
+    if (fmt != NULL) list << fmt;
+  }
+  return list;
+}
 
-class FrameDecoder {
-public:
-  virtual ~FrameDecoder() {};
-  virtual QImage decode(QByteArray frame) = 0;
-  virtual QString ffmpegPixfmtRaw() = 0;
-  virtual bool isGrayscale() = 0;
-};
-
-FrameDecoder* makeFrameDecoder(QString format, QSize size);
-
-#endif
+/*!
+ * Returns NULL if the format is not supported.
+ */
+QArvDecoder* QArvPixelFormat::makeDecoder(QString format, QSize size) {
+  auto list = supportedFormats();
+  foreach (auto fmt, list) {
+    if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
+  }
+  return NULL;
+}

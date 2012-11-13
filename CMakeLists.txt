@@ -24,7 +24,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}
 set(CMAKE_CXX_FLAGS "-std=c++0x")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3")
-add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\")
+add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\" -DQT_STATICPLUGIN)
 
 set_prefixed(qarv_UIS_pre src/ mainwindow.ui)
 qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
@@ -33,12 +33,19 @@ qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/ glvideowidget.h glhistogramwidget.h qarvmainwindow.h
   roicombobox.h api/qarvgui.h api/qarvcamera.h)
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
-set_prefixed(qarv_SRCS src/ framedecoders.cpp qarvmainwindow.cpp
-  main.cpp glvideowidget.cpp glhistogramwidget.cpp globals.cpp
-  roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp)
+set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
+  glvideowidget.cpp glhistogramwidget.cpp globals.cpp
+  roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp
+  api/qarvdecoder.cpp)
+set_prefixed(qarv_decoders_MOCS src/decoders/
+  mono8.h mono12.h mono12packed.h)
+qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
+set_prefixed(qarv_decoders_SRC src/decoders/
+  decoders.cpp graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
-add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
+add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS}
+  ${qarv_TRANS} ${qarv_decoders_SRC} ${qarv_decoders_MOCD})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
 
@@ -56,7 +63,7 @@ set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
 install(TARGETS qarv qarvexe
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
-install(FILES src/api/qarvcamera.h src/api/qarvgui.h
+install(FILES src/api/qarvcamera.h src/api/qarvgui.h src/api/qarvdecoder.h
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION share/qarv/)

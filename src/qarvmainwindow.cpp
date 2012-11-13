@@ -533,8 +533,8 @@ void QArvMainWindow::startVideo(bool start) {
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
-      decoder = makeFrameDecoder(camera->getPixelFormat(),
-                                 camera->getFrameSize());
+      decoder = QArvPixelFormat::makeDecoder(camera->getPixelFormat(),
+                                             camera->getFrameSize());
       invalidImage = QImage(camera->getFrameSize(), QImage::Format_RGB32);
       invalidImage.fill(Qt::red);
       if (decoder == NULL)
@@ -634,7 +634,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       QString cmd = ffmpegInputCommand;
       QString fmt;
       if (videoFormatSelector->currentIndex() == 1) {
-        fmt = decoder->ffmpegPixfmtRaw();
+        fmt = decoder->ffmpegPixelFormat();
         if (fmt.isNull()) {
           statusBar()->showMessage(tr("Unable to record. "
                                       "AVI cannot store this pixel format in raw "

@@ -1,0 +1,5 @@
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(Mono8)
+Q_IMPORT_PLUGIN(Mono12)
+Q_IMPORT_PLUGIN(Mono12Packed)
