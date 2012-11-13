@@ -22,7 +22,6 @@
 
 #include <QObject>
 #include <QImage>
-#include <complex>
 #include <fftw3.h>
 
 class fftprocessor : public QObject {
@@ -45,11 +44,9 @@ private:
   size_t alloc_width;
   size_t alloc_height;
   fftw_plan fftplan;
-  std::complex<double> *fft2d_in;
-  std::complex<double> *fft2d_out;
-  int halfx;
-  int halfy;
-  int maxidx;
+  double *fft2d_in;
+  double *fft2d_out;
+  int minsize;
   double *spectrum_accum;
   int *spectrum_count;
   QVector<double> spectrum;

@@ -22,7 +22,6 @@
 
 #include <QGLWidget>
 #include <QMouseEvent>
-#include <complex>
 #include <fftw3.h>
 
 #include "fftprocessor.h"

@@ -19,7 +19,6 @@
 #include "fftprocessor.h"
 #include <QDebug>
 #include <QtConcurrentRun>
-#include <complex>
 #include <fftw3.h>
 
 using namespace std;
@@ -51,22 +50,19 @@ void fftprocessor::preparePlan(QImage& image) {
   alloc_width = image.width();
   alloc_height = image.height();
 
-  size_t alloc_size = alloc_width*alloc_height*sizeof(fftw_complex);
-  fft2d_in = reinterpret_cast<complex<double>*>(fftw_malloc(alloc_size));
-  fft2d_out = reinterpret_cast<complex<double>*>(fftw_malloc(alloc_size));
+  size_t alloc_size = alloc_width*alloc_height*sizeof(double);
+  fft2d_in = (double *)fftw_malloc(alloc_size);
+  fft2d_out = (double *)fftw_malloc(alloc_size);
 
-  fftplan = fftw_plan_dft_2d(alloc_height, alloc_width,
-                             reinterpret_cast<fftw_complex*>(fft2d_in),
-                             reinterpret_cast<fftw_complex*>(fft2d_out),
-                             FFTW_FORWARD, FFTW_ESTIMATE);
+  fftplan = fftw_plan_r2r_2d(alloc_height, alloc_width,
+                             fft2d_in, fft2d_out,
+                             FFTW_REDFT10, FFTW_REDFT10, FFTW_ESTIMATE);
 
-  halfx = alloc_width/2;
-  halfy = alloc_height/2;
-  maxidx = min(halfx, halfy);
+  minsize = min(alloc_width, alloc_height);
   
-  spectrum_accum = new double[maxidx + 1];
-  spectrum_count = new int[maxidx + 1];
-  spectrum.resize(maxidx + 1);
+  spectrum_accum = new double[minsize];
+  spectrum_count = new int[minsize];
+  spectrum.resize(minsize);
 }
 
 
@@ -77,14 +73,11 @@ void fftprocessor::fromImage(QImage& image) {
   }
 
   if (image.format() == QImage::Format_Indexed8) {
-    complex<double> *fft_ptr = fft2d_in;
+    double *fft_ptr = fft2d_in;
     for (int row = 0; row < alloc_height; row++) {
       const uchar *image_ptr = image.constScanLine(row);
-      double hann_y = 0.5*(1-cos(2*M_PI*row/(alloc_height-1)));
-      for (int column = 0; column < alloc_width; column++) {
-        double hann_x = 0.5*(1-cos(2*M_PI*column/(alloc_width-1)));
-        *(fft_ptr++) = *(image_ptr++) * hann_x * hann_y;
-      }
+      for (int column = 0; column < alloc_width; column++)
+        *(fft_ptr++) = *(image_ptr++);
     }
     
     QtConcurrent::run(this, &fftprocessor::performFFT);
@@ -96,21 +89,19 @@ void fftprocessor::performFFT() {
 //  qDebug() << "   fftprocessor::performFFT";
   fftw_execute(fftplan);
   
-  memset(spectrum_accum, 0, (maxidx + 1)*sizeof(*spectrum_accum));
-  memset(spectrum_count, 0, (maxidx + 1)*sizeof(*spectrum_count));
+  memset(spectrum_accum, 0, (minsize)*sizeof(*spectrum_accum));
+  memset(spectrum_count, 0, (minsize)*sizeof(*spectrum_count));
   
-  double minsize = min(alloc_width, alloc_height);
   double aspect_x = minsize/alloc_width;
   double aspect_y = minsize/alloc_height;
   
-  int fx, fy, ridx;
+  int ridx;
+  int maxidx = minsize - 1;
   
-  complex<double> *fft_ptr = fft2d_out;
+  double *fft_ptr = fft2d_out;
   for (int y = 0; y < alloc_height; y++) {
     for (int x = 0; x < alloc_width; x++, fft_ptr++) {
-      fx = (x > halfx ? alloc_width - x : x);
-      fy = (y > halfy ? alloc_height - y : y);
-      ridx = floor(sqrt(pow(fx*aspect_x, 2) + pow(fy*aspect_y, 2)));
+      ridx = floor(sqrt(pow((double)x*aspect_x, 2) + pow((double)y*aspect_y, 2)));
 
       if (ridx > maxidx)
         continue;
