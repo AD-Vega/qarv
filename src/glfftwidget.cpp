@@ -71,8 +71,8 @@ void GLFFTWidget::paintGL() {
   float wUnit = (float)rect().width() / spectrum.size();
   QPointF origin = rect().bottomLeft();
 
-  painter.setPen(opt.palette.color(QPalette::WindowText));
-  painter.setBrush(QBrush(opt.palette.color(QPalette::WindowText)));
+  painter.setPen(Qt::NoPen);
+  painter.setBrush(QColor(91, 23, 173));
   
   for (int i = 0; i < spectrum.size(); i++) {
     float height = spectrum[i];
