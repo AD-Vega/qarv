@@ -34,17 +34,19 @@ public:
   ~GLFFTWidget();
 
   void paintGL();
-  void fromImage(QImage& image);
+  void fromImage(QImage& image, bool setReference);
 
 signals:
   void fftIdle();
+  void fftQuality(double quality);
 
 private:
   fftprocessor *ffter;
   QVector<double> spectrum;
+  bool isReferenced;
 
 private slots:
-  void spectrumComputed(QVector<double> result);
+  void spectrumComputed(QVector<double> result, bool isReferenced);
 };
 
 #endif

@@ -42,6 +42,7 @@ void fftprocessor::deallocate() {
   fftw_free(fft2d_out);
   delete[] spectrum_accum;
   delete[] spectrum_count;
+  delete[] spectrum_reference;
 }
 
 
@@ -62,11 +63,15 @@ void fftprocessor::preparePlan(QImage& image) {
   
   spectrum_accum = new double[minsize];
   spectrum_count = new int[minsize];
+  spectrum_reference = new double[minsize];
   spectrum.resize(minsize);
+  
+  memset(spectrum_reference, 0, minsize*sizeof(*spectrum_reference));
+  isReferenced = false;
 }
 
 
-void fftprocessor::fromImage(QImage& image) {
+void fftprocessor::fromImage(QImage& image, bool setReference) {
   if ((image.width() != alloc_width) || (image.height() != alloc_height)) {
     deallocate();
     preparePlan(image);
@@ -80,17 +85,17 @@ void fftprocessor::fromImage(QImage& image) {
         *(fft_ptr++) = *(image_ptr++);
     }
     
-    QtConcurrent::run(this, &fftprocessor::performFFT);
+    QtConcurrent::run(this, &fftprocessor::performFFT, setReference);
   }
 }
 
 
-void fftprocessor::performFFT() {
+void fftprocessor::performFFT(bool setReference) {
 //  qDebug() << "   fftprocessor::performFFT";
   fftw_execute(fftplan);
   
-  memset(spectrum_accum, 0, (minsize)*sizeof(*spectrum_accum));
-  memset(spectrum_count, 0, (minsize)*sizeof(*spectrum_count));
+  memset(spectrum_accum, 0, minsize*sizeof(*spectrum_accum));
+  memset(spectrum_count, 0, minsize*sizeof(*spectrum_count));
   
   double aspect_x = minsize/alloc_width;
   double aspect_y = minsize/alloc_height;
@@ -112,10 +117,22 @@ void fftprocessor::performFFT() {
   }
   
   double dc = log10(spectrum_accum[0]/spectrum_count[0]);
-  for (int i = 0; i <= maxidx; i++)
-    spectrum[i] = log10(spectrum_accum[i]/spectrum_count[i]) - dc;
+  double quality = 0;
+  isReferenced |= setReference;
   
-//  qDebug() << "   fftprocessor::performFFT (about to emit fftDone)";
-  emit(fftDone(spectrum));
-//  qDebug() << "   fftprocessor::performFFT (exit)";
+  for (int i = 0; i <= maxidx; i++) {
+    spectrum[i] = log10(spectrum_accum[i]/spectrum_count[i]) - dc;
+
+    if (setReference) {
+      spectrum_reference[i] = spectrum[i];
+      spectrum[i] = 0;
+    } else {
+      spectrum[i] -= spectrum_reference[i];
+    }
+
+    quality += spectrum[i];
+  }
+  
+  emit(fftDone(spectrum, isReferenced));
+  emit(fftQuality(quality));
 }

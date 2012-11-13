@@ -31,15 +31,16 @@ public:
   fftprocessor(QObject* parent = 0);
   ~fftprocessor();
 
-  void fromImage(QImage& image);
+  void fromImage(QImage& image, bool setReference);
   
 signals:
-  void fftDone(QVector<double> spectrum);
+  void fftDone(QVector<double> spectrum, bool isReferenced);
+  void fftQuality(double quality);
 
 private:
   void deallocate();
   void preparePlan(QImage& image);
-  void performFFT();
+  void performFFT(bool setReference);
   
   size_t alloc_width;
   size_t alloc_height;
@@ -49,6 +50,8 @@ private:
   int minsize;
   double *spectrum_accum;
   int *spectrum_count;
+  double *spectrum_reference;
+  bool isReferenced;
   QVector<double> spectrum;
 };
 

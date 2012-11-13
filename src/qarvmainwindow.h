@@ -74,6 +74,7 @@ private slots:
   void on_sliderUpdateSpinbox_valueChanged(int i);
   void on_histogramUpdateSpinbox_valueChanged(int i);
   void on_statusTimeoutSpinbox_valueChanged(int i);
+  void on_setReference_clicked();
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
@@ -106,7 +107,7 @@ private:
   QTimer* autoreadexposure;
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
-  bool timeForFFT, FFTIdle, drawFFT;
+  bool timeForFFT, FFTIdle, drawFFT, setFFTReference;
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;

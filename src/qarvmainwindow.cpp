@@ -59,7 +59,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), standalone(standalone_),
   toDisableWhenPlaying(), toDisableWhenRecording(), timeForFFT(false),
-  FFTIdle(true), drawFFT(false) {
+  FFTIdle(true), drawFFT(false), setFFTReference(false) {
 
   recordingfile = new QFile(this);
 
@@ -149,6 +149,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   timer->setInterval(1000);
   this->connect(timer, SIGNAL(timeout()), SLOT(showFPS()));
   timer->start();
+  
+  this->connect(fft, SIGNAL(fftQuality(double)), quality, SLOT(setNum(double)));
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 
@@ -518,8 +520,9 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (drawFFT) {
-      fft->fromImage(image);
+      fft->fromImage(image, setFFTReference);
       drawFFT = false;
+      setFFTReference = false;
     }
 
     if (recording && !frame.isEmpty()) {
@@ -992,6 +995,10 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
 
 void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
   video->setSelectionSize(size);
+}
+
+void QArvMainWindow::on_setReference_clicked() {
+  setFFTReference = true;
 }
 
 void QArvMainWindow::histogramNextFrame() {

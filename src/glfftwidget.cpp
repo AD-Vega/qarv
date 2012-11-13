@@ -23,9 +23,12 @@
 using namespace std;
 
 
-GLFFTWidget::GLFFTWidget(QWidget* parent) : QGLWidget() {
+GLFFTWidget::GLFFTWidget(QWidget* parent) :
+  QGLWidget(), isReferenced(false) {
+
   ffter = new fftprocessor(this);
-  this->connect(ffter, SIGNAL(fftDone(QVector<double>)), SLOT(spectrumComputed(QVector<double>)));
+  this->connect(ffter, SIGNAL(fftDone(QVector<double>, bool)), SLOT(spectrumComputed(QVector<double>, bool)));
+  this->connect(ffter, SIGNAL(fftQuality(double)), SIGNAL(fftQuality(double)));
 }
 
 
@@ -33,15 +36,16 @@ GLFFTWidget::~GLFFTWidget() {
 }
 
 
-void GLFFTWidget::fromImage(QImage& image) {
+void GLFFTWidget::fromImage(QImage& image, bool setReference) {
 //  qDebug() << "GLFFTWidget::fromImage";
-  ffter->fromImage(image);
+  ffter->fromImage(image, setReference);
 }
 
 
-void GLFFTWidget::spectrumComputed(QVector<double> result) {
+void GLFFTWidget::spectrumComputed(QVector<double> result, bool isReferenced ) {
 //  qDebug() << "GLFFTWidget::spectrumComputed";
   spectrum = result;
+  this->isReferenced = isReferenced;
   emit(fftIdle());
   update();
 }
@@ -54,8 +58,16 @@ void GLFFTWidget::paintGL() {
   painter.setBackground(opt.palette.color(QPalette::Background));
   painter.fillRect(rect(), opt.palette.color(QPalette::Background));
 
-  const double scale_range = 6;
-  float hUnit = rect().height() / scale_range;
+  double scale_min, scale_max;
+  if (isReferenced) {
+    scale_min = -3;
+    scale_max = 3;
+  } else {
+    scale_min = -6;
+    scale_max = 0;
+  }
+
+  float hUnit = rect().height() / (scale_max - scale_min);
   float wUnit = (float)rect().width() / spectrum.size();
   QPointF origin = rect().bottomLeft();
 
@@ -63,11 +75,14 @@ void GLFFTWidget::paintGL() {
   painter.setBrush(QBrush(opt.palette.color(QPalette::WindowText)));
   
   for (int i = 0; i < spectrum.size(); i++) {
-    float height = (spectrum[i] + scale_range);
-    if (height < 0)
-      height = 0;
-    else if (height > scale_range)
-      height = scale_range;
+    float height = spectrum[i];
+    
+    if (height < scale_min)
+      height = scale_min;
+    else if (height > scale_max)
+      height = scale_max;
+    
+    height -= scale_min;
       
     QPointF topLeft(origin + QPointF(i*wUnit, -height*hUnit));
     QPointF bottomRight(origin + QPointF((i+1)*wUnit, 0));
