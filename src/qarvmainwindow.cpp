@@ -59,7 +59,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), standalone(standalone_),
   toDisableWhenPlaying(), toDisableWhenRecording(), timeForFFT(false),
-  FFTIdle(true), drawFFT(false), setFFTReference(false) {
+  FFTIdle(true), drawFFT(false), setFFTReference(false),
+  wantFFTReference(false) {
 
   recordingfile = new QFile(this);
 
@@ -151,6 +152,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   timer->start();
   
   this->connect(fft, SIGNAL(fftQuality(double)), quality, SLOT(setNum(double)));
+  this->connect(fft, SIGNAL(fftStatus(bool, bool)), SLOT(setFFTStatus(bool, bool)));
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 
@@ -520,7 +522,7 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (drawFFT) {
-      fft->fromImage(image, setFFTReference);
+      fft->fromImage(image, wantFFTReference, setFFTReference);
       drawFFT = false;
       setFFTReference = false;
     }
@@ -1012,6 +1014,14 @@ void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
 
 void QArvMainWindow::on_setReference_clicked() {
   setFFTReference = true;
+  wantFFTReference = true;
+}
+
+void QArvMainWindow::on_useReference_clicked(bool checked) {
+  if (useReference->checkState() == Qt::Unchecked)
+    wantFFTReference = false;
+  else
+    wantFFTReference = true;
 }
 
 void QArvMainWindow::histogramNextFrame() {
@@ -1036,6 +1046,24 @@ void QArvMainWindow::checkFFTCondition() {
   if (drawFFT) {
     timeForFFT = false;
     FFTIdle = false;
+  }
+}
+
+void QArvMainWindow::setFFTStatus(bool isReferenced, bool haveReference) {
+  if (haveReference) {
+    useReference->setEnabled(true);
+
+    if (isReferenced != wantFFTReference)
+      useReference->setCheckState(Qt::PartiallyChecked);
+    else {
+      if (isReferenced)
+        useReference->setCheckState(Qt::Checked);
+      else
+        useReference->setCheckState(Qt::Unchecked);
+    }
+  } else {
+    useReference->setEnabled(false),
+    useReference->setCheckState(Qt::Unchecked);
   }
 }
 

@@ -77,6 +77,7 @@ private slots:
   void on_histogramUpdateSpinbox_valueChanged(int i);
   void on_statusTimeoutSpinbox_valueChanged(int i);
   void on_setReference_clicked();
+  void on_useReference_clicked(bool checked);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
@@ -90,6 +91,7 @@ private slots:
   void FFTTimerElapsed();
   void FFTSetIdle();
   void checkFFTCondition();
+  void setFFTStatus(bool isReferenced, bool haveReference);
   void readAllValues();
 
 private:
@@ -109,7 +111,7 @@ private:
   QTimer* autoreadexposure;
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
-  bool timeForFFT, FFTIdle, drawFFT, setFFTReference;
+  bool timeForFFT, FFTIdle, drawFFT, setFFTReference, wantFFTReference;
   QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;

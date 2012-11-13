@@ -27,7 +27,7 @@ GLFFTWidget::GLFFTWidget(QWidget* parent) :
   QGLWidget(), isReferenced(false) {
 
   ffter = new fftprocessor(this);
-  this->connect(ffter, SIGNAL(fftDone(QVector<double>, bool)), SLOT(spectrumComputed(QVector<double>, bool)));
+  this->connect(ffter, SIGNAL(fftDone(QVector<double>, bool, bool)), SLOT(spectrumComputed(QVector<double>, bool, bool)));
   this->connect(ffter, SIGNAL(fftQuality(double)), SIGNAL(fftQuality(double)));
 }
 
@@ -36,16 +36,17 @@ GLFFTWidget::~GLFFTWidget() {
 }
 
 
-void GLFFTWidget::fromImage(QImage& image, bool setReference) {
+void GLFFTWidget::fromImage(QImage& image, bool wantReference, bool setReference) {
 //  qDebug() << "GLFFTWidget::fromImage";
-  ffter->fromImage(image, setReference);
+  ffter->fromImage(image, wantReference, setReference);
 }
 
 
-void GLFFTWidget::spectrumComputed(QVector<double> result, bool isReferenced ) {
+void GLFFTWidget::spectrumComputed(QVector<double> result, bool isReferenced, bool haveReference) {
 //  qDebug() << "GLFFTWidget::spectrumComputed";
   spectrum = result;
   this->isReferenced = isReferenced;
+  emit(fftStatus(isReferenced, haveReference));
   emit(fftIdle());
   update();
 }

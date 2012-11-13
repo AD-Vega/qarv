@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
+    <width>928</width>
     <height>534</height>
    </rect>
   </property>
@@ -1213,6 +1213,19 @@
         <widget class="QPushButton" name="setReference">
          <property name="text">
           <string>Set reference</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="useReference">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Use reference</string>
+         </property>
+         <property name="tristate">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

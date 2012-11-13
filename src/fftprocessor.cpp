@@ -25,6 +25,7 @@ using namespace std;
 
 
 fftprocessor::fftprocessor(QObject* parent) : QObject() {
+
   uchar nullimg[] = { 0 };
   QImage img(nullimg, 1, 1, 1, QImage::Format_Indexed8);
   preparePlan(img);
@@ -67,11 +68,11 @@ void fftprocessor::preparePlan(QImage& image) {
   spectrum.resize(minsize);
   
   memset(spectrum_reference, 0, minsize*sizeof(*spectrum_reference));
-  isReferenced = false;
+  haveReference = false;
 }
 
 
-void fftprocessor::fromImage(QImage& image, bool setReference) {
+void fftprocessor::fromImage(QImage& image, bool wantReference, bool setReference) {
   if ((image.width() != alloc_width) || (image.height() != alloc_height)) {
     deallocate();
     preparePlan(image);
@@ -85,12 +86,12 @@ void fftprocessor::fromImage(QImage& image, bool setReference) {
         *(fft_ptr++) = *(image_ptr++);
     }
     
-    QtConcurrent::run(this, &fftprocessor::performFFT, setReference);
+    QtConcurrent::run(this, &fftprocessor::performFFT, wantReference, setReference);
   }
 }
 
 
-void fftprocessor::performFFT(bool setReference) {
+void fftprocessor::performFFT(bool wantReference, bool setReference) {
 //  qDebug() << "   fftprocessor::performFFT";
   fftw_execute(fftplan);
   
@@ -118,21 +119,21 @@ void fftprocessor::performFFT(bool setReference) {
   
   double dc = log10(spectrum_accum[0]/spectrum_count[0]);
   double quality = 0;
-  isReferenced |= setReference;
+
+  haveReference |= setReference;
+  bool isReferenced = haveReference & wantReference;
   
   for (int i = 0; i <= maxidx; i++) {
     spectrum[i] = log10(spectrum_accum[i]/spectrum_count[i]) - dc;
 
-    if (setReference) {
+    if (setReference)
       spectrum_reference[i] = spectrum[i];
-      spectrum[i] = 0;
-    } else {
+    if (isReferenced)
       spectrum[i] -= spectrum_reference[i];
-    }
 
     quality += spectrum[i];
   }
   
-  emit(fftDone(spectrum, isReferenced));
+  emit(fftDone(spectrum, isReferenced, haveReference));
   emit(fftQuality(quality));
 }
