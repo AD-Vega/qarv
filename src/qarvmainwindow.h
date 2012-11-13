@@ -68,6 +68,8 @@ private slots:
   void on_videodock_topLevelChanged(bool floating);
   void on_histogramdock_visibilityChanged(bool visible);
   void on_histogramdock_topLevelChanged(bool floating);
+  void on_fftdock_visibilityChanged(bool visible);
+  void on_fftdock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
   void on_videoFormatSelector_currentIndexChanged(int index);
   void on_ROIsizeCombo_newSizeSelected(QSize size);

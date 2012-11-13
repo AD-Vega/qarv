@@ -956,6 +956,19 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
   }
 }
 
+void QArvMainWindow::on_fftdock_visibilityChanged(bool visible) {
+  showFFTButton->blockSignals(true);
+  showFFTButton->setChecked(visible);
+  showFFTButton->blockSignals(false);
+}
+
+void QArvMainWindow::on_fftdock_topLevelChanged(bool floating) {
+  if (floating) {
+    fftdock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    fftdock->setVisible(true);
+  }
+}
+
 void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
   auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
   statusBar()->showMessage(tr("Finalizing video recording, please wait..."));

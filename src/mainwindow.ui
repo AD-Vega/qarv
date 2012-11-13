@@ -71,6 +71,24 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="showFFTButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="office-chart-area-stacked">
+          <normaloff/>
+         </iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="snapButton">
         <property name="toolTip">
          <string>Store a snapshot.</string>
@@ -1320,6 +1338,22 @@
     <hint type="destinationlabel">
      <x>657</x>
      <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showFFTButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>fftdock</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>783</x>
+     <y>476</y>
     </hint>
    </hints>
   </connection>
