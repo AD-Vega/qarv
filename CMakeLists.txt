@@ -15,6 +15,7 @@ find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL QtNetwork)
 include(FindPkgConfig)
 pkg_check_modules(ARAVIS REQUIRED aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
+pkg_check_modules(SWSCALE REQUIRED libswscale)
 
 include(${QT_USE_FILE})
 
@@ -38,15 +39,16 @@ set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp
   api/qarvdecoder.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
-  mono8.h mono12.h mono12packed.h)
+  mono8.h mono12.h mono12packed.h uyvy422.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
-  decoders.cpp graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp)
+  decoders.cpp graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp uyvy422.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS}
   ${qarv_TRANS} ${qarv_decoders_SRC} ${qarv_decoders_MOCD})
-target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS})
+target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS}
+  ${SWSCALE_LDFLAGS})
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
 
 add_executable(qarvexe src/main.cpp)

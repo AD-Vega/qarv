@@ -245,6 +245,7 @@ void QArvMainWindow::readAllValues() {
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
   pixelFormatSelector->setEnabled(noofframes > 1);
   pixelFormatSelector->blockSignals(false);
+  qDebug() << "Pixel formats:" << formats;
 
   QSize binsize = camera->getBinning();
   binSpinBox->setValue(binsize.width());
