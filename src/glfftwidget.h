@@ -21,6 +21,7 @@
 #define GLFFTWIDGET_H
 
 #include <QGLWidget>
+#include <QMap>
 #include <QMouseEvent>
 #include <fftw3.h>
 
@@ -40,10 +41,24 @@ signals:
   void fftInfo(fft_info info);
   void fftQuality(double quality);
 
+public slots:
+  void enableQDisplay(bool state);
+  void setQscaleMid(double value);
+  void setQscaleSpan(double value);
+  void setTscaleSpan(int value);
+
 private:
+  void pruneQualityHistory(qint64 older_than);
+
   fftprocessor *ffter;
   QVector<double> spectrum;
   fft_info last_info;
+  QMap<qint64, double> quality;
+
+  bool display_quality;
+  double qscale_mid;
+  double qscale_span;
+  double tscale_span;
 
 private slots:
   void spectrumComputed(QVector<double> result, fft_info info);

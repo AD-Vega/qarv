@@ -18,12 +18,15 @@
 
 #include "glfftwidget.h"
 #include <QStyleOption>
+#include <QDateTime>
 #include <QDebug>
 
 using namespace std;
 
 
-GLFFTWidget::GLFFTWidget(QWidget* parent) : QGLWidget() {
+GLFFTWidget::GLFFTWidget(QWidget* parent) :
+  QGLWidget(), display_quality(true), qscale_mid(0), qscale_span(50),
+  tscale_span(10000) {
 
   ffter = new fftprocessor(this);
   this->connect(ffter, SIGNAL(fftDone(QVector<double>, fft_info)), SLOT(spectrumComputed(QVector<double>, fft_info)));
@@ -42,10 +45,26 @@ void GLFFTWidget::fromImage(QImage& image, fft_options options) {
 void GLFFTWidget::spectrumComputed(QVector<double> result, fft_info info) {
   spectrum = result;
   last_info = info;
+
+  qint64 now = QDateTime::currentMSecsSinceEpoch();
+  quality.insert(now, last_info.quality);
+  pruneQualityHistory(now - tscale_span);
+
   emit(fftInfo(last_info));
   emit(fftQuality(last_info.quality));
   update();
 }
+
+void GLFFTWidget::pruneQualityHistory(qint64 older_than) {
+  QMap<qint64, double>::iterator qiter = quality.begin();
+  while ((qiter != quality.end()) && (qiter.key() < older_than))
+      qiter = quality.erase(qiter);
+}
+
+void GLFFTWidget::enableQDisplay(bool state) { display_quality = state; }
+void GLFFTWidget::setQscaleMid(double value) { qscale_mid = value; }
+void GLFFTWidget::setQscaleSpan(double value) { qscale_span = value; }
+void GLFFTWidget::setTscaleSpan(int value) { tscale_span = 1000 * value; }
 
 
 void GLFFTWidget::paintGL() {
@@ -84,5 +103,33 @@ void GLFFTWidget::paintGL() {
     QPointF topLeft(origin + QPointF(i*wUnit, -height*hUnit));
     QPointF bottomRight(origin + QPointF((i+1)*wUnit, 0));
     painter.drawRect(QRectF(topLeft, bottomRight));
+  }
+
+  if (display_quality) {
+    scale_min = qscale_mid - qscale_span/2;
+    scale_max = qscale_mid + qscale_span/2;
+
+    hUnit = rect().height() / (scale_max - scale_min);
+    wUnit = rect().width() / (float)tscale_span;
+
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    pruneQualityHistory(now - tscale_span);
+
+    QVector<QPointF> points;
+    QMap<qint64, double>::iterator qiter = quality.begin();
+    while (qiter != quality.end()) {
+      float x = tscale_span - (now - qiter.key());
+      float y = qiter.value() - scale_min;
+      points.append(origin + QPointF(x*wUnit, -y*hUnit));
+      qiter++;
+    }
+
+    QPen p(Qt::SolidLine);
+    p.setWidth(2);
+    p.setColor("red");
+    painter.setPen(p);
+    painter.setBrush(Qt::NoBrush);
+
+    painter.drawPolyline(points.constData(), points.count());
   }
 }

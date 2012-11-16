@@ -151,6 +151,10 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   this->connect(fft, SIGNAL(fftQuality(double)), quality, SLOT(setNum(double)));
   this->connect(fft, SIGNAL(fftInfo(fft_info)), SLOT(setFFTInfo(fft_info)));
+  this->connect(qualityDisplay, SIGNAL(toggled(bool)), fft, SLOT(enableQDisplay(bool)));
+  this->connect(qualityCenterValue, SIGNAL(valueChanged(double)), fft, SLOT(setQscaleMid(double)));
+  this->connect(qualitySpan, SIGNAL(valueChanged(double)), fft, SLOT(setQscaleSpan(double)));
+  this->connect(qualityTimeSpan, SIGNAL(valueChanged(int)), fft, SLOT(setTscaleSpan(int)));
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 
