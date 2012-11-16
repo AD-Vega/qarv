@@ -23,12 +23,10 @@
 using namespace std;
 
 
-GLFFTWidget::GLFFTWidget(QWidget* parent) :
-  QGLWidget(), isReferenced(false) {
+GLFFTWidget::GLFFTWidget(QWidget* parent) : QGLWidget() {
 
   ffter = new fftprocessor(this);
-  this->connect(ffter, SIGNAL(fftDone(QVector<double>, bool, bool)), SLOT(spectrumComputed(QVector<double>, bool, bool)));
-  this->connect(ffter, SIGNAL(fftQuality(double)), SIGNAL(fftQuality(double)));
+  this->connect(ffter, SIGNAL(fftDone(QVector<double>, fft_info)), SLOT(spectrumComputed(QVector<double>, fft_info)));
 }
 
 
@@ -36,18 +34,16 @@ GLFFTWidget::~GLFFTWidget() {
 }
 
 
-void GLFFTWidget::fromImage(QImage& image, bool wantReference, bool setReference) {
-//  qDebug() << "GLFFTWidget::fromImage";
-  ffter->fromImage(image, wantReference, setReference);
+void GLFFTWidget::fromImage(QImage& image, fft_options options) {
+  ffter->fromImage(image, options);
 }
 
 
-void GLFFTWidget::spectrumComputed(QVector<double> result, bool isReferenced, bool haveReference) {
-//  qDebug() << "GLFFTWidget::spectrumComputed";
+void GLFFTWidget::spectrumComputed(QVector<double> result, fft_info info) {
   spectrum = result;
-  this->isReferenced = isReferenced;
-  emit(fftStatus(isReferenced, haveReference));
-  emit(fftIdle());
+  last_info = info;
+  emit(fftInfo(last_info));
+  emit(fftQuality(last_info.quality));
   update();
 }
 
@@ -60,7 +56,7 @@ void GLFFTWidget::paintGL() {
   painter.fillRect(rect(), opt.palette.color(QPalette::Background));
 
   double scale_min, scale_max;
-  if (isReferenced) {
+  if (last_info.isReferenced) {
     scale_min = -3;
     scale_max = 3;
   } else {
@@ -74,17 +70,17 @@ void GLFFTWidget::paintGL() {
 
   painter.setPen(Qt::NoPen);
   painter.setBrush(QColor(91, 23, 173));
-  
+
   for (int i = 0; i < spectrum.size(); i++) {
     float height = spectrum[i];
-    
+
     if (height < scale_min)
       height = scale_min;
     else if (height > scale_max)
       height = scale_max;
-    
+
     height -= scale_min;
-      
+
     QPointF topLeft(origin + QPointF(i*wUnit, -height*hUnit));
     QPointF bottomRight(origin + QPointF((i+1)*wUnit, 0));
     painter.drawRect(QRectF(topLeft, bottomRight));

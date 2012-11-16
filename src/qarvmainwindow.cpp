@@ -59,8 +59,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   started(false), drawHistogram(false), decoder(NULL),
   imageTransform(), framecounter(0), standalone(standalone_),
   toDisableWhenPlaying(), toDisableWhenRecording(), timeForFFT(false),
-  FFTIdle(true), drawFFT(false), setFFTReference(false),
-  wantFFTReference(false) {
+  FFTIdle(true), drawFFT(false) {
 
   recordingfile = new QFile(this);
 
@@ -119,7 +118,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   autoreadfft->setInterval(100);
   this->connect(autoreadfft, SIGNAL(timeout()),
                 SLOT(FFTTimerElapsed()));
-  this->connect(fft, SIGNAL(fftIdle()), this, SLOT(FFTSetIdle()));
   autoreadfft->start();
 
   video->connect(pickROIButton, SIGNAL(toggled(bool)),
@@ -150,9 +148,9 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   timer->setInterval(1000);
   this->connect(timer, SIGNAL(timeout()), SLOT(showFPS()));
   timer->start();
-  
+
   this->connect(fft, SIGNAL(fftQuality(double)), quality, SLOT(setNum(double)));
-  this->connect(fft, SIGNAL(fftStatus(bool, bool)), SLOT(setFFTStatus(bool, bool)));
+  this->connect(fft, SIGNAL(fftInfo(fft_info)), SLOT(setFFTInfo(fft_info)));
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
 
@@ -522,9 +520,9 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (drawFFT) {
-      fft->fromImage(image, wantFFTReference, setFFTReference);
+      fft->fromImage(image, fftopts);
       drawFFT = false;
-      setFFTReference = false;
+      fftopts.setReference = false;
     }
 
     if (recording && !frame.isEmpty()) {
@@ -1013,15 +1011,15 @@ void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
 }
 
 void QArvMainWindow::on_setReference_clicked() {
-  setFFTReference = true;
-  wantFFTReference = true;
+  fftopts.setReference = true;
+  fftopts.wantReference = true;
 }
 
 void QArvMainWindow::on_useReference_clicked(bool checked) {
   if (useReference->checkState() == Qt::Unchecked)
-    wantFFTReference = false;
+    fftopts.wantReference = false;
   else
-    wantFFTReference = true;
+    fftopts.wantReference = true;
 }
 
 void QArvMainWindow::histogramNextFrame() {
@@ -1033,11 +1031,6 @@ void QArvMainWindow::FFTTimerElapsed() {
   checkFFTCondition();
 }
 
-void QArvMainWindow::FFTSetIdle() {
-  FFTIdle = true;
-  checkFFTCondition();
-}
-  
 void QArvMainWindow::checkFFTCondition() {
   if (drawFFT)
     return;
@@ -1049,14 +1042,14 @@ void QArvMainWindow::checkFFTCondition() {
   }
 }
 
-void QArvMainWindow::setFFTStatus(bool isReferenced, bool haveReference) {
-  if (haveReference) {
+void QArvMainWindow::setFFTInfo(fft_info info) {
+  if (info.haveReference) {
     useReference->setEnabled(true);
 
-    if (isReferenced != wantFFTReference)
+    if (info.isReferenced != fftopts.wantReference)
       useReference->setCheckState(Qt::PartiallyChecked);
     else {
-      if (isReferenced)
+      if (info.isReferenced)
         useReference->setCheckState(Qt::Checked);
       else
         useReference->setCheckState(Qt::Unchecked);
@@ -1065,6 +1058,9 @@ void QArvMainWindow::setFFTStatus(bool isReferenced, bool haveReference) {
     useReference->setEnabled(false),
     useReference->setCheckState(Qt::Unchecked);
   }
+
+  FFTIdle = true;
+  checkFFTCondition();
 }
 
 ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold,

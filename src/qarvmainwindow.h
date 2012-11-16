@@ -89,9 +89,8 @@ private slots:
   void showFPS();
   void histogramNextFrame();
   void FFTTimerElapsed();
-  void FFTSetIdle();
   void checkFFTCondition();
-  void setFFTStatus(bool isReferenced, bool haveReference);
+  void setFFTInfo(fft_info info);
   void readAllValues();
 
 private:
@@ -121,6 +120,7 @@ private:
   QList<QWidget*> toDisableWhenRecording;
   QIcon recordIcon, pauseIcon, playIcon;
   int statusTimeoutMsec;
+  fft_options fftopts;
 
   friend class QArvGui;
 };

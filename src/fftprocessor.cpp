@@ -23,6 +23,12 @@
 
 using namespace std;
 
+static const int fft_info_meta_id =
+   qRegisterMetaType<fft_info>("fft_info");
+
+static const int qvector_double_meta_id =
+   qRegisterMetaType<QVector<double>>("QVector<double>");
+
 
 fftprocessor::fftprocessor(QObject* parent) : QObject() {
 
@@ -48,7 +54,6 @@ void fftprocessor::deallocate() {
 
 
 void fftprocessor::preparePlan(QImage& image) {
-//  qDebug() << "fftprocessor::preparePlan";
   alloc_width = image.width();
   alloc_height = image.height();
 
@@ -61,22 +66,24 @@ void fftprocessor::preparePlan(QImage& image) {
                              FFTW_REDFT10, FFTW_REDFT10, FFTW_ESTIMATE);
 
   minsize = min(alloc_width, alloc_height);
-  
+
   spectrum_accum = new double[minsize];
   spectrum_count = new int[minsize];
   spectrum_reference = new double[minsize];
   spectrum.resize(minsize);
-  
+
   memset(spectrum_reference, 0, minsize*sizeof(*spectrum_reference));
-  haveReference = false;
+  info.haveReference = false;
 }
 
 
-void fftprocessor::fromImage(QImage& image, bool wantReference, bool setReference) {
+void fftprocessor::fromImage(QImage& image, fft_options options) {
   if ((image.width() != alloc_width) || (image.height() != alloc_height)) {
     deallocate();
     preparePlan(image);
   }
+
+  this->options = options;
 
   if (image.format() == QImage::Format_Indexed8) {
     double *fft_ptr = fft2d_in;
@@ -85,25 +92,24 @@ void fftprocessor::fromImage(QImage& image, bool wantReference, bool setReferenc
       for (int column = 0; column < alloc_width; column++)
         *(fft_ptr++) = *(image_ptr++);
     }
-    
-    QtConcurrent::run(this, &fftprocessor::performFFT, wantReference, setReference);
+
+    QtConcurrent::run(this, &fftprocessor::performFFT);
   }
 }
 
 
-void fftprocessor::performFFT(bool wantReference, bool setReference) {
-//  qDebug() << "   fftprocessor::performFFT";
+void fftprocessor::performFFT() {
   fftw_execute(fftplan);
-  
+
   memset(spectrum_accum, 0, minsize*sizeof(*spectrum_accum));
   memset(spectrum_count, 0, minsize*sizeof(*spectrum_count));
-  
+
   double aspect_x = minsize/alloc_width;
   double aspect_y = minsize/alloc_height;
-  
+
   int ridx;
   int maxidx = minsize - 1;
-  
+
   double *fft_ptr = fft2d_out;
   for (int y = 0; y < alloc_height; y++) {
     for (int x = 0; x < alloc_width; x++, fft_ptr++) {
@@ -111,29 +117,29 @@ void fftprocessor::performFFT(bool wantReference, bool setReference) {
 
       if (ridx > maxidx)
         continue;
-      
+
       spectrum_accum[ridx] += abs(*fft_ptr);
       spectrum_count[ridx]++;
     }
   }
-  
-  double dc = log10(spectrum_accum[0]/spectrum_count[0]);
-  double quality = 0;
 
-  haveReference |= setReference;
-  bool isReferenced = haveReference & wantReference;
-  
+  double dc = log10(spectrum_accum[0]/spectrum_count[0]);
+
+  info.haveReference |= options.setReference;
+  info.isReferenced = info.haveReference & options.wantReference;
+
+  double quality = 0;
   for (int i = 0; i <= maxidx; i++) {
     spectrum[i] = log10(spectrum_accum[i]/spectrum_count[i]) - dc;
 
-    if (setReference)
+    if (options.setReference)
       spectrum_reference[i] = spectrum[i];
-    if (isReferenced)
+    if (info.isReferenced)
       spectrum[i] -= spectrum_reference[i];
 
     quality += spectrum[i];
   }
-  
-  emit(fftDone(spectrum, isReferenced, haveReference));
-  emit(fftQuality(quality));
+
+  info.quality = quality;
+  emit(fftDone(spectrum, info));
 }
