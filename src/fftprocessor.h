@@ -64,6 +64,7 @@ private:
   void deallocate();
   void preparePlan(QImage& image);
   void performFFT();
+  double qualityEstimator();
 
   size_t alloc_width;
   size_t alloc_height;
@@ -77,8 +78,9 @@ private:
   int minsize;
   double *spectrum_accum;
   int *spectrum_count;
+  double *spectrum;
   double *spectrum_reference;
-  QVector<double> spectrum;
+  QVector<double> spectrum_out;
 };
 
 #endif

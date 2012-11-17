@@ -49,6 +49,7 @@ void fftprocessor::deallocate() {
   fftw_free(fft2d_out);
   delete[] spectrum_accum;
   delete[] spectrum_count;
+  delete[] spectrum;
   delete[] spectrum_reference;
 }
 
@@ -69,8 +70,9 @@ void fftprocessor::preparePlan(QImage& image) {
 
   spectrum_accum = new double[minsize];
   spectrum_count = new int[minsize];
+  spectrum = new double[minsize];
   spectrum_reference = new double[minsize];
-  spectrum.resize(minsize);
+  spectrum_out.resize(minsize);
 
   memset(spectrum_reference, 0, minsize*sizeof(*spectrum_reference));
   info.haveReference = false;
@@ -123,23 +125,32 @@ void fftprocessor::performFFT() {
     }
   }
 
-  double dc = log10(spectrum_accum[0]/spectrum_count[0]);
-
   info.haveReference |= options.setReference;
   info.isReferenced = info.haveReference & options.wantReference;
 
-  double quality = 0;
-  for (int i = 0; i <= maxidx; i++) {
-    spectrum[i] = log10(spectrum_accum[i]/spectrum_count[i]) - dc;
+  double dc = spectrum_accum[0]/spectrum_count[0];
 
+  for (int i = 0; i < minsize; i++) {
+    spectrum[i] = spectrum_accum[i]/spectrum_count[i]/dc;
     if (options.setReference)
       spectrum_reference[i] = spectrum[i];
-    if (info.isReferenced)
-      spectrum[i] -= spectrum_reference[i];
 
-    quality += spectrum[i];
+    if (info.isReferenced)
+      spectrum_out[i] = log10(spectrum[i]/spectrum_reference[i]);
+    else
+      spectrum_out[i] = log10(spectrum[i]);
   }
 
-  info.quality = quality;
-  emit(fftDone(spectrum, info));
+  info.quality = qualityEstimator();
+  emit(fftDone(spectrum_out, info));
+}
+
+
+double fftprocessor::qualityEstimator() {
+  double quality = 0;
+
+  for (int i = 0; i < minsize; i++)
+    quality += spectrum_out[i];
+
+  return(quality);
 }
