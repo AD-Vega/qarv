@@ -323,7 +323,6 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     cameraMTUDescription->setText(description);
   }
 
-  on_resetROIButton_clicked(true);
   camera->setAutoGain(false);
   camera->setAutoExposure(false);
   readAllValues();
