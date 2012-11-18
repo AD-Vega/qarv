@@ -1026,6 +1026,10 @@ void QArvMainWindow::on_useReference_clicked(bool checked) {
     fftopts.wantReference = true;
 }
 
+void QArvMainWindow::on_outsourceQuality_clicked(bool checked) {
+   fftopts.externalQ = checked;
+}
+
 void QArvMainWindow::histogramNextFrame() {
   drawHistogram = true;
 }

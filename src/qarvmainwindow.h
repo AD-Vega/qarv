@@ -78,6 +78,7 @@ private slots:
   void on_statusTimeoutSpinbox_valueChanged(int i);
   void on_setReference_clicked();
   void on_useReference_clicked(bool checked);
+  void on_outsourceQuality_clicked(bool checked);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();

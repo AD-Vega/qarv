@@ -28,11 +28,13 @@
 struct fft_options {
   fft_options() :
     wantReference(false),
-    setReference(false)
+    setReference(false),
+    externalQ(false)
     { };
 
   bool wantReference;
   bool setReference;
+  bool externalQ;
 };
 
 struct fft_info {
@@ -65,6 +67,7 @@ private:
   void preparePlan(QImage& image);
   void performFFT();
   double qualityEstimator();
+  double externalQualityEstimator();
 
   size_t alloc_width;
   size_t alloc_height;

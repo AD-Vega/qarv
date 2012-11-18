@@ -19,6 +19,7 @@
 #include "fftprocessor.h"
 #include <QDebug>
 #include <QtConcurrentRun>
+#include <QTcpSocket>
 #include <fftw3.h>
 
 using namespace std;
@@ -141,7 +142,11 @@ void fftprocessor::performFFT() {
       spectrum_out[i] = log10(spectrum[i]);
   }
 
-  info.quality = qualityEstimator();
+  if (options.externalQ)
+    info.quality = externalQualityEstimator();
+  else
+    info.quality = qualityEstimator();
+
   emit(fftDone(spectrum_out, info));
 }
 
@@ -151,6 +156,30 @@ double fftprocessor::qualityEstimator() {
 
   for (int i = 0; i < minsize; i++)
     quality += spectrum_out[i];
+
+  return(quality);
+}
+
+
+double fftprocessor::externalQualityEstimator() {
+  QTcpSocket socket;
+  socket.connectToHost("127.0.0.1", 8080);
+
+  if (!socket.waitForConnected(3000))
+      return(NAN);
+
+  QDataStream octave(&socket);
+  quint32 streamlength;
+  streamlength = minsize;
+  octave.writeRawData(reinterpret_cast<const char *>(&streamlength), sizeof(quint32));
+  octave.writeRawData(reinterpret_cast<const char *>(spectrum), minsize*sizeof(double));
+  streamlength = (info.isReferenced ? minsize : 0);
+  octave.writeRawData(reinterpret_cast<const char *>(&streamlength), sizeof(quint32));
+  if (info.isReferenced)
+     octave.writeRawData(reinterpret_cast<const char *>(spectrum_reference), minsize*sizeof(double));
+  socket.waitForReadyRead(3000);
+  double quality;
+  octave.readRawData(reinterpret_cast<char *>(&quality), sizeof(quality));
 
   return(quality);
 }
