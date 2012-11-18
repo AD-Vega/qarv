@@ -26,7 +26,7 @@ using namespace std;
 
 GLFFTWidget::GLFFTWidget(QWidget* parent) :
   QGLWidget(), display_quality(true), qscale_mid(0), qscale_span(50),
-  tscale_span(10000) {
+  tscale_span(40000) {
 
   ffter = new fftprocessor(this);
   this->connect(ffter, SIGNAL(fftDone(QVector<double>, fft_info)), SLOT(spectrumComputed(QVector<double>, fft_info)));
