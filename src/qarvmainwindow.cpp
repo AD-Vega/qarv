@@ -245,7 +245,6 @@ void QArvMainWindow::readAllValues() {
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
   pixelFormatSelector->setEnabled(noofframes > 1);
   pixelFormatSelector->blockSignals(false);
-  qDebug() << "Pixel formats:" << formats;
 
   QSize binsize = camera->getBinning();
   binSpinBox->setValue(binsize.width());
@@ -280,6 +279,8 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
   }
   camera = new QArvCamera(camid, this);
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
+
+  qDebug() << "Pixel formats:" << camera->getPixelFormats();
 
   auto ifaceIP = camera->getHostIP();
   QNetworkInterface cameraIface;
