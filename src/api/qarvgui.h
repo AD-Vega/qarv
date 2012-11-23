@@ -33,7 +33,7 @@ class QArvGuiExtension;
  * 
  * Only the standalone mode is currently implemented.
  */
-class QArvGui : QObject {
+class QArvGui : public QObject {
   Q_OBJECT
 
 public:
