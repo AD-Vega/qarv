@@ -41,17 +41,17 @@ public:
   ~QArvGui();
 
   //! Fills the non-NULL parameters with the current frame.
-  void getFrame(QImage* processed = 0,
-                QImage* unprocessed = 0,
-                QByteArray* raw = 0,
-                ArvBuffer** rawAravisBuffer = 0,
-                bool nocopy = false);
+  void getFrame(QImage* processed,
+                QImage* unprocessed,
+                QByteArray* raw,
+                ArvBuffer** rawAravisBuffer,
+                bool nocopy);
 
   //! Same as getFrame(), but takes the nocopy parameter from the GUI.
-  void getFrame(QImage* processed = 0,
-                QImage* unprocessed = 0,
-                QByteArray* raw = 0,
-                ArvBuffer** rawAravisBuffer = 0);
+  void getFrame(QImage* processed,
+                QImage* unprocessed,
+                QByteArray* raw,
+                ArvBuffer** rawAravisBuffer);
 
   //! Returns the widget containing the GUI.
   QWidget* widget();
