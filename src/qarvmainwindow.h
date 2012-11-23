@@ -30,6 +30,11 @@
 #include <QFile>
 #include <QTransform>
 
+class QArvGui;
+
+namespace QArv
+{
+
 class QArvMainWindow : public QMainWindow, private Ui::MainWindowUI {
   Q_OBJECT
 
@@ -113,7 +118,7 @@ private:
   QIcon recordIcon, pauseIcon, playIcon;
   int statusTimeoutMsec;
 
-  friend class QArvGui;
+  friend class ::QArvGui;
 };
 
 /* Qt event filter that intercepts ToolTipChange events and replaces the
@@ -134,5 +139,7 @@ protected:
 private:
   int size_threshold;
 };
+
+}
 
 #endif

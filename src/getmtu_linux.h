@@ -19,6 +19,9 @@
 #ifndef GETMTU_LINUX_H
 #define GETMTU_LINUX_H
 
+namespace QArv
+{
+
 #include <QString>
 #include <QDebug>
 #include <cstring>
@@ -41,6 +44,8 @@ int getMTU(QString ifname) {
   ioctl(sock, SIOCGIFMTU, &req);
   close(sock);
   return req.ifr_mtu;
+}
+
 }
 
 #endif

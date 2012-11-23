@@ -25,6 +25,9 @@
 #include <QMouseEvent>
 #include <QIcon>
 
+namespace QArv
+{
+
 class GLVideoWidget : public QGLWidget {
   Q_OBJECT
 
@@ -58,5 +61,7 @@ private:
   QSize fixedSize;
   QPen whitepen, blackpen;
 };
+
+}
 
 #endif // GLVIDEOWIDGET_H

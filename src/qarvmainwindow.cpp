@@ -32,6 +32,8 @@
 #include "getmtu_linux.h"
 #include "globals.h"
 
+using namespace QArv;
+
 const int slidersteps = 1000;
 
 auto ffmpegOutputOptions = QStringList();

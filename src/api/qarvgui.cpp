@@ -22,6 +22,8 @@
 
 #include <QTranslator>
 
+using namespace QArv;
+
 class QArvGuiExtension {
 public:
   QArvMainWindow* mw;

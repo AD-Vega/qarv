@@ -21,6 +21,8 @@
 #include "globals.h"
 #include <QDebug>
 
+using namespace QArv;
+
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   corner1(), corner2(), rectangle(), selecting(false),

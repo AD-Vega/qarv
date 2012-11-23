@@ -384,7 +384,7 @@
               </widget>
              </item>
              <item>
-              <widget class="ROIcomboBox" name="ROIsizeCombo">
+              <widget class="QArv::ROIcomboBox" name="ROIsizeCombo">
                <property name="toolTip">
                 <string>Choose a size of ROI used for picking.</string>
                </property>
@@ -1105,7 +1105,7 @@
       </layout>
      </item>
      <item>
-      <widget class="GLVideoWidget" name="video" native="true">
+      <widget class="QArv::GLVideoWidget" name="video" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -1168,7 +1168,7 @@
       </layout>
      </item>
      <item>
-      <widget class="GLHistogramWidget" name="histogram" native="true">
+      <widget class="QArv::GLHistogramWidget" name="histogram" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -1183,13 +1183,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GLVideoWidget</class>
+   <class>QArv::GLVideoWidget</class>
    <extends>QWidget</extends>
    <header>glvideowidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>GLHistogramWidget</class>
+   <class>QArv::GLHistogramWidget</class>
    <extends>QWidget</extends>
    <header>glhistogramwidget.h</header>
    <container>1</container>
@@ -1198,7 +1198,7 @@
    </slots>
   </customwidget>
   <customwidget>
-   <class>ROIcomboBox</class>
+   <class>QArv::ROIcomboBox</class>
    <extends>QComboBox</extends>
    <header>roicombobox.h</header>
   </customwidget>

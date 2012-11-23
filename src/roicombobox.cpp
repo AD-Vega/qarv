@@ -21,6 +21,8 @@
 
 #include "roicombobox.h"
 
+using namespace QArv;
+
 ROIcomboBox::ROIcomboBox(QWidget* parent) : QComboBox(parent) {
   this->addItem(tr("No size constraint"), QVariant(QSize(0, 0)));
   this->addItem("1024x768", QVariant(QSize(1024, 768)));

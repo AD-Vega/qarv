@@ -22,6 +22,8 @@
 
 #include <QComboBox>
 
+namespace QArv
+{
 
 class ROIcomboBox : public QComboBox {
   Q_OBJECT
@@ -40,5 +42,7 @@ private slots:
 private:
   QValidator* ROIsizeValidator;
 };
+
+}
 
 #endif

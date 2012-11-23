@@ -1,3 +1,5 @@
 #include "globals.h"
 
-const char* qarv_datafiles = QARV_PREFIX "/share/qarv/";
+using namespace QArv;
+
+const char* QArv::qarv_datafiles = QARV_PREFIX "/share/qarv/";

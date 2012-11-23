@@ -21,6 +21,8 @@
 #include <QStyleOption>
 #include <QDebug>
 
+using namespace QArv;
+
 GLHistogramWidget::GLHistogramWidget(QWidget* parent) : QGLWidget() {
   indexed = true;
   logarithmic = false;

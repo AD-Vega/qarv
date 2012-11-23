@@ -24,6 +24,9 @@
 #include <QMouseEvent>
 #include <QIcon>
 
+namespace QArv
+{
+
 class GLHistogramWidget : public QGLWidget {
   Q_OBJECT
 
@@ -44,5 +47,7 @@ private:
   float* histGreen;
   float* histBlue;
 };
+
+}
 
 #endif
