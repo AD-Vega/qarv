@@ -87,6 +87,14 @@ void QArvGui::getFrame(QImage* processed,
   ext->mw->getNextFrame(processed, unprocessed, raw, rawAravisBuffer, nocopy);
 }
 
+void QArvGui::getFrame(QImage* processed,
+                       QImage* unprocessed,
+                       QByteArray* raw,
+                       ArvBuffer** rawAravisBuffer) {
+  getFrame(processed, unprocessed, raw, rawAravisBuffer,
+           ext->mw->nocopyCheck->isChecked());
+}
+
 /*! This function only works when not in standalone mode. It is useful when the
  * caller relies on fixed frame format and wants to disallow changing it during
  * operation.

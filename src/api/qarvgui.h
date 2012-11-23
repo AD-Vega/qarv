@@ -47,6 +47,12 @@ public:
                 ArvBuffer** rawAravisBuffer = 0,
                 bool nocopy = false);
 
+  //! Same as getFrame(), but takes the nocopy parameter from the GUI.
+  void getFrame(QImage* processed = 0,
+                QImage* unprocessed = 0,
+                QByteArray* raw = 0,
+                ArvBuffer** rawAravisBuffer = 0);
+
   //! Returns the widget containing the GUI.
   QWidget* widget();
 
