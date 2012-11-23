@@ -86,3 +86,22 @@ void QArvGui::getFrame(QImage* processed,
                        bool nocopy) {
   ext->mw->getNextFrame(processed, unprocessed, raw, rawAravisBuffer, nocopy);
 }
+
+/*! This function only works when not in standalone mode. It is useful when the
+ * caller relies on fixed frame format and wants to disallow changing it during
+ * operation.
+ */
+void QArvGui::forceRecording() {
+  if (!ext->mw->standalone) {
+    if (!ext->mw->recordButton->isChecked()) ext->mw->recordButton->click();
+    ext->mw->recordButton->setEnabled(false);
+  }
+}
+
+/*! While the camera shouldn't normally be used outside the GUI, it is
+ * sometimes useful to be able to get information about it, such as the
+ * current pixel format.
+ */
+QArvCamera* QArvGui::camera() {
+  return ext->mw->camera;
+}

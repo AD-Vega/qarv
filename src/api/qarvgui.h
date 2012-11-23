@@ -53,6 +53,12 @@ public:
   //! Does static initialization.
   static void init(QApplication* a);
 
+  //! Permanently enable the frameReady() signal and disable some GUI options.
+  void forceRecording();
+
+  //! Returns the camera object.
+  QArvCamera* camera();
+
 signals:
   void frameReady();
 
