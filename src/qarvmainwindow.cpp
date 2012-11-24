@@ -168,15 +168,21 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
     display = display + cam.vendor + " (" + cam.model + ")";
     cameraSelector->addItem(display, QVariant::fromValue<QArvCameraId>(cam));
   }
+  cameraSelector->setCurrentIndex(-1);
   cameraSelector->setEnabled(true);
   cameraSelector->blockSignals(false);
-  cameraSelector->setCurrentIndex(0);
   QString message = tr(" Found %n cameras.",
                        "Number of cameras",
                        cameraSelector->count());
   statusBar()->showMessage(statusBar()->currentMessage() + message,
                            statusTimeoutMsec);
-  on_cameraSelector_currentIndexChanged(0);
+  QSettings settings;
+  QVariant data = settings.value("camera/selected");
+  int previous_cam;
+  if (data.isValid() && (previous_cam = cameraSelector->findText(data.toString())) != -1)
+    cameraSelector->setCurrentIndex(previous_cam);
+  else
+    cameraSelector->setCurrentIndex(0);
 }
 
 void QArvMainWindow::on_unzoomButton_toggled(bool checked) {
@@ -274,6 +280,9 @@ void QArvMainWindow::readAllValues() {
 
 void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
+
+  QSettings settings;
+  settings.setValue("camera/selected", cameraSelector->currentText());
 
   auto camid = cameraSelector->itemData(index).value<QArvCameraId>();
   if (camera != NULL) {
