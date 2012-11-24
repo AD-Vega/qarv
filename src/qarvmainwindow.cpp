@@ -561,10 +561,11 @@ void QArvMainWindow::startVideo(bool start) {
       decoder = NULL;
       started = false;
       foreach (auto wgt, toDisableWhenPlaying) {
-        wgt->setEnabled(!recordingfile->isOpen());
+        wgt->setEnabled(!recording && !recordingfile->isOpen());
       }
       pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
-                                      && !recordingfile->isOpen());
+                                      && !recordingfile->isOpen()
+                                      && !recording);
     }
   }
   // Set idle image on the histogram.
@@ -701,7 +702,7 @@ skip_all_file_opening:
 
   closeFileButton->setEnabled(!recording && recordingfile->isOpen());
   foreach (auto wgt, toDisableWhenRecording) {
-    wgt->setEnabled(!recordingfile->isOpen());
+    wgt->setEnabled(!recording && !recordingfile->isOpen());
   }
   on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 
