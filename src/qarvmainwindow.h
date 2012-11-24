@@ -90,6 +90,9 @@ private slots:
   void showFPS();
   void histogramNextFrame();
   void readAllValues();
+  void setupListOfSavedWidgets();
+  void saveProgramSettings();
+  void restoreProgramSettings();
 
 private:
   void readROILimits();
@@ -117,6 +120,7 @@ private:
   QList<QWidget*> toDisableWhenRecording;
   QIcon recordIcon, pauseIcon, playIcon;
   int statusTimeoutMsec;
+  QMap<QString, QWidget*> saved_widgets;
 
   friend class ::QArvGui;
 };

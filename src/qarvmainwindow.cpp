@@ -98,10 +98,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
   videoFormatSelector->addItems(ffmpegOutputOptions);
 
-  QSettings settings;
-  restoreGeometry(settings.value("qarvmainwindow/geometry").toByteArray());
-  restoreState(settings.value("qarvmainwindow/state").toByteArray());
-
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
@@ -147,6 +143,9 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   timer->start();
 
   QTimer::singleShot(300, this, SLOT(on_refreshCamerasButton_clicked()));
+
+  setupListOfSavedWidgets();
+  restoreProgramSettings();
 
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
@@ -869,9 +868,7 @@ void QArvMainWindow::updateBandwidthEstimation() {
 }
 
 void QArvMainWindow::closeEvent(QCloseEvent* event) {
-  QSettings settings;
-  settings.setValue("qarvmainwindow/geometry", saveGeometry());
-  settings.setValue("qarvmainwindow/state", saveState());
+  saveProgramSettings();
   QMainWindow::closeEvent(event);
 }
 
@@ -1031,4 +1028,86 @@ void QArvMainWindow::on_histogramUpdateSpinbox_valueChanged(int i) {
 
 void QArvMainWindow::on_statusTimeoutSpinbox_valueChanged(int i){
   statusTimeoutMsec = 1000*i;
+}
+
+void QArvMainWindow::setupListOfSavedWidgets() {
+  // settings tab
+  saved_widgets["settings/invert_colors"] = invertColors;
+  saved_widgets["settings/flip_horizontal"] = flipHorizontal;
+  saved_widgets["settings/flip_vertical"] = flipVertical;
+  saved_widgets["settings/rotation"] = rotationSelector;
+  saved_widgets["settings/drop_invalid_frames"] = dropInvalidFrames;
+  saved_widgets["settings/mark_clipped"] = markClipped;
+  saved_widgets["settings/exposure_update_ms"] = sliderUpdateSpinbox;
+  saved_widgets["settings/histogram_update_ms"] = histogramUpdateSpinbox;
+  saved_widgets["settings/statusbar_timeout"] = statusTimeoutSpinbox;
+  saved_widgets["settings/frame_queue_size"] = streamFramesSpinbox;
+  saved_widgets["settings/frame_transfer_nocopy"] = nocopyCheck;
+
+  //recording tab
+  saved_widgets["recording/snapshot_directory"] = snappathEdit;
+  saved_widgets["recording/snapshot_basename"] = snapbasenameEdit;
+  saved_widgets["recording/snapshot_raw"] = snapshotRaw;
+  saved_widgets["recording/video_file"] = filenameEdit;
+  saved_widgets["recording/video_format"] = videoFormatSelector;
+  saved_widgets["recording/append_video"] = recordApendCheck;
+  saved_widgets["recording/log_encoder_messages"] = recordLogCheck;
+
+  // video display
+  saved_widgets["videodisplay/actual_size"] = unzoomButton;
+
+  // histogram
+  saved_widgets["histogram/logarithmic"] = histogramLog;
+}
+
+void QArvMainWindow::saveProgramSettings() {
+  QSettings settings;
+
+  // main window geometry and state
+  settings.setValue("qarvmainwindow/geometry", saveGeometry());
+  settings.setValue("qarvmainwindow/state", saveState());
+
+  // buttons, combo boxes, text fields etc.
+  for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
+    QWidget *widget = i.value();
+
+    if (auto *w = qobject_cast<QAbstractButton*>(widget))
+      settings.setValue(i.key(), w->isChecked());
+    else if (auto *w = qobject_cast<QComboBox*>(widget))
+      settings.setValue(i.key(), w->currentIndex());
+    else if (auto *w = qobject_cast<QLineEdit*>(widget))
+      settings.setValue(i.key(), w->text());
+    else if (auto *w = qobject_cast<QSpinBox*>(widget))
+      settings.setValue(i.key(), w->value());
+    else
+      qDebug() << "FIXME: don't know what to save under setting" << i.key();
+  }
+}
+
+void QArvMainWindow::restoreProgramSettings() {
+  QSettings settings;
+
+  // main window geometry and state
+  restoreGeometry(settings.value("qarvmainwindow/geometry").toByteArray());
+  restoreState(settings.value("qarvmainwindow/state").toByteArray());
+
+  // buttons, combo boxes, text fields etc.
+  for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
+    QWidget *widget = i.value();
+    QVariant data = settings.value(i.key());
+
+    if (!data.isValid())
+      continue;
+
+    if (auto *w = qobject_cast<QAbstractButton*>(widget))
+      w->setChecked(data.toBool());
+    else if (auto *w = qobject_cast<QComboBox*>(widget))
+      w->setCurrentIndex(data.toInt());
+    else if (auto *w = qobject_cast<QLineEdit*>(widget))
+      w->setText(data.toString());
+    else if (auto *w = qobject_cast<QSpinBox*>(widget))
+      w->setValue(data.toInt());
+    else
+      qDebug() << "FIXME: don't know how to restore setting" << i.key();
+  }
 }
