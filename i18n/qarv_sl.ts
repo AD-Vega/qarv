@@ -2,159 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="sl_SI">
 <context>
-    <name>MainWindow</name>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="121"/>
-        <source>No rotation</source>
-        <translation>Brez zasuka</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="122"/>
-        <source>90 degrees</source>
-        <translation>90 stopinj</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="123"/>
-        <source>180 degrees</source>
-        <translation>180 stopinj</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="124"/>
-        <source>270 degrees</source>
-        <translation>270 stopinj</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="144"/>
-        <source>Welcome to qarv!</source>
-        <translation>Dobrodošel v qarv!</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="155"/>
-        <source>Looking for cameras...</source>
-        <translation>Iščem kamere...</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="168"/>
-        <source> Found %n cameras.</source>
-        <comment>Number of cameras</comment>
-        <translation>
-            <numerusform> Našel sem %n kamero.</numerusform>
-            <numerusform> Našel sem %n kameri.</numerusform>
-            <numerusform> Našel sem %n kamere.</numerusform>
-            <numerusform> Našel sem %n kamere.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="302"/>
-        <source>Network address not found, trying best-effort MTU %1.</source>
-        <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
-        <location filename="../src/mainwindow.cpp" line="847"/>
-        <source>Not an ethernet camera.</source>
-        <translation>Kamera ni na ethernet vmesniku.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="314"/>
-        <source>Camera is on interface %1,
-MTU set to %2.</source>
-        <translation>Kamera je na vmesniku %1,
-MTU je %2.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="318"/>
-        <source>
-Consider increasing the MTU!</source>
-        <translation>
-Predlagamo večji MTU.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="384"/>
-        <source>Region of interest too large, shrinking.</source>
-        <translation>Izrez slike je prevelik, zmanjšujem.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="737"/>
-        <source>Current frame is invalid, try snapshotting again.</source>
-        <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="794"/>
-        <location filename="../src/mainwindow.cpp" line="840"/>
-        <source>Could not open settings file.</source>
-        <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="831"/>
-        <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
-        <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="837"/>
-        <source>Loading settings failed</source>
-        <translation>Nalaganje nastavitev ni uspelo</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="941"/>
-        <source>Finalizing video recording, please wait...</source>
-        <translation>Dokončujem video posnetek, prosim počakaj...</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="750"/>
-        <location filename="../src/mainwindow.cpp" line="786"/>
-        <location filename="../src/mainwindow.cpp" line="800"/>
-        <source>Open file</source>
-        <translation>Odpri datoteko</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="599"/>
-        <source>Please set the video file name.</source>
-        <translation>Izberi ime video datoteke.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="619"/>
-        <source>Video directory does not exist.</source>
-        <translation>Direktorij za video ne obstaja.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="627"/>
-        <source>Cannot open video file for recording.</source>
-        <translation>Ne morem odpreti datoteke za snemanje.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="636"/>
-        <source>Unable to record. AVI cannot store this pixel format in raw form. Use processed form instead.</source>
-        <translation>Ne morem snemati. Surov AVI video ne podpira izbranega tipa pikslov. Namesto tega uporabi obdelano obliko AVI videa.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="706"/>
-        <source>Please set the snapshot directory and name.</source>
-        <translation>Izberi direktorij in ime za slike.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="714"/>
-        <source>Snapshot directory does not exist.</source>
-        <translation>Direktorij za slike ne obstaja.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="719"/>
-        <source>Video is not playing, no image to save.</source>
-        <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="732"/>
-        <location filename="../src/mainwindow.cpp" line="744"/>
-        <source>Snapshot cannot be written.</source>
-        <translation>Ne morem shraniti slike.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="755"/>
-        <source>Choose directory</source>
-        <translation>Izberi direktorij</translation>
-    </message>
-</context>
-<context>
     <name>MainWindowUI</name>
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
@@ -659,6 +506,159 @@ Predlagamo večji MTU.</translation>
     </message>
 </context>
 <context>
+    <name>QArvMainWindow</name>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="117"/>
+        <source>No rotation</source>
+        <translation>Brez zasuka</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="118"/>
+        <source>90 degrees</source>
+        <translation>90 stopinj</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="119"/>
+        <source>180 degrees</source>
+        <translation>180 stopinj</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="120"/>
+        <source>270 degrees</source>
+        <translation>270 stopinj</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="146"/>
+        <source>Welcome to qarv!</source>
+        <translation>Dobrodošel v qarv!</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="157"/>
+        <source>Looking for cameras...</source>
+        <translation>Iščem kamere...</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../src/qarvmainwindow.cpp" line="170"/>
+        <source> Found %n cameras.</source>
+        <comment>Number of cameras</comment>
+        <translation>
+            <numerusform> Našel sem %n kamero.</numerusform>
+            <numerusform> Našel sem %n kameri.</numerusform>
+            <numerusform> Našel sem %n kamere.</numerusform>
+            <numerusform> Našel sem %n kamere.</numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="306"/>
+        <source>Network address not found, trying best-effort MTU %1.</source>
+        <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="314"/>
+        <location filename="../src/qarvmainwindow.cpp" line="850"/>
+        <source>Not an ethernet camera.</source>
+        <translation>Kamera ni na ethernet vmesniku.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="318"/>
+        <source>Camera is on interface %1,
+MTU set to %2.</source>
+        <translation>Kamera je na vmesniku %1,
+MTU je %2.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="322"/>
+        <source>
+Consider increasing the MTU!</source>
+        <translation>
+Predlagamo večji MTU.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="387"/>
+        <source>Region of interest too large, shrinking.</source>
+        <translation>Izrez slike je prevelik, zmanjšujem.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="602"/>
+        <source>Please set the video file name.</source>
+        <translation>Izberi ime video datoteke.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="622"/>
+        <source>Video directory does not exist.</source>
+        <translation>Direktorij za video ne obstaja.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="630"/>
+        <source>Cannot open video file for recording.</source>
+        <translation>Ne morem odpreti datoteke za snemanje.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="639"/>
+        <source>Unable to record. AVI cannot store this pixel format in raw form. Use processed form instead.</source>
+        <translation>Ne morem snemati. Surov AVI video ne podpira izbranega tipa pikslov. Namesto tega uporabi obdelano obliko AVI videa.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="709"/>
+        <source>Please set the snapshot directory and name.</source>
+        <translation>Izberi direktorij in ime za slike.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="717"/>
+        <source>Snapshot directory does not exist.</source>
+        <translation>Direktorij za slike ne obstaja.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="722"/>
+        <source>Video is not playing, no image to save.</source>
+        <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="735"/>
+        <location filename="../src/qarvmainwindow.cpp" line="747"/>
+        <source>Snapshot cannot be written.</source>
+        <translation>Ne morem shraniti slike.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="740"/>
+        <source>Current frame is invalid, try snapshotting again.</source>
+        <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="753"/>
+        <location filename="../src/qarvmainwindow.cpp" line="789"/>
+        <location filename="../src/qarvmainwindow.cpp" line="803"/>
+        <source>Open file</source>
+        <translation>Odpri datoteko</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="758"/>
+        <source>Choose directory</source>
+        <translation>Izberi direktorij</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="797"/>
+        <location filename="../src/qarvmainwindow.cpp" line="843"/>
+        <source>Could not open settings file.</source>
+        <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="834"/>
+        <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
+        <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="840"/>
+        <source>Loading settings failed</source>
+        <translation>Nalaganje nastavitev ni uspelo</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="942"/>
+        <source>Finalizing video recording, please wait...</source>
+        <translation>Dokončujem video posnetek, prosim počakaj...</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="../src/api/qarvcamera.h" line="347"/>
@@ -679,13 +679,13 @@ Predlagamo večji MTU.</translation>
         <translation>&lt;ukaz&gt;</translation>
     </message>
     <message>
-        <location filename="../src/api/qarvcamera.cpp" line="396"/>
+        <location filename="../src/api/qarvcamera.cpp" line="397"/>
         <source>Incompatible camera settings</source>
         <comment>QArvCamera</comment>
         <translation>Nekompatibilne nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/api/qarvcamera.cpp" line="1011"/>
+        <location filename="../src/api/qarvcamera.cpp" line="1012"/>
         <source>Execute</source>
         <comment>QArvCamera</comment>
         <translation>Izvedi</translation>
@@ -707,17 +707,17 @@ Predlagamo večji MTU.</translation>
 <context>
     <name>Video formats</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="43"/>
+        <location filename="../src/qarvmainwindow.cpp" line="43"/>
         <source>Raw data</source>
         <translation>Surovi podatki</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="44"/>
+        <location filename="../src/qarvmainwindow.cpp" line="44"/>
         <source>AVI (raw)</source>
         <translation>AVI (surov)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="45"/>
+        <location filename="../src/qarvmainwindow.cpp" line="45"/>
         <source>AVI (processed)</source>
         <translation>AVI (obdelan)</translation>
     </message>
