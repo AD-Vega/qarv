@@ -69,11 +69,13 @@ signals:
   void frameReady();
 
 private slots:
+  void mainWindowDestroyed(QObject*);
   void signalForwarding(bool enable);
 
 private:
   QWidget* thewidget;
   QArvGuiExtension* ext;
+  bool mainWindowAlive;
 
   friend class QArvGuiExtension;
 };

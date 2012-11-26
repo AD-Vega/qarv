@@ -49,18 +49,26 @@ void QArvGui::init(QApplication* a) {
  * standalone mode, only the record button is available. When toggled, frames
  * will be decoded and made available using getFrame().
  */
-QArvGui::QArvGui(QWidget* parent, bool standalone) : QObject(parent) {
+QArvGui::QArvGui(QWidget* parent, bool standalone) :
+  QObject(parent), mainWindowAlive(true) {
+
   ext = new QArvGuiExtension;
   ext->mw = new QArvMainWindow(parent, standalone);
   thewidget = ext->mw;
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
+  connect(ext->mw, SIGNAL(destroyed(QObject*)), SLOT(mainWindowDestroyed(QObject*)));
 }
 
 QArvGui::~QArvGui() {
   delete ext;
-  bool autodelete = thewidget->testAttribute(Qt::WA_DeleteOnClose);
-  bool closed = thewidget->close();
-  if (!(autodelete && closed)) delete thewidget;
+  if (mainWindowAlive) {
+    thewidget->close();
+    delete thewidget;
+  }
+}
+
+void QArvGui::mainWindowDestroyed(QObject*) {
+  mainWindowAlive = false;
 }
 
 QWidget* QArvGui::widget() {

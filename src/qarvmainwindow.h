@@ -85,7 +85,6 @@ private slots:
   void startVideo(bool start);
   void takeNextFrame();
   void updateBandwidthEstimation();
-  void closeEvent(QCloseEvent* event);
   void updateImageTransform();
   void showFPS();
   void histogramNextFrame();

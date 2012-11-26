@@ -62,6 +62,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   imageTransform(), framecounter(0), standalone(standalone_),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
+  setAttribute(Qt::WA_DeleteOnClose);
+
   recordingfile = new QFile(this);
 
   qWarning() << "Please ignore \"Could not resolve property\" warnings "
@@ -152,6 +154,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
 QArvMainWindow::~QArvMainWindow() {
   on_closeFileButton_clicked(true);
+  saveProgramSettings();
 }
 
 void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
@@ -874,11 +877,6 @@ void QArvMainWindow::updateBandwidthEstimation() {
     }
     bandwidthDescription->setText(QString::number(bw) + unit);
   }
-}
-
-void QArvMainWindow::closeEvent(QCloseEvent* event) {
-  saveProgramSettings();
-  QMainWindow::closeEvent(event);
 }
 
 void QArvMainWindow::updateImageTransform() {
