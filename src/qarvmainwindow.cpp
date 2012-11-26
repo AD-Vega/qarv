@@ -177,7 +177,7 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   statusBar()->showMessage(statusBar()->currentMessage() + message,
                            statusTimeoutMsec);
   QSettings settings;
-  QVariant data = settings.value("camera/selected");
+  QVariant data = settings.value("qarv_camera/selected");
   int previous_cam;
   if (data.isValid() && (previous_cam = cameraSelector->findText(data.toString())) != -1)
     cameraSelector->setCurrentIndex(previous_cam);
@@ -282,7 +282,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
   autoreadexposure->stop();
 
   QSettings settings;
-  settings.setValue("camera/selected", cameraSelector->currentText());
+  settings.setValue("qarv_camera/selected", cameraSelector->currentText());
 
   auto camid = cameraSelector->itemData(index).value<QArvCameraId>();
   if (camera != NULL) {
@@ -1041,40 +1041,40 @@ void QArvMainWindow::on_statusTimeoutSpinbox_valueChanged(int i){
 
 void QArvMainWindow::setupListOfSavedWidgets() {
   // settings tab
-  saved_widgets["settings/invert_colors"] = invertColors;
-  saved_widgets["settings/flip_horizontal"] = flipHorizontal;
-  saved_widgets["settings/flip_vertical"] = flipVertical;
-  saved_widgets["settings/rotation"] = rotationSelector;
-  saved_widgets["settings/drop_invalid_frames"] = dropInvalidFrames;
-  saved_widgets["settings/mark_clipped"] = markClipped;
-  saved_widgets["settings/exposure_update_ms"] = sliderUpdateSpinbox;
-  saved_widgets["settings/histogram_update_ms"] = histogramUpdateSpinbox;
-  saved_widgets["settings/statusbar_timeout"] = statusTimeoutSpinbox;
-  saved_widgets["settings/frame_queue_size"] = streamFramesSpinbox;
-  saved_widgets["settings/frame_transfer_nocopy"] = nocopyCheck;
+  saved_widgets["qarv_settings/invert_colors"] = invertColors;
+  saved_widgets["qarv_settings/flip_horizontal"] = flipHorizontal;
+  saved_widgets["qarv_settings/flip_vertical"] = flipVertical;
+  saved_widgets["qarv_settings/rotation"] = rotationSelector;
+  saved_widgets["qarv_settings/drop_invalid_frames"] = dropInvalidFrames;
+  saved_widgets["qarv_settings/mark_clipped"] = markClipped;
+  saved_widgets["qarv_settings/exposure_update_ms"] = sliderUpdateSpinbox;
+  saved_widgets["qarv_settings/histogram_update_ms"] = histogramUpdateSpinbox;
+  saved_widgets["qarv_settings/statusbar_timeout"] = statusTimeoutSpinbox;
+  saved_widgets["qarv_settings/frame_queue_size"] = streamFramesSpinbox;
+  saved_widgets["qarv_settings/frame_transfer_nocopy"] = nocopyCheck;
 
   //recording tab
-  saved_widgets["recording/snapshot_directory"] = snappathEdit;
-  saved_widgets["recording/snapshot_basename"] = snapbasenameEdit;
-  saved_widgets["recording/snapshot_raw"] = snapshotRaw;
-  saved_widgets["recording/video_file"] = filenameEdit;
-  saved_widgets["recording/video_format"] = videoFormatSelector;
-  saved_widgets["recording/append_video"] = recordApendCheck;
-  saved_widgets["recording/log_encoder_messages"] = recordLogCheck;
+  saved_widgets["qarv_recording/snapshot_directory"] = snappathEdit;
+  saved_widgets["qarv_recording/snapshot_basename"] = snapbasenameEdit;
+  saved_widgets["qarv_recording/snapshot_raw"] = snapshotRaw;
+  saved_widgets["qarv_recording/video_file"] = filenameEdit;
+  saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
+  saved_widgets["qarv_recording/append_video"] = recordApendCheck;
+  saved_widgets["qarv_recording/log_encoder_messages"] = recordLogCheck;
 
   // video display
-  saved_widgets["videodisplay/actual_size"] = unzoomButton;
+  saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;
 
   // histogram
-  saved_widgets["histogram/logarithmic"] = histogramLog;
+  saved_widgets["qarv_histogram/logarithmic"] = histogramLog;
 }
 
 void QArvMainWindow::saveProgramSettings() {
   QSettings settings;
 
   // main window geometry and state
-  settings.setValue("qarvmainwindow/geometry", saveGeometry());
-  settings.setValue("qarvmainwindow/state", saveState());
+  settings.setValue("qarv_mainwindow/geometry", saveGeometry());
+  settings.setValue("qarv_mainwindow/state", saveState());
 
   // buttons, combo boxes, text fields etc.
   for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
@@ -1097,8 +1097,8 @@ void QArvMainWindow::restoreProgramSettings() {
   QSettings settings;
 
   // main window geometry and state
-  restoreGeometry(settings.value("qarvmainwindow/geometry").toByteArray());
-  restoreState(settings.value("qarvmainwindow/state").toByteArray());
+  restoreGeometry(settings.value("qarv_mainwindow/geometry").toByteArray());
+  restoreState(settings.value("qarv_mainwindow/state").toByteArray());
 
   // buttons, combo boxes, text fields etc.
   for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
