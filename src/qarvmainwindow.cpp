@@ -747,7 +747,7 @@ void QArvMainWindow::on_snapButton_clicked(bool checked) {
   auto time = QDateTime::currentDateTime();
   QString fileName = snappathEdit->text() + "/"
                      + snapbasenameEdit->text()
-                     + time.toString("yyyy-MM-dd-hh:mm:ss:zzz");
+                     + time.toString("yyyy-MM-dd-hhmmss.zzz");
   if (snapshotPNG->isChecked()) {
     auto img = video->getImage();
     if (!img.save(fileName + ".png"))
