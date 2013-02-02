@@ -16,17 +16,23 @@ provided. Region-of-interest can be selected via manual entry or by
 drawing it directly in the video display. Full access to all camera
 features is available in a tree view.
 
-For a programmer, qarv provides the ArCam and ArCamId classes which
-isolate the Qt program from Aravis internals, thus avoiding clashes
-between Qt and Glib/GTK. The ArCam class implements the
-QAbstractItemModel interface. This interface allows direct access to
-camera features using Qt's Model/View paradigm. The ArCam model can
-thus be plugged directly into a "view" widget, as is done in the
-GUI. An implementation of QStyledItemDelegate is also provided; it
-generates widgets that can be used to edit Aravis feature nodes. All
-this functionality is provided in src/ArCam.{h,cpp} files and may be
-used in other projects. If you do use it, drop us a mail; we will
-create a stand-alone library if there is sufficient interest.
+For a programmer, qarv provides the QArvCamera and QArvCameraId
+classes which isolate the Qt program from Aravis internals, thus
+avoiding clashes between Qt and Glib/GTK. The QArvCamera class
+implements the QAbstractItemModel interface. This interface allows
+direct access to camera features using Qt's Model/View paradigm. The
+QArvCamera model can thus be plugged directly into a "view" widget, as
+is done in our GUI. An implementation of QStyledItemDelegate is also
+provided; it generates widgets that can be used to edit Aravis feature
+nodes.
+
+The camera control GUI itself is meant to be embedded in another
+application. In this mode, it does not support recording into a file,
+but instead generates signals to notify the host application of new
+frames.
+
+Both the core camera classes and the embeddable GUI class are provided
+in the form of a library.
 
 Homepage: http://gitorious.org/adv-staging/qarv
 Aravis: https://live.gnome.org/Aravis
@@ -35,9 +41,9 @@ Aravis: https://live.gnome.org/Aravis
 REQUIREMENTS AND INSTALLATION
 -----------------------------
 
-qarv requires Qt-4.8 and aravis-0.2. It can use the ffmpeg command (if
-present) to record AVIs, but it is not necessary for recording raw
-data.
+qarv requires Qt-4.8, aravis-0.2 and libswscale. It can use the ffmpeg
+command (if present) to record AVIs, but it is not necessary for
+recording raw data.
 
 qarv is built using CMake with no special configuration
 options. If you are not familiar with CMake, refer to any
@@ -48,7 +54,7 @@ directory:
   cd build
   cmake ..
   make
-  sudo make install  # optional!
+  sudo make install
 
 You can skip the "make install" step and run qarv from the build
 directory directly, although there might be problems with localization
