@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "api/qarvfeaturetree.h"
+#include "qarvfeaturetree.h"
 #include "api/qarvcameradelegate.h"
 
 QArvCamera::QArvFeatureTree::QArvFeatureTree(
