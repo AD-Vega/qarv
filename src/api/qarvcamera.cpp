@@ -1,6 +1,6 @@
 /*
     qarv, a Qt interface to aravis.
-    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
+    Copyright (C) 2012, 2013  Jure Varlec <jure.varlec@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -378,7 +378,9 @@ QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
   out << id.vendor << endl
       << id.model << endl
       << id.id << endl;
-  QArvCamera::QArvFeatureTree::recursiveSerialization(out, camera, camera->featuretree);
+  QArvCamera::QArvFeatureTree::recursiveSerialization(out,
+                                                      camera,
+                                                      camera->featuretree);
   return out;
 }
 
@@ -435,7 +437,8 @@ QModelIndex QArvCamera::index(int row, int column,
   if (column > 1) return QModelIndex();
   QArvCamera::QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
+  else treenode =
+      static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
   auto children = treenode->children();
   if (row < 0 || row >= children.size()) return QModelIndex();
   auto child = children.at(row);
@@ -447,7 +450,8 @@ QModelIndex QArvCamera::index(int row, int column,
 QModelIndex QArvCamera::parent(const QModelIndex& index) const {
   QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+  else treenode =
+      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   if (treenode->parent() == NULL) return QModelIndex();
   auto parent = treenode->parent();
   return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
@@ -460,14 +464,16 @@ int QArvCamera::columnCount(const QModelIndex& parent) const {
 int QArvCamera::rowCount(const QModelIndex& parent) const {
   QArvCamera::QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
+  else treenode =
+      static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
   return treenode->children().count();
 }
 
 QVariant QArvCamera::data(const QModelIndex& index, int role) const {
   QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+  else treenode =
+      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
 
   if (!ARV_IS_GC_FEATURE_NODE(node)) {
@@ -531,7 +537,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
             arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
                                                NULL);
           e.values
-            << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
+          << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
           const char* name =
             arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->
                                                                      data),
@@ -614,7 +620,8 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
 
   QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+  else treenode =
+      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   ArvGcFeatureNode* node =
     ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
 
@@ -719,9 +726,11 @@ void QArvCameraDelegate::setModelData(QWidget* editor,
   model->setData(index, var);
 }
 
-void QArvCameraDelegate::updateEditorGeometry(QWidget* editor,
-                                              const QStyleOptionViewItem& option,
-                                              const QModelIndex& index) const {
+void QArvCameraDelegate::updateEditorGeometry(
+  QWidget* editor,
+  const QStyleOptionViewItem&
+  option,
+  const QModelIndex& index) const {
   editor->layout()->setContentsMargins(0, 0, 0, 0);
   editor->setGeometry(option.rect);
 }

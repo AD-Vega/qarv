@@ -34,7 +34,8 @@ QArvCamera::QArvFeatureTree::~QArvFeatureTree() {
     delete *child;
 }
 
-void QArvCamera::QArvFeatureTree::addChild(QArvCamera::QArvFeatureTree* child) {
+void QArvCamera::QArvFeatureTree::addChild(QArvCamera::QArvFeatureTree* child)
+{
   children_ << child;
 }
 
@@ -50,7 +51,8 @@ QArvCamera::QArvFeatureTree* QArvCamera::QArvFeatureTree::parent() {
   return parent_;
 }
 
-void QArvCamera::QArvFeatureTree::removeChild(QArvCamera::QArvFeatureTree* child) {
+void QArvCamera::QArvFeatureTree::removeChild(
+  QArvCamera::QArvFeatureTree* child) {
   children_.removeAll(child);
 }
 
@@ -62,24 +64,32 @@ int QArvCamera::QArvFeatureTree::row() {
 
 //! Walk the Aravis feature tree and copy it as an QArvFeatureTree.
 /**@{*/
-void QArvCamera::QArvFeatureTree::recursiveMerge(ArvGc* cam, QArvCamera::QArvFeatureTree* tree, ArvGcNode* node) {
+void QArvCamera::QArvFeatureTree::recursiveMerge(
+  ArvGc* cam,
+  QArvCamera::QArvFeatureTree*
+  tree,
+  ArvGcNode* node) {
   const GSList* child = arv_gc_category_get_features(ARV_GC_CATEGORY(node));
   for (; child != NULL; child = child->next) {
     ArvGcNode* newnode = arv_gc_get_node(cam, (const char*)(child->data));
-    auto newtree = new QArvCamera::QArvFeatureTree(tree, (const char*)(child->data));
+    auto newtree =
+      new QArvCamera::QArvFeatureTree(tree, (const char*)(child->data));
     if (ARV_IS_GC_CATEGORY(newnode)) recursiveMerge(cam, newtree, newnode);
   }
 }
 
-QArvCamera::QArvFeatureTree* QArvCamera::QArvFeatureTree::createFeaturetree(ArvGc* cam) {
-  QArvCamera::QArvFeatureTree* tree = new QArvCamera::QArvFeatureTree(NULL, "Root");
+QArvCamera::QArvFeatureTree* QArvCamera::QArvFeatureTree::createFeaturetree(
+  ArvGc* cam) {
+  QArvCamera::QArvFeatureTree* tree = new QArvCamera::QArvFeatureTree(NULL,
+                                                                      "Root");
   ArvGcNode* node = arv_gc_get_node(cam, tree->feature());
   recursiveMerge(cam, tree, node);
   return tree;
 }
 /**@}*/
 
-void QArvCamera::QArvFeatureTree::freeFeaturetree(QArvCamera::QArvFeatureTree* tree) {
+void QArvCamera::QArvFeatureTree::freeFeaturetree(
+  QArvCamera::QArvFeatureTree* tree) {
   auto children = tree->children();
   for (auto child = children.begin(); child != children.end(); child++)
     freeFeaturetree(*child);
@@ -87,8 +97,11 @@ void QArvCamera::QArvFeatureTree::freeFeaturetree(QArvCamera::QArvFeatureTree* t
 }
 
 //! Serialize the tree, used by QArvCamera stream operators.
-void QArvCamera::QArvFeatureTree::recursiveSerialization(QTextStream& out, QArvCamera* camera,
-                                   QArvCamera::QArvFeatureTree* tree) {
+void QArvCamera::QArvFeatureTree::recursiveSerialization(
+  QTextStream& out,
+  QArvCamera* camera,
+  QArvCamera::
+  QArvFeatureTree* tree) {
   auto node = arv_gc_get_node(camera->genicam, tree->feature());
   ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
 
