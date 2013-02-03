@@ -42,7 +42,6 @@ struct _ArvStream;
 typedef _ArvStream ArvStream;
 struct _ArvGc;
 typedef _ArvGc ArvGc;
-class QArvFeatureTree;
 /**@}*/
 
 //! Objects of this class are used to identify cameras.
@@ -62,8 +61,6 @@ public:
 
 Q_DECLARE_METATYPE(QArvCameraId)
 
-// Allow ABI-compatible extensions.
-class QArvCameraExtension;
 
 //! QArvCamera provides an interface to an Aravis camera.
 /*!
@@ -83,6 +80,9 @@ class QArvCameraExtension;
  */
 class QArvCamera : public QAbstractItemModel {
   Q_OBJECT
+
+  class QArvCameraExtension;
+  class QArvFeatureTree;
 
 public:
   //! Initialize glib and aravis. Call this once in the main program.
@@ -191,9 +191,6 @@ private:
   friend void streamCallback(ArvStream* stream, QArvCamera* cam);
   friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
   friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
-  friend void recursiveSerialization(QTextStream& out,
-                                     QArvCamera* camera,
-                                     QArvFeatureTree* tree);
 
 public:
   //! \name QAbstractItemModel implementation

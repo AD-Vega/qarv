@@ -26,6 +26,7 @@ extern "C" {
 #include <cassert>
 
 #include "api/qarvcamera.h"
+#include "api/qarvfeaturetree.h"
 #include <QDebug>
 #include <QComboBox>
 #include <QLayout>
@@ -35,7 +36,7 @@ extern "C" {
 #include <QPushButton>
 #include <QTextDocument>
 
-class QArvCameraExtension {};
+class QArvCamera::QArvCameraExtension {};
 
 QList<QArvCameraId> QArvCamera::cameraList;
 
@@ -66,9 +67,6 @@ QArvCameraId::~QArvCameraId() {
   if (model != NULL) free((void*)model);
 }
 
-QArvFeatureTree* createFeaturetree(ArvGc* cam);
-void freeFeaturetree(QArvFeatureTree* tree);
-
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
  */
@@ -80,12 +78,12 @@ QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
   arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
   device = arv_camera_get_device(camera);
   genicam = arv_device_get_genicam(device);
-  featuretree = createFeaturetree(genicam);
+  featuretree = QArvFeatureTree::createFeaturetree(genicam);
 }
 
 QArvCamera::~QArvCamera() {
   delete ext;
-  freeFeaturetree(featuretree);
+  QArvFeatureTree::freeFeaturetree(featuretree);
   stopAcquisition();
   g_object_unref(camera);
 }
@@ -380,7 +378,7 @@ QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
   out << id.vendor << endl
       << id.model << endl
       << id.id << endl;
-  recursiveSerialization(out, camera, camera->featuretree);
+  QArvCamera::QArvFeatureTree::recursiveSerialization(out, camera, camera->featuretree);
   return out;
 }
 
@@ -432,153 +430,12 @@ QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
 
 /* QAbstractItemModel implementation ######################################## */
 
-//! A class that stores the hirearchy of camera features.
-/*! String identifiers are used to get feature nodes from Aravis. At first it
- * seems that a QAbstractItemModel can be implemented by only using Aravis
- * functions to walk the feature hirearchy, but it turns out there is no way
- * to find a feature's parent that way. Also, string identifiers returned by
- * Aravis are not persistent and need to be copied. Therefore, a tree to store
- * feature identifiers is used by the model. It is assumed that the hirearchy
- * is static.
- */
-class QArvFeatureTree {
-public:
-  QArvFeatureTree(QArvFeatureTree* parent = NULL, const char* feature = NULL);
-  ~QArvFeatureTree();
-  QArvFeatureTree* parent();
-  QList<QArvFeatureTree*> children();
-  const char* feature();
-  int row();
-
-private:
-  void addChild(QArvFeatureTree* child);
-  void removeChild(QArvFeatureTree* child);
-  QArvFeatureTree* parent_;
-  QList<QArvFeatureTree*> children_;
-  const char* feature_;
-};
-
-QArvFeatureTree::QArvFeatureTree(QArvFeatureTree* parent,
-                                 const char* feature) :
-  children_() {
-  if (feature == NULL) feature_ = strdup("");
-  else feature_ = strdup(feature);
-  parent_ = parent;
-  if (parent_ != NULL) parent_->addChild(this);
-}
-
-QArvFeatureTree::~QArvFeatureTree() {
-  delete feature_;
-  if (parent_ != NULL) parent_->removeChild(this);
-  for (auto child = children_.begin(); child != children_.end(); child++)
-    delete *child;
-}
-
-void QArvFeatureTree::addChild(QArvFeatureTree* child) {
-  children_ << child;
-}
-
-QList< QArvFeatureTree* > QArvFeatureTree::children() {
-  return children_;
-}
-
-const char* QArvFeatureTree::feature() {
-  return feature_;
-}
-
-QArvFeatureTree* QArvFeatureTree::parent() {
-  return parent_;
-}
-
-void QArvFeatureTree::removeChild(QArvFeatureTree* child) {
-  children_.removeAll(child);
-}
-
-int QArvFeatureTree::row() {
-  if (parent_ == NULL) return 0;
-  auto litter = parent_->children();
-  return litter.indexOf(this);
-}
-
-//! Walk the Aravis feature tree and copy it as an QArvFeatureTree.
-/**@{*/
-void recursiveMerge(ArvGc* cam, QArvFeatureTree* tree, ArvGcNode* node) {
-  const GSList* child = arv_gc_category_get_features(ARV_GC_CATEGORY(node));
-  for (; child != NULL; child = child->next) {
-    ArvGcNode* newnode = arv_gc_get_node(cam, (const char*)(child->data));
-    auto newtree = new QArvFeatureTree(tree, (const char*)(child->data));
-    if (ARV_IS_GC_CATEGORY(newnode)) recursiveMerge(cam, newtree, newnode);
-  }
-}
-
-QArvFeatureTree* createFeaturetree(ArvGc* cam) {
-  QArvFeatureTree* tree = new QArvFeatureTree(NULL, "Root");
-  ArvGcNode* node = arv_gc_get_node(cam, tree->feature());
-  recursiveMerge(cam, tree, node);
-  return tree;
-}
-/**@}*/
-
-void freeFeaturetree(QArvFeatureTree* tree) {
-  auto children = tree->children();
-  for (auto child = children.begin(); child != children.end(); child++)
-    freeFeaturetree(*child);
-  delete tree;
-}
-
-//! Serialize the tree, used by QArvCamera stream operators.
-void recursiveSerialization(QTextStream& out, QArvCamera* camera,
-                            QArvFeatureTree* tree) {
-  auto node = arv_gc_get_node(camera->genicam, tree->feature());
-  ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
-
-  if (tree->children().count() != 0) {
-    if (QString("Root") != tree->feature())
-      out << "Category: " << tree->feature() << endl;
-    foreach (auto child, tree->children()) {
-      recursiveSerialization(out, camera, child);
-    }
-    return;
-  }
-
-  if (ARV_IS_GC_COMMAND(node)) return;
-
-  out << "\t" << tree->feature() << "\t";
-  if (ARV_IS_GC_REGISTER_NODE(node)
-      && QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node)))
-      == "IntReg") {
-    QArvRegister r;
-    r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
-    r.value = QByteArray(r.length, 0);
-    arv_gc_register_get(ARV_GC_REGISTER(node),
-                        r.value.data(), r.length, NULL);
-    out << "Register\t" << QString::number(r.length) << "\t"
-        << QString("0x") + r.value.toHex() << endl;
-  } else if (ARV_IS_GC_ENUMERATION(node)) {
-    out << "Enumeration\t"
-        << arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL)
-        << endl;
-  } else if (ARV_IS_GC_STRING(node)) {
-    out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL)
-        << endl;
-  } else if (ARV_IS_GC_FLOAT(node)) {
-    out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
-        << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
-  } else if (ARV_IS_GC_BOOLEAN(node)) {
-    out << "Boolean\t" << arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node),
-                                                   NULL) << endl;
-  } else if (ARV_IS_GC_INTEGER(node)) {
-    out << "Integer\t" << arv_gc_integer_get_value(ARV_GC_INTEGER(node),
-                                                   NULL) << endl;
-  }
-}
-
 QModelIndex QArvCamera::index(int row, int column,
                               const QModelIndex& parent) const {
   if (column > 1) return QModelIndex();
-  QArvFeatureTree* treenode;
+  QArvCamera::QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvFeatureTree*>(parent.internalPointer());
+  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
   auto children = treenode->children();
   if (row < 0 || row >= children.size()) return QModelIndex();
   auto child = children.at(row);
@@ -588,9 +445,9 @@ QModelIndex QArvCamera::index(int row, int column,
 }
 
 QModelIndex QArvCamera::parent(const QModelIndex& index) const {
-  QArvFeatureTree* treenode;
+  QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   if (treenode->parent() == NULL) return QModelIndex();
   auto parent = treenode->parent();
   return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
@@ -601,16 +458,16 @@ int QArvCamera::columnCount(const QModelIndex& parent) const {
 }
 
 int QArvCamera::rowCount(const QModelIndex& parent) const {
-  QArvFeatureTree* treenode;
+  QArvCamera::QArvFeatureTree* treenode;
   if (!parent.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvFeatureTree*>(parent.internalPointer());
+  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
   return treenode->children().count();
 }
 
 QVariant QArvCamera::data(const QModelIndex& index, int role) const {
-  QArvFeatureTree* treenode;
+  QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
 
   if (!ARV_IS_GC_FEATURE_NODE(node)) {
@@ -755,9 +612,9 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
       || !(index.model()->flags(index) & Qt::ItemIsEditable))
     return false;
 
-  QArvFeatureTree* treenode;
+  QArvCamera::QArvFeatureTree* treenode;
   if (!index.isValid()) treenode = featuretree;
-  else treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
+  else treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   ArvGcFeatureNode* node =
     ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
 
@@ -797,8 +654,8 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
 Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
   auto f = QAbstractItemModel::flags(index);
   if (!index.isValid()) return f;
-  QArvFeatureTree* treenode;
-  treenode = static_cast<QArvFeatureTree*>(index.internalPointer());
+  QArvCamera::QArvFeatureTree* treenode;
+  treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
   ArvGcFeatureNode* node =
     ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
   if (index.column() != 1 && !ARV_IS_GC_CATEGORY(node)) {

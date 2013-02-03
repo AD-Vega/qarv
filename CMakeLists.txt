@@ -37,7 +37,7 @@ qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   glvideowidget.cpp glhistogramwidget.cpp globals.cpp
   roicombobox.cpp api/qarvgui.cpp api/qarvcamera.cpp
-  api/qarvdecoder.cpp)
+  api/qarvdecoder.cpp api/qarvfeaturetree.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono8.h mono12.h mono12packed.h uyvy422.h yuyv422.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
