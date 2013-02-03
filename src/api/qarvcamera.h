@@ -1,6 +1,6 @@
 /*
     qarv, a Qt interface to aravis.
-    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
+    Copyright (C) 2012, 2013  Jure Varlec <jure.varlec@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ARCAM_H
-#define ARCAM_H
+#ifndef QARVCAMERA_H
+#define QARVCAMERA_H
 
 #include <QList>
 #include <QString>

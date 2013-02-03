@@ -1,6 +1,6 @@
 /*
     qarv, a Qt interface to aravis.
-    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
+    Copyright (C) 2012, 2013  Jure Varlec <jure.varlec@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,8 +30,6 @@ class QArvGuiExtension;
 /*! The init() functions should be called to load translations and other setup.
  * After that, the GUI can be instantiated. It will create a widget, accessible
  * via the widget() method. This widget is hidden by default.
- * 
- * Only the standalone mode is currently implemented.
  */
 class QArvGui : public QObject {
   Q_OBJECT
