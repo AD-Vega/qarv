@@ -4,35 +4,64 @@ qarv - a Qt interface to Aravis
 DESCRIPTION
 -----------
 
-qarv provides a graphical user interface to GeniCam ethernet cameras
-via the Aravis library. It allows viewing the video and recording it
-in either the original or AVI formats. OpenGL is used for video
-display. The network interface used by the camera is automatically
-detected and camera's packet size is set to match the interface MTU,
-providing usable (hopefully) performance with minimal interaction,
-unlike the default settings on some cameras. Basic controls, such as
-frames-per-second, pixel format and exposure/gain are
-provided. Region-of-interest can be selected via manual entry or by
-drawing it directly in the video display. Full access to all camera
-features is available in a tree view.
+qarv provides a Qt interface to GeniCam ethernet cameras via the
+Aravis library.
 
-For a programmer, qarv provides the QArvCamera and QArvCameraId
-classes which isolate the Qt program from Aravis internals, thus
-avoiding clashes between Qt and Glib/GTK. The QArvCamera class
-implements the QAbstractItemModel interface. This interface allows
-direct access to camera features using Qt's Model/View paradigm. The
-QArvCamera model can thus be plugged directly into a "view" widget, as
-is done in our GUI. An implementation of QStyledItemDelegate is also
-provided; it generates widgets that can be used to edit Aravis feature
-nodes.
+For a user, qarv provides:
 
-The camera control GUI itself is meant to be embedded in another
-application. In this mode, it does not support recording into a file,
-but instead generates signals to notify the host application of new
-frames.
+    - Viewing the video and recording it in either the original or AVI
+      formats, with basic controls, such as frames-per-second, pixel
+      format and exposure/gain easily accessible. Region-of-interest
+      can be selected via manual entry or by drawing it directly in
+      the video display.
 
-Both the core camera classes and the embeddable GUI class are provided
-in the form of a library.
+    - The network interface used by the camera is automatically
+      detected and camera's packet size is set to match the interface
+      MTU, providing usable (hopefully) performance with minimal
+      interaction, unlike the default settings on some cameras.
+
+    - Full access to all camera features is available in a tree view.
+      Settings can be saved and restored, subject to some limitations.
+
+    - Basic image transformations: mirroring, rotating, inverting.
+
+    - Histogram; clipped highlights can be marked in the video
+      display.
+
+
+For a programmer, qarv provides:
+
+    - QArvCamera class which isolates the Qt program from Aravis
+      internals, thus avoiding clashes between Qt and Glib/GTK. It
+      provides direct access to basic settings and emits signals when
+      frames are ready. To access features not covered by the basic
+      interface, it implements the QAbstractItemModel interface. This
+      interface allows access to camera features using Qt's Model/View
+      paradigm. The QArvCamera model can thus be plugged directly into
+      a "view" widget, as is done in our GUI.
+
+    - QArvCameraDelegate class which implements the
+      QStyledItemDelegate interface. It can be used with the
+      QArvCamera model to get editing widgets for camera features.
+
+    - QArvType and its subclasses represent camera feature
+      types. These provide type identification and editing widget
+      implementation for the data model.
+
+    - QArvGui class provides a camera control window that can be
+      embedded into a host application. It is the same as the
+      standalone application; in fact, the latter is simply a minimal
+      host application. The difference is in the recording
+      functionality: instead of recording to a file, the GUI will emit
+      signals and pass frames to the host application.
+
+    - QArvDecoder and QArvPixelFormat, which are plugin interfaces
+      for converting a raw frame into a QImage. Currently provided are
+      decoders for 8, 12 and 16 bit grayscale, UYVY and YUYV color
+      formats.
+
+    - All of this is provided as libqarv, with headers installed in a
+      standard location, such as /usr/include/qarv-0/.
 
 Homepage: http://gitorious.org/adv-staging/qarv
 Aravis: https://live.gnome.org/Aravis
@@ -73,4 +102,4 @@ information.
 
 The qarv icon itself is derived from the oxygen theme as well.
 
-Copyright 2012 Jure Varlec
+Copyright 2012, 2013 Jure Varlec
