@@ -29,6 +29,7 @@
 #include <QTextDocument>
 #include <QStatusBar>
 
+#include "api/qarvcameradelegate.h"
 #include "getmtu_linux.h"
 #include "globals.h"
 
