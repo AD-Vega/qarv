@@ -44,10 +44,6 @@ For a programmer, qarv provides:
       QStyledItemDelegate interface. It can be used with the
       QArvCamera model to get editing widgets for camera features.
 
-    - QArvType and its subclasses represent camera feature
-      types. These provide type identification and editing widget
-      implementation for the data model.
-
     - QArvGui class provides a camera control window that can be
       embedded into a host application. It is the same as the
       standalone application; in fact, the latter is simply a minimal

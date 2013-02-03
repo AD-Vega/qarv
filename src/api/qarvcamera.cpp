@@ -26,8 +26,8 @@ extern "C" {
 #include <cassert>
 
 #include "api/qarvcamera.h"
-#include "api/qarvcameradelegate.h"
 #include "qarvfeaturetree.h"
+#include "qarvtype.h"
 #include <QDebug>
 #include <QTextDocument>
 
