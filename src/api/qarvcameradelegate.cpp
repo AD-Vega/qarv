@@ -21,6 +21,8 @@
 #include "qarvtype.h"
 #include <QLayout>
 
+using namespace QArv;
+
 QArvCameraDelegate::QArvCameraDelegate(QObject* parent) :
   QStyledItemDelegate(parent) {}
 

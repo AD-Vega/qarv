@@ -25,6 +25,8 @@
 #include <QPushButton>
 #include <cassert>
 
+using namespace QArv;
+
 QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
   auto select = new QComboBox(editor);

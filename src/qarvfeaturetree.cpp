@@ -19,6 +19,8 @@
 #include "qarvfeaturetree.h"
 #include "qarvtype.h"
 
+using namespace QArv;
+
 QArvCamera::QArvFeatureTree::QArvFeatureTree(
   QArvCamera::QArvFeatureTree* parent, const char* feature) :
   children_() {

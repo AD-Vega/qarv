@@ -22,6 +22,8 @@
 #include <QWidget>
 #include <QMetaType>
 
+namespace QArv {
+
 //! QArvEditor is a QWidget that contains the actual editing widgets.
 /*! It is used to translate whichever signal is emitted by the actual widgets
  * when editig is finished into the editingFinished() signal which can be
@@ -66,7 +68,6 @@ struct QArvType {
   virtual void populateEditor(QWidget* editor) const = 0;
   virtual void readFromEditor(QWidget* editor) = 0;
 };
-Q_DECLARE_METATYPE(QArvType*)
 
 struct QArvEnumeration : QArvType {
   QList<QString> names;
@@ -81,7 +82,6 @@ struct QArvEnumeration : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvEnumeration)
 
 struct QArvString : QArvType {
   QString value;
@@ -92,7 +92,6 @@ struct QArvString : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvString)
 
 struct QArvFloat : QArvType {
   double value, min, max;
@@ -103,7 +102,6 @@ struct QArvFloat : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvFloat)
 
 struct QArvInteger : QArvType {
   qint64 value, min, max, inc;
@@ -112,7 +110,6 @@ struct QArvInteger : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvInteger)
 
 struct QArvBoolean : QArvType {
   bool value;
@@ -125,7 +122,6 @@ struct QArvBoolean : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvBoolean)
 
 struct QArvCommand : QArvType {
   operator QString() const { return QObject::tr("<command>", "QArvCamera"); }
@@ -133,7 +129,6 @@ struct QArvCommand : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvCommand)
 
 struct QArvRegister : QArvType {
   QByteArray value;
@@ -144,8 +139,18 @@ struct QArvRegister : QArvType {
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
-Q_DECLARE_METATYPE(QArvRegister)
 
 /**@}*/
+
+};
+
+Q_DECLARE_METATYPE(QArv::QArvType*)
+Q_DECLARE_METATYPE(QArv::QArvEnumeration)
+Q_DECLARE_METATYPE(QArv::QArvString)
+Q_DECLARE_METATYPE(QArv::QArvFloat)
+Q_DECLARE_METATYPE(QArv::QArvInteger)
+Q_DECLARE_METATYPE(QArv::QArvBoolean)
+Q_DECLARE_METATYPE(QArv::QArvCommand)
+Q_DECLARE_METATYPE(QArv::QArvRegister)
 
 #endif

@@ -31,6 +31,8 @@ extern "C" {
 #include <QDebug>
 #include <QTextDocument>
 
+using namespace QArv;
+
 class QArvCamera::QArvCameraExtension {};
 
 QList<QArvCameraId> QArvCamera::cameraList;
