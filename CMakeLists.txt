@@ -66,7 +66,9 @@ set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
 install(TARGETS qarv qarvexe
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
-install(FILES src/api/qarvcamera.h src/api/qarvgui.h src/api/qarvdecoder.h
+set_prefixed(qarv_IHDR src/api/
+             qarvcamera.h qarvcameradelegate.h qarvgui.h qarvdecoder.h)
+install(FILES ${qarv_IHDR} 
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION share/qarv/)
