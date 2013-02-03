@@ -85,6 +85,8 @@ You can skip the "make install" step and run qarv from the build
 directory directly, although there might be problems with localization
 and icon loading.
 
+API documentation can be generated with doxygen using apidoc/Doxyfile.
+
 
 LICENSING INFORMATION
 ---------------------
