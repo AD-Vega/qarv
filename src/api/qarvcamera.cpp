@@ -387,7 +387,8 @@ QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
 /*!
  * This operator simply reads settings into the camera in the order they are
  * provided. This means that dependencies between features are not honored.
- * Because of this, loading may fail.
+ * Because of this, loading may fail. Trying several times might help. This
+ * cannot be fixed until Aravis provides dependecy information.
  */
 QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
   auto ID = camera->getId();
