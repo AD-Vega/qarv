@@ -1006,7 +1006,7 @@ bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
     QObject* parent = qobject_cast<QObject*>(widget);
     bool doEnrich = false;
     while(NULL != (parent = parent->parent())) {
-      if (parent->metaObject()->className() == QString("QArvMainWindow")) {
+      if (parent->metaObject()->className() == QString("QArv::QArvMainWindow")) {
         doEnrich = true;
         break;
       }
