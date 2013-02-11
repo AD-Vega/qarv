@@ -138,6 +138,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
     tabWidget->removeTab(tabWidget->indexOf(recordingTab));
+    snapButton->setEnabled(false);
   }
 
   auto timer = new QTimer(this);
