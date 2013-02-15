@@ -31,7 +31,7 @@ QArvCamera::QArvFeatureTree::QArvFeatureTree(
 }
 
 QArvCamera::QArvFeatureTree::~QArvFeatureTree() {
-  delete feature_;
+  if (feature_ != NULL) free((void*)feature_);
   if (parent_ != NULL) parent_->removeChild(this);
   for (auto child = children_.begin(); child != children_.end(); child++)
     delete *child;
