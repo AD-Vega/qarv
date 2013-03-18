@@ -640,7 +640,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       if (!dir.exists()) {
         statusBar()->showMessage(tr("Video directory does not exist."),
                                  statusTimeoutMsec);
-        goto skip_file_opening;
+        goto file_has_been_opened;
       }
     }
     if (videoFormatSelector->currentIndex() == 0) {
@@ -696,13 +696,25 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       }
     }
 
-skip_file_opening:
+file_has_been_opened:
 
     if (!open) {
       recordButton->setChecked(false);
       checked = false;
-    } else
+    } else {
       statusBar()->clearMessage();
+      if (recordMetadataCheck->isChecked()) {
+        auto metaFileName = filenameEdit->text() + ".caminfo";
+        QFile metaFile(metaFileName);
+        bool open = metaFile.open(QIODevice::WriteOnly);
+        if (open) {
+          QTextStream file(&metaFile);
+          file << camera;
+        } else
+          statusBar()->showMessage(tr("Could not dump camera settings."),
+                                   statusTimeoutMsec);
+      }
+    }
   }
 
 skip_all_file_opening:
@@ -1060,6 +1072,7 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/video_file"] = filenameEdit;
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
   saved_widgets["qarv_recording/append_video"] = recordApendCheck;
+  saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
   saved_widgets["qarv_recording/log_encoder_messages"] = recordLogCheck;
 
   // video display
