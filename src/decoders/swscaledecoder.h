@@ -1,6 +1,6 @@
 /*
     qarv, a Qt interface to aravis.
-    Copyright (C) 2012  Jure Varlec <jure.varlec@ad-vega.si>
+    Copyright (C) 2013 Jure Varlec <jure.varlec@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,33 +16,39 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UYVY422_H
-#define UYVY422_H
+#ifndef FFMPEG_DECODER_H
+#define FFMPEG_DECODER_H
 
-#include "api/qarvdecoder.h"
-#include "decoders/swscaledecoder.h"
+#include <QSize>
+#include <QImage>
+#include <opencv2/core/core.hpp>
+
 extern "C" {
 #include <libswscale/swscale.h>
 }
 
 namespace QArv {
 
-class UYVY422Decoder : public QArvDecoder, private SwScaleDecoder {
+/*
+ * This decoder works by first decoding into RGB48 using libswscale, and then
+ * copying data into the appropriate container.
+ */
+class SwScaleDecoder {
 public:
-  UYVY422Decoder(QSize size);
-  QImage decode(QByteArray frame);
-  QString pixelFormat() { return "YUV422Packed"; }
-  QString ffmpegPixelFormat() { return "uyvy422"; }
-  bool isGrayscale() { return false; }
-};
+  SwScaleDecoder(QSize size, enum PixelFormat inputPixfmt);
+  virtual ~SwScaleDecoder();
+  void decode(QByteArray frame);
+  QImage getQImage();
+  cv::Mat getCvImage();
 
-class UYVY422Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
-
-public:
-  QString pixelFormat() { return "YUV422Packed"; }
-  QArvDecoder* makeDecoder(QSize size) { return new UYVY422Decoder(size); }
+private:
+  QSize size;
+  struct SwsContext* ctx;
+  const uint8_t* channel_pointers[3];
+  int channel_strides[3];
+  uint8_t* image_pointers[3];
+  int image_strides[3];
+  uint16_t* buffer;
 };
 
 }

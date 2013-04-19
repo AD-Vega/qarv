@@ -19,32 +19,14 @@
 #include "decoders/uyvy422.h"
 #include <QDebug>
 
-UYVY422Decoder::UYVY422Decoder(QSize size_) :
-  size(size_), channel_pointers { 0, 0, 0 }, channel_strides { 0, 0, 0 },
-  image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 } {
-    channel_strides[0] = 2 * size.width();
-    ctx = sws_getContext(size.width(), size.height(), PIX_FMT_UYVY422,
-                         size.width(), size.height(), PIX_FMT_RGB24,
-                         SWS_BICUBIC, 0, 0, 0);
-}
+using namespace QArv;
 
-UYVY422Decoder::~UYVY422Decoder() {
-  sws_freeContext(ctx);
-}
+UYVY422Decoder::UYVY422Decoder(QSize size_) :
+  SwScaleDecoder(size_, PIX_FMT_UYVY422) {}
 
 QImage UYVY422Decoder::decode(QByteArray frame) {
-  QImage out(size, QImage::Format_RGB888);
-  channel_pointers[0] = reinterpret_cast<const uint8_t*>(frame.constData());
-  image_pointers[0] = reinterpret_cast<uint8_t*>(out.scanLine(0));
-  image_strides[0] = out.bytesPerLine();
-  int outheight = sws_scale(ctx, channel_pointers, channel_strides,
-                            0, size.height(),
-                            image_pointers, image_strides);
-  if(outheight != size.height()) {
-    qDebug() << "swscale error! outheight =" << outheight;
-    return QImage();
-  }
-  return out;
+  SwScaleDecoder::decode(frame);
+  return getQImage();
 }
 
 Q_EXPORT_PLUGIN2(UYVY422, UYVY422Format)
