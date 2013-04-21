@@ -19,14 +19,18 @@
 #include "decoders/mono12packed.h"
 #include "decoders/graymap.h"
 
-QImage Mono12PackedDecoder::decode(QByteArray frame) {
-  QImage img(size, QImage::Format_Indexed8);
-  img.setColorTable(graymap);
+using namespace QArv;
+
+Mono12PackedDecoder::Mono12PackedDecoder(QSize size_) :
+  size(size_), M(size_.height(), size_.width(), CV_16U) {}
+
+
+void Mono12PackedDecoder::decode(QByteArray frame) {
   const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
   const int h = size.height(), w = size.width();
 
   int line = 0;
-  uchar* linestart = img.scanLine(0);
+  auto linestart = M.ptr<uint16_t>(0);
   int outcurrent = 0;
   const uchar* inptr = dta;
   uint16_t pixel;
@@ -34,29 +38,42 @@ QImage Mono12PackedDecoder::decode(QByteArray frame) {
   while (inptr < dta + frame.size()) {
     bytes[0] = inptr[1] << 4;
     bytes[1] = inptr[0];
-    pixel >>= 8;
     linestart[outcurrent++] = pixel;
 
     if (outcurrent == w) {
       if (++line == h) break;
-      linestart = img.scanLine(line);
+      linestart = M.ptr<uint16_t>(line);
       outcurrent = 0;
     }
 
     bytes[0] = inptr[1] << 4;
     bytes[1] = inptr[2];
-    pixel >>= 8;
     linestart[outcurrent++] = pixel;
 
     if (outcurrent == w) {
       if (++line == h) break;
-      linestart = img.scanLine(line);
+      linestart = M.ptr<uint16_t>(line);
       outcurrent = 0;
     }
 
     inptr += 3;
   }
+}
 
+cv::Mat Mono12PackedDecoder::getCvImage() {
+  return M;
+}
+
+QImage Mono12PackedDecoder::getQImage() {
+  QImage img(size, QImage::Format_Indexed8);
+  img.setColorTable(graymap);
+  const int h = size.height(), w = size.width();
+  for (int i = 0; i < h; i++) {
+    auto line = M.ptr<uint16_t>(i);
+    auto I = img.scanLine(i);
+    for (int j = 0; j < w; j++)
+      I[j] = line[j] >> 8;
+  }
   return img;
 }
 

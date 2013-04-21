@@ -20,17 +20,22 @@
 #define MONO8_H
 
 #include "api/qarvdecoder.h"
+extern "C" {
+  #include <arvenums.h>
+}
+
+namespace QArv {
 
 class Mono12PackedDecoder : public QArvDecoder {
 public:
-  Mono12PackedDecoder(QSize size_) : size(size_) {}
-  QImage decode(QByteArray frame);
-  QString pixelFormat() { return "Mono12Packed"; }
-  QString ffmpegPixelFormat() { return QString(); }
-  bool isGrayscale() { return true; }
+  Mono12PackedDecoder(QSize size_);
+  void decode(QByteArray frame);
+  QImage getQImage();
+  cv::Mat getCvImage();
 
 private:
   QSize size;
+  cv::Mat M;
 };
 
 class Mono12PackedFormat : public QObject, public QArvPixelFormat {
@@ -38,10 +43,12 @@ class Mono12PackedFormat : public QObject, public QArvPixelFormat {
   Q_INTERFACES(QArvPixelFormat)
 
 public:
-  QString pixelFormat() { return "Mono12Packed"; }
+  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
   QArvDecoder* makeDecoder(QSize size) {
     return new Mono12PackedDecoder(size);
   }
 };
+
+}
 
 #endif

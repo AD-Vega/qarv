@@ -19,17 +19,36 @@
 #include "decoders/mono12.h"
 #include "decoders/graymap.h"
 
-QImage Mono12Decoder::decode(QByteArray frame) {
-  QImage img(size, QImage::Format_Indexed8);
-  img.setColorTable(graymap);
+using namespace QArv;
+
+Mono12Decoder::Mono12Decoder(QSize size_) :
+  size(size_), M(size_.height(), size_.width(), CV_16U) {}
+
+void Mono12Decoder::decode(QByteArray frame) {
   const uint16_t* dta = reinterpret_cast<const uint16_t*>(frame.constData());
   const int h = size.height(), w = size.width();
   for (int i = 0; i < h; i++) {
+    auto line = M.ptr<uint16_t>(i);
+    for (int j = 0; j < w; j++)
+      line[j] = dta[i * w + j] << 4;
+  }
+}
+
+cv::Mat Mono12Decoder::getCvImage() {
+  return M;
+}
+
+QImage Mono12Decoder::getQImage() {
+  QImage img(size, QImage::Format_Indexed8);
+  img.setColorTable(graymap);
+  const int h = size.height(), w = size.width();
+  for (int i = 0; i < h; i++) {
+    auto line = M.ptr<uint16_t>(i);
     auto I = img.scanLine(i);
     for (int j = 0; j < w; j++)
-      I[j] = dta[i * w + j] >> 4;
+      I[j] = line[j] >> 8;
   }
   return img;
 }
 
-Q_EXPORT_PLUGIN2(Mono12, Mono12Format)
+Q_EXPORT_PLUGIN2(Mono12, QArv::Mono12Format)
