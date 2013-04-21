@@ -24,8 +24,6 @@ extern "C" {
   #include <arvenums.h>
 }
 
-#include "decoders/staticplugins.list"
-
 QList<QArvPixelFormat*> initPluginFormats() {
   QList<QArvPixelFormat*> list;
   auto plugins = QPluginLoader::staticInstances();

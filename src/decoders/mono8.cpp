@@ -44,3 +44,4 @@ cv::Mat Mono8Decoder::getCvImage() {
 }
 
 Q_EXPORT_STATIC_PLUGIN2(Mono8, QArv::Mono8Format)
+Q_IMPORT_PLUGIN(Mono8)

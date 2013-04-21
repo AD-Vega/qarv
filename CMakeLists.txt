@@ -47,8 +47,8 @@ set_prefixed(qarv_decoders_SRC src/decoders/
   swscaledecoder.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
-add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS}
-  ${qarv_TRANS} ${qarv_decoders_SRC} ${qarv_decoders_MOCD})
+add_library(qarv SHARED ${qarv_decoders_SRC} ${qarv_decoders_MOCD} ${qarv_SRCS}
+  ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS}
   ${SWSCALE_LDFLAGS} ${OpenCV_LIBS})
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})

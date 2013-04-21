@@ -52,3 +52,4 @@ QImage Mono12Decoder::getQImage() {
 }
 
 Q_EXPORT_PLUGIN2(Mono12, QArv::Mono12Format)
+Q_IMPORT_PLUGIN(Mono12)
