@@ -171,8 +171,24 @@ QList< QString > QArvCamera::getPixelFormatNames() {
   return list;
 }
 
+QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
+  unsigned int numformats;
+  gint64* formats =
+    arv_camera_get_available_pixel_formats(camera, &numformats);
+  QList<ArvPixelFormat> list;
+  for (int i = 0; i < numformats; i++) {
+    list << formats[i];
+  }
+  free(formats);
+  return list;
+}
+
 QString QArvCamera::getPixelFormat() {
   return QString(arv_camera_get_pixel_format_as_string(camera));
+}
+
+ArvPixelFormat QArvCamera::getPixelFormatId() {
+  return arv_camera_get_pixel_format(camera);
 }
 
 void QArvCamera::setPixelFormat(QString format) {

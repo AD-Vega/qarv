@@ -40,6 +40,9 @@ struct _ArvStream;
 typedef _ArvStream ArvStream;
 struct _ArvGc;
 typedef _ArvGc ArvGc;
+#ifndef ARV_PIXEL_FORMAT_MONO_8
+typedef quint32 ArvPixelFormat;
+#endif
 /**@}*/
 
 //! Objects of this class are used to identify cameras.
@@ -110,12 +113,14 @@ public:
   //! \name Choose pixel format
   /**@{*/
   /*!
-   * The lists returned by getPixelFormat() and getPixelFormatNames()
-   * are congruent.
+   * The lists returned by getPixelFormat(), getPixelFormatNames() and
+   * getPixelFormatIds() are congruent.
    */
   QList<QString> getPixelFormats();
   QList<QString> getPixelFormatNames();
+  QList<ArvPixelFormat> getPixelFormatIds();
   QString getPixelFormat();
+  ArvPixelFormat getPixelFormatId();
   void setPixelFormat(QString format);
   /**@}*/
 
