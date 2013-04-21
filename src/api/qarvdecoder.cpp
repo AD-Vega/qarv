@@ -17,11 +17,16 @@
  */
 
 #include "api/qarvdecoder.h"
+#include "decoders/swscaledecoder.h"
 #include <QPluginLoader>
+#include <QMap>
+extern "C" {
+  #include <arvenums.h>
+}
 
-QList< QArvPixelFormat* > QArvPixelFormat::supportedFormats() {
-  auto plugins = QPluginLoader::staticInstances();
+QList<QArvPixelFormat*> initPluginFormats() {
   QList<QArvPixelFormat*> list;
+  auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
     auto fmt = qobject_cast<QArvPixelFormat*>(plugin);
     if (fmt != NULL) list << fmt;
@@ -29,13 +34,49 @@ QList< QArvPixelFormat* > QArvPixelFormat::supportedFormats() {
   return list;
 }
 
+QMap<ArvPixelFormat, enum PixelFormat> initSwScaleFormats();
+
+// List of formats supported by plugins.
+static QList<QArvPixelFormat*> pluginFormats = initPluginFormats();
+
+// List of formats supported by libswscale, with mappings to
+// appropriate ffmpeg formats.
+QMap<ArvPixelFormat, enum PixelFormat> swScaleFormats = initSwScaleFormats();
+
+QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
+  QList<ArvPixelFormat> list;
+  foreach (auto fmt, pluginFormats) {
+    list << fmt->pixelFormat();
+  }
+  list << swScaleFormats.keys();
+  return list;
+}
+
 /*!
  * Returns NULL if the format is not supported.
  */
-QArvDecoder* QArvPixelFormat::makeDecoder(QString format, QSize size) {
-  auto list = supportedFormats();
-  foreach (auto fmt, list) {
+QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format, QSize size) {
+  foreach (auto fmt, pluginFormats) {
     if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
   }
+  foreach (auto arvfmt, swScaleFormats.keys()) {
+    if (arvfmt == format)
+      return makeSwScaleDecoder(swScaleFormats[arvfmt], size);
+  }
   return NULL;
+}
+
+/*!
+ * Returns NULL if the format is not supported.
+ */
+QArvDecoder* QArvPixelFormat::makeSwScaleDecoder(PixelFormat fmt, QSize size) {
+  return new QArv::SwScaleDecoder(size, fmt);
+}
+
+QMap<ArvPixelFormat, PixelFormat> initSwScaleFormats() {
+  QMap<ArvPixelFormat, PixelFormat> m;
+
+  m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = PIX_FMT_UYVY422;
+
+  return m;
 }

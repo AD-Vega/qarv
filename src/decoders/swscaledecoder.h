@@ -21,7 +21,7 @@
 
 #include <QSize>
 #include <QImage>
-#include <opencv2/core/core.hpp>
+#include <api/qarvdecoder.h>
 
 extern "C" {
 #include <libswscale/swscale.h>
@@ -33,7 +33,7 @@ namespace QArv {
  * This decoder works by first decoding into RGB48 using libswscale, and then
  * copying data into the appropriate container.
  */
-class SwScaleDecoder {
+class SwScaleDecoder: public QArvDecoder {
 public:
   SwScaleDecoder(QSize size, enum PixelFormat inputPixfmt);
   virtual ~SwScaleDecoder();

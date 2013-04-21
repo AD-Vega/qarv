@@ -41,12 +41,12 @@ set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   api/qarvcamera.cpp api/qarvdecoder.cpp api/qarvcameradelegate.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
   #mono8.h mono12.h mono12packed.h uyvy422.h yuyv422.h)
-  uyvy422.h)
+  )
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
-  decoders.cpp #graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp
+  #graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp
   #uyvy422.cpp yuyv422.cpp)
-  swscaledecoder.cpp uyvy422.cpp)
+  swscaledecoder.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 add_library(qarv SHARED ${qarv_SRCS} ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS}

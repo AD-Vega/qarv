@@ -24,6 +24,14 @@
 #include <QSize>
 #include <QImage>
 #include <QtPlugin>
+#include <opencv2/core/core.hpp>
+extern "C" {
+#include <libavutil/pixfmt.h>
+}
+
+#ifndef ARV_PIXEL_FORMAT_MONO_8
+typedef quint32 ArvPixelFormat;
+#endif
 
 //! An abstract interface of a decoder for a particular frame format and size.
 class QArvDecoder {
@@ -31,19 +39,13 @@ public:
   virtual ~QArvDecoder() {};
 
   //! Decodes the given frame.
-  virtual QImage decode(QByteArray frame) = 0;
+  virtual void decode(QByteArray frame) = 0;
 
-  //! Returns the Aravis' name for the pixel format.
-  virtual QString pixelFormat() = 0;
+  //! Returns the decoded frame as QImage.
+  virtual QImage getQImage() = 0;
 
-  //! Returns the ffmpeg's name for the pixel format.
-  /*!
-   * Returns an invalid string if ffmpeg doesn't support the raw format.
-   */
-  virtual QString ffmpegPixelFormat() = 0;
-
-  //! Return true if the frame format is grayscale.
-  virtual bool isGrayscale() = 0;
+  //! Returns the decoded frame as an OpenCv matrix.
+  virtual cv::Mat getCvImage() = 0;
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.
@@ -51,17 +53,20 @@ class QArvPixelFormat {
 public:
   virtual ~QArvPixelFormat() {};
 
-  //! Returns the Aravis' name for the pixel format.
-  virtual QString pixelFormat() = 0;
+  //! Returns the Aravis' name for the pixel format supported by this plugin.
+  virtual ArvPixelFormat pixelFormat() = 0;
 
-  //! Instantiates a decoder.
+  //! Instantiates a decoder using this plugin.
   virtual QArvDecoder* makeDecoder(QSize size) = 0;
 
   //! Returns the list of supported pixel formats.
-  static QList<QArvPixelFormat*> supportedFormats();
+  static QList<ArvPixelFormat> supportedFormats();
 
   //! Directly creates a decoder for the requested format and frame size.
-  static QArvDecoder* makeDecoder(QString format, QSize size);
+  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size);
+
+  //! Convenience function to create a libswscale decoder.
+  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat, QSize size);
 };
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,
