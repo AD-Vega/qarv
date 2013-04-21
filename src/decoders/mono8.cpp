@@ -19,14 +19,28 @@
 #include "decoders/mono8.h"
 #include "decoders/graymap.h"
 
-QImage Mono8Decoder::decode(QByteArray frame) {
+using namespace QArv;
+
+Mono8Decoder::Mono8Decoder(QSize size_) :
+  size(size_), M(size_.height(), size_.width(), CV_8U) {}
+
+
+void Mono8Decoder::decode(QByteArray frame) {
+  memcpy(M.ptr(0), frame.constData(), frame.size());
+}
+
+QImage Mono8Decoder::getQImage() {
   QImage img(size, QImage::Format_Indexed8);
   img.setColorTable(graymap);
-  const char* dta = frame.constData();
+  char* dta = M.ptr<char>(0);
   const int h = size.height(), w = size.width();
   for (int i = 0; i < h; i++)
     memcpy(img.scanLine(i), dta+i*w, w);
   return img;
 }
 
-Q_EXPORT_PLUGIN2(Mono8, Mono8Format)
+cv::Mat Mono8Decoder::getCvImage() {
+  return M;
+}
+
+Q_EXPORT_STATIC_PLUGIN2(Mono8, QArv::Mono8Format)
