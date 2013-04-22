@@ -40,7 +40,7 @@ QImage Mono8Decoder::getQImage() {
 }
 
 cv::Mat Mono8Decoder::getCvImage() {
-  return M;
+  return M.clone();
 }
 
 Q_EXPORT_STATIC_PLUGIN2(Mono8, QArv::Mono8Format)

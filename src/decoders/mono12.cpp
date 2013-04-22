@@ -35,7 +35,7 @@ void Mono12Decoder::decode(QByteArray frame) {
 }
 
 cv::Mat Mono12Decoder::getCvImage() {
-  return M;
+  return M.clone();
 }
 
 QImage Mono12Decoder::getQImage() {

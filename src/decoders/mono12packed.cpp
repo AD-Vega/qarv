@@ -61,7 +61,7 @@ void Mono12PackedDecoder::decode(QByteArray frame) {
 }
 
 cv::Mat Mono12PackedDecoder::getCvImage() {
-  return M;
+  return M.clone();
 }
 
 QImage Mono12PackedDecoder::getQImage() {
