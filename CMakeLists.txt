@@ -40,10 +40,10 @@ set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   roicombobox.cpp qarvfeaturetree.cpp qarvtype.cpp api/qarvgui.cpp
   api/qarvcamera.cpp api/qarvdecoder.cpp api/qarvcameradelegate.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
-  mono8.h mono12.h mono12packed.h)
+  mono12packed.h monounpackeddecoders.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
-  graymap.cpp mono8.cpp mono12.cpp mono12packed.cpp
+  graymap.cpp mono12packed.cpp monounpackeddecoders.cpp
   swscaledecoder.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
