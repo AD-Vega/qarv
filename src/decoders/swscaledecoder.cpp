@@ -21,6 +21,10 @@
 #include <opencv2/core/types_c.h>
 #include <QDebug>
 
+extern "C" {
+#include <libavutil/pixdesc.h>
+}
+
 using namespace QArv;
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
@@ -32,20 +36,30 @@ using namespace QArv;
 SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_) :
   inputPixfmt(inputPixfmt_), size(size_),
   image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 } {
+  if (sws_isSupportedInput(inputPixfmt) > 0) {
+    OK = true;
     image_strides[0] = 3 * sizeof(uint16_t) * size.width();
     buffer = new uint16_t[size.width()*size.height()*3];
     image_pointers[0] = reinterpret_cast<uint8_t*>(buffer);
     ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
                          size.width(), size.height(), BUFFER_PIXFMT,
                          SWS_BICUBIC, 0, 0, 0);
+  } else {
+    qDebug() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
+             << "is not supported for input.";
+    OK = false;
+  }
 }
 
 SwScaleDecoder::~SwScaleDecoder() {
-  sws_freeContext(ctx);
-  delete[] buffer;
+  if (OK) {
+    sws_freeContext(ctx);
+    delete[] buffer;
+  }
 }
 
 void SwScaleDecoder::decode(QByteArray frame) {
+  if (!OK) return;
   auto dataptr = reinterpret_cast<const uint8_t*>(frame.constData());
   int calculatedSize =
     avpicture_fill(&srcInfo, const_cast<uint8_t*>(dataptr),
@@ -60,6 +74,7 @@ void SwScaleDecoder::decode(QByteArray frame) {
 }
 
 QImage SwScaleDecoder::getQImage() {
+  if (!OK) return QImage();
   QImage out(size, QImage::Format_RGB888);
   int width = size.width(), height = size.height();
   for (int i = 0; i < height; i++) {
@@ -74,6 +89,7 @@ QImage SwScaleDecoder::getQImage() {
 }
 
 cv::Mat SwScaleDecoder::getCvImage() {
+  if (!OK) return cv::Mat();
   cv::Mat M(size.height(), size.width(), CV_16UC3);
   for(int i = 0; i < M.rows; i++) {
     auto Mr = M.ptr<cv::Vec<uint16_t, 3>>(i);
