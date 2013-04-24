@@ -29,8 +29,8 @@ using namespace QArv;
 #define BUFFER_PIXFMT PIX_FMT_RGB48LE
 #endif
 
-SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt) :
-  size(size_), channel_pointers { 0, 0, 0 }, channel_strides { 0, 0, 0 },
+SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_) :
+  inputPixfmt(inputPixfmt_), size(size_),
   image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 } {
     image_strides[0] = 3 * sizeof(uint16_t) * size.width();
     buffer = new uint16_t[size.width()*size.height()*3];
@@ -46,9 +46,12 @@ SwScaleDecoder::~SwScaleDecoder() {
 }
 
 void SwScaleDecoder::decode(QByteArray frame) {
-  channel_strides[0] = frame.size() / size.height();
-  channel_pointers[0] = reinterpret_cast<const uint8_t*>(frame.constData());
-  int outheight = sws_scale(ctx, channel_pointers, channel_strides,
+  auto dataptr = reinterpret_cast<const uint8_t*>(frame.constData());
+  int calculatedSize =
+    avpicture_fill(&srcInfo, const_cast<uint8_t*>(dataptr),
+                   inputPixfmt, size.width(), size.height());
+  assert(calculatedSize == frame.size());
+  int outheight = sws_scale(ctx, srcInfo.data, srcInfo.linesize,
                             0, size.height(),
                             image_pointers, image_strides);
   if(outheight != size.height()) {

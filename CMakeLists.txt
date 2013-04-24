@@ -16,6 +16,7 @@ include(FindPkgConfig)
 pkg_check_modules(ARAVIS REQUIRED aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
+pkg_check_modules(AVCODEC REQUIRED libavcodec)
 find_package( OpenCV REQUIRED )
 
 include(${QT_USE_FILE})
@@ -50,7 +51,7 @@ qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 add_library(qarv SHARED ${qarv_decoders_SRC} ${qarv_decoders_MOCD} ${qarv_SRCS}
   ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS}
-  ${SWSCALE_LDFLAGS} ${OpenCV_LIBS})
+  ${SWSCALE_LDFLAGS} ${AVCODEC_LDFLAGS} ${OpenCV_LIBS})
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
 
 add_executable(qarvexe src/main.cpp)

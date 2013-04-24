@@ -25,6 +25,7 @@
 
 extern "C" {
 #include <libswscale/swscale.h>
+#include <libavcodec/avcodec.h>
 }
 
 namespace QArv {
@@ -44,11 +45,11 @@ public:
 private:
   QSize size;
   struct SwsContext* ctx;
-  const uint8_t* channel_pointers[3];
-  int channel_strides[3];
   uint8_t* image_pointers[3];
   int image_strides[3];
   uint16_t* buffer;
+  enum PixelFormat inputPixfmt;
+  struct AVPicture srcInfo;
 };
 
 }
