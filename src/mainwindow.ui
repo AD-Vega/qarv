@@ -987,19 +987,6 @@
           </property>
          </widget>
         </item>
-        <item row="11" column="1">
-         <widget class="QCheckBox" name="recordLogCheck">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>Unless the video format is &amp;quot;Raw data&amp;quot;, an external encoder is used. Check this option to log its messages. The log file will have the same name as the video file with an additional &amp;quot;.log&amp;quot; suffix.</string>
-          </property>
-          <property name="text">
-           <string>Log encoder messages</string>
-          </property>
-         </widget>
-        </item>
         <item row="10" column="1">
          <widget class="QCheckBox" name="recordMetadataCheck">
           <property name="text">

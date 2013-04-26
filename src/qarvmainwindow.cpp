@@ -45,8 +45,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   setAttribute(Qt::WA_DeleteOnClose);
 
-  recordingfile = new QFile(this);
-
   qWarning() << "Please ignore \"Could not resolve property\" warnings "
                 "unless icons look bad.";
   setupUi(this);
@@ -117,6 +115,9 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     tabWidget->removeTab(tabWidget->indexOf(recordingTab));
     snapButton->setEnabled(false);
   }
+
+  videoFormatSelector->addItems(Recorder::outputFormats());
+  videoFormatSelector->setCurrentIndex(0);
 
   auto timer = new QTimer(this);
   timer->setInterval(1000);
@@ -495,10 +496,8 @@ void QArvMainWindow::takeNextFrame() {
     QByteArray frame;
     QImage image;
 
-    if (playing || drawHistogram || videoFormatSelector->currentIndex() >= 2)
+    if (playing || drawHistogram)
       getNextFrame(&image, NULL, &frame, NULL, nocopyCheck->isChecked());
-    else
-      getNextFrame(NULL, NULL, &frame, NULL, nocopyCheck->isChecked());
 
     if (playing) video->setImage(image);
 
@@ -508,7 +507,11 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (recording && !frame.isEmpty()) {
-
+      if (image.isNull())
+        decoder->decode(frame);
+      recorder->recordFrame(frame, decoder);
+      if (! recorder->isOK())
+        closeFileButton->setChecked(false);
     }
 
     if (!frame.isEmpty()) {
@@ -545,11 +548,12 @@ void QArvMainWindow::startVideo(bool start) {
       if (decoder != NULL) delete decoder;
       decoder = NULL;
       started = false;
+      bool open = recorder && recorder->isOK();
       foreach (auto wgt, toDisableWhenPlaying) {
-        wgt->setEnabled(!recording && !recordingfile->isOpen());
+        wgt->setEnabled(!recording && !open);
       }
       pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
-                                      && !recordingfile->isOpen()
+                                      && !open
                                       && !recording);
     }
   }
@@ -581,7 +585,6 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       filenameEdit,
       chooseFilenameButton,
       recordApendCheck,
-      recordLogCheck,
       videoFormatSelector
     };
   }
@@ -596,16 +599,20 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
     return;
   }
 
-  if (checked && !recordingfile->isOpen()) {
+  if (checked && !recorder || !recorder->isOK()) {
     startVideo(true); // Initialize the decoder and all that.
-    QIODevice::OpenMode openflags;
+    bool doAppend;
     if (recordApendCheck->isChecked() && recordApendCheck->isEnabled())
-      openflags = QIODevice::Append;
+      doAppend = true;
     else
-      openflags = QIODevice::Truncate | QIODevice::WriteOnly;
-    bool open = false;
+      doAppend = false;
 
-    // Do the opening
+    auto rct = camera->getROI();
+    recorder.reset(Recorder::makeRecorder(filenameEdit->text(),
+                                          videoFormatSelector->currentText(),
+                                          rct.size(), fpsSpinbox->value(),
+                                          doAppend));
+    bool open = recorder && recorder->isOK();
 
 file_has_been_opened:
 
@@ -636,11 +643,11 @@ skip_all_file_opening:
   recordButton->setChecked(recording);
   recordButton->setIcon(recording ? pauseIcon : recordIcon);
 
-  closeFileButton->setEnabled(!recording && recordingfile->isOpen());
+  bool open = recorder && recorder->isOK();
+  closeFileButton->setEnabled(!recording && open);
   foreach (auto wgt, toDisableWhenRecording) {
-    wgt->setEnabled(!recording && !recordingfile->isOpen());
+    wgt->setEnabled(!recording && !open);
   }
-  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
 
   emit recordingStarted(recording);
 }
@@ -875,20 +882,7 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
 }
 
 void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
-  auto ffmpeg = qobject_cast<QProcess*>(recordingfile);
-  statusBar()->showMessage(tr("Finalizing video recording, please wait..."));
-  QApplication::processEvents();
-  QApplication::flush();
-  if (ffmpeg != NULL) {
-    ffmpeg->closeWriteChannel();
-    ffmpeg->waitForFinished();
-  } else {
-    recordingfile->close();
-  }
-  delete recordingfile;
-  recordingfile = new QFile(this);
-  statusBar()->clearMessage();
-
+  recorder.reset();
   closeFileButton->setEnabled(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
@@ -898,17 +892,6 @@ void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
   }
   pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
                                   && !started);
-  on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
-}
-
-void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int index) {
-  if (index != 0) {
-    recordApendCheck->setEnabled(false);
-    recordLogCheck->setEnabled(true);
-  } else {
-    recordApendCheck->setEnabled(true);
-    recordLogCheck->setEnabled(false);
-  }
 }
 
 void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
@@ -984,7 +967,6 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
   saved_widgets["qarv_recording/append_video"] = recordApendCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
-  saved_widgets["qarv_recording/log_encoder_messages"] = recordLogCheck;
 
   // video display
   saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;

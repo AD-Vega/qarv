@@ -25,6 +25,7 @@
 #include "glvideowidget.h"
 #include "api/qarvcamera.h"
 #include "api/qarvdecoder.h"
+#include "recorder.h"
 
 #include <QTimer>
 #include <QFile>
@@ -74,7 +75,6 @@ private slots:
   void on_histogramdock_visibilityChanged(bool visible);
   void on_histogramdock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
-  void on_videoFormatSelector_currentIndexChanged(int index);
   void on_ROIsizeCombo_newSizeSelected(QSize size);
   void on_sliderUpdateSpinbox_valueChanged(int i);
   void on_histogramUpdateSpinbox_valueChanged(int i);
@@ -110,7 +110,6 @@ private:
   QTimer* autoreadexposure;
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
-  QIODevice* recordingfile;
   QTransform imageTransform;
   uint framecounter;
   QByteArray oldstate, oldgeometry;
@@ -120,6 +119,7 @@ private:
   QIcon recordIcon, pauseIcon, playIcon;
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
+  QScopedPointer<Recorder> recorder;
 
   friend class ::QArvGui;
 };
