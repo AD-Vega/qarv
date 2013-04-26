@@ -37,26 +37,6 @@ using namespace QArv;
 
 const int slidersteps = 1000;
 
-auto ffmpegOutputOptions = QStringList();
-auto ffmpegOutputCommands = QHash<QString, QString>();
-QString ffmpegInputCommand = "-pixel_format %1 -f rawvideo -s %2x%3 -i - ";
-
-static void initFfmpegOutputCommands() {
-  static const char* keys[] = {
-    QT_TRANSLATE_NOOP("Video formats", "Raw data"),
-    QT_TRANSLATE_NOOP("Video formats", "AVI (raw)"),
-    QT_TRANSLATE_NOOP("Video formats", "AVI (processed)")
-  };
-  ffmpegOutputOptions = {
-    QApplication::translate("Video formats", keys[0]),
-    QApplication::translate("Video formats", keys[1]),
-    QApplication::translate("Video formats", keys[2])
-  };
-  ffmpegOutputCommands[ffmpegOutputOptions[0]] = QString();
-  ffmpegOutputCommands[ffmpegOutputOptions[1]] = "-f avi -codec rawvideo";
-  ffmpegOutputCommands[ffmpegOutputOptions[2]] = "-f avi -codec huffyuv";
-}
-
 QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), playing(false), recording(false),
   started(false), drawHistogram(false), decoder(NULL),
@@ -97,9 +77,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   else
     pauseIcon = QIcon(QString(
                         qarv_datafiles) + "media-playback-pause" + ".svgz");
-
-  if (ffmpegOutputCommands.isEmpty()) initFfmpegOutputCommands();
-  videoFormatSelector->addItems(ffmpegOutputOptions);
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
@@ -531,16 +508,7 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (recording && !frame.isEmpty()) {
-      if (videoFormatSelector->currentIndex() < 2) {
-        QByteArray outframe(frame);
-        outframe.data(); // make deep copy, writing can block
-        recordingfile->write(outframe);
-      } else {
-        image = image.convertToFormat(QImage::Format_RGB888);
-        for (int i = 0; i < image.height(); i++)
-          recordingfile->write((char*)(image.scanLine(i)),
-                               image.bytesPerLine());
-      }
+
     }
 
     if (!frame.isEmpty()) {
@@ -636,69 +604,8 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
     else
       openflags = QIODevice::Truncate | QIODevice::WriteOnly;
     bool open = false;
-    {
-      auto thefile = qobject_cast<QFile*>(recordingfile);
-      thefile->setFileName(filenameEdit->text());
-      auto info = QFileInfo(*thefile);
-      auto dir = info.dir();
-      if (!dir.exists()) {
-        statusBar()->showMessage(tr("Video directory does not exist."),
-                                 statusTimeoutMsec);
-        goto file_has_been_opened;
-      }
-    }
-    if (videoFormatSelector->currentIndex() == 0) {
-      open = recordingfile->open(openflags);
-      if (!open)
-        statusBar()->showMessage(tr("Cannot open video file for recording."),
-                                 statusTimeoutMsec);
-    } else {
-      auto ffmpeg = new QProcess(this);
-      QString cmd = ffmpegInputCommand;
-      QString fmt;
-      if (videoFormatSelector->currentIndex() == 1) {
-        //fmt = decoder->ffmpegPixelFormat();
-        if (fmt.isNull()) {
-          statusBar()->showMessage(tr("Unable to record. "
-                                      "AVI cannot store this pixel format in raw "
-                                      "form. Use processed form instead."),
-                                   statusTimeoutMsec);
-          open = false;
-        } else {
-          open = true;
-        }
-      } else {
-        fmt = "rgb24";
-        open = true;
-      }
-      if (open) {
-        cmd = cmd.arg(fmt);
-        if (videoFormatSelector->currentIndex() < 2) {
-          cmd = cmd.arg(camera->getFrameSize().width());
-          cmd = cmd.arg(camera->getFrameSize().height());
-        } else {
-          QImage emptyimg(camera->getFrameSize().width(),
-                          camera->getFrameSize().height(), QImage::Format_Mono);
-          transformImage(emptyimg);
-          cmd = cmd.arg(emptyimg.width());
-          cmd = cmd.arg(emptyimg.height());
-        }
-        cmd += ffmpegOutputCommands[videoFormatSelector->currentText()];
-        cmd += QString(" -r %1 -").arg(fpsSpinbox->value());
 
-        auto fname = qobject_cast<QFile*>(recordingfile)->fileName();
-        ffmpeg->setStandardOutputFile(fname, openflags);
-        if (recordLogCheck->isChecked() && recordLogCheck->isEnabled())
-          ffmpeg->setStandardErrorFile(fname + ".log", QIODevice::Truncate);
-        qDebug() << "ffmpeg" << cmd;
-        ffmpeg->start("ffmpeg", cmd.split(' ', QString::SkipEmptyParts));
-        open = ffmpeg->waitForStarted(10000);
-      }
-      if (open) {
-        delete recordingfile;
-        recordingfile = ffmpeg;
-      }
-    }
+    // Do the opening
 
 file_has_been_opened:
 
