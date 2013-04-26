@@ -94,9 +94,9 @@ cv::Mat SwScaleDecoder::getCvImage() {
   for(int i = 0; i < M.rows; i++) {
     auto Mr = M.ptr<cv::Vec<uint16_t, 3>>(i);
     for (int j = 0; j < M.cols; j++) {
-      auto& rgb = Mr[j];
+      auto& bgr = Mr[j];
       for (int px = 0; px < 3; px++)
-        rgb[px] = buffer[3*(i*M.cols + j) + (2 - px)];
+        bgr[px] = buffer[3*(i*M.cols + j) + (2 - px)];
     }
   }
   return M;
