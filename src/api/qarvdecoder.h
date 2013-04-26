@@ -41,10 +41,10 @@ public:
   //! Decodes the given frame.
   virtual void decode(QByteArray frame) = 0;
 
-  //! Returns the decoded frame as QImage.
+  //! Returns the decoded frame as QImage, either indexed (gray) or RGB888.
   virtual QImage getQImage() = 0;
 
-  //! Returns the decoded frame as an OpenCv matrix.
+  //! Returns the decoded frame as an OpenCv matrix, CV_16U, either 1 or 3 channels.
   virtual cv::Mat getCvImage() = 0;
 };
 
