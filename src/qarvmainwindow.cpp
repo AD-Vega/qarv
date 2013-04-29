@@ -255,6 +255,8 @@ void QArvMainWindow::readAllValues() {
 
   readROILimits();
   QRect roi = camera->getROI();
+  roi.setWidth((roi.width() / 2) * 2);
+  roi.setHeight((roi.height() / 2) * 2);
   xSpinbox->setValue(roi.x());
   ySpinbox->setValue(roi.y());
   wSpinbox->setValue(roi.width());
@@ -387,6 +389,8 @@ void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
 
   bool tostart = started;
   startVideo(false);
+  ROI.setWidth((ROI.width() / 2 ) * 2);
+  ROI.setHeight((ROI.height() / 2) * 2);
   camera->setROI(ROI);
   QRect roi = camera->getROI();
   xSpinbox->setValue(roi.x());
@@ -401,7 +405,10 @@ void QArvMainWindow::on_resetROIButton_clicked(bool clicked) {
   startVideo(false);
   camera->setROI(camera->getROIMaxSize());
   // It needs to be applied twice to reach maximum size.
-  camera->setROI(camera->getROIMaxSize());
+  QRect ROI = camera->getROIMaxSize();
+  ROI.setWidth((ROI.width() / 2) * 2);
+  ROI.setHeight((ROI.height() / 2) * 2);
+  camera->setROI(ROI);
   readROILimits();
   QRect roi = camera->getROI();
   xSpinbox->setValue(roi.x());
