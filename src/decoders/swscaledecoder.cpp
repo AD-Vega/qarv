@@ -36,6 +36,12 @@ using namespace QArv;
 SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_) :
   inputPixfmt(inputPixfmt_), size(size_),
   image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 } {
+  if (size.width() != (size.width() / 2) * 2
+      || size.height() != (size.height() / 2) * 2) {
+    qDebug() << "Frame size must be factor of two for SwScaleDecoder.";
+    OK = false;
+    return;
+  }
   if (sws_isSupportedInput(inputPixfmt) > 0) {
     OK = true;
     image_strides[0] = 3 * sizeof(uint16_t) * size.width();
