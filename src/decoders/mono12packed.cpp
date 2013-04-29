@@ -46,7 +46,7 @@ void Mono12PackedDecoder::decode(QByteArray frame) {
       outcurrent = 0;
     }
 
-    bytes[0] = inptr[1] & 0x0F;
+    bytes[0] = inptr[1] & 0xF0;
     bytes[1] = inptr[2];
     linestart[outcurrent++] = pixel;
 
