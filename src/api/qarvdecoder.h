@@ -46,6 +46,9 @@ public:
 
   //! Returns the decoded frame as an OpenCv matrix, CV_16U, either 1 or 3 channels.
   virtual cv::Mat getCvImage() = 0;
+
+  //! Convenience function to convert an OpenCV image to QImage. Limited to formats used by QArv.
+  static QImage CVImage2QImage(cv::Mat image);
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.

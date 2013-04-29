@@ -18,10 +18,37 @@
 
 #include "api/qarvdecoder.h"
 #include "decoders/swscaledecoder.h"
+#include "decoders/graymap.h"
 #include <QPluginLoader>
 #include <QMap>
 extern "C" {
   #include <arvenums.h>
+}
+
+QImage QArvDecoder::CVImage2QImage(cv::Mat image) {
+  const int h = image.size().height, w = image.size().width;
+  QImage img(QSize(w, h), image.channels() == 1
+             ? QImage::Format_Indexed8 : QImage::Format_RGB888);
+  if (img.format() == QImage::Format_Indexed8) {
+    img.setColorTable(graymap);
+    for (int i = 0; i < h; i++) {
+      auto line = image.ptr<uint16_t>(i);
+      auto I = img.scanLine(i);
+      for (int j = 0; j < w; j++)
+        I[j] = line[j] >> 8;
+    }
+  } else {
+    for (int i = 0; i < image.rows; i++) {
+      auto Mr = image.ptr<cv::Vec<uint16_t, 3> >(i);
+      auto l = img.scanLine(i);
+      for (int j = 0; j < image.cols; j++) {
+        auto& bgr = Mr[j];
+        for (int px = 0; px < 3; px++)
+          l[3*j + 2 - px] = bgr[px] >> 8;
+      }
+    }
+  }
+  return img;
 }
 
 QList<QArvPixelFormat*> initPluginFormats() {
