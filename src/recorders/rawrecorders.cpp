@@ -16,30 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "recorder.h"
+#include "recorders/rawrecorders.h"
 #include <QFile>
-#include <QDebug>
-#include <cassert>
 
 using namespace QArv;
-
-// Order of format classes must match order of strings.
-// TODO Make these into proper plugins when there's too many.
-// Enforce it below in definition of makeRecorder();
-
-class RawUndecoded;
-class RawDecoded8;
-class RawDecoded16;
-
-QList<QString> allFormats = {
-  "Raw undecoded",
-  "Raw decoded (8-bit)",
-  "Raw decoded (16-bit)",
-};
-
-QList< QString > Recorder::outputFormats() {
-  return allFormats;
-}
 
 class RawUndecoded: public Recorder {
 public:
@@ -123,16 +103,32 @@ private:
   QFile file;
 };
 
-Recorder* Recorder::makeRecorder(QString fileName,
-                                 QString outputFormat,
-                                 QSize frameSize,
-                                 int framesPerSecond,
-                                 bool appendToFile) {
-  auto idx = allFormats.indexOf(outputFormat);
-  switch (idx) {
-    case 0: return new RawUndecoded(fileName, frameSize, framesPerSecond, appendToFile);
-    case 1: return new RawDecoded8(fileName, frameSize, framesPerSecond, appendToFile);
-    case 2: return new RawDecoded16(fileName, frameSize, framesPerSecond, appendToFile);
-    default: return NULL;
-  }
+Recorder* RawUndecodedFormat::makeRecorder(QString fileName,
+                                           QSize frameSize,
+                                           int framesPerSecond,
+                                           bool appendToFile) {
+  return new RawUndecoded(fileName, frameSize, framesPerSecond, appendToFile);
 }
+
+Recorder* RawDecoded8Format::makeRecorder(QString fileName,
+                                          QSize frameSize,
+                                          int framesPerSecond,
+                                          bool appendToFile) {
+  return new RawDecoded8(fileName, frameSize, framesPerSecond, appendToFile);
+}
+
+Recorder* RawDecoded16Format::makeRecorder(QString fileName,
+                                           QSize frameSize,
+                                           int framesPerSecond,
+                                           bool appendToFile) {
+  return new RawDecoded16(fileName, frameSize, framesPerSecond, appendToFile);
+}
+
+Q_EXPORT_PLUGIN2(RawUndecoded, QArv::RawUndecodedFormat)
+Q_IMPORT_PLUGIN(RawUndecoded)
+
+Q_EXPORT_PLUGIN2(RawDecoded8, QArv::RawDecoded8Format)
+Q_IMPORT_PLUGIN(RawDecoded8)
+
+Q_EXPORT_PLUGIN2(RawDecoded16, QArv::RawDecoded16Format)
+Q_IMPORT_PLUGIN(RawDecoded16)

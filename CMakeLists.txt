@@ -41,16 +41,22 @@ set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   glvideowidget.cpp glhistogramwidget.cpp globals.cpp
   roicombobox.cpp qarvfeaturetree.cpp qarvtype.cpp api/qarvgui.cpp
   api/qarvcamera.cpp api/qarvdecoder.cpp api/qarvcameradelegate.cpp
-  recorder.cpp)
+  recorders/recorder.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono12packed.h monounpackeddecoders.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
   graymap.cpp mono12packed.cpp monounpackeddecoders.cpp
   swscaledecoder.cpp)
+set_prefixed(qarv_recorders_MOCS src/recorders/
+  rawrecorders.h)
+qt4_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
+set_prefixed(qarv_recorders_SRC src/recorders/
+  rawrecorders.cpp)
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
-add_library(qarv SHARED ${qarv_decoders_SRC} ${qarv_decoders_MOCD} ${qarv_SRCS}
+add_library(qarv SHARED ${qarv_recorders_MOCD} ${qarv_recorders_SRC}
+  ${qarv_decoders_SRC} ${qarv_decoders_MOCD} ${qarv_SRCS}
   ${qarv_MOCD} ${qarv_UIS} ${qarv_RCS} ${qarv_TRANS})
 target_link_libraries(qarv ${QT_LIBRARIES} ${ARAVIS_LDFLAGS} ${GIO_LDFLAGS}
   ${SWSCALE_LDFLAGS} ${AVCODEC_LDFLAGS} ${AVUTIL_LDFLAGS} ${OpenCV_LIBS})

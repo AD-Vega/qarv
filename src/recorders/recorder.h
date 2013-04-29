@@ -39,16 +39,33 @@ public:
    * the GUI must have done it.
    */
   virtual void recordFrame(QByteArray raw, QArvDecoder* decoder) = 0;
+};
 
+class OutputFormat {
+public:
+  //! Returns the name of the output format.
+  virtual QString name() = 0;
+
+  //! Instantiates a recorder using this plugin.
+  virtual Recorder* makeRecorder(QString fileName,
+                                 QSize frameSize,
+                                 int framesPerSecond,
+                                 bool appendToFile) = 0;
+
+  //! Creates a recorder for the requested output format.
   static Recorder* makeRecorder(QString fileName,
                                 QString outputFormat,
                                 QSize frameSize,
                                 int framesPerSecond,
                                 bool appendToFile);
 
+  //! Returns a list of supported output formats.
   static QList<QString> outputFormats();
 };
 
 }
+
+Q_DECLARE_INTERFACE(QArv::OutputFormat,
+                    "si.ad-vega.qarv.QArvOutputFormat/0.1");
 
 #endif

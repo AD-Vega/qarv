@@ -116,7 +116,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     snapButton->setEnabled(false);
   }
 
-  videoFormatSelector->addItems(Recorder::outputFormats());
+  videoFormatSelector->addItems(OutputFormat::outputFormats());
   videoFormatSelector->setCurrentIndex(0);
 
   auto timer = new QTimer(this);
@@ -608,10 +608,10 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       doAppend = false;
 
     auto rct = camera->getROI();
-    recorder.reset(Recorder::makeRecorder(filenameEdit->text(),
-                                          videoFormatSelector->currentText(),
-                                          rct.size(), fpsSpinbox->value(),
-                                          doAppend));
+    recorder.reset(OutputFormat::makeRecorder(filenameEdit->text(),
+                                              videoFormatSelector->currentText(),
+                                              rct.size(), fpsSpinbox->value(),
+                                              doAppend));
     bool open = recorder && recorder->isOK();
 
 file_has_been_opened:
