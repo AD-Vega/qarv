@@ -36,7 +36,7 @@ private:
   cv::Mat M;
   static const bool typeIsSigned = std::is_signed<InputType>::value;
   static const uint zeroBits = 8*sizeof(uint16_t) - bitsPerPixel;
-  static const uint signedShiftBits = typeIsSigned ? 8*sizeof(uint16_t) - 1 : 0;
+  static const uint signedShiftBits = bitsPerPixel - 1;
 
 public:
   MonoUnpackedDecoder(QSize size_) :
@@ -49,7 +49,12 @@ public:
     for (int i = 0; i < h; i++) {
       auto line = M.ptr<uint16_t>(i);
       for (int j = 0; j < w; j++) {
-        line[j] = (dta[i * w + j] + (1<<signedShiftBits)) * (1<<zeroBits);
+        uint16_t tmp;
+        if (typeIsSigned)
+          tmp = dta[i * w + j] + (1<<signedShiftBits);
+        else
+          tmp = dta[i * w + j];
+        line[j] = tmp << (zeroBits);
       }
     }
   }
