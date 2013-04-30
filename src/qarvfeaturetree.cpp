@@ -106,7 +106,6 @@ void QArvCamera::QArvFeatureTree::recursiveSerialization(
   QArvCamera::
   QArvFeatureTree* tree) {
   auto node = arv_gc_get_node(camera->genicam, tree->feature());
-  ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
 
   if (tree->children().count() != 0) {
     if (QString("Root") != tree->feature())

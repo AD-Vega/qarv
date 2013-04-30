@@ -38,9 +38,9 @@ using namespace QArv;
 const int slidersteps = 1000;
 
 QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
-  QMainWindow(parent), camera(NULL), playing(false), recording(false),
-  started(false), drawHistogram(false), decoder(NULL),
-  imageTransform(), framecounter(0), standalone(standalone_),
+  QMainWindow(parent), camera(NULL), decoder(NULL), playing(false),
+  recording(false), started(false), drawHistogram(false),
+  standalone(standalone_), imageTransform(), framecounter(0),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
   setAttribute(Qt::WA_DeleteOnClose);
@@ -606,7 +606,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
     return;
   }
 
-  if (checked && !recorder || !recorder->isOK()) {
+  if ((checked && !recorder) || !recorder->isOK()) {
     startVideo(true); // Initialize the decoder and all that.
     bool doAppend;
     if (recordApendCheck->isChecked() && recordApendCheck->isEnabled())
@@ -620,8 +620,6 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
                                               rct.size(), fpsSpinbox->value(),
                                               doAppend));
     bool open = recorder && recorder->isOK();
-
-file_has_been_opened:
 
     if (!open) {
       recordButton->setChecked(false);
@@ -911,7 +909,7 @@ void QArvMainWindow::histogramNextFrame() {
 
 ToolTipToRichTextFilter::ToolTipToRichTextFilter(int size_threshold,
                                                  QObject* parent) :
-  size_threshold(size_threshold), QObject(parent) {}
+  QObject(parent), size_threshold(size_threshold) {}
 
 bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
   if (evt->type() == QEvent::ToolTipChange) {

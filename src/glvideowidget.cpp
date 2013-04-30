@@ -25,9 +25,9 @@ using namespace QArv;
 
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
-  corner1(), corner2(), rectangle(), selecting(false),
-  drawRectangle(false), fixedSelection(false), whitepen(Qt::white),
-  blackpen(Qt::black), idleImageIcon() {
+  idleImageIcon(), selecting(false), drawRectangle(false),
+  fixedSelection(false), corner1(), corner2(), rectangle(),
+  whitepen(Qt::white), blackpen(Qt::black) {
   QFile iconfile(QString(qarv_datafiles) + "/video-display.svgz");
   if (iconfile.exists())
     idleImageIcon = QIcon(iconfile.fileName());

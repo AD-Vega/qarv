@@ -152,7 +152,7 @@ QList< QString > QArvCamera::getPixelFormats() {
   const char** formats =
     arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
   QList<QString> list;
-  for (int i = 0; i < numformats; i++)
+  for (uint i = 0; i < numformats; i++)
     list << formats[i];
   free(formats);
   return list;
@@ -164,7 +164,7 @@ QList< QString > QArvCamera::getPixelFormatNames() {
     arv_camera_get_available_pixel_formats_as_display_names(camera,
                                                             &numformats);
   QList<QString> list;
-  for (int i = 0; i < numformats; i++) {
+  for (uint i = 0; i < numformats; i++) {
     list << formats[i];
   }
   free(formats);
@@ -176,7 +176,7 @@ QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
   gint64* formats =
     arv_camera_get_available_pixel_formats(camera, &numformats);
   QList<ArvPixelFormat> list;
-  for (int i = 0; i < numformats; i++) {
+  for (uint i = 0; i < numformats; i++) {
     list << formats[i];
   }
   free(formats);
@@ -496,7 +496,6 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
   }
 
   const char* string;
-  ArvGcFeatureNode* fnode = ARV_GC_FEATURE_NODE(node);
 
   if (index.column() == 0) {
     switch (role) {
