@@ -18,8 +18,28 @@
 
 #include "recorders/rawrecorders.h"
 #include <QFile>
+#include <QSettings>
+#include <QRegExp>
+#include <QFileInfo>
+extern "C" {
+#include <libavutil/pixdesc.h>
+}
 
 using namespace QArv;
+
+static const QString descExt(".desc");
+static const QRegExp descExtRegexp("\\.desc$");
+
+void initDescfile(QSettings& s, QSize size, int FPS) {
+  s.beginGroup("qarv_raw_video_description");
+  s.remove("");
+  s.setValue("description_version", "0.1");
+  QFileInfo finfo(s.fileName());
+  QString fname(finfo.baseName().remove(descExtRegexp));
+  s.setValue("file_name", fname);
+  s.setValue("frame_size", size);
+  s.setValue("nominal_fps", FPS);
+}
 
 class RawUndecoded: public Recorder {
 public:
@@ -30,6 +50,13 @@ public:
                bool appendToFile) :
     file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
+    if (isOK() && !appendToFile) {
+      QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+      initDescfile(s, size, FPS);
+      s.setValue("encoding_type", "aravis");
+      auto pxfmt = QString::number(decoder->pixelFormat(), 16);
+      s.setValue("arv_pixel_format", QString("0x") + pxfmt);
+    }
   }
 
   bool isOK() {
@@ -54,6 +81,13 @@ public:
               bool appendToFile) :
     file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
+    if (isOK() && !appendToFile) {
+      QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+      initDescfile(s, size, FPS);
+      s.setValue("encoding_type", "libavutil");
+      s.setValue("libavutil_pixel_format", PIX_FMT_GRAY8);
+      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(PIX_FMT_GRAY8));
+    }
   }
 
   bool isOK() {
@@ -88,6 +122,13 @@ public:
                bool appendToFile) :
     file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
+    if (isOK() && !appendToFile) {
+      QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+      initDescfile(s, size, FPS);
+      s.setValue("encoding_type", "libavutil");
+      s.setValue("libavutil_pixel_format", PIX_FMT_GRAY16);
+      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(PIX_FMT_GRAY16));
+    }
   }
 
   bool isOK() {
