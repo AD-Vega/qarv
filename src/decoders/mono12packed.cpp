@@ -65,16 +65,7 @@ cv::Mat Mono12PackedDecoder::getCvImage() {
 }
 
 QImage Mono12PackedDecoder::getQImage() {
-  QImage img(size, QImage::Format_Indexed8);
-  img.setColorTable(graymap);
-  const int h = size.height(), w = size.width();
-  for (int i = 0; i < h; i++) {
-    auto line = M.ptr<uint16_t>(i);
-    auto I = img.scanLine(i);
-    for (int j = 0; j < w; j++)
-      I[j] = line[j] >> 8;
-  }
-  return img;
+  return QArvDecoder::CV2QImage(M);
 }
 
 Q_EXPORT_PLUGIN2(Mono12Packed, Mono12PackedFormat)
