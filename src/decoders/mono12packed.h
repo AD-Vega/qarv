@@ -32,6 +32,7 @@ public:
   void decode(QByteArray frame);
   QImage getQImage();
   cv::Mat getCvImage();
+  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
 
 private:
   QSize size;

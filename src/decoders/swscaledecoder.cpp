@@ -33,9 +33,9 @@ using namespace QArv;
 #define BUFFER_PIXFMT PIX_FMT_RGB48LE
 #endif
 
-SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_) :
+SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_, ArvPixelFormat arvPixFmt) :
   size(size_), image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 },
-  inputPixfmt(inputPixfmt_) {
+  inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
   if (size.width() != (size.width() / 2) * 2
       || size.height() != (size.height() / 2) * 2) {
     qDebug() << "Frame size must be factor of two for SwScaleDecoder.";
@@ -62,6 +62,14 @@ SwScaleDecoder::~SwScaleDecoder() {
     sws_freeContext(ctx);
     delete[] buffer;
   }
+}
+
+ArvPixelFormat SwScaleDecoder::pixelFormat() {
+  return arvPixelFormat;
+}
+
+PixelFormat SwScaleDecoder::swscalePixelFormat() {
+  return inputPixfmt;
 }
 
 void SwScaleDecoder::decode(QByteArray frame) {

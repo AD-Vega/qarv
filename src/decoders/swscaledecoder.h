@@ -36,11 +36,13 @@ namespace QArv {
  */
 class SwScaleDecoder: public QArvDecoder {
 public:
-  SwScaleDecoder(QSize size, enum PixelFormat inputPixfmt);
+  SwScaleDecoder(QSize size, enum PixelFormat inputPixfmt, ArvPixelFormat arvPixFmt);
   virtual ~SwScaleDecoder();
   void decode(QByteArray frame);
   QImage getQImage();
   cv::Mat getCvImage();
+  ArvPixelFormat pixelFormat();
+  enum PixelFormat swscalePixelFormat();
 
 private:
   bool OK;
@@ -51,6 +53,7 @@ private:
   uint16_t* buffer;
   enum PixelFormat inputPixfmt;
   struct AVPicture srcInfo;
+  ArvPixelFormat arvPixelFormat;
 };
 
 }

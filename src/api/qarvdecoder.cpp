@@ -88,7 +88,7 @@ QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format, QSize size) {
   }
   foreach (auto arvfmt, swScaleFormats.keys()) {
     if (arvfmt == format)
-      return makeSwScaleDecoder(swScaleFormats[arvfmt], size);
+      return new QArv::SwScaleDecoder(size, swScaleFormats[arvfmt], arvfmt);
   }
   return NULL;
 }
@@ -97,7 +97,7 @@ QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format, QSize size) {
  * Returns NULL if the format is not supported.
  */
 QArvDecoder* QArvPixelFormat::makeSwScaleDecoder(PixelFormat fmt, QSize size) {
-  return new QArv::SwScaleDecoder(size, fmt);
+  return new QArv::SwScaleDecoder(size, fmt, 0);
 }
 
 QMap<ArvPixelFormat, PixelFormat> initSwScaleFormats() {

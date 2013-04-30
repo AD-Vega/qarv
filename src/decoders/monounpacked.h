@@ -25,7 +25,7 @@
 
 namespace QArv {
 
-template <typename InputType, uint bitsPerPixel>
+template <typename InputType, uint bitsPerPixel, ArvPixelFormat pixFmt>
 class MonoUnpackedDecoder : public QArvDecoder {
 
   static_assert(sizeof(InputType) <= sizeof(uint16_t),
@@ -41,6 +41,8 @@ private:
 public:
   MonoUnpackedDecoder(QSize size_) :
     size(size_), M(size_.height(), size_.width(), CV_16U) {}
+
+  ArvPixelFormat pixelFormat() { return pixFmt; }
 
   void decode(QByteArray frame) {
     const InputType* dta =
