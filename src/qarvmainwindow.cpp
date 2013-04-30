@@ -514,9 +514,7 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (recording && !frame.isEmpty()) {
-      if (image.isNull())
-        decoder->decode(frame);
-      recorder->recordFrame(frame, decoder);
+      recorder->recordFrame(frame, !image.isNull());
       if (! recorder->isOK())
         closeFileButton->setChecked(false);
     }
@@ -615,7 +613,8 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       doAppend = false;
 
     auto rct = camera->getROI();
-    recorder.reset(OutputFormat::makeRecorder(filenameEdit->text(),
+    recorder.reset(OutputFormat::makeRecorder(decoder,
+                                              filenameEdit->text(),
                                               videoFormatSelector->currentText(),
                                               rct.size(), fpsSpinbox->value(),
                                               doAppend));

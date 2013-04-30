@@ -33,12 +33,11 @@ public:
   virtual bool isOK() = 0;
 
   /*!
-   * Write a single frame. This function takes both a raw frame and a
-   * decoder because, depending on the format, it might use either. But
-   * it does expect that the decoder already has a frame decoded since
-   * the GUI must have done it.
+   * Write a single frame. The isDecoded parameter specifies whether the GUI
+   * already loaded this frame into the decoder that this recorder uses. If
+   * so, it will not be decoded again.
    */
-  virtual void recordFrame(QByteArray raw, QArvDecoder* decoder) = 0;
+  virtual void recordFrame(QByteArray raw, bool isDecoded = false) = 0;
 };
 
 class OutputFormat {
@@ -47,13 +46,15 @@ public:
   virtual QString name() = 0;
 
   //! Instantiates a recorder using this plugin.
-  virtual Recorder* makeRecorder(QString fileName,
+  virtual Recorder* makeRecorder(QArvDecoder* decoder,
+                                 QString fileName,
                                  QSize frameSize,
                                  int framesPerSecond,
                                  bool appendToFile) = 0;
 
   //! Creates a recorder for the requested output format.
-  static Recorder* makeRecorder(QString fileName,
+  static Recorder* makeRecorder(QArvDecoder* decoder,
+                                QString fileName,
                                 QString outputFormat,
                                 QSize frameSize,
                                 int framesPerSecond,

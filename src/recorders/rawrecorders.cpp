@@ -23,8 +23,12 @@ using namespace QArv;
 
 class RawUndecoded: public Recorder {
 public:
-  RawUndecoded(QString fileName, QSize size, int FPS, bool appendToFile):
-    file(fileName) {
+  RawUndecoded(QArvDecoder* decoder_,
+               QString fileName,
+               QSize size,
+               int FPS,
+               bool appendToFile) :
+    file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
   }
 
@@ -32,18 +36,23 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, QArvDecoder* decoder) {
+  void recordFrame(QByteArray raw, bool isDecoded) {
     file.write(raw);
   }
 
 private:
   QFile file;
+  QArvDecoder* decoder;
 };
 
 class RawDecoded8: public Recorder {
 public:
-  RawDecoded8(QString fileName, QSize size, int FPS, bool appendToFile):
-    file(fileName) {
+  RawDecoded8(QArvDecoder* decoder_,
+              QString fileName,
+              QSize size,
+              int FPS,
+              bool appendToFile) :
+    file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
   }
 
@@ -51,7 +60,8 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, QArvDecoder* decoder) {
+  void recordFrame(QByteArray raw, bool isDecoded) {
+    if (!isDecoded) decoder->decode(raw);
     QImage img = decoder->getQImage();
     int bytesPerLine;
     if (img.format() == QImage::Format_Indexed8)
@@ -66,12 +76,17 @@ public:
 
 private:
   QFile file;
+  QArvDecoder* decoder;
 };
 
 class RawDecoded16: public Recorder {
 public:
-  RawDecoded16(QString fileName, QSize size, int FPS, bool appendToFile):
-    file(fileName) {
+  RawDecoded16(QArvDecoder* decoder_,
+               QString fileName,
+               QSize size,
+               int FPS,
+               bool appendToFile) :
+    file(fileName), decoder(decoder_) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
   }
 
@@ -79,7 +94,8 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, QArvDecoder* decoder) {
+  void recordFrame(QByteArray raw, bool isDecoded) {
+    if (!isDecoded) decoder->decode(raw);
     cv::Mat M = decoder->getCvImage();
     // The image is assumed contiguous, as cv::Mat is by default.
     assert(M.isContinuous());
@@ -101,27 +117,31 @@ public:
 
 private:
   QFile file;
+  QArvDecoder* decoder;
 };
 
-Recorder* RawUndecodedFormat::makeRecorder(QString fileName,
+Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,
+                                           QString fileName,
                                            QSize frameSize,
                                            int framesPerSecond,
                                            bool appendToFile) {
-  return new RawUndecoded(fileName, frameSize, framesPerSecond, appendToFile);
+  return new RawUndecoded(decoder, fileName, frameSize, framesPerSecond, appendToFile);
 }
 
-Recorder* RawDecoded8Format::makeRecorder(QString fileName,
+Recorder* RawDecoded8Format::makeRecorder(QArvDecoder* decoder,
+                                          QString fileName,
                                           QSize frameSize,
                                           int framesPerSecond,
                                           bool appendToFile) {
-  return new RawDecoded8(fileName, frameSize, framesPerSecond, appendToFile);
+  return new RawDecoded8(decoder, fileName, frameSize, framesPerSecond, appendToFile);
 }
 
-Recorder* RawDecoded16Format::makeRecorder(QString fileName,
+Recorder* RawDecoded16Format::makeRecorder(QArvDecoder* decoder,
+                                           QString fileName,
                                            QSize frameSize,
                                            int framesPerSecond,
                                            bool appendToFile) {
-  return new RawDecoded16(fileName, frameSize, framesPerSecond, appendToFile);
+  return new RawDecoded16(decoder, fileName, frameSize, framesPerSecond, appendToFile);
 }
 
 Q_EXPORT_PLUGIN2(RawUndecoded, QArv::RawUndecodedFormat)

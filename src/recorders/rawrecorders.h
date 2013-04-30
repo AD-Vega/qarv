@@ -29,7 +29,8 @@ class RawUndecodedFormat: public QObject, public OutputFormat {
 
 public:
   QString name() { return "Raw undecoded"; }
-  Recorder* makeRecorder(QString fileName,
+  Recorder* makeRecorder(QArvDecoder* decoder,
+                         QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
                          bool appendToFile);
@@ -41,7 +42,8 @@ class RawDecoded8Format: public QObject, public OutputFormat {
 
 public:
   QString name() { return "Raw decoded (8-bit)"; }
-  Recorder* makeRecorder(QString fileName,
+  Recorder* makeRecorder(QArvDecoder* decoder,
+                         QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
                          bool appendToFile);
@@ -53,7 +55,8 @@ class RawDecoded16Format: public QObject, public OutputFormat {
 
 public:
   QString name() { return "Raw decoded (16-bit)"; }
-  Recorder* makeRecorder(QString fileName,
+  Recorder* makeRecorder(QArvDecoder* decoder,
+                         QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
                          bool appendToFile);

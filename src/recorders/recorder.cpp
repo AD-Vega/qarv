@@ -21,16 +21,18 @@
 
 using namespace QArv;
 
-Recorder* OutputFormat::makeRecorder(QString fileName,
-                                 QString outputFormat,
-                                 QSize frameSize,
-                                 int framesPerSecond,
-                                 bool appendToFile) {
+Recorder* OutputFormat::makeRecorder(QArvDecoder* decoder,
+                                     QString fileName,
+                                     QString outputFormat,
+                                     QSize frameSize,
+                                     int framesPerSecond,
+                                     bool appendToFile) {
   auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
     auto fmt = qobject_cast<OutputFormat*>(plugin);
     if (fmt != NULL && outputFormat == fmt->name())
-      return fmt->makeRecorder(fileName, frameSize, framesPerSecond, appendToFile);
+      return fmt->makeRecorder(decoder, fileName, frameSize,
+                               framesPerSecond, appendToFile);
   }
   return NULL;
 }
