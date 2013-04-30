@@ -27,17 +27,29 @@ extern "C" {
 }
 
 QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
+  const int h = image.rows, w = image.cols;
   if (image.channels() == 1) {
-    QImage img(image.cols, image.rows, QImage::Format_Indexed8);
+    QImage img(w, h, QImage::Format_Indexed8);
     img.setColorTable(graymap);
-    cv::Mat view(image.rows, image.cols, CV_8UC1, img.bits(), img.bytesPerLine());
-    image.convertTo(view, CV_8UC1, 1/256.);
+    for (int i = 0; i < h; i++) {
+      auto line = image.ptr<uint16_t>(i);
+      auto I = img.scanLine(i);
+      for (int j = 0; j < w; j++)
+        I[j] = line[j] >> 8;
+    }
     return img;
   } else {
-    QImage img(image.cols, image.rows, QImage::Format_RGB888);
-    cv::Mat view(image.rows, image.cols, CV_8UC3, img.bits(), img.bytesPerLine());
-    image.convertTo(view, CV_8UC3, 1/256.);
-    cv::cvtColor(view, view, CV_BGR2RGB);
+    QImage img(w, h, QImage::Format_RGB888);
+    for (int i = 0; i < h; i++) {
+      auto imgLine = img.scanLine(i);
+      auto imageLine = image.ptr<cv::Vec<uint16_t, 3> >(i);
+      for (int j = 0; j < w; j++) {
+        auto& bgr = imageLine[j];
+        for (int px = 0; px < 3; px++) {
+          imgLine[3*j + px] = bgr[2-px] >> 8;
+        }
+      }
+    }
     return img;
   }
 }
