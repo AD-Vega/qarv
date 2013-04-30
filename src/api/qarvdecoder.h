@@ -50,8 +50,11 @@ public:
   //! Returns the pixel format supported by this decoder.
   virtual ArvPixelFormat pixelFormat() = 0;
 
-  //! Convenience function to convert an OpenCV image to QImage. Limited to formats used by QArv.
-  static QImage CVImage2QImage(cv::Mat image);
+  /*!
+   * Convenience function to convert an OpenCV image to QImage. Limited to
+   * formats used by QArv.
+   */
+  static QImage CV2QImage(const cv::Mat& image);
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.
