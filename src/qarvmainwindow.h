@@ -95,7 +95,7 @@ private slots:
 
 private:
   void readROILimits();
-  void transformImage(QImage& img);
+  void transformImage(cv::Mat& img);
   void getNextFrame(cv::Mat* processed,
                     cv::Mat* unprocessed,
                     QByteArray* raw,
@@ -111,6 +111,8 @@ private:
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
   QTransform imageTransform;
+  bool imageTransform_doFlip;
+  int imageTransform_flip, imageTransform_rot;
   uint framecounter;
   QByteArray oldstate, oldgeometry;
   QSize oldsize;

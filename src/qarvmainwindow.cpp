@@ -40,7 +40,8 @@ const int slidersteps = 1000;
 QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), decoder(NULL), playing(false),
   recording(false), started(false), drawHistogram(false),
-  standalone(standalone_), imageTransform(), framecounter(0),
+  standalone(standalone_), imageTransform(), imageTransform_doFlip(false),
+  imageTransform_flip(0), imageTransform_rot(0), framecounter(0),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
   setAttribute(Qt::WA_DeleteOnClose);
@@ -425,30 +426,33 @@ static QVector<QRgb> initHighlightColors() {
 
 static QVector<QRgb> highlightColors = initHighlightColors();
 
-void QArvMainWindow::transformImage(QImage& img) {
-  if (imageTransform.type() != QTransform::TxNone)
-    img = img.transformed(imageTransform);
-  if (invertColors->isChecked()) img.invertPixels();
+void QArvMainWindow::transformImage(cv::Mat& img) {
+  if (invertColors->isChecked())
+    cv::subtract((1<<16)-1, img, img);
 
-  if (markClipped->isChecked()) {
-    if (img.format() == QImage::Format_Indexed8) {
-      auto colors = img.colorTable();
-      colors[255] = qRgb(255, 0, 200);
-      img.setColorTable(colors);
-    } else {
-      auto mask = img.createMaskFromColor(qRgb(255, 255, 255));
-      mask.setColorTable(highlightColors);
-      QPainter painter(&img);
-      painter.drawImage(img.rect(), mask);
-    }
+  if (imageTransform_doFlip)
+    cv::flip(img, img, imageTransform_flip);
+
+  switch (imageTransform_rot) {
+  case 1:
+    cv::transpose(img, img);
+    cv::flip(img, img, 0);
+    break;
+  case 2:
+    cv::flip(img, img, -1);
+    break;
+  case 3:
+    cv::transpose(img, img);
+    cv::flip(img, img, 1);
+    break;
   }
 }
 
 void QArvMainWindow::getNextFrame(cv::Mat* processed,
-                              cv::Mat* unprocessed,
-                              QByteArray* raw,
-                              ArvBuffer** rawAravisBuffer,
-                              bool nocopy) {
+                                  cv::Mat* unprocessed,
+                                  QByteArray* raw,
+                                  ArvBuffer** rawAravisBuffer,
+                                  bool nocopy) {
   if (processed == NULL
       && unprocessed == NULL
       && raw == NULL
@@ -459,21 +463,24 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
                                       rawAravisBuffer);
   if (raw != NULL) *raw = frame;
 
-  cv::Mat img;
+  cv::Mat imgu, imgp;
   if (unprocessed != NULL
       || processed != NULL) {
     if (!frame.isEmpty()) {
       decoder->decode(frame);
-      img = decoder->getCvImage();
+      imgu = decoder->getCvImage();
     }
   }
 
-  if (unprocessed != NULL) *unprocessed = img;
+  if (unprocessed != NULL) *unprocessed = imgu;
 
   if (processed != NULL) {
-    //TODO
-    //transformImage(img);
-    *processed = img;
+    if (unprocessed != NULL)
+      imgp = imgu.clone();
+    else
+      imgp = imgu;
+    transformImage(imgp);
+    *processed = imgp;
   }
 }
 
@@ -802,6 +809,16 @@ void QArvMainWindow::updateImageTransform() {
   int angle = rotationSelector->itemData(rotationSelector->
                                          currentIndex()).toInt();
   imageTransform.rotate(angle);
+
+  imageTransform_doFlip = flipHorizontal->isChecked()
+                          || flipVertical->isChecked();
+  if (flipHorizontal->isChecked() && flipVertical->isChecked())
+    imageTransform_flip = -1;
+  else if (flipHorizontal->isChecked() && !flipVertical->isChecked())
+    imageTransform_flip = 1;
+  else if (!flipHorizontal->isChecked() && flipVertical->isChecked())
+    imageTransform_flip = 0;
+  imageTransform_rot = angle / 90;
 }
 
 void QArvMainWindow::showFPS() {
