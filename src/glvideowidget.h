@@ -42,6 +42,7 @@ public:
 public slots:
   void enableSelection(bool enable);
   void setSelectionSize(QSize size);
+  void setMarkClipped(bool enable);
 
 signals:
   void selectionComplete(QRect region);
@@ -61,6 +62,7 @@ private:
   QRect rectangle, drawnRectangle;
   QSize fixedSize;
   QPen whitepen, blackpen;
+  bool markClipped;
 };
 
 }

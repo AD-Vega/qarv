@@ -108,6 +108,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
                 SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
+  video->connect(markClipped, SIGNAL(toggled(bool)),
+                 SLOT(setMarkClipped(bool)));
 
   if (!standalone) {
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);

@@ -28,7 +28,7 @@ GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
   idleImageIcon(), selecting(false), drawRectangle(false),
   fixedSelection(false), corner1(), corner2(), rectangle(),
-  whitepen(Qt::white), blackpen(Qt::black) {
+  whitepen(Qt::white), blackpen(Qt::black), markClipped(false) {
   QFile iconfile(QString(qarv_datafiles) + "/video-display.svgz");
   if (iconfile.exists())
     idleImageIcon = QIcon(iconfile.fileName());
@@ -51,7 +51,53 @@ void GLVideoWidget::setImage(const cv::Mat& image_) {
     image = idleImageIcon.pixmap(size()).toImage();
   } else {
     idling = false;
-    QArvDecoder::CV2QImage(image_, image);
+    {
+      const int h = image_.rows, w = image_.cols;
+      QSize s = image.size();
+      if (s.height() != h
+          || s.width() != w
+          || image.format() != QImage::Format_ARGB32_Premultiplied)
+        image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
+      if (image_.channels() == 3) {
+        for (int i = 0; i < h; i++) {
+          auto imgLine = image.scanLine(i);
+          auto imageLine = image_.ptr<cv::Vec<uint16_t, 3> >(i);
+          for (int j = 0; j < w; j++) {
+            auto& bgr = imageLine[j];
+            bool clipped;
+            for (int px = 0; px < 3; px++) {
+              uint8_t tmp = bgr[2-px] >> 8;
+              clipped = tmp == 255;
+              imgLine[4*j + px] = tmp;
+            }
+            imgLine[4*j + 3] = 255;
+            if (clipped && markClipped) {
+              imgLine[4*j + 0] = 255;
+              imgLine[4*j + 1] = 0;
+              imgLine[4*j + 2] = 200;
+            }
+          }
+        }
+      } else {
+        for (int i = 0; i < h; i++) {
+          auto imgLine = image.scanLine(i);
+          auto imageLine = image_.ptr<uint16_t>(i);
+          for (int j = 0; j < w; j++) {
+            uint8_t gray = imageLine[j] >> 8;
+            if (gray == 255 && markClipped) {
+              imgLine[4*j + 0] = 255;
+              imgLine[4*j + 1] = 0;
+              imgLine[4*j + 2] = 200;
+            } else {
+              for (int px = 0; px < 3; px++) {
+                imgLine[4*j + px] = gray;
+              }
+            }
+            imgLine[4*j + 3] = 255;
+          }
+        }
+      }
+    }
   }
   if (in.size() != image.size()) {
     in = image.rect();
@@ -185,4 +231,8 @@ void GLVideoWidget::mouseReleaseEvent(QMouseEvent* event) {
     selecting = false;
     emit selectionComplete(rectangle);
   }
+}
+
+void GLVideoWidget::setMarkClipped(bool enable) {
+  markClipped = enable;
 }
