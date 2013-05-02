@@ -559,7 +559,7 @@ void QArvMainWindow::startVideo(bool start) {
       }
       pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
                                       && !open
-                                      && !recording);
+                                      && !started);
     }
   }
   // Set idle image on the histogram.
