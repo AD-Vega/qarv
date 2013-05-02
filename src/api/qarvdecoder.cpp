@@ -26,10 +26,18 @@ extern "C" {
   #include <arvenums.h>
 }
 
-QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
+void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& img) {
   const int h = image.rows, w = image.cols;
+  QSize s = img.size();
+  if (s.height() != h
+      || s.width() != w
+      || img.format() != QImage::Format_RGB888) {
+    if (image.channels() == 1)
+      img = QImage(w, h, QImage::Format_Indexed8);
+    else
+      img = QImage(w, h, QImage::Format_RGB888);
+  }
   if (image.channels() == 1) {
-    QImage img(w, h, QImage::Format_Indexed8);
     img.setColorTable(graymap);
     for (int i = 0; i < h; i++) {
       auto line = image.ptr<uint16_t>(i);
@@ -37,9 +45,7 @@ QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
       for (int j = 0; j < w; j++)
         I[j] = line[j] >> 8;
     }
-    return img;
   } else {
-    QImage img(w, h, QImage::Format_RGB888);
     for (int i = 0; i < h; i++) {
       auto imgLine = img.scanLine(i);
       auto imageLine = image.ptr<cv::Vec<uint16_t, 3> >(i);
@@ -50,8 +56,53 @@ QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
         }
       }
     }
-    return img;
   }
+}
+
+QImage QArvDecoder::CV2QImage_RGB24(const cv::Mat& image) {
+  QImage img;
+  CV2QImage_RGB24(image, img);
+  return img;
+}
+
+void QArvDecoder::CV2QImage(const cv::Mat& image_, QImage& image) {
+  const int h = image_.rows, w = image_.cols;
+  QSize s = image.size();
+  if (s.height() != h
+      || s.width() != w
+      || image.format() != QImage::Format_ARGB32_Premultiplied)
+    image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
+  if (image_.channels() == 3) {
+    for (int i = 0; i < h; i++) {
+      auto imgLine = image.scanLine(i);
+      auto imageLine = image_.ptr<cv::Vec<uint16_t, 3> >(i);
+      for (int j = 0; j < w; j++) {
+        auto& bgr = imageLine[j];
+        for (int px = 0; px < 3; px++) {
+          imgLine[4*j + px] = bgr[2-px] >> 8;
+        }
+        imgLine[4*j + 3] = 255;
+      }
+    }
+  } else {
+    for (int i = 0; i < h; i++) {
+      auto imgLine = image.scanLine(i);
+      auto imageLine = image_.ptr<uint16_t>(i);
+      for (int j = 0; j < w; j++) {
+        uint8_t gray = imageLine[j] >> 8;
+        for (int px = 0; px < 3; px++) {
+          imgLine[4*j + px] = gray;
+        }
+        imgLine[4*j + 3] = 255;
+      }
+    }
+  }
+}
+
+QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
+  QImage img;
+  CV2QImage(image, img);
+  return img;
 }
 
 QList<QArvPixelFormat*> initPluginFormats() {

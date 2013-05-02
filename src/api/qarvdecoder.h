@@ -52,9 +52,20 @@ public:
 
   /*!
    * Convenience function to convert an OpenCV image to QImage. Limited to
-   * formats used by QArv.
+   * formats used by QArv. Returns Format_ARGB32_Premultiplied, which is
+   * fast to render.
    */
+  static void CV2QImage(const cv::Mat& image, QImage& out);
   static QImage CV2QImage(const cv::Mat& image);
+
+  /*!
+   * Alternative version of CV2QImage() which returns either Format_RGB888
+   * or Format_Indexed8, which may be easier to use for direct pixel
+   * manipulation, but are slow to render. Not recommended, for manipulation
+   * cv::Mat should be used instead.
+   */
+  static void CV2QImage_RGB24(const cv::Mat& image, QImage& out);
+  static QImage CV2QImage_RGB24(const cv::Mat& image);
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.
