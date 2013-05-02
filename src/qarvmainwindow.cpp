@@ -392,11 +392,6 @@ void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
   ROI.setWidth((ROI.width() / 2 ) * 2);
   ROI.setHeight((ROI.height() / 2) * 2);
   camera->setROI(ROI);
-  QRect roi = camera->getROI();
-  xSpinbox->setValue(roi.x());
-  ySpinbox->setValue(roi.y());
-  wSpinbox->setValue(roi.width());
-  hSpinbox->setValue(roi.height());
   startVideo(tostart);
 }
 
@@ -404,17 +399,12 @@ void QArvMainWindow::on_resetROIButton_clicked(bool clicked) {
   bool tostart = started;
   startVideo(false);
   camera->setROI(camera->getROIMaxSize());
-  // It needs to be applied twice to reach maximum size.
+  // It needs to be applied twice to reach maximum size because
+  // X and Y decrease available range.
   QRect ROI = camera->getROIMaxSize();
   ROI.setWidth((ROI.width() / 2) * 2);
   ROI.setHeight((ROI.height() / 2) * 2);
   camera->setROI(ROI);
-  readROILimits();
-  QRect roi = camera->getROI();
-  xSpinbox->setValue(roi.x());
-  ySpinbox->setValue(roi.y());
-  wSpinbox->setValue(roi.width());
-  hSpinbox->setValue(roi.height());
   startVideo(tostart);
 }
 
@@ -423,16 +413,6 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
   startVideo(false);
   int bin = binSpinBox->value();
   camera->setBinning(QSize(bin, bin));
-  QSize binsize = camera->getBinning();
-  binSpinBox->blockSignals(true);
-  binSpinBox->setValue(binsize.width());
-  binSpinBox->blockSignals(false);
-  readROILimits();
-  auto roi = camera->getROI();
-  xSpinbox->setValue(roi.x());
-  ySpinbox->setValue(roi.y());
-  wSpinbox->setValue(roi.width());
-  hSpinbox->setValue(roi.height());
   startVideo(tostart);
 }
 
