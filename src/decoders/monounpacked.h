@@ -21,7 +21,6 @@
 
 #include <type_traits>
 #include "api/qarvdecoder.h"
-#include "decoders/graymap.h"
 
 namespace QArv {
 
@@ -61,12 +60,8 @@ public:
     }
   }
 
-  QImage getQImage() {
-    return QArvDecoder::CV2QImage(M);
-  }
-
-  cv::Mat getCvImage() {
-    return M.clone();
+  const cv::Mat getCvImage() {
+    return M;
   }
 };
 

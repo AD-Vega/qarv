@@ -30,8 +30,7 @@ class Mono12PackedDecoder : public QArvDecoder {
 public:
   Mono12PackedDecoder(QSize size_);
   void decode(QByteArray frame);
-  QImage getQImage();
-  cv::Mat getCvImage();
+  const cv::Mat getCvImage();
   ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
 
 private:

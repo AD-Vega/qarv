@@ -96,8 +96,8 @@ private slots:
 private:
   void readROILimits();
   void transformImage(QImage& img);
-  void getNextFrame(QImage* processed,
-                    QImage* unprocessed,
+  void getNextFrame(cv::Mat* processed,
+                    cv::Mat* unprocessed,
                     QByteArray* raw,
                     ArvBuffer** rawAravisBuffer,
                     bool nocopy = false);

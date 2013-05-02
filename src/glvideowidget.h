@@ -24,6 +24,7 @@
 #include <QImage>
 #include <QMouseEvent>
 #include <QIcon>
+#include <opencv2/core/core.hpp>
 
 namespace QArv
 {
@@ -34,7 +35,7 @@ class GLVideoWidget : public QGLWidget {
 public:
   GLVideoWidget(QWidget* parent = NULL);
   ~GLVideoWidget();
-  void setImage(const QImage& image = QImage());
+  void setImage(const cv::Mat& image = cv::Mat());
   QImage getImage();
   void paintGL();
 

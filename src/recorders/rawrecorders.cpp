@@ -96,14 +96,15 @@ public:
 
   void recordFrame(QByteArray raw, bool isDecoded) {
     if (!isDecoded) decoder->decode(raw);
-    QImage img = decoder->getQImage();
+    cv::Mat M = decoder->getCvImage();
+    QArvDecoder::CV2QImage_RGB24(M, temporary);
     int bytesPerLine;
-    if (img.format() == QImage::Format_Indexed8)
-      bytesPerLine = img.width();
+    if (temporary.format() == QImage::Format_Indexed8)
+      bytesPerLine = temporary.width();
     else
-      bytesPerLine = 3*img.width();
-    for (int i = 0; i < img.height(); i++) {
-      auto line = reinterpret_cast<const char*>(img.constScanLine(i));
+      bytesPerLine = 3*temporary.width();
+    for (int i = 0; i < temporary.height(); i++) {
+      auto line = reinterpret_cast<const char*>(temporary.constScanLine(i));
       file.write(line, bytesPerLine);
     }
   }
@@ -111,6 +112,7 @@ public:
 private:
   QFile file;
   QArvDecoder* decoder;
+  QImage temporary;
 };
 
 class RawDecoded16: public Recorder {

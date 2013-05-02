@@ -17,7 +17,6 @@
  */
 
 #include "decoders/mono12packed.h"
-#include "decoders/graymap.h"
 
 using namespace QArv;
 
@@ -60,12 +59,8 @@ void Mono12PackedDecoder::decode(QByteArray frame) {
   }
 }
 
-cv::Mat Mono12PackedDecoder::getCvImage() {
-  return M.clone();
-}
-
-QImage Mono12PackedDecoder::getQImage() {
-  return QArvDecoder::CV2QImage(M);
+const cv::Mat Mono12PackedDecoder::getCvImage() {
+  return M;
 }
 
 Q_EXPORT_PLUGIN2(Mono12Packed, Mono12PackedFormat)

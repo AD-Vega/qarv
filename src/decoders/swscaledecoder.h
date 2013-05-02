@@ -39,8 +39,7 @@ public:
   SwScaleDecoder(QSize size, enum PixelFormat inputPixfmt, ArvPixelFormat arvPixFmt);
   virtual ~SwScaleDecoder();
   void decode(QByteArray frame);
-  QImage getQImage();
-  cv::Mat getCvImage();
+  const cv::Mat getCvImage();
   ArvPixelFormat pixelFormat();
   enum PixelFormat swscalePixelFormat();
 

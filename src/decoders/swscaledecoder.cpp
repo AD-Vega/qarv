@@ -81,14 +81,8 @@ void SwScaleDecoder::decode(QByteArray frame) {
   }
 }
 
-QImage SwScaleDecoder::getQImage() {
-  if (!OK) return QImage();
-  cv::Mat M(size.height(), size.width(), CV_16UC3, buffer);
-  return QArvDecoder::CV2QImage(M);
-}
-
-cv::Mat SwScaleDecoder::getCvImage() {
+const cv::Mat SwScaleDecoder::getCvImage() {
   if (!OK) return cv::Mat();
   cv::Mat M(size.height(), size.width(), CV_16UC3, buffer);
-  return M.clone();
+  return M;
 }

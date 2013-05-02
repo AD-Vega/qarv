@@ -444,8 +444,8 @@ void QArvMainWindow::transformImage(QImage& img) {
   }
 }
 
-void QArvMainWindow::getNextFrame(QImage* processed,
-                              QImage* unprocessed,
+void QArvMainWindow::getNextFrame(cv::Mat* processed,
+                              cv::Mat* unprocessed,
                               QByteArray* raw,
                               ArvBuffer** rawAravisBuffer,
                               bool nocopy) {
@@ -459,21 +459,20 @@ void QArvMainWindow::getNextFrame(QImage* processed,
                                       rawAravisBuffer);
   if (raw != NULL) *raw = frame;
 
-  QImage img;
+  cv::Mat img;
   if (unprocessed != NULL
       || processed != NULL) {
-    if (frame.isEmpty()) {
-      img = invalidImage;
-    } else {
+    if (!frame.isEmpty()) {
       decoder->decode(frame);
-      img = decoder->getQImage();
+      img = decoder->getCvImage();
     }
   }
 
   if (unprocessed != NULL) *unprocessed = img;
 
   if (processed != NULL) {
-    transformImage(img);
+    //TODO
+    //transformImage(img);
     *processed = img;
   }
 }
@@ -481,7 +480,7 @@ void QArvMainWindow::getNextFrame(QImage* processed,
 void QArvMainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame;
-    QImage image;
+    cv::Mat image;
 
     if (playing || drawHistogram)
       getNextFrame(&image, NULL, &frame, NULL, nocopyCheck->isChecked());
@@ -489,12 +488,13 @@ void QArvMainWindow::takeNextFrame() {
     if (playing) video->setImage(image);
 
     if (drawHistogram && !frame.isEmpty()) {
-      histogram->fromImage(image);
+      //TODO
+      //histogram->fromImage(image);
       drawHistogram = false;
     }
 
     if (recording && !frame.isEmpty()) {
-      recorder->recordFrame(frame, !image.isNull());
+      recorder->recordFrame(frame, !image.empty());
       if (! recorder->isOK())
         closeFileButton->setChecked(false);
     }

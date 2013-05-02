@@ -26,6 +26,10 @@
 
 class QArvGuiExtension;
 
+namespace cv {
+  class Mat;
+}
+
 //! QArvGui contains the widget for working with a camera.
 /*! The init() functions should be called to load translations and other setup.
  * After that, the GUI can be instantiated. It will create a widget, accessible
@@ -39,15 +43,15 @@ public:
   ~QArvGui();
 
   //! Fills the non-NULL parameters with the current frame.
-  void getFrame(QImage* processed,
-                QImage* unprocessed,
+  void getFrame(cv::Mat* processed,
+                cv::Mat* unprocessed,
                 QByteArray* raw,
                 ArvBuffer** rawAravisBuffer,
                 bool nocopy);
 
   //! Same as getFrame(), but takes the nocopy parameter from the GUI.
-  void getFrame(QImage* processed,
-                QImage* unprocessed,
+  void getFrame(cv::Mat* processed,
+                cv::Mat* unprocessed,
                 QByteArray* raw,
                 ArvBuffer** rawAravisBuffer);
 

@@ -19,6 +19,7 @@
 
 #include "glvideowidget.h"
 #include "globals.h"
+#include "api/qarvdecoder.h"
 #include <QDebug>
 
 using namespace QArv;
@@ -36,8 +37,6 @@ GLVideoWidget::GLVideoWidget(QWidget* parent) :
   whitepen.setWidth(0);
   whitepen.setStyle(Qt::DotLine);
   blackpen.setWidth(0);
-  setImage(idleImageIcon.pixmap(size()).toImage());
-  idling = true;
 }
 
 GLVideoWidget::~GLVideoWidget() {}
@@ -46,18 +45,18 @@ QImage GLVideoWidget::getImage() {
   return image;
 }
 
-void GLVideoWidget::setImage(const QImage& image_) {
-  if (image_.isNull()) {
+void GLVideoWidget::setImage(const cv::Mat& image_) {
+  if (image_.empty()) {
     idling = true;
     image = idleImageIcon.pixmap(size()).toImage();
   } else {
     idling = false;
-    image = image_;
-    if (in.size() != image.size()) {
-      in = image.rect();
-      QResizeEvent nochange(size(), size());
-      resizeEvent(&nochange);
-    }
+    QArvDecoder::CV2QImage(image_, image);
+  }
+  if (in.size() != image.size()) {
+    in = image.rect();
+    QResizeEvent nochange(size(), size());
+    resizeEvent(&nochange);
   }
   update();
 }
@@ -88,8 +87,8 @@ void GLVideoWidget::resizeEvent(QResizeEvent* event) {
 
 void GLVideoWidget::paintGL() {
   QPainter painter(this);
-  if (in.size() != out.size()) painter.setRenderHint(
-      QPainter::SmoothPixmapTransform);
+  if (in.size() != out.size())
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
   painter.drawImage(out, image);
 
   if (drawRectangle) {

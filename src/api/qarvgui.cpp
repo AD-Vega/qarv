@@ -89,16 +89,16 @@ void QArvGui::signalForwarding(bool enable) {
  * \param rawAravisBuffer See QArvCamera::getFrame().
  * \param nocopy See QArvCamera::getFrame().
  */
-void QArvGui::getFrame(QImage* processed,
-                       QImage* unprocessed,
+void QArvGui::getFrame(cv::Mat* processed,
+                       cv::Mat* unprocessed,
                        QByteArray* raw,
                        ArvBuffer** rawAravisBuffer,
                        bool nocopy) {
   ext->mw->getNextFrame(processed, unprocessed, raw, rawAravisBuffer, nocopy);
 }
 
-void QArvGui::getFrame(QImage* processed,
-                       QImage* unprocessed,
+void QArvGui::getFrame(cv::Mat* processed,
+                       cv::Mat* unprocessed,
                        QByteArray* raw,
                        ArvBuffer** rawAravisBuffer) {
   getFrame(processed, unprocessed, raw, rawAravisBuffer,
