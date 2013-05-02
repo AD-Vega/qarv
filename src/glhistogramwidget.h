@@ -23,6 +23,7 @@
 #include <QGLWidget>
 #include <QMouseEvent>
 #include <QIcon>
+#include <opencv2/core/core.hpp>
 
 namespace QArv
 {
@@ -35,7 +36,7 @@ public:
   ~GLHistogramWidget();
 
   void paintGL();
-  void fromImage(const QImage& image = QImage());
+  void fromImage(const cv::Mat& image = cv::Mat());
 
 public slots:
   void setLogarithmic(bool logarithmic);

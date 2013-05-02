@@ -497,8 +497,7 @@ void QArvMainWindow::takeNextFrame() {
     if (playing) video->setImage(image);
 
     if (drawHistogram && !frame.isEmpty()) {
-      //TODO
-      //histogram->fromImage(image);
+      histogram->fromImage(image);
       drawHistogram = false;
     }
 

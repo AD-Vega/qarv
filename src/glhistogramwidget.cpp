@@ -48,24 +48,20 @@ void GLHistogramWidget::setLogarithmic(bool logarithmic_) {
   logarithmic = logarithmic_;
 }
 
-void GLHistogramWidget::fromImage(const QImage& image) {
-  if (image.isNull()) {
+void GLHistogramWidget::fromImage(const cv::Mat& image) {
+  if (image.empty()) {
     idle = true;
     update();
     return;
   }
   idle = false;
 
-  if (image.format() == QImage::Format_Indexed8) {
+  if (image.channels() == 1) {
     indexed = true;
     for (int i = 0; i < 256; i++)
       histRed[i] = 0;
-    for (int i = 0; i < image.height(); i++) {
-      const uchar* line = image.scanLine(i);
-      for (int j = 0; j < image.width(); j++) {
-        histRed[line[j]] += 1;
-      }
-    }
+    for (auto i = image.begin<uint16_t>(); i != image.end<uint16_t>(); i++)
+        histRed[*i >> 8]++;
     if (logarithmic)
       for (int i = 0; i < 256; i++)
         histRed[i] = log2(histRed[i] + 1);
@@ -73,15 +69,11 @@ void GLHistogramWidget::fromImage(const QImage& image) {
     indexed = false;
     for (int i = 0; i < 256; i++)
       histRed[i] = histGreen[i] = histBlue[i] = 0;
-    auto img = image.convertToFormat(QImage::Format_RGB888);
-    for (int i = 0; i < img.height(); i++) {
-      const uchar* line = img.scanLine(i);
-      for (int j = 0; j < 3*img.width(); j += 3) {
-        histRed[line[j]] += 1;
-        histGreen[line[j+1]] += 1;
-        histBlue[line[j+2]] += 1;
+    for (auto i = image.begin<cv::Vec<uint16_t, 3>>(); i != image.end<cv::Vec<uint16_t, 3>>(); i++) {
+      histBlue[(*i)[0] >> 8]++;
+      histGreen[(*i)[1] >> 8]++;
+      histRed[(*i)[2] >> 8]++;
       }
-    }
     if (logarithmic) {
       float* histograms[] = { histRed, histGreen, histBlue };
       for (int c = 0; c < 3; c++)
