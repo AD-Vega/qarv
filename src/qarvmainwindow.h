@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QFile>
 #include <QTransform>
+#include <QtConcurrentRun>
 
 class QArvGui;
 
@@ -95,14 +96,13 @@ private slots:
 
 private:
   void readROILimits();
-  void transformImage(cv::Mat& img);
   void getNextFrame(cv::Mat* processed,
                     cv::Mat* unprocessed,
                     QByteArray* raw,
                     ArvBuffer** rawAravisBuffer,
                     bool nocopy = false);
 
-  QImage invalidImage;
+  cv::Mat invalidImage;
   QArvCamera* camera;
   QArvDecoder* decoder;
   QRect roirange, roidefault;
@@ -111,7 +111,6 @@ private:
   QTimer* autoreadhistogram;
   bool playing, recording, started, drawHistogram, standalone;
   QTransform imageTransform;
-  bool imageTransform_doFlip;
   int imageTransform_flip, imageTransform_rot;
   uint framecounter;
   QByteArray oldstate, oldgeometry;
@@ -122,6 +121,7 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
+  QFuture<cv::Mat> futureImage;
 
   friend class ::QArvGui;
 };

@@ -40,7 +40,7 @@ const int slidersteps = 1000;
 QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), decoder(NULL), playing(false),
   recording(false), started(false), drawHistogram(false),
-  standalone(standalone_), imageTransform(), imageTransform_doFlip(false),
+  standalone(standalone_), imageTransform(),
   imageTransform_flip(0), imageTransform_rot(0), framecounter(0),
   toDisableWhenPlaying(), toDisableWhenRecording() {
 
@@ -131,6 +131,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   setupListOfSavedWidgets();
   restoreProgramSettings();
+
+  updateImageTransform();
 
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
@@ -419,20 +421,14 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
   startVideo(tostart);
 }
 
-static QVector<QRgb> initHighlightColors() {
-  QVector<QRgb> colors(2);
-  colors[0] = qRgba(255, 0, 200, 0);
-  colors[1] = qRgba(255, 0, 200, 255);
-  return colors;
-}
-
-static QVector<QRgb> highlightColors = initHighlightColors();
-
-void QArvMainWindow::transformImage(cv::Mat& img) {
-  if (invertColors->isChecked())
+cv::Mat transformImage(cv::Mat img,
+                    bool imageTransform_invert,
+                    int imageTransform_flip,
+                    int imageTransform_rot) {
+  if (imageTransform_invert)
     cv::subtract((1<<16)-1, img, img);
 
-  if (imageTransform_doFlip)
+  if (imageTransform_flip != -100)
     cv::flip(img, img, imageTransform_flip);
 
   switch (imageTransform_rot) {
@@ -448,6 +444,17 @@ void QArvMainWindow::transformImage(cv::Mat& img) {
     cv::flip(img, img, 1);
     break;
   }
+  return img;
+}
+
+cv::Mat decodeAndTransformFrame(QByteArray frame,
+                                QArvDecoder* decoder,
+                                bool imageTransform_invert,
+                                int imageTransform_flip,
+                                int imageTransform_rot) {
+  decoder->decode(frame);
+  return transformImage(decoder->getCvImage(), imageTransform_invert,
+                        imageTransform_flip, imageTransform_rot);
 }
 
 void QArvMainWindow::getNextFrame(cv::Mat* processed,
@@ -481,35 +488,41 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
       imgp = imgu.clone();
     else
       imgp = imgu;
-    transformImage(imgp);
+    transformImage(imgp, invertColors->isChecked(),
+                   imageTransform_flip, imageTransform_rot);
     *processed = imgp;
   }
 }
 
 void QArvMainWindow::takeNextFrame() {
   if (playing || recording) {
-    QByteArray frame;
-    cv::Mat image;
+    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(),
+                                        nocopyCheck->isChecked());
+    if (frame.isEmpty()) {
+      if (playing)
+        video->setImage(invalidImage);
+      return ;
+    }
 
-    if (playing || drawHistogram)
-      getNextFrame(&image, NULL, &frame, NULL, nocopyCheck->isChecked());
+    cv::Mat image = decodeAndTransformFrame(frame, decoder,
+                                            invertColors->isChecked(),
+                                            imageTransform_flip,
+                                            imageTransform_rot);
 
     if (playing) video->setImage(image);
 
-    if (drawHistogram && !frame.isEmpty()) {
+    if (drawHistogram) {
       histogram->fromImage(image);
       drawHistogram = false;
     }
 
-    if (recording && !frame.isEmpty()) {
-      recorder->recordFrame(frame, !image.empty());
-      if (! recorder->isOK())
-        closeFileButton->setChecked(false);
-    }
+//     if (recording && !frame.isEmpty()) {
+//       recorder->recordFrame(frame, !image.empty());
+//       if (! recorder->isOK())
+//         closeFileButton->setChecked(false);
+//     }
 
-    if (!frame.isEmpty()) {
-      framecounter++;
-    }
+    framecounter++;
   }
 }
 
@@ -521,8 +534,9 @@ void QArvMainWindow::startVideo(bool start) {
       if (decoder != NULL) delete decoder;
       decoder = QArvPixelFormat::makeDecoder(camera->getPixelFormatId(),
                                              camera->getFrameSize());
-      invalidImage = QImage(camera->getFrameSize(), QImage::Format_RGB32);
-      invalidImage.fill(Qt::red);
+      QSize S = camera->getFrameSize();
+      invalidImage = cv::Mat(S.height(), S.width(),
+                              CV_16UC3, cv::Scalar((1<<16)-1, 0, 0, (1<<16)-1));
       if (decoder == NULL)
         qCritical() << "Decoder for" << camera->getPixelFormat()
                     << "doesn't exist!";
@@ -601,11 +615,12 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       doAppend = false;
 
     auto rct = camera->getROI();
-    recorder.reset(OutputFormat::makeRecorder(decoder,
-                                              filenameEdit->text(),
-                                              videoFormatSelector->currentText(),
-                                              rct.size(), fpsSpinbox->value(),
-                                              doAppend));
+//     recorder.reset(OutputFormat::makeRecorder(decoder,
+//                                               filenameEdit->text(),
+    if (doAppend && rct.width() == 1) qDebug() << "";
+//                                               videoFormatSelector->currentText(),
+//                                               rct.size(), fpsSpinbox->value(),
+//                                               doAppend));
     bool open = recorder && recorder->isOK();
 
     if (!open) {
@@ -712,7 +727,7 @@ void QArvMainWindow::pickedROI(QRect roi) {
   // Compensate for the transform of the image. The actual transform must
   // be calculated using the size of the actual image, so we get this size
   // from the image prepared for invalid frames.
-  auto imagesize = invalidImage.size();
+  auto imagesize = QSize(invalidImage.cols, invalidImage.rows);
   auto truexform = QImage::trueMatrix(imageTransform,
                                       imagesize.width(),
                                       imagesize.height());
@@ -811,14 +826,14 @@ void QArvMainWindow::updateImageTransform() {
                                          currentIndex()).toInt();
   imageTransform.rotate(angle);
 
-  imageTransform_doFlip = flipHorizontal->isChecked()
-                          || flipVertical->isChecked();
   if (flipHorizontal->isChecked() && flipVertical->isChecked())
     imageTransform_flip = -1;
   else if (flipHorizontal->isChecked() && !flipVertical->isChecked())
     imageTransform_flip = 1;
   else if (!flipHorizontal->isChecked() && flipVertical->isChecked())
     imageTransform_flip = 0;
+  else if (!flipHorizontal->isChecked() && !flipVertical->isChecked())
+    imageTransform_flip = -100; // Magic value
   imageTransform_rot = angle / 90;
 }
 
