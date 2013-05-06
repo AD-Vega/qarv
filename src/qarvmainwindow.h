@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QFile>
 #include <QTransform>
+#include <QFutureWatcher>
 
 class QArvGui;
 
@@ -92,6 +93,7 @@ private slots:
   void setupListOfSavedWidgets();
   void saveProgramSettings();
   void restoreProgramSettings();
+  void frameRendered();
 
 private:
   void readROILimits();
@@ -121,6 +123,7 @@ private:
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
   cv::Mat currentFrame;
+  QFutureWatcher<void> futureRender;
 
   friend class ::QArvGui;
 };

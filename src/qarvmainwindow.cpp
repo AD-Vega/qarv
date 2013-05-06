@@ -28,6 +28,7 @@
 #include <QProcess>
 #include <QTextDocument>
 #include <QStatusBar>
+#include <QtConcurrentRun>
 
 #include "api/qarvcameradelegate.h"
 #include "getmtu_linux.h"
@@ -108,6 +109,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
                 SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
+  connect(&futureRender, SIGNAL(finished()), SLOT(frameRendered()));
 
   if (!standalone) {
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
@@ -492,7 +494,9 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
   }
 }
 
-void renderFrame(const cv::Mat& frame, QImage& image, bool markClipped = false) {
+// Interestingly, QtConcurrent::run cannot take reference arguments.
+void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) {
+  QImage& image = *image_;
   const int h = frame.rows, w = frame.cols;
   QSize s = image.size();
   if (s.height() != h
@@ -555,10 +559,11 @@ void QArvMainWindow::takeNextFrame() {
                                            imageTransform_flip,
                                            imageTransform_rot);
 
-    if (playing) {
-      QImage& qimg = video->unusedFrame();
-      renderFrame(currentFrame, qimg, markClipped->isChecked());
-      video->swapFrames();
+    if (playing && !futureRender.isRunning()) {
+      futureRender.setFuture(QtConcurrent::run(renderFrame,
+                                               currentFrame,
+                                               &(video->unusedFrame()),
+                                               markClipped->isChecked()));
     }
 
     if (drawHistogram) {
@@ -574,6 +579,11 @@ void QArvMainWindow::takeNextFrame() {
 
     framecounter++;
   }
+}
+
+void QArvMainWindow::frameRendered() {
+  if (playing)
+    video->swapFrames();
 }
 
 void QArvMainWindow::startVideo(bool start) {
