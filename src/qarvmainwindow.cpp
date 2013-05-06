@@ -582,7 +582,7 @@ void QArvMainWindow::takeNextFrame() {
       return ;
     }
 
-    currentFrame = decodeAndTransformFrame(frame, decoder,
+    auto decoded = decodeAndTransformFrame(frame, decoder,
                                            invertColors->isChecked(),
                                            imageTransform_flip,
                                            imageTransform_rot);
@@ -596,6 +596,7 @@ void QArvMainWindow::takeNextFrame() {
       } else {
         hists = nullptr;
       }
+      currentFrame = decoded.clone();
       futureRender.setFuture(QtConcurrent::run(renderFrame,
                                                currentFrame,
                                                video->unusedFrame(),
@@ -605,7 +606,7 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (recording) {
-      recorder->recordFrame(frame, currentFrame);
+      recorder->recordFrame(frame, decoded);
       if (! recorder->isOK())
         closeFileButton->setChecked(false);
     }
