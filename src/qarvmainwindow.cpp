@@ -550,19 +550,19 @@ void QArvMainWindow::takeNextFrame() {
       return ;
     }
 
-    cv::Mat image = decodeAndTransformFrame(frame, decoder,
-                                            invertColors->isChecked(),
-                                            imageTransform_flip,
-                                            imageTransform_rot);
+    currentFrame = decodeAndTransformFrame(frame, decoder,
+                                           invertColors->isChecked(),
+                                           imageTransform_flip,
+                                           imageTransform_rot);
 
     if (playing) {
       QImage& qimg = video->unusedFrame();
-      renderFrame(image, qimg, markClipped->isChecked());
+      renderFrame(currentFrame, qimg, markClipped->isChecked());
       video->swapFrames();
     }
 
     if (drawHistogram) {
-      histogram->fromImage(image);
+      histogram->fromImage(currentFrame);
       drawHistogram = false;
     }
 
@@ -736,9 +736,7 @@ void QArvMainWindow::on_snapButton_clicked(bool checked) {
                      + snapbasenameEdit->text()
                      + time.toString("yyyy-MM-dd-hhmmss.zzz");
   if (snapshotPNG->isChecked()) {
-    //auto img = video->getImage();
-    // TODO
-    QImage img;
+    QImage img = QArvDecoder::CV2QImage_RGB24(currentFrame);
     if (!img.save(fileName + ".png"))
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);

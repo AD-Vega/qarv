@@ -120,6 +120,7 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
+  cv::Mat currentFrame;
 
   friend class ::QArvGui;
 };
