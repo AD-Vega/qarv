@@ -30,7 +30,6 @@
 #include <QTimer>
 #include <QFile>
 #include <QTransform>
-#include <QtConcurrentRun>
 
 class QArvGui;
 
@@ -102,7 +101,7 @@ private:
                     ArvBuffer** rawAravisBuffer,
                     bool nocopy = false);
 
-  cv::Mat invalidImage;
+  QImage invalidImage;
   QArvCamera* camera;
   QArvDecoder* decoder;
   QRect roirange, roidefault;
@@ -121,7 +120,6 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
-  QFuture<cv::Mat> futureImage;
 
   friend class ::QArvGui;
 };

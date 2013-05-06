@@ -108,8 +108,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
                 SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
-  video->connect(markClipped, SIGNAL(toggled(bool)),
-                 SLOT(setMarkClipped(bool)));
 
   if (!standalone) {
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
@@ -178,7 +176,7 @@ void QArvMainWindow::on_unzoomButton_toggled(bool checked) {
     oldstate = saveState();
     oldgeometry = saveGeometry();
     oldsize = video->size();
-    QSize newsize = video->getImage().size();
+    QSize newsize = video->getImageSize();
     video->setFixedSize(newsize);
   } else {
     video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -494,6 +492,54 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
   }
 }
 
+void renderFrame(const cv::Mat& frame, QImage& image, bool markClipped = false) {
+  const int h = frame.rows, w = frame.cols;
+  QSize s = image.size();
+  if (s.height() != h
+      || s.width() != w
+      || image.format() != QImage::Format_ARGB32_Premultiplied)
+    image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
+  if (frame.channels() == 3) {
+    for (int i = 0; i < h; i++) {
+      auto imgLine = image.scanLine(i);
+      auto imageLine = frame.ptr<cv::Vec<uint16_t, 3> >(i);
+      for (int j = 0; j < w; j++) {
+        auto& bgr = imageLine[j];
+        bool clipped;
+        for (int px = 0; px < 3; px++) {
+          uint8_t tmp = bgr[2-px] >> 8;
+          clipped = tmp == 255;
+          imgLine[4*j + px] = tmp;
+        }
+        imgLine[4*j + 3] = 255;
+        if (clipped && markClipped) {
+          imgLine[4*j + 0] = 255;
+          imgLine[4*j + 1] = 0;
+          imgLine[4*j + 2] = 200;
+        }
+      }
+    }
+  } else {
+    for (int i = 0; i < h; i++) {
+      auto imgLine = image.scanLine(i);
+      auto imageLine = frame.ptr<uint16_t>(i);
+      for (int j = 0; j < w; j++) {
+        uint8_t gray = imageLine[j] >> 8;
+        if (gray == 255 && markClipped) {
+          imgLine[4*j + 0] = 255;
+          imgLine[4*j + 1] = 0;
+          imgLine[4*j + 2] = 200;
+        } else {
+          for (int px = 0; px < 3; px++) {
+            imgLine[4*j + px] = gray;
+          }
+        }
+        imgLine[4*j + 3] = 255;
+      }
+    }
+  }
+}
+
 void QArvMainWindow::takeNextFrame() {
   if (playing || recording) {
     QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(),
@@ -509,7 +555,11 @@ void QArvMainWindow::takeNextFrame() {
                                             imageTransform_flip,
                                             imageTransform_rot);
 
-    if (playing) video->setImage(image);
+    if (playing) {
+      QImage& qimg = video->unusedFrame();
+      renderFrame(image, qimg, markClipped->isChecked());
+      video->swapFrames();
+    }
 
     if (drawHistogram) {
       histogram->fromImage(image);
@@ -534,9 +584,9 @@ void QArvMainWindow::startVideo(bool start) {
       if (decoder != NULL) delete decoder;
       decoder = QArvPixelFormat::makeDecoder(camera->getPixelFormatId(),
                                              camera->getFrameSize());
-      QSize S = camera->getFrameSize();
-      invalidImage = cv::Mat(S.height(), S.width(),
-                              CV_16UC3, cv::Scalar((1<<16)-1, 0, 0, (1<<16)-1));
+      invalidImage = QImage(camera->getFrameSize(),
+                            QImage::Format_ARGB32_Premultiplied);
+      invalidImage.fill(Qt::red);
       if (decoder == NULL)
         qCritical() << "Decoder for" << camera->getPixelFormat()
                     << "doesn't exist!";
@@ -686,7 +736,9 @@ void QArvMainWindow::on_snapButton_clicked(bool checked) {
                      + snapbasenameEdit->text()
                      + time.toString("yyyy-MM-dd-hhmmss.zzz");
   if (snapshotPNG->isChecked()) {
-    auto img = video->getImage();
+    //auto img = video->getImage();
+    // TODO
+    QImage img;
     if (!img.save(fileName + ".png"))
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);
@@ -727,7 +779,7 @@ void QArvMainWindow::pickedROI(QRect roi) {
   // Compensate for the transform of the image. The actual transform must
   // be calculated using the size of the actual image, so we get this size
   // from the image prepared for invalid frames.
-  auto imagesize = QSize(invalidImage.cols, invalidImage.rows);
+  auto imagesize = invalidImage.size();
   auto truexform = QImage::trueMatrix(imageTransform,
                                       imagesize.width(),
                                       imagesize.height());

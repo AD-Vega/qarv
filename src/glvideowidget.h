@@ -35,14 +35,15 @@ class GLVideoWidget : public QGLWidget {
 public:
   GLVideoWidget(QWidget* parent = NULL);
   ~GLVideoWidget();
-  void setImage(const cv::Mat& image = cv::Mat());
-  QImage getImage();
   void paintGL();
+  QImage& unusedFrame();
+  void swapFrames();
+  void setImage(const QImage& image_ = QImage());
+  QSize getImageSize();
 
 public slots:
   void enableSelection(bool enable);
   void setSelectionSize(QSize size);
-  void setMarkClipped(bool enable);
 
 signals:
   void selectionComplete(QRect region);
@@ -53,7 +54,7 @@ private:
   virtual void mouseReleaseEvent(QMouseEvent* event);
   virtual void resizeEvent(QResizeEvent* event);
 
-  QImage image;
+  QImage image, unusedImage;
   QRect in, out;
   QIcon idleImageIcon;
 
@@ -62,7 +63,6 @@ private:
   QRect rectangle, drawnRectangle;
   QSize fixedSize;
   QPen whitepen, blackpen;
-  bool markClipped;
 };
 
 }
