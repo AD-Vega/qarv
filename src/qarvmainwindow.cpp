@@ -604,11 +604,11 @@ void QArvMainWindow::takeNextFrame() {
                                                histogramLog->isChecked()));
     }
 
-//     if (recording && !frame.isEmpty()) {
-//       recorder->recordFrame(frame, !image.empty());
-//       if (! recorder->isOK())
-//         closeFileButton->setChecked(false);
-//     }
+    if (recording) {
+      recorder->recordFrame(frame, currentFrame);
+      if (! recorder->isOK())
+        closeFileButton->setChecked(false);
+    }
 
     framecounter++;
   }
@@ -712,12 +712,11 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       doAppend = false;
 
     auto rct = camera->getROI();
-//     recorder.reset(OutputFormat::makeRecorder(decoder,
-//                                               filenameEdit->text(),
-    if (doAppend && rct.width() == 1) qDebug() << "";
-//                                               videoFormatSelector->currentText(),
-//                                               rct.size(), fpsSpinbox->value(),
-//                                               doAppend));
+    recorder.reset(OutputFormat::makeRecorder(decoder,
+                                              filenameEdit->text(),
+                                              videoFormatSelector->currentText(),
+                                              rct.size(), fpsSpinbox->value(),
+                                              doAppend));
     bool open = recorder && recorder->isOK();
 
     if (!open) {

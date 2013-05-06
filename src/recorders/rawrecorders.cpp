@@ -63,7 +63,7 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, bool isDecoded) {
+  void recordFrame(QByteArray raw, cv::Mat decoded) {
     file.write(raw);
   }
 
@@ -94,10 +94,8 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, bool isDecoded) {
-    if (!isDecoded) decoder->decode(raw);
-    cv::Mat M = decoder->getCvImage();
-    QArvDecoder::CV2QImage_RGB24(M, temporary);
+  void recordFrame(QByteArray raw, cv::Mat decoded) {
+    QArvDecoder::CV2QImage_RGB24(decoded, temporary);
     int bytesPerLine;
     if (temporary.format() == QImage::Format_Indexed8)
       bytesPerLine = temporary.width();
@@ -137,9 +135,8 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, bool isDecoded) {
-    if (!isDecoded) decoder->decode(raw);
-    cv::Mat M = decoder->getCvImage();
+  void recordFrame(QByteArray raw, cv::Mat decoded) {
+    auto& M = decoded;
     // The image is assumed contiguous, as cv::Mat is by default.
     assert(M.isContinuous());
     if (M.channels() == 1) {

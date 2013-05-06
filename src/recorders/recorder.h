@@ -37,7 +37,7 @@ public:
    * already loaded this frame into the decoder that this recorder uses. If
    * so, it will not be decoded again.
    */
-  virtual void recordFrame(QByteArray raw, bool isDecoded = false) = 0;
+  virtual void recordFrame(QByteArray raw, cv::Mat decoded) = 0;
 };
 
 class OutputFormat {
