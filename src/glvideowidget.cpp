@@ -68,8 +68,8 @@ void GLVideoWidget::swapFrames() {
   update();
 }
 
-QImage& GLVideoWidget::unusedFrame() {
-  return unusedImage;
+QImage* GLVideoWidget::unusedFrame() {
+  return &unusedImage;
 }
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {

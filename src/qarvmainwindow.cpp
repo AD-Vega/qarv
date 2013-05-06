@@ -598,7 +598,7 @@ void QArvMainWindow::takeNextFrame() {
       }
       futureRender.setFuture(QtConcurrent::run(renderFrame,
                                                currentFrame,
-                                               &(video->unusedFrame()),
+                                               video->unusedFrame(),
                                                markClipped->isChecked(),
                                                hists,
                                                histogramLog->isChecked()));

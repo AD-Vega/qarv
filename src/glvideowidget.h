@@ -36,7 +36,7 @@ public:
   GLVideoWidget(QWidget* parent = NULL);
   ~GLVideoWidget();
   void paintGL();
-  QImage& unusedFrame();
+  QImage* unusedFrame();
   void swapFrames();
   void setImage(const QImage& image_ = QImage());
   QSize getImageSize();
