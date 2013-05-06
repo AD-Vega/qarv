@@ -43,7 +43,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   recording(false), started(false), drawHistogram(false),
   standalone(standalone_), imageTransform(),
   imageTransform_flip(0), imageTransform_rot(0), framecounter(0),
-  toDisableWhenPlaying(), toDisableWhenRecording() {
+  toDisableWhenPlaying(), toDisableWhenRecording(), futureHoldsAHistogram(false) {
 
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -495,7 +495,20 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
 }
 
 // Interestingly, QtConcurrent::run cannot take reference arguments.
-void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) {
+void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
+                 Histograms* hists = NULL, bool logarithmic = false) {
+  bool grayscale = frame.channels() == 1;
+  float * histRed, * histGreen, * histBlue;
+  if (hists) {
+    histRed = hists->red;
+    histGreen = hists->green;
+    histBlue = hists->blue;
+    for (int i = 0; i < 256; i++) {
+      histRed[i] = histGreen[i] = histBlue[i] = 0;
+    }
+  } else {
+    histRed = histGreen = histBlue = NULL;
+  }
   QImage& image = *image_;
   const int h = frame.rows, w = frame.cols;
   QSize s = image.size();
@@ -503,7 +516,8 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) 
       || s.width() != w
       || image.format() != QImage::Format_ARGB32_Premultiplied)
     image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
-  if (frame.channels() == 3) {
+  if (!grayscale) {
+    float* histograms[3] = { histRed, histGreen, histBlue };
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
       auto imageLine = frame.ptr<cv::Vec<uint16_t, 3> >(i);
@@ -512,6 +526,8 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) 
         bool clipped;
         for (int px = 0; px < 3; px++) {
           uint8_t tmp = bgr[2-px] >> 8;
+          if (hists)
+            histograms[px][tmp]++;
           clipped = tmp == 255;
           imgLine[4*j + px] = tmp;
         }
@@ -523,12 +539,21 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) 
         }
       }
     }
+    if (hists && logarithmic) {;
+      for (int c = 0; c < 3; c++)
+        for (int i = 0; i < 256; i++) {
+          float* h = histograms[c] + i;
+          *h = log2(*h + 1);
+        }
+    }
   } else {
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
       auto imageLine = frame.ptr<uint16_t>(i);
       for (int j = 0; j < w; j++) {
         uint8_t gray = imageLine[j] >> 8;
+        if (hists)
+          histRed[gray]++;
         if (gray == 255 && markClipped) {
           imgLine[4*j + 0] = 255;
           imgLine[4*j + 1] = 0;
@@ -541,6 +566,9 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false) 
         imgLine[4*j + 3] = 255;
       }
     }
+    if (hists && logarithmic)
+      for (int i = 0; i < 256; i++)
+        histRed[i] = log2(histRed[i] + 1);
   }
 }
 
@@ -559,16 +587,21 @@ void QArvMainWindow::takeNextFrame() {
                                            imageTransform_flip,
                                            imageTransform_rot);
 
-    if (playing && !futureRender.isRunning()) {
+    if ((playing || drawHistogram) && !futureRender.isRunning()) {
+      Histograms* hists;
+      if (drawHistogram) {
+        futureHoldsAHistogram = true;
+        drawHistogram = false;
+        hists = histogram->unusedHistograms();
+      } else {
+        hists = nullptr;
+      }
       futureRender.setFuture(QtConcurrent::run(renderFrame,
                                                currentFrame,
                                                &(video->unusedFrame()),
-                                               markClipped->isChecked()));
-    }
-
-    if (drawHistogram) {
-      histogram->fromImage(currentFrame);
-      drawHistogram = false;
+                                               markClipped->isChecked(),
+                                               hists,
+                                               histogramLog->isChecked()));
     }
 
 //     if (recording && !frame.isEmpty()) {
@@ -584,6 +617,10 @@ void QArvMainWindow::takeNextFrame() {
 void QArvMainWindow::frameRendered() {
   if (playing)
     video->swapFrames();
+  if (futureHoldsAHistogram) {
+    futureHoldsAHistogram = false;
+    histogram->swapHistograms(currentFrame.channels() == 1);
+  }
 }
 
 void QArvMainWindow::startVideo(bool start) {

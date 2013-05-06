@@ -23,12 +23,11 @@
 
 using namespace QArv;
 
-GLHistogramWidget::GLHistogramWidget(QWidget* parent) : QGLWidget() {
+GLHistogramWidget::GLHistogramWidget(QWidget* parent) :
+  QGLWidget(), unusedHists(&histograms2), histRed(histograms1.red),
+  histGreen(histograms1.green), histBlue(histograms1.blue) {
   indexed = true;
   logarithmic = false;
-  histRed = new float[256];
-  histGreen = new float[256];
-  histBlue = new float[256];
   QFile iconfile(QString(qarv_datafiles)
                  + "/view-object-histogram-linear.svgz");
   if (iconfile.exists())
@@ -36,12 +35,6 @@ GLHistogramWidget::GLHistogramWidget(QWidget* parent) : QGLWidget() {
   else
     idleImageIcon = QIcon::fromTheme("view-object-histogram-linear");
   fromImage();
-}
-
-GLHistogramWidget::~GLHistogramWidget() {
-  delete[] histRed;
-  delete[] histGreen;
-  delete[] histBlue;
 }
 
 void GLHistogramWidget::setLogarithmic(bool logarithmic_) {
@@ -83,6 +76,23 @@ void GLHistogramWidget::fromImage(const cv::Mat& image) {
         }
     }
   }
+  update();
+}
+
+Histograms* GLHistogramWidget::unusedHistograms() {
+  return unusedHists;
+}
+
+void GLHistogramWidget::swapHistograms(bool grayscale) {
+  idle = false;
+  indexed = grayscale;
+  histRed = unusedHists->red;
+  histGreen = unusedHists->green;
+  histBlue = unusedHists->blue;
+  if (unusedHists == &histograms1)
+    unusedHists = &histograms2;
+  else
+    unusedHists = &histograms1;
   update();
 }
 

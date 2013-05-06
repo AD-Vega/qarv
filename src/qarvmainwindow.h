@@ -124,6 +124,7 @@ private:
   QScopedPointer<Recorder> recorder;
   cv::Mat currentFrame;
   QFutureWatcher<void> futureRender;
+  bool futureHoldsAHistogram;
 
   friend class ::QArvGui;
 };
