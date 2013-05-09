@@ -663,7 +663,7 @@ void QArvMainWindow::startVideo(bool start) {
     }
   }
   // Set idle image on the histogram.
-  histogram->fromImage();
+  histogram->setIdle();
 }
 
 void QArvMainWindow::on_playButton_clicked(bool checked) {

@@ -34,49 +34,19 @@ GLHistogramWidget::GLHistogramWidget(QWidget* parent) :
     idleImageIcon = QIcon(iconfile.fileName());
   else
     idleImageIcon = QIcon::fromTheme("view-object-histogram-linear");
-  fromImage();
+  setIdle();
 }
 
 void GLHistogramWidget::setLogarithmic(bool logarithmic_) {
   logarithmic = logarithmic_;
 }
 
-void GLHistogramWidget::fromImage(const cv::Mat& image) {
-  if (image.empty()) {
+
+
+void GLHistogramWidget::setIdle() {
     idle = true;
     update();
     return;
-  }
-  idle = false;
-
-  if (image.channels() == 1) {
-    indexed = true;
-    for (int i = 0; i < 256; i++)
-      histRed[i] = 0;
-    for (auto i = image.begin<uint16_t>(); i != image.end<uint16_t>(); i++)
-        histRed[*i >> 8]++;
-    if (logarithmic)
-      for (int i = 0; i < 256; i++)
-        histRed[i] = log2(histRed[i] + 1);
-  } else {
-    indexed = false;
-    for (int i = 0; i < 256; i++)
-      histRed[i] = histGreen[i] = histBlue[i] = 0;
-    for (auto i = image.begin<cv::Vec<uint16_t, 3>>(); i != image.end<cv::Vec<uint16_t, 3>>(); i++) {
-      histBlue[(*i)[0] >> 8]++;
-      histGreen[(*i)[1] >> 8]++;
-      histRed[(*i)[2] >> 8]++;
-      }
-    if (logarithmic) {
-      float* histograms[] = { histRed, histGreen, histBlue };
-      for (int c = 0; c < 3; c++)
-        for (int i = 0; i < 256; i++) {
-          float* h = histograms[c] + i;
-          *h = log2(*h + 1);
-        }
-    }
-  }
-  update();
 }
 
 Histograms* GLHistogramWidget::unusedHistograms() {

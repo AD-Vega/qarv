@@ -39,7 +39,7 @@ public:
   GLHistogramWidget(QWidget* parent = 0);
 
   void paintGL();
-  void fromImage(const cv::Mat& image = cv::Mat());
+  void setIdle();
   Histograms* unusedHistograms();
   void swapHistograms(bool grayscale);
 
