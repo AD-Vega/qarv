@@ -22,11 +22,18 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QPluginLoader>
 #include <QMap>
+#include <QDebug>
 extern "C" {
   #include <arvenums.h>
 }
 
 void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& img) {
+  if (image.depth() == CV_8U) {
+    //TODO
+    img = QImage();
+    qDebug() << "Rendering from 8-bit image not implemented yet";
+    return;
+  }
   const int h = image.rows, w = image.cols;
   QSize s = img.size();
   if (s.height() != h
@@ -66,6 +73,12 @@ QImage QArvDecoder::CV2QImage_RGB24(const cv::Mat& image) {
 }
 
 void QArvDecoder::CV2QImage(const cv::Mat& image_, QImage& image) {
+  if (image.depth() == CV_8U) {
+    //TODO
+    image = QImage();
+    qDebug() << "Rendering from 8-bit image not implemented yet";
+    return;
+  }
   const int h = image_.rows, w = image_.cols;
   QSize s = image.size();
   if (s.height() != h
