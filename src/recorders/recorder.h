@@ -33,9 +33,8 @@ public:
   virtual bool isOK() = 0;
 
   /*!
-   * Write a single frame. The isDecoded parameter specifies whether the GUI
-   * already loaded this frame into the decoder that this recorder uses. If
-   * so, it will not be decoded again.
+   * Write a single frame. Both raw and decoded forms must be provided, it
+   * is up to the recorder to decide whether the decoded form is useful.
    */
   virtual void recordFrame(QByteArray raw, cv::Mat decoded) = 0;
 };

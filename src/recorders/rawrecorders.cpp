@@ -21,6 +21,7 @@
 #include <QSettings>
 #include <QRegExp>
 #include <QFileInfo>
+#include <QDebug>
 extern "C" {
 #include <libavutil/pixdesc.h>
 }
@@ -64,7 +65,8 @@ public:
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    file.write(raw);
+    if (isOK())
+      file.write(raw);
   }
 
 private:
@@ -79,38 +81,65 @@ public:
               QSize size,
               int FPS,
               bool appendToFile) :
-    file(fileName), decoder(decoder_) {
+    file(fileName), decoder(decoder_), OK(true) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
     if (isOK() && !appendToFile) {
+      enum PixelFormat fmt;
+      switch (decoder->cvType()) {
+      case CV_8UC1:
+      case CV_16UC1:
+        fmt = PIX_FMT_GRAY8;
+        temporary.create(size.height(), size.width(), CV_8UC1);
+        break;
+      case CV_8UC3:
+      case CV_16UC3:
+        fmt = PIX_FMT_BGR24;
+        temporary.create(size.height(), size.width(), CV_8UC3);
+        break;
+      default:
+        qDebug() << "Recorder: Invalid CV image format";
+        return;
+      }
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);
       initDescfile(s, size, FPS);
       s.setValue("encoding_type", "libavutil");
-      s.setValue("libavutil_pixel_format", PIX_FMT_GRAY8);
-      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(PIX_FMT_GRAY8));
+      s.setValue("libavutil_pixel_format", fmt);
+      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
     }
   }
 
   bool isOK() {
-    return file.isOpen() && (file.error() == QFile::NoError);
+    return OK && file.isOpen() && (file.error() == QFile::NoError);
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    QArvDecoder::CV2QImage_RGB24(decoded, temporary);
-    int bytesPerLine;
-    if (temporary.format() == QImage::Format_Indexed8)
-      bytesPerLine = temporary.width();
-    else
-      bytesPerLine = 3*temporary.width();
-    for (int i = 0; i < temporary.height(); i++) {
-      auto line = reinterpret_cast<const char*>(temporary.constScanLine(i));
-      file.write(line, bytesPerLine);
+    if (!decoded.isContinuous()) {
+      qDebug() << "Image is not continuous!";
+      OK = false;
+    }
+    if (!isOK())
+      return;
+    if (decoded.depth() == CV_8U) {
+      file.write(reinterpret_cast<char*>(decoded.data),
+                 decoded.total()*decoded.elemSize1());
+    } else {
+      auto out = temporary.ptr<uint8_t>(0);
+      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
+           in != end; ) {
+        *out = (*in) >> 8;
+        out++;
+        in++;
+      }
+      file.write(reinterpret_cast<char*>(temporary.data),
+                 temporary.total()*temporary.elemSize1());
     }
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
-  QImage temporary;
+  bool OK;
+  cv::Mat temporary;
 };
 
 class RawDecoded16: public Recorder {
@@ -120,44 +149,65 @@ public:
                QSize size,
                int FPS,
                bool appendToFile) :
-    file(fileName), decoder(decoder_) {
+    file(fileName), decoder(decoder_), OK(true) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
     if (isOK() && !appendToFile) {
+      enum PixelFormat fmt;
+      switch (decoder->cvType()) {
+      case CV_8UC1:
+      case CV_16UC1:
+        fmt = PIX_FMT_GRAY16;
+        temporary.create(size.height(), size.width(), CV_16UC1);
+        break;
+      case CV_8UC3:
+      case CV_16UC3:
+        fmt = PIX_FMT_BGR48;
+        temporary.create(size.height(), size.width(), CV_16UC3);
+        break;
+      default:
+        qDebug() << "Recorder: Invalid CV image format";
+        return;
+      }
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);
       initDescfile(s, size, FPS);
       s.setValue("encoding_type", "libavutil");
-      s.setValue("libavutil_pixel_format", PIX_FMT_GRAY16);
-      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(PIX_FMT_GRAY16));
+      s.setValue("libavutil_pixel_format", fmt);
+      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
     }
   }
 
   bool isOK() {
-    return file.isOpen() && (file.error() == QFile::NoError);
+    return OK && file.isOpen() && (file.error() == QFile::NoError);
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    auto& M = decoded;
-    // The image is assumed contiguous, as cv::Mat is by default.
-    assert(M.isContinuous());
-    if (M.channels() == 1) {
-      file.write(M.ptr<const char>(), M.total() * M.elemSize());
+    if (!decoded.isContinuous()) {
+      qDebug() << "Image is not continuous!";
+      OK = false;
+    }
+    if (!isOK())
+      return;
+    if (decoded.depth() == CV_16U) {
+      file.write(reinterpret_cast<char*>(decoded.data),
+                 decoded.total()*decoded.elemSize1());
     } else {
-      for(int i = 0; i < M.rows; i++) {
-        auto Mr = M.ptr<cv::Vec<uint16_t, 3> >(i);
-        for (int j = 0; j < M.cols; j++) {
-          const auto& bgr = Mr[j];
-          for (int px = 0; px < 3; px++) {
-            auto bytes = reinterpret_cast<const char*>(&(bgr[2 - px]));
-            file.write(bytes, 2);
-          }
-        }
+      auto out = temporary.ptr<uint16_t>(0);
+      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
+           in != end;) {
+        *out = (*in) << 8;
+        out++;
+        in++;
       }
+      file.write(reinterpret_cast<char*>(temporary.data),
+                 temporary.total()*temporary.elemSize1());
     }
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
+  bool OK;
+  cv::Mat temporary;
 };
 
 Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,
