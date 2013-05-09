@@ -40,6 +40,7 @@ public:
   virtual ~SwScaleDecoder();
   void decode(QByteArray frame);
   const cv::Mat getCvImage();
+  int cvType();
   ArvPixelFormat pixelFormat();
   enum PixelFormat swscalePixelFormat();
 
@@ -49,8 +50,10 @@ private:
   struct SwsContext* ctx;
   uint8_t* image_pointers[3];
   int image_strides[3];
-  uint16_t* buffer;
-  enum PixelFormat inputPixfmt;
+  uint8_t* buffer;
+  uint8_t bufferBytesPerPixel;
+  int cvMatType;
+  enum PixelFormat inputPixfmt, outputPixFmt;
   struct AVPicture srcInfo;
   ArvPixelFormat arvPixelFormat;
 };

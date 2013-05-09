@@ -27,7 +27,8 @@ extern "C" {
 
 using namespace QArv;
 
-SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_, ArvPixelFormat arvPixFmt) :
+SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
+                               ArvPixelFormat arvPixFmt) :
   size(size_), image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 },
   inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
   if (size.width() != (size.width() / 2) * 2
@@ -37,12 +38,24 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_, ArvPixelFo
     return;
   }
   if (sws_isSupportedInput(inputPixfmt) > 0) {
+    int bitsPerPixel =
+      av_get_bits_per_pixel(av_pix_fmt_descriptors + inputPixfmt);
+    uint8_t components = av_pix_fmt_descriptors[inputPixfmt].nb_components;
+    if (bitsPerPixel / components > 8) {
+      outputPixFmt = PIX_FMT_BGR48;
+      cvMatType = CV_16UC3;
+      bufferBytesPerPixel = 6;
+    } else {
+      outputPixFmt = PIX_FMT_BGR24;
+      cvMatType = CV_8UC3;
+      bufferBytesPerPixel = 3;
+    }
     OK = true;
-    image_strides[0] = 3 * sizeof(uint16_t) * size.width();
-    buffer = new uint16_t[size.width()*size.height()*3];
-    image_pointers[0] = reinterpret_cast<uint8_t*>(buffer);
+    image_strides[0] = bufferBytesPerPixel * size.width();
+    buffer = new uint8_t[size.width()*size.height()*bufferBytesPerPixel];
+    image_pointers[0] = buffer;
     ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
-                         size.width(), size.height(), PIX_FMT_BGR48,
+                         size.width(), size.height(), outputPixFmt,
                          SWS_BICUBIC, 0, 0, 0);
   } else {
     qDebug() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
@@ -66,6 +79,10 @@ PixelFormat SwScaleDecoder::swscalePixelFormat() {
   return inputPixfmt;
 }
 
+int SwScaleDecoder::cvType() {
+  return cvMatType;
+}
+
 void SwScaleDecoder::decode(QByteArray frame) {
   if (!OK) return;
   auto dataptr = reinterpret_cast<const uint8_t*>(frame.constData());
@@ -83,6 +100,6 @@ void SwScaleDecoder::decode(QByteArray frame) {
 
 const cv::Mat SwScaleDecoder::getCvImage() {
   if (!OK) return cv::Mat();
-  cv::Mat M(size.height(), size.width(), CV_16UC3, buffer);
+  cv::Mat M(size.height(), size.width(), cvMatType, buffer);
   return M;
 }

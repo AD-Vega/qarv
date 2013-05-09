@@ -42,10 +42,17 @@ public:
   virtual void decode(QByteArray frame) = 0;
 
   /*!
-   * Returns the decoded frame as an OpenCv matrix, CV_16U, either 1 or 3 channels.
-   * The matrix is constant to avoid copying.
+   * Returns the decoded frame as an OpenCv matrix. See cvType() for possible
+   * types. The matrix is constant to avoid copying.
    */
   virtual const cv::Mat getCvImage() = 0;
+
+  /*!
+   * Returns the type of cv::Mat returned by getCvImage(). The decoder chooses
+   * the most sensible type given the number of significant bits in input data.
+   * Possible types are either CV_8U or CV_16U, with 1 or 3 channels.
+   */
+  virtual int cvType() = 0;
 
   //! Returns the pixel format supported by this decoder.
   virtual ArvPixelFormat pixelFormat() = 0;

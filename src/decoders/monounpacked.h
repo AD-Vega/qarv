@@ -33,24 +33,29 @@ class MonoUnpackedDecoder : public QArvDecoder {
 private:
   QSize size;
   cv::Mat M;
+  static const bool OutputIsChar = bitsPerPixel <= 8;
+  typedef typename std::conditional<OutputIsChar, uint8_t, uint16_t>::type OutputType;
+  static const int cvMatType = OutputIsChar ? CV_8UC1 : CV_16UC1;
   static const bool typeIsSigned = std::is_signed<InputType>::value;
-  static const uint zeroBits = 8*sizeof(uint16_t) - bitsPerPixel;
+  static const uint zeroBits = 8*sizeof(OutputType) - bitsPerPixel;
   static const uint signedShiftBits = bitsPerPixel - 1;
 
 public:
   MonoUnpackedDecoder(QSize size_) :
-    size(size_), M(size_.height(), size_.width(), CV_16U) {}
+    size(size_), M(size_.height(), size_.width(), cvMatType) {}
 
   ArvPixelFormat pixelFormat() { return pixFmt; }
+
+  int cvType() { return cvMatType; };
 
   void decode(QByteArray frame) {
     const InputType* dta =
       reinterpret_cast<const InputType*>(frame.constData());
     const int h = size.height(), w = size.width();
     for (int i = 0; i < h; i++) {
-      auto line = M.ptr<uint16_t>(i);
+      auto line = M.ptr<OutputType>(i);
       for (int j = 0; j < w; j++) {
-        uint16_t tmp;
+        OutputType tmp;
         if (typeIsSigned)
           tmp = dta[i * w + j] + (1<<signedShiftBits);
         else
@@ -64,8 +69,6 @@ public:
     return M;
   }
 };
-
-
 
 }
 

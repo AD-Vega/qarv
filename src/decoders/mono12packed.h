@@ -31,6 +31,7 @@ public:
   Mono12PackedDecoder(QSize size_);
   void decode(QByteArray frame);
   const cv::Mat getCvImage();
+  int cvType() { return CV_16UC1; }
   ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
 
 private:
