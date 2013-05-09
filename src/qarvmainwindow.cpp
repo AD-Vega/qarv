@@ -30,6 +30,8 @@
 #include <QStatusBar>
 #include <QtConcurrentRun>
 
+#include <type_traits>
+
 #include "api/qarvcameradelegate.h"
 #include "getmtu_linux.h"
 #include "globals.h"
@@ -495,9 +497,10 @@ void QArvMainWindow::getNextFrame(cv::Mat* processed,
 }
 
 // Interestingly, QtConcurrent::run cannot take reference arguments.
+template<bool grayscale, bool depth8>
 void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
                  Histograms* hists = NULL, bool logarithmic = false) {
-  bool grayscale = frame.channels() == 1;
+  typedef typename ::std::conditional<depth8, uint8_t, uint16_t>::type ImageType;
   float * histRed, * histGreen, * histBlue;
   if (hists) {
     histRed = hists->red;
@@ -520,12 +523,12 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
     float* histograms[3] = { histRed, histGreen, histBlue };
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
-      auto imageLine = frame.ptr<cv::Vec<uint16_t, 3> >(i);
+      auto imageLine = frame.ptr<cv::Vec<ImageType, 3> >(i);
       for (int j = 0; j < w; j++) {
         auto& bgr = imageLine[j];
         bool clipped;
         for (int px = 0; px < 3; px++) {
-          uint8_t tmp = bgr[2-px] >> 8;
+          uint8_t tmp = depth8 ? bgr[2-px] : bgr[2-px] >> 8;
           if (hists)
             histograms[px][tmp]++;
           clipped = tmp == 255;
@@ -549,9 +552,9 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
   } else {
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
-      auto imageLine = frame.ptr<uint16_t>(i);
+      auto imageLine = frame.ptr<ImageType>(i);
       for (int j = 0; j < w; j++) {
-        uint8_t gray = imageLine[j] >> 8;
+        uint8_t gray = depth8 ? imageLine[j] : imageLine[j] >> 8;
         if (hists)
           histRed[gray]++;
         if (gray == 255 && markClipped) {
@@ -597,7 +600,26 @@ void QArvMainWindow::takeNextFrame() {
         hists = nullptr;
       }
       currentFrame = decoded.clone();
-      futureRender.setFuture(QtConcurrent::run(renderFrame,
+      void (*theFunc) (const cv::Mat, QImage*, bool, QArv::Histograms*, bool);
+      switch (currentFrame.type()) {
+      case CV_16UC1:
+        theFunc = renderFrame<true, false>;
+        break;
+      case CV_16UC3:
+        theFunc = renderFrame<false, false>;
+        break;
+      case CV_8UC1:
+        theFunc = renderFrame<true, true>;
+        break;
+      case CV_8UC3:
+        theFunc = renderFrame<false, true>;
+        break;
+      default:
+        video->setImage(invalidImage);
+        qDebug() << "Invalid CV image format";
+        return;
+      }
+      futureRender.setFuture(QtConcurrent::run(theFunc,
                                                currentFrame,
                                                video->unusedFrame(),
                                                markClipped->isChecked(),
