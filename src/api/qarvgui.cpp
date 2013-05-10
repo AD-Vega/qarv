@@ -83,26 +83,16 @@ void QArvGui::signalForwarding(bool enable) {
 }
 
 /*!
- * \param processed The frame as seen in the GUI video display.
- * \param unprocessed The decoded frame with no transformations applied.
- * \param raw Undecoded buffer.
+ * \param processed The frame as seen in the GUI video display. Is not copied, use cv::Mat::clone() if necessary.
+ * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
  * \param rawAravisBuffer See QArvCamera::getFrame().
- * \param nocopy See QArvCamera::getFrame().
  */
 void QArvGui::getFrame(cv::Mat* processed,
-                       cv::Mat* unprocessed,
-                       QByteArray* raw,
-                       ArvBuffer** rawAravisBuffer,
-                       bool nocopy) {
-  ext->mw->getNextFrame(processed, unprocessed, raw, rawAravisBuffer, nocopy);
-}
-
-void QArvGui::getFrame(cv::Mat* processed,
-                       cv::Mat* unprocessed,
                        QByteArray* raw,
                        ArvBuffer** rawAravisBuffer) {
-  getFrame(processed, unprocessed, raw, rawAravisBuffer,
-           ext->mw->nocopyCheck->isChecked());
+  if (raw) *raw = ext->mw->currentRawFrame;
+  if (processed) *processed = ext->mw->currentFrame;
+  if (rawAravisBuffer) *rawAravisBuffer = ext->mw->currentArvFrame;
 }
 
 /*! This function only works when not in standalone mode. It is useful when the

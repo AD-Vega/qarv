@@ -459,43 +459,6 @@ cv::Mat decodeAndTransformFrame(QByteArray frame,
                         imageTransform_flip, imageTransform_rot);
 }
 
-void QArvMainWindow::getNextFrame(cv::Mat* processed,
-                                  cv::Mat* unprocessed,
-                                  QByteArray* raw,
-                                  ArvBuffer** rawAravisBuffer,
-                                  bool nocopy) {
-  if (processed == NULL
-      && unprocessed == NULL
-      && raw == NULL
-      && rawAravisBuffer == NULL)
-    return;
-
-  QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(), nocopy,
-                                      rawAravisBuffer);
-  if (raw != NULL) *raw = frame;
-
-  cv::Mat imgu, imgp;
-  if (unprocessed != NULL
-      || processed != NULL) {
-    if (!frame.isEmpty()) {
-      decoder->decode(frame);
-      imgu = decoder->getCvImage();
-    }
-  }
-
-  if (unprocessed != NULL) *unprocessed = imgu;
-
-  if (processed != NULL) {
-    if (unprocessed != NULL)
-      imgp = imgu.clone();
-    else
-      imgp = imgu;
-    transformImage(imgp, invertColors->isChecked(),
-                   imageTransform_flip, imageTransform_rot);
-    *processed = imgp;
-  }
-}
-
 // Interestingly, QtConcurrent::run cannot take reference arguments.
 template<bool grayscale, bool depth8>
 void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
@@ -578,7 +541,8 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
 void QArvMainWindow::takeNextFrame() {
   if (playing || recording) {
     currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
-                                       nocopyCheck->isChecked());
+                                       nocopyCheck->isChecked(),
+                                       &currentArvFrame);
     if (currentRawFrame.isEmpty()) {
       if (playing)
         video->setImage(invalidImage);

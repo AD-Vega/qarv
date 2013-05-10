@@ -44,14 +44,6 @@ public:
 
   //! Fills the non-NULL parameters with the current frame.
   void getFrame(cv::Mat* processed,
-                cv::Mat* unprocessed,
-                QByteArray* raw,
-                ArvBuffer** rawAravisBuffer,
-                bool nocopy);
-
-  //! Same as getFrame(), but takes the nocopy parameter from the GUI.
-  void getFrame(cv::Mat* processed,
-                cv::Mat* unprocessed,
                 QByteArray* raw,
                 ArvBuffer** rawAravisBuffer);
 

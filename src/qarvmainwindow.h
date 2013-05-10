@@ -97,11 +97,6 @@ private slots:
 
 private:
   void readROILimits();
-  void getNextFrame(cv::Mat* processed,
-                    cv::Mat* unprocessed,
-                    QByteArray* raw,
-                    ArvBuffer** rawAravisBuffer,
-                    bool nocopy = false);
 
   QImage invalidImage;
   QArvCamera* camera;
@@ -124,6 +119,7 @@ private:
   QScopedPointer<Recorder> recorder;
   cv::Mat currentFrame, currentRendering;
   QByteArray currentRawFrame;
+  ArvBuffer* currentArvFrame;
   QFutureWatcher<void> futureRender;
   bool futureHoldsAHistogram;
 
