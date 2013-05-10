@@ -612,7 +612,11 @@ void QArvMainWindow::frameRendered() {
 
 void QArvMainWindow::startVideo(bool start) {
   if (toDisableWhenPlaying.isEmpty())
-    toDisableWhenPlaying << cameraSelector << refreshCamerasButton;
+    toDisableWhenPlaying = {
+      cameraSelector,
+      refreshCamerasButton,
+      streamFramesSpinbox
+    };
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
@@ -672,7 +676,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       resetROIButton,
       pickROIButton,
       binSpinBox,
-      settingsTab,
+      transformBox,
       filenameEdit,
       chooseFilenameButton,
       recordApendCheck,
