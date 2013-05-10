@@ -23,17 +23,14 @@
 #include <QPluginLoader>
 #include <QMap>
 #include <QDebug>
+#include <type_traits>
 extern "C" {
   #include <arvenums.h>
 }
 
-void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& img) {
-  if (image.depth() == CV_8U) {
-    //TODO
-    img = QImage();
-    qDebug() << "Rendering from 8-bit image not implemented yet";
-    return;
-  }
+template<bool grayscale, bool depth8>
+void CV2QImage_RGB24Template(const cv::Mat& image, QImage& img) {
+  typedef typename std::conditional<depth8, uint8_t, uint16_t>::type InputType;
   const int h = image.rows, w = image.cols;
   QSize s = img.size();
   if (s.height() != h
@@ -44,25 +41,51 @@ void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& img) {
     else
       img = QImage(w, h, QImage::Format_RGB888);
   }
-  if (image.channels() == 1) {
+  if (grayscale) {
     img.setColorTable(graymap);
     for (int i = 0; i < h; i++) {
-      auto line = image.ptr<uint16_t>(i);
+      auto line = image.ptr<InputType>(i);
       auto I = img.scanLine(i);
       for (int j = 0; j < w; j++)
-        I[j] = line[j] >> 8;
+        if (depth8)
+          I[j] = line[j];
+        else
+          I[j] = line[j] >> 8;
     }
   } else {
     for (int i = 0; i < h; i++) {
       auto imgLine = img.scanLine(i);
-      auto imageLine = image.ptr<cv::Vec<uint16_t, 3> >(i);
+      auto imageLine = image.ptr<cv::Vec<InputType, 3> >(i);
       for (int j = 0; j < w; j++) {
         auto& bgr = imageLine[j];
         for (int px = 0; px < 3; px++) {
-          imgLine[3*j + px] = bgr[2-px] >> 8;
+          if (depth8)
+            imgLine[3*j + px] = bgr[2-px];
+          else
+            imgLine[3*j + px] = bgr[2-px] >> 8;
         }
       }
     }
+  }
+}
+
+void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& out) {
+  switch (image.type()) {
+  case CV_16UC1:
+    CV2QImage_RGB24Template<true, false>(image, out);
+    break;
+  case CV_16UC3:
+    CV2QImage_RGB24Template<false, false>(image, out);
+    break;
+  case CV_8UC1:
+    CV2QImage_RGB24Template<true, true>(image, out);
+    break;
+  case CV_8UC3:
+    CV2QImage_RGB24Template<false, true>(image, out);
+    break;
+  default:
+    qDebug() << "CV2QImage: Invalid CV image format";
+    return;
   }
 }
 
@@ -72,27 +95,26 @@ QImage QArvDecoder::CV2QImage_RGB24(const cv::Mat& image) {
   return img;
 }
 
-void QArvDecoder::CV2QImage(const cv::Mat& image_, QImage& image) {
-  if (image.depth() == CV_8U) {
-    //TODO
-    image = QImage();
-    qDebug() << "Rendering from 8-bit image not implemented yet";
-    return;
-  }
+template<bool grayscale, bool depth8>
+void CV2QImageTemplate(const cv::Mat& image_, QImage& image) {
+  typedef typename std::conditional<depth8, uint8_t, uint16_t>::type InputType;
   const int h = image_.rows, w = image_.cols;
   QSize s = image.size();
   if (s.height() != h
       || s.width() != w
       || image.format() != QImage::Format_ARGB32_Premultiplied)
     image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
-  if (image_.channels() == 3) {
+  if (!grayscale) {
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
-      auto imageLine = image_.ptr<cv::Vec<uint16_t, 3> >(i);
+      auto imageLine = image_.ptr<cv::Vec<InputType, 3> >(i);
       for (int j = 0; j < w; j++) {
         auto& bgr = imageLine[j];
         for (int px = 0; px < 3; px++) {
-          imgLine[4*j + px] = bgr[2-px] >> 8;
+          if (depth8)
+            imgLine[4*j + px] = bgr[2-px];
+          else
+            imgLine[4*j + px] = bgr[2-px] >> 8;
         }
         imgLine[4*j + 3] = 255;
       }
@@ -100,15 +122,39 @@ void QArvDecoder::CV2QImage(const cv::Mat& image_, QImage& image) {
   } else {
     for (int i = 0; i < h; i++) {
       auto imgLine = image.scanLine(i);
-      auto imageLine = image_.ptr<uint16_t>(i);
+      auto imageLine = image_.ptr<InputType>(i);
       for (int j = 0; j < w; j++) {
-        uint8_t gray = imageLine[j] >> 8;
+        uint8_t gray;
+        if (depth8)
+          gray = imageLine[j];
+        else
+          gray = imageLine[j] >> 8;
         for (int px = 0; px < 3; px++) {
           imgLine[4*j + px] = gray;
         }
         imgLine[4*j + 3] = 255;
       }
     }
+  }
+}
+
+void QArvDecoder::CV2QImage(const cv::Mat& image, QImage& out) {
+  switch (image.type()) {
+  case CV_16UC1:
+    CV2QImageTemplate<true, false>(image, out);
+    break;
+  case CV_16UC3:
+    CV2QImageTemplate<false, false>(image, out);
+    break;
+  case CV_8UC1:
+    CV2QImageTemplate<true, true>(image, out);
+    break;
+  case CV_8UC3:
+    CV2QImageTemplate<false, true>(image, out);
+    break;
+  default:
+    qDebug() << "CV2QImage: Invalid CV image format";
+    return;
   }
 }
 
