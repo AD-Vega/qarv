@@ -591,7 +591,7 @@ void QArvMainWindow::takeNextFrame() {
                                                histogramLog->isChecked()));
     }
 
-    if (recording) {
+    if (recording && standalone) {
       recorder->recordFrame(currentRawFrame, currentFrame);
       if (! recorder->isOK())
         closeFileButton->setChecked(false);
