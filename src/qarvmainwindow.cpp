@@ -577,15 +577,15 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
 
 void QArvMainWindow::takeNextFrame() {
   if (playing || recording) {
-    QByteArray frame = camera->getFrame(dropInvalidFrames->isChecked(),
-                                        nocopyCheck->isChecked());
-    if (frame.isEmpty()) {
+    currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
+                                       nocopyCheck->isChecked());
+    if (currentRawFrame.isEmpty()) {
       if (playing)
         video->setImage(invalidImage);
       return ;
     }
 
-    auto decoded = decodeAndTransformFrame(frame, decoder,
+    currentFrame = decodeAndTransformFrame(currentRawFrame, decoder,
                                            invertColors->isChecked(),
                                            imageTransform_flip,
                                            imageTransform_rot);
@@ -599,9 +599,9 @@ void QArvMainWindow::takeNextFrame() {
       } else {
         hists = nullptr;
       }
-      currentFrame = decoded.clone();
+      currentRendering = currentFrame.clone();
       void (*theFunc) (const cv::Mat, QImage*, bool, QArv::Histograms*, bool);
-      switch (currentFrame.type()) {
+      switch (currentRendering.type()) {
       case CV_16UC1:
         theFunc = renderFrame<true, false>;
         break;
@@ -620,7 +620,7 @@ void QArvMainWindow::takeNextFrame() {
         return;
       }
       futureRender.setFuture(QtConcurrent::run(theFunc,
-                                               currentFrame,
+                                               currentRendering,
                                                video->unusedFrame(),
                                                markClipped->isChecked(),
                                                hists,
@@ -628,7 +628,7 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     if (recording) {
-      recorder->recordFrame(frame, decoded);
+      recorder->recordFrame(currentRawFrame, currentFrame);
       if (! recorder->isOK())
         closeFileButton->setChecked(false);
     }
@@ -642,7 +642,7 @@ void QArvMainWindow::frameRendered() {
     video->swapFrames();
   if (futureHoldsAHistogram) {
     futureHoldsAHistogram = false;
-    histogram->swapHistograms(currentFrame.channels() == 1);
+    histogram->swapHistograms(currentRendering.channels() == 1);
   }
 }
 

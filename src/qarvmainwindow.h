@@ -122,7 +122,8 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
-  cv::Mat currentFrame;
+  cv::Mat currentFrame, currentRendering;
+  QByteArray currentRawFrame;
   QFutureWatcher<void> futureRender;
   bool futureHoldsAHistogram;
 
