@@ -490,12 +490,12 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
       auto imageLine = frame.ptr<cv::Vec<ImageType, 3> >(i);
       for (int j = 0; j < w; j++) {
         auto& bgr = imageLine[j];
-        bool clipped;
+        bool clipped = false;
         for (int px = 0; px < 3; px++) {
           uint8_t tmp = depth8 ? bgr[2-px] : bgr[2-px] >> 8;
           if (hists)
             histograms[px][tmp]++;
-          clipped = tmp == 255;
+          clipped = clipped || tmp == 255;
           imgLine[4*j + px] = tmp;
         }
         imgLine[4*j + 3] = 255;
