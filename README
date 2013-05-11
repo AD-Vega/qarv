@@ -9,11 +9,11 @@ Aravis library.
 
 For a user, qarv provides:
 
-    - Viewing the video and recording it in either the original or AVI
-      formats, with basic controls, such as frames-per-second, pixel
-      format and exposure/gain easily accessible. Region-of-interest
-      can be selected via manual entry or by drawing it directly in
-      the video display.
+    - Viewing the video, recording it and taking snapshots, with basic
+      controls, such as frames-per-second, pixel format and
+      exposure/gain easily accessible. Region-of-interest can be
+      selected via manual entry or by drawing it directly in the video
+      display.
 
     - The network interface used by the camera is automatically
       detected and camera's packet size is set to match the interface
@@ -51,10 +51,13 @@ For a programmer, qarv provides:
       functionality: instead of recording to a file, the GUI will emit
       signals and pass frames to the host application.
 
-    - QArvDecoder and QArvPixelFormat, which are plugin interfaces
-      for converting a raw frame into a QImage. Currently provided are
-      decoders for 8, 12 and 16 bit grayscale, UYVY and YUYV color
-      formats.
+    - QArvDecoder and QArvPixelFormat, which are plugin interfaces for
+      converting a raw frame into an OpenCV image. Convenience
+      functions are available to obtain QImages. Currently provided
+      are decoders for 8, 10, 12 (packed or unpacked) and 16 bit
+      grayscale formats, plus anything supported by libav/ffmpeg. The
+      libav plugin is exposed further to allow easy decoding of all
+      pixel formats, not just those used by Aravis.
 
     - All of this is provided as libqarv, with headers installed in a
       standard location, such as /usr/include/qarv-0/.
@@ -66,13 +69,10 @@ Aravis: https://live.gnome.org/Aravis
 REQUIREMENTS AND INSTALLATION
 -----------------------------
 
-qarv requires Qt-4.8, aravis-0.2 and libswscale. It can use the ffmpeg
-command (if present) to record AVIs, but it is not necessary for
-recording raw data.
+qarv requires Qt-4.8, aravis-0.2, OpenCV and either libav or ffmpeg.
 
-qarv is built using CMake with no special configuration
-options. If you are not familiar with CMake, refer to any
-tutorial. But for starters, run these commands from the qarv
+qarv is built using CMake. If you are not familiar with CMake, refer
+to any tutorial. But for starters, run these commands from the qarv
 directory:
 
   mkdir build
