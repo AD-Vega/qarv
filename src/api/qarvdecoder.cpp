@@ -196,11 +196,19 @@ QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
 /*!
  * Returns NULL if the format is not supported.
  */
-QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format, QSize size) {
+QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format,
+                                          QSize size,
+                                          bool fast) {
   foreach (auto fmt, pluginFormats) {
     if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
   }
   foreach (auto arvfmt, swScaleFormats.keys()) {
+    int swsFlags;
+    if (fast)
+      swsFlags = SWS_FAST_BILINEAR;
+    else
+      swsFlags = SWS_BILINEAR;
+    swsFlags |= SWS_BITEXACT | SWS_ACCURATE_RND;
     if (arvfmt == format)
       return new QArv::SwScaleDecoder(size, swScaleFormats[arvfmt], arvfmt);
   }
@@ -210,8 +218,13 @@ QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format, QSize size) {
 /*!
  * Returns NULL if the format is not supported.
  */
-QArvDecoder* QArvPixelFormat::makeSwScaleDecoder(PixelFormat fmt, QSize size) {
-  return new QArv::SwScaleDecoder(size, fmt, 0);
+QArvDecoder* QArvPixelFormat::makeSwScaleDecoder(PixelFormat fmt,
+                                                 QSize size,
+                                                 int swsFlags) {
+  if (swsFlags)
+    return new QArv::SwScaleDecoder(size, fmt, 0, swsFlags);
+  else
+    return new QArv::SwScaleDecoder(size, fmt, 0);
 }
 
 QMap<ArvPixelFormat, PixelFormat> initSwScaleFormats() {

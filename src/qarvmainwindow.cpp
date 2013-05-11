@@ -616,13 +616,15 @@ void QArvMainWindow::startVideo(bool start) {
     toDisableWhenPlaying = {
       cameraSelector,
       refreshCamerasButton,
-      streamFramesSpinbox
+      streamFramesSpinbox,
+      useFastInterpolator,
     };
   if (camera != NULL) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
       decoder = QArvPixelFormat::makeDecoder(camera->getPixelFormatId(),
-                                             camera->getFrameSize());
+                                             camera->getFrameSize(),
+                                             useFastInterpolator->isChecked());
       invalidImage = QImage(camera->getFrameSize(),
                             QImage::Format_ARGB32_Premultiplied);
       invalidImage.fill(Qt::red);

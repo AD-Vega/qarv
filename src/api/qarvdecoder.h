@@ -90,11 +90,17 @@ public:
   //! Returns the list of supported pixel formats.
   static QList<ArvPixelFormat> supportedFormats();
 
-  //! Directly creates a decoder for the requested format and frame size.
-  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size);
+  /*!
+   * Creates a decoder for the requested format and frame size.
+   * Some decoders allow using a faster algorithm for decoding colors,
+   * which can be (but is not neccessarily) less precise.
+   */
+  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size, bool fast = true);
 
   //! Convenience function to create a libswscale decoder.
-  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat, QSize size);
+  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat fmt,
+                                         QSize size,
+                                         int swsFlags = 0);
 };
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,

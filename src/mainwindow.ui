@@ -649,6 +649,19 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QCheckBox" name="useFastInterpolator">
+               <property name="toolTip">
+                <string>Only affects certain pixel formats. Colors are calculated using a fast bilinear scaler. Might yield better results for effectively gray images.</string>
+               </property>
+               <property name="text">
+                <string>Use fast color approximation</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>
