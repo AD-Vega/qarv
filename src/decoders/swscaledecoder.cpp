@@ -29,7 +29,7 @@ extern "C" {
 using namespace QArv;
 
 SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
-                               ArvPixelFormat arvPixFmt) :
+                               ArvPixelFormat arvPixFmt, int swsFlags) :
   size(size_), image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 },
   inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
   if (size.width() != (size.width() / 2) * 2
@@ -57,7 +57,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
     image_pointers[0] = buffer;
     ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
                          size.width(), size.height(), outputPixFmt,
-                         SWS_BICUBIC, 0, 0, 0);
+                         swsFlags, 0, 0, 0);
   } else {
     qDebug() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
              << "is not supported for input.";
