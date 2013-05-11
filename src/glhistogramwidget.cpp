@@ -104,13 +104,15 @@ void GLHistogramWidget::paintGL() {
       QColor::fromRgba(qRgba(0, 0, 255, 128))
     };
     float* histograms[] = { histRed, histGreen, histBlue };
+    float max = 0;
+    for (int c = 0; c < 3; c++) {
+      for (int i = 0; i < 256; i++)
+        if (histograms[c][i] > max) max = histograms[c][i];
+    }
     for (int c = 0; c < 3; c++) {
       painter.setPen(colors[c]);
       painter.setBrush(colors[c]);
 
-      float max = 0;
-      for (int i = 0; i < 256; i++)
-        if (histograms[c][i] > max) max = histograms[c][i];
       float hUnit = rect().height() / max;
       for (int i = 0; i < 256; i++) {
         float height = histograms[c][i]*hUnit;
