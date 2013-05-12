@@ -25,6 +25,8 @@
 #include <QWidget>
 #include <QApplication>
 
+#pragma GCC visibility push(default)
+
 class QArvGuiExtension;
 
 namespace cv {
@@ -74,5 +76,7 @@ private:
 
   friend class QArvGuiExtension;
 };
+
+#pragma GCC visibility pop
 
 #endif

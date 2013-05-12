@@ -25,7 +25,7 @@ include(${QT_USE_FILE})
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src ${ARAVIS_INCLUDE_DIRS} ${GIO_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
 if (NOT qarv_BTYPE MATCHES "debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")

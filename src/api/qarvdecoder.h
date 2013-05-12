@@ -30,6 +30,8 @@ extern "C" {
 #include <libavutil/pixfmt.h>
 }
 
+#pragma GCC visibility push(default)
+
 #ifndef ARV_PIXEL_FORMAT_MONO_8
 typedef quint32 ArvPixelFormat;
 #endif
@@ -105,5 +107,7 @@ public:
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,
                     "si.ad-vega.qarv.QArvPixelFormat/0.1");
+
+#pragma GCC visibility pop
 
 #endif

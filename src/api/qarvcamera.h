@@ -29,6 +29,8 @@
 #include <QHostAddress>
 #include <QAbstractItemModel>
 
+#pragma GCC visibility push(default)
+
 //! \name Forward declarations to avoid exposing arv.h
 /**@{*/
 struct _ArvCamera;
@@ -223,5 +225,7 @@ QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
 
 //! Reads the textual representation of cammera settings. May not succeed.
 QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
+
+#pragma GCC visibility pop
 
 #endif // ARCAM_H

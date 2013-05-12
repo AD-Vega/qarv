@@ -22,6 +22,8 @@
 
 #include <QStyledItemDelegate>
 
+#pragma GCC visibility push(default)
+
 //! QArvCameraDelegate provides editing widgets to go with the QArvCamera model.
 /*!
  * Once a view is created for the data model provided by QArvCamera, use this
@@ -46,5 +48,7 @@ public:
 private slots:
   void finishEditing();
 };
+
+#pragma GCC visibility pop
 
 #endif
