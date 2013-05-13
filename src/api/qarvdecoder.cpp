@@ -207,10 +207,9 @@ QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format,
     if (fast)
       swsFlags = SWS_FAST_BILINEAR;
     else
-      swsFlags = SWS_BILINEAR;
-    swsFlags |= SWS_BITEXACT | SWS_ACCURATE_RND;
+      swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT;
     if (arvfmt == format)
-      return new QArv::SwScaleDecoder(size, swScaleFormats[arvfmt], arvfmt);
+      return new QArv::SwScaleDecoder(size, swScaleFormats[arvfmt], arvfmt, swsFlags);
   }
   return NULL;
 }

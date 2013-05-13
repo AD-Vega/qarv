@@ -40,7 +40,7 @@ public:
   SwScaleDecoder(QSize size,
                  enum PixelFormat inputPixfmt,
                  ArvPixelFormat arvPixFmt,
-                 int swsFlags = SWS_BILINEAR | SWS_BITEXACT | SWS_ACCURATE_RND);
+                 int swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT);
   virtual ~SwScaleDecoder();
   void decode(QByteArray frame);
   const cv::Mat getCvImage();

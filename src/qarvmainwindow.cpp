@@ -1065,6 +1065,7 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_settings/statusbar_timeout"] = statusTimeoutSpinbox;
   saved_widgets["qarv_settings/frame_queue_size"] = streamFramesSpinbox;
   saved_widgets["qarv_settings/frame_transfer_nocopy"] = nocopyCheck;
+  saved_widgets["qarv_settings/fast_swscale"] = useFastInterpolator;
 
   //recording tab
   saved_widgets["qarv_recording/snapshot_directory"] = snappathEdit;
