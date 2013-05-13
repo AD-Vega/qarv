@@ -652,7 +652,7 @@
              <item>
               <widget class="QCheckBox" name="useFastInterpolator">
                <property name="toolTip">
-                <string>Only affects certain pixel formats. Colors are calculated using a fast bilinear scaler. Might yield better results for effectively gray images.</string>
+                <string>Only affects certain pixel formats. Colors are calculated using a less exact interpolation.</string>
                </property>
                <property name="text">
                 <string>Use fast color approximation</string>

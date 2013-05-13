@@ -220,11 +220,6 @@
         <translation>Označi preosvetljene piksle</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="655"/>
-        <source>Only affects certain pixel formats. Colors are calculated using a fast bilinear scaler. Might yield better results for effectively gray images.</source>
-        <translation>Vpliva le na nekatere tipe zapisa pikslov. Barve se izračunajo s hitro bilinearno interpolacijo. V primeru sive slike lahko da boljše rezultate.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="658"/>
         <source>Use fast color approximation</source>
         <translation>Uporabljaj hitro računanje barv</translation>
@@ -410,6 +405,11 @@
         <translation>Preosvetljeni piksli se obarvajo rožnato.</translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.ui" line="655"/>
+        <source>Only affects certain pixel formats. Colors are calculated using a less exact interpolation.</source>
+        <translation>Vpliva le na nekatere tipe zapisa pikslov. Barve se izračunajo z manj natančno interpolacijo.</translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.ui" line="777"/>
         <source>The camera has a queue of frames which are cycled. There should be several to ensure smooth operation, but not too many because they increase memory usage. Also, if the &quot;Transfer frames without copying&quot; option is enabled, the frames are not copied before they are passed to the program. If there are not enough frames in the queue, the current frame is not shown or recorded quickly enough, it may get overwritten. This option takes effect when starting the video stream.</source>
         <translation>Kamera ima vrsto slikovnik okvirjev, v katere ciklično snema. V vrsti jih mora biti vsaj nekaj, da snemanje teče gladko, a ne preveč, saj zasedajo pomnilnik. Če je vklopljena možnost &quot;Premikaj slikovne okvirje brez kopiranja&quot;, se okvirji pred vstopom v program ne kopirajo. Če v vrsti ni dovolj okvirjev in če program trenutnega okvirja ne prikaže ali posname dovolj hitro, ga lahko kamera prepiše. Ta možnost se uveljavi ob začetku pretakanja videa.</translation>
@@ -533,17 +533,17 @@
         <translation>270 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="141"/>
+        <location filename="../src/qarvmainwindow.cpp" line="140"/>
         <source>Welcome to qarv!</source>
         <translation>Dobrodošel v qarv!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="153"/>
+        <location filename="../src/qarvmainwindow.cpp" line="152"/>
         <source>Looking for cameras...</source>
         <translation>Iščem kamere...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/qarvmainwindow.cpp" line="166"/>
+        <location filename="../src/qarvmainwindow.cpp" line="165"/>
         <source> Found %n cameras.</source>
         <comment>Number of cameras</comment>
         <translation>
@@ -554,32 +554,32 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="313"/>
+        <location filename="../src/qarvmainwindow.cpp" line="312"/>
         <source>Network address not found, trying best-effort MTU %1.</source>
         <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="321"/>
+        <location filename="../src/qarvmainwindow.cpp" line="320"/>
         <location filename="../src/qarvmainwindow.cpp" line="896"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="325"/>
+        <location filename="../src/qarvmainwindow.cpp" line="324"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="329"/>
+        <location filename="../src/qarvmainwindow.cpp" line="328"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="394"/>
+        <location filename="../src/qarvmainwindow.cpp" line="393"/>
         <source>Region of interest too large, shrinking.</source>
         <translation>Izrez slike je prevelik, zmanjšujem.</translation>
     </message>
