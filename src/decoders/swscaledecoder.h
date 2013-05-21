@@ -52,9 +52,8 @@ private:
   bool OK;
   QSize size;
   struct SwsContext* ctx;
-  uint8_t* image_pointers[3];
-  int image_strides[3];
-  uint8_t* buffer;
+  uint8_t* image_pointers[4];
+  int image_strides[4];
   uint8_t bufferBytesPerPixel;
   int cvMatType;
   enum PixelFormat inputPixfmt, outputPixFmt;

@@ -24,13 +24,15 @@
 
 extern "C" {
 #include <libavutil/pixdesc.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/mem.h>
 }
 
 using namespace QArv;
 
 SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
                                ArvPixelFormat arvPixFmt, int swsFlags) :
-  size(size_), image_pointers { 0, 0, 0 }, image_strides { 0, 0, 0 },
+  size(size_),
   inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
   if (size.width() != (size.width() / 2) * 2
       || size.height() != (size.height() / 2) * 2) {
@@ -51,13 +53,12 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
       cvMatType = CV_8UC3;
       bufferBytesPerPixel = 3;
     }
-    OK = true;
-    image_strides[0] = bufferBytesPerPixel * size.width();
-    buffer = new uint8_t[size.width()*size.height()*bufferBytesPerPixel];
-    image_pointers[0] = buffer;
-    ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
-                         size.width(), size.height(), outputPixFmt,
-                         swsFlags, 0, 0, 0);
+    OK = 0 < av_image_alloc(image_pointers, image_strides, size.width(),
+                            size.height(), outputPixFmt, 16);
+    if (OK)
+      ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
+                           size.width(), size.height(), outputPixFmt,
+                           swsFlags, 0, 0, 0);
   } else {
     qDebug() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
              << "is not supported for input.";
@@ -68,7 +69,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
 SwScaleDecoder::~SwScaleDecoder() {
   if (OK) {
     sws_freeContext(ctx);
-    delete[] buffer;
+    av_freep(&image_pointers[0]);
   }
 }
 
@@ -101,6 +102,7 @@ void SwScaleDecoder::decode(QByteArray frame) {
 
 const cv::Mat SwScaleDecoder::getCvImage() {
   if (!OK) return cv::Mat();
-  cv::Mat M(size.height(), size.width(), cvMatType, buffer);
+  cv::Mat M(size.height(), size.width(), cvMatType,
+            image_pointers[0], image_strides[0]);
   return M;
 }
