@@ -50,7 +50,8 @@ public:
                                  QString fileName,
                                  QSize frameSize,
                                  int framesPerSecond,
-                                 bool appendToFile) = 0;
+                                 bool appendToFile,
+                                 bool writeInfo) = 0;
 
   //! Creates a recorder for the requested output format.
   static Recorder* makeRecorder(QArvDecoder* decoder,
@@ -58,7 +59,8 @@ public:
                                 QString outputFormat,
                                 QSize frameSize,
                                 int framesPerSecond,
-                                bool appendToFile);
+                                bool appendToFile,
+                                bool writeInfo);
 
   //! Returns a list of supported output formats.
   static QList<QString> outputFormats();

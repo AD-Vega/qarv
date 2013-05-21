@@ -710,7 +710,8 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
                                               filenameEdit->text(),
                                               videoFormatSelector->currentText(),
                                               rct.size(), fpsSpinbox->value(),
-                                              doAppend));
+                                              doAppend,
+                                              recordInfoCheck->isChecked()));
     bool open = recorder && recorder->isOK();
 
     if (!open) {

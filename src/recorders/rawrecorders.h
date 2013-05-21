@@ -34,7 +34,8 @@ public:
                          QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
-                         bool appendToFile);
+                         bool appendToFile,
+                         bool writeInfo);
 };
 
 class RawDecoded8Format: public QObject, public OutputFormat {
@@ -47,7 +48,8 @@ public:
                          QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
-                         bool appendToFile);
+                         bool appendToFile,
+                         bool writeInfo);
 };
 
 class RawDecoded16Format: public QObject, public OutputFormat {
@@ -60,7 +62,8 @@ public:
                          QString fileName,
                          QSize frameSize,
                          int framesPerSecond,
-                         bool appendToFile);
+                         bool appendToFile,
+                         bool writeInfo);
 };
 
 }

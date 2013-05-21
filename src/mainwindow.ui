@@ -1015,6 +1015,16 @@
           </property>
          </widget>
         </item>
+        <item row="9" column="1">
+         <widget class="QCheckBox" name="recordInfoCheck">
+          <property name="toolTip">
+           <string>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .desc extension will be created and will contain video format information.</string>
+          </property>
+          <property name="text">
+           <string>Write video information file</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="aboutTab">
