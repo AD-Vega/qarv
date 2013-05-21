@@ -1095,6 +1095,7 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/video_file"] = filenameEdit;
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
   saved_widgets["qarv_recording/append_video"] = recordApendCheck;
+  saved_widgets["qarv_recording/write_info"] = recordInfoCheck;
   saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
 
