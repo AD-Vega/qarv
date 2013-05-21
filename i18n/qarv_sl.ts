@@ -436,11 +436,36 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1014"/>
+        <source>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</source>
+        <translation>Ustvari dodatno datoteko s končnico .caminfo. Nastavitve je moč naložiti v zavihku Napredne nastavitve.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1017"/>
         <source>Dump camera settings along with the video</source>
         <translation>Skupaj z videom shrani tudi nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1022"/>
+        <location filename="../src/mainwindow.ui" line="1024"/>
+        <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .desc extension will be created and will contain video format information.</source>
+        <translation>Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .desc, ki vsebuje te informacije.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1027"/>
+        <source>Write video information file</source>
+        <translation>Zapiši informacije o videu</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1034"/>
+        <source>An additional file with a .timestamps extension will be created and will contain frame timestamps in nanoseconds, one per line, in text form.</source>
+        <translation>Ustvari dodatno datoteko s končnico .timestamps, ki vsebuje časovne oznake okvirjev v nanosekundah v tekstovni obliki, ena oznaka na vrstico.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1037"/>
+        <source>Write timestamp file</source>
+        <translation>Zapiši časovne oznake</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1045"/>
         <source>About</source>
         <translation>O programu</translation>
     </message>
@@ -455,17 +480,17 @@
         <translation>Prikaži ali skrij histogram.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1077"/>
+        <location filename="../src/mainwindow.ui" line="1100"/>
         <source>Display image</source>
         <translation>Prikaži sliko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1092"/>
+        <location filename="../src/mainwindow.ui" line="1115"/>
         <source>Fix display size to video size.</source>
         <translation>Fiksiraj prikazovalnik na izvorno velikost videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1158"/>
+        <location filename="../src/mainwindow.ui" line="1181"/>
         <source>Logarithmic</source>
         <translation>Logaritemski</translation>
     </message>
@@ -480,32 +505,32 @@
         <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1028"/>
+        <location filename="../src/mainwindow.ui" line="1051"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012, 2013 Jure Varlec and Andrej Lajovic, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012, 2013 Jure Varlec in Andrej Lajovic, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;qarv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona qarv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1074"/>
+        <location filename="../src/mainwindow.ui" line="1097"/>
         <source>Display live image.</source>
         <translation>Prikaži živo sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1095"/>
+        <location filename="../src/mainwindow.ui" line="1118"/>
         <source>Actual size</source>
         <translation>Dejanska velikost</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1155"/>
+        <location filename="../src/mainwindow.ui" line="1178"/>
         <source>Logarithmic histogram.</source>
         <translation>Logaritemski histogram.</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1062"/>
+        <location filename="../src/mainwindow.ui" line="1085"/>
         <source>Video Display – qarv</source>
         <translation>Prikaz videa – qarv</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1143"/>
+        <location filename="../src/mainwindow.ui" line="1166"/>
         <source>Histogram – qarv</source>
         <translation>Histogram – qarv</translation>
     </message>
@@ -513,37 +538,37 @@
 <context>
     <name>QArv::QArvMainWindow</name>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="102"/>
+        <location filename="../src/qarvmainwindow.cpp" line="106"/>
         <source>No rotation</source>
         <translation>Brez zasuka</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="103"/>
+        <location filename="../src/qarvmainwindow.cpp" line="107"/>
         <source>90 degrees</source>
         <translation>90 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="104"/>
+        <location filename="../src/qarvmainwindow.cpp" line="108"/>
         <source>180 degrees</source>
         <translation>180 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="105"/>
+        <location filename="../src/qarvmainwindow.cpp" line="109"/>
         <source>270 degrees</source>
         <translation>270 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="140"/>
+        <location filename="../src/qarvmainwindow.cpp" line="144"/>
         <source>Welcome to qarv!</source>
         <translation>Dobrodošel v qarv!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="152"/>
+        <location filename="../src/qarvmainwindow.cpp" line="156"/>
         <source>Looking for cameras...</source>
         <translation>Iščem kamere...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/qarvmainwindow.cpp" line="165"/>
+        <location filename="../src/qarvmainwindow.cpp" line="169"/>
         <source> Found %n cameras.</source>
         <comment>Number of cameras</comment>
         <translation>
@@ -554,96 +579,101 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="312"/>
+        <location filename="../src/qarvmainwindow.cpp" line="316"/>
         <source>Network address not found, trying best-effort MTU %1.</source>
         <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="320"/>
-        <location filename="../src/qarvmainwindow.cpp" line="896"/>
+        <location filename="../src/qarvmainwindow.cpp" line="324"/>
+        <location filename="../src/qarvmainwindow.cpp" line="916"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="324"/>
+        <location filename="../src/qarvmainwindow.cpp" line="328"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="328"/>
+        <location filename="../src/qarvmainwindow.cpp" line="332"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="393"/>
+        <location filename="../src/qarvmainwindow.cpp" line="397"/>
         <source>Region of interest too large, shrinking.</source>
         <translation>Izrez slike je prevelik, zmanjšujem.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="694"/>
+        <location filename="../src/qarvmainwindow.cpp" line="705"/>
         <source>Please set the video file name.</source>
         <translation>Izberi ime video datoteke.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="729"/>
+        <location filename="../src/qarvmainwindow.cpp" line="742"/>
         <source>Could not dump camera settings.</source>
         <translation>Nastavitev kamere ni bilo mogoče shraniti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="755"/>
+        <location filename="../src/qarvmainwindow.cpp" line="749"/>
+        <source>Could not open timestamp file.</source>
+        <translation>Časovnih oznak ni mogoče zapisati.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="775"/>
         <source>Please set the snapshot directory and name.</source>
         <translation>Izberi direktorij in ime za slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="763"/>
+        <location filename="../src/qarvmainwindow.cpp" line="783"/>
         <source>Snapshot directory does not exist.</source>
         <translation>Direktorij za slike ne obstaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="768"/>
+        <location filename="../src/qarvmainwindow.cpp" line="788"/>
         <source>Video is not playing, no image to save.</source>
         <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="781"/>
-        <location filename="../src/qarvmainwindow.cpp" line="793"/>
+        <location filename="../src/qarvmainwindow.cpp" line="801"/>
+        <location filename="../src/qarvmainwindow.cpp" line="813"/>
         <source>Snapshot cannot be written.</source>
         <translation>Ne morem shraniti slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="786"/>
+        <location filename="../src/qarvmainwindow.cpp" line="806"/>
         <source>Current frame is invalid, try snapshotting again.</source>
         <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="799"/>
-        <location filename="../src/qarvmainwindow.cpp" line="835"/>
-        <location filename="../src/qarvmainwindow.cpp" line="849"/>
+        <location filename="../src/qarvmainwindow.cpp" line="819"/>
+        <location filename="../src/qarvmainwindow.cpp" line="855"/>
+        <location filename="../src/qarvmainwindow.cpp" line="869"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="804"/>
+        <location filename="../src/qarvmainwindow.cpp" line="824"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="843"/>
-        <location filename="../src/qarvmainwindow.cpp" line="889"/>
+        <location filename="../src/qarvmainwindow.cpp" line="863"/>
+        <location filename="../src/qarvmainwindow.cpp" line="909"/>
         <source>Could not open settings file.</source>
         <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="880"/>
+        <location filename="../src/qarvmainwindow.cpp" line="900"/>
         <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
         <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="886"/>
+        <location filename="../src/qarvmainwindow.cpp" line="906"/>
         <source>Loading settings failed</source>
         <translation>Nalaganje nastavitev ni uspelo</translation>
     </message>
