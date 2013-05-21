@@ -1010,6 +1010,9 @@
         </item>
         <item row="10" column="1">
          <widget class="QCheckBox" name="recordMetadataCheck">
+          <property name="toolTip">
+           <string>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</string>
+          </property>
           <property name="text">
            <string>Dump camera settings along with the video</string>
           </property>
