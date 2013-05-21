@@ -123,6 +123,7 @@ private:
   ArvBuffer* currentArvFrame;
   QFutureWatcher<void> futureRender;
   bool futureHoldsAHistogram;
+  QFile timestampFile;
 
   friend class ::QArvGui;
 };

@@ -37,6 +37,10 @@
 #include "getmtu_linux.h"
 #include "globals.h"
 
+extern "C" {
+  #include <arvbuffer.h>
+}
+
 using namespace QArv;
 
 const int slidersteps = 1000;
@@ -594,8 +598,15 @@ void QArvMainWindow::takeNextFrame() {
 
     if (recording && standalone) {
       recorder->recordFrame(currentRawFrame, currentFrame);
-      if (! recorder->isOK())
+      if (recorder->isOK()) {
+        if (timestampFile.isOpen()) {
+          quint64 ts = currentArvFrame->timestamp_ns;
+          timestampFile.write(QString::number(ts).toAscii());
+          timestampFile.write("\n");
+        }
+      } else {
         closeFileButton->setChecked(false);
+      }
     }
 
     framecounter++;
@@ -719,6 +730,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       checked = false;
     } else {
       statusBar()->clearMessage();
+      QString msg;
       if (recordMetadataCheck->isChecked()) {
         auto metaFileName = filenameEdit->text() + ".caminfo";
         QFile metaFile(metaFileName);
@@ -727,9 +739,16 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
           QTextStream file(&metaFile);
           file << camera;
         } else
-          statusBar()->showMessage(tr("Could not dump camera settings."),
-                                   statusTimeoutMsec);
+          msg += tr("Could not dump camera settings.");
       }
+      if (recordTimestampsCheck->isChecked()) {
+        auto tsFileName = filenameEdit->text() + ".timestamps";
+        timestampFile.setFileName(tsFileName);
+        bool open = timestampFile.open(QIODevice::WriteOnly);
+        if (!open)
+          msg += " " + tr("Could not open timestamp file.");
+      }
+      if (!msg.isNull()) statusBar()->showMessage(msg, statusTimeoutMsec);
     }
   }
 
@@ -991,6 +1010,7 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
 
 void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
   recorder.reset();
+  timestampFile.close();
   closeFileButton->setEnabled(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
@@ -1075,6 +1095,7 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/video_file"] = filenameEdit;
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
   saved_widgets["qarv_recording/append_video"] = recordApendCheck;
+  saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
 
   // video display
