@@ -90,12 +90,10 @@ public:
       case CV_8UC1:
       case CV_16UC1:
         fmt = PIX_FMT_GRAY8;
-        temporary.create(size.height(), size.width(), CV_8UC1);
         break;
       case CV_8UC3:
       case CV_16UC3:
         fmt = PIX_FMT_BGR24;
-        temporary.create(size.height(), size.width(), CV_8UC3);
         break;
       default:
         qDebug() << "Recorder: Invalid CV image format";
@@ -114,25 +112,19 @@ public:
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    if (!decoded.isContinuous()) {
-      qDebug() << "Image is not continuous!";
-      OK = false;
-    }
     if (!isOK())
       return;
     if (decoded.depth() == CV_8U) {
-      file.write(reinterpret_cast<char*>(decoded.data),
-                 decoded.total()*decoded.elemSize1());
-    } else {
-      auto out = temporary.ptr<uint8_t>(0);
-      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
-           in != end; ) {
-        *out = (*in) >> 8;
-        out++;
-        in++;
+      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
+           in != end; in++) {
+        file.putChar(*reinterpret_cast<char*>(&(*in)));
       }
-      file.write(reinterpret_cast<char*>(temporary.data),
-                 temporary.total()*temporary.elemSize1());
+    } else {
+      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
+           in != end; in++) {
+        uint8_t tmp = (*in) >> 8;
+        file.putChar(*reinterpret_cast<char*>(&tmp));
+      }
     }
   }
 
@@ -140,7 +132,6 @@ private:
   QFile file;
   QArvDecoder* decoder;
   bool OK;
-  cv::Mat temporary;
 };
 
 class RawDecoded16: public Recorder {
@@ -158,12 +149,10 @@ public:
       case CV_8UC1:
       case CV_16UC1:
         fmt = PIX_FMT_GRAY16;
-        temporary.create(size.height(), size.width(), CV_16UC1);
         break;
       case CV_8UC3:
       case CV_16UC3:
         fmt = PIX_FMT_BGR48;
-        temporary.create(size.height(), size.width(), CV_16UC3);
         break;
       default:
         qDebug() << "Recorder: Invalid CV image format";
@@ -182,25 +171,23 @@ public:
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    if (!decoded.isContinuous()) {
-      qDebug() << "Image is not continuous!";
-      OK = false;
-    }
     if (!isOK())
       return;
     if (decoded.depth() == CV_16U) {
-      file.write(reinterpret_cast<char*>(decoded.data),
-                 decoded.total()*decoded.elemSize1());
-    } else {
-      auto out = temporary.ptr<uint16_t>(0);
-      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
-           in != end;) {
-        *out = (*in) << 8;
-        out++;
-        in++;
+      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
+           in != end; in++) {
+        char* tmpp = reinterpret_cast<char*>(&(*in));
+        file.putChar(tmpp[0]);
+        file.putChar(tmpp[1]);
       }
-      file.write(reinterpret_cast<char*>(temporary.data),
-                 temporary.total()*temporary.elemSize1());
+    } else {
+      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
+           in != end; in++) {
+        uint16_t tmp = (*in) << 8;
+        char* tmpp = reinterpret_cast<char*>(&tmp);
+        file.putChar(tmpp[0]);
+        file.putChar(tmpp[1]);
+      }
     }
   }
 
@@ -208,7 +195,6 @@ private:
   QFile file;
   QArvDecoder* decoder;
   bool OK;
-  cv::Mat temporary;
 };
 
 Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,
