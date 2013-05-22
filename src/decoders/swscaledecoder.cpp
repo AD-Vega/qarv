@@ -45,13 +45,25 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
       av_get_bits_per_pixel(av_pix_fmt_descriptors + inputPixfmt);
     uint8_t components = av_pix_fmt_descriptors[inputPixfmt].nb_components;
     if (bitsPerPixel / components > 8) {
-      outputPixFmt = PIX_FMT_BGR48;
-      cvMatType = CV_16UC3;
-      bufferBytesPerPixel = 6;
+      if (components == 1) {
+        outputPixFmt = PIX_FMT_GRAY16;
+        cvMatType = CV_16UC1;
+        bufferBytesPerPixel = 2;
+      } else {
+        outputPixFmt = PIX_FMT_BGR48;
+        cvMatType = CV_16UC3;
+        bufferBytesPerPixel = 6;
+      }
     } else {
-      outputPixFmt = PIX_FMT_BGR24;
-      cvMatType = CV_8UC3;
-      bufferBytesPerPixel = 3;
+      if (components == 1) {
+        outputPixFmt = PIX_FMT_GRAY8;
+        cvMatType = CV_8UC1;
+        bufferBytesPerPixel = 1;
+      } else {
+        outputPixFmt = PIX_FMT_BGR24;
+        cvMatType = CV_8UC3;
+        bufferBytesPerPixel = 3;
+      }
     }
     OK = 0 < av_image_alloc(image_pointers, image_strides, size.width(),
                             size.height(), outputPixFmt, 16);
