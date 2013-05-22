@@ -31,7 +31,8 @@ QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
                                           const QStyleOptionViewItem& option,
                                           const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
-  assert(var.isValid());
+  if (!var.isValid())
+    return NULL;
   auto val = static_cast<QArvType*>(var.data());
   auto editor = val->createEditor(parent);
   this->connect(editor, SIGNAL(editingFinished()), SLOT(finishEditing()));
@@ -56,17 +57,26 @@ void QArvCameraDelegate::setModelData(QWidget* editor,
   model->setData(index, var);
 }
 
-void QArvCameraDelegate::updateEditorGeometry(
-  QWidget* editor,
-  const QStyleOptionViewItem&
-  option,
-  const QModelIndex& index) const {
-  editor->layout()->setContentsMargins(0, 0, 0, 0);
-  editor->setGeometry(option.rect);
+void QArvCameraDelegate::updateEditorGeometry(QWidget* editor,
+                                              const QStyleOptionViewItem& opt,
+                                              const QModelIndex& index) const {
+  editor->setGeometry(opt.rect);
 }
 
 void QArvCameraDelegate::finishEditing() {
   auto editor = qobject_cast<QWidget*>(sender());
   emit commitData(editor);
   emit closeEditor(editor);
+}
+
+QSize QArvCameraDelegate::sizeHint(const QStyleOptionViewItem& option,
+                                   const QModelIndex& index) const {
+  if (!index.isValid())
+    return QStyledItemDelegate::sizeHint(option, index);
+  QScopedPointer<QWidget> ptr(createEditor(NULL, option, index));
+  if (ptr) {
+    return ptr->layout()->sizeHint();
+  } else {
+    return QStyledItemDelegate::sizeHint(option, index);
+  }
 }

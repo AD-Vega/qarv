@@ -33,6 +33,7 @@ QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
   auto select = new QComboBox(editor);
   select->setObjectName("selectEnum");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(select);
   editor->connect(select, SIGNAL(activated(int)), SLOT(editingComplete()));
@@ -65,6 +66,7 @@ QArvEditor* QArvString::createEditor(QWidget* parent) const {
   auto edline = new QLineEdit(editor);
   edline->setObjectName("editString");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edline);
   editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
@@ -89,6 +91,7 @@ QArvEditor* QArvFloat::createEditor(QWidget* parent) const {
   auto edbox = new QDoubleSpinBox(editor);
   edbox->setObjectName("editFloat");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edbox);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
@@ -115,6 +118,7 @@ QArvEditor* QArvInteger::createEditor(QWidget* parent) const {
   auto edbox = new QSpinBox(editor);
   edbox->setObjectName("editInteger");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edbox);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
@@ -140,6 +144,7 @@ QArvEditor* QArvBoolean::createEditor(QWidget* parent) const {
   auto check = new QCheckBox(editor);
   check->setObjectName("editBool");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(check);
   editor->connect(check, SIGNAL(clicked(bool)), SLOT(editingComplete()));
@@ -164,6 +169,7 @@ QArvEditor* QArvCommand::createEditor(QWidget* parent) const {
   button->setObjectName("execCommand");
   button->setText(QObject::tr("Execute", "QArvCamera"));
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(button);
   editor->connect(button, SIGNAL(clicked(bool)), SLOT(editingComplete()));
@@ -179,6 +185,7 @@ QArvEditor* QArvRegister::createEditor(QWidget* parent) const {
   auto edline = new QLineEdit(editor);
   edline->setObjectName("editRegister");
   auto layout = new QHBoxLayout;
+  layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edline);
   editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
