@@ -106,7 +106,7 @@ public:
 };
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,
-                    "si.ad-vega.qarv.QArvPixelFormat/0.1");
+                    "si.ad-vega.qarv.QArvPixelFormat/0.1")
 
 #pragma GCC visibility pop
 

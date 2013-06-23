@@ -69,6 +69,6 @@ public:
 }
 
 Q_DECLARE_INTERFACE(QArv::OutputFormat,
-                    "si.ad-vega.qarv.QArvOutputFormat/0.1");
+                    "si.ad-vega.qarv.QArvOutputFormat/0.1")
 
 #endif
