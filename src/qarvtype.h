@@ -64,6 +64,7 @@ private slots:
  */
 
 struct QArvType {
+  virtual ~QArvType() {}
   virtual operator QString() const = 0;
   virtual QArvEditor* createEditor(QWidget* parent = NULL) const = 0;
   virtual void populateEditor(QWidget* editor) const = 0;
