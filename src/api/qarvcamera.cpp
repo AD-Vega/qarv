@@ -39,7 +39,9 @@ class QArvCamera::QArvCameraExtension {};
 QList<QArvCameraId> QArvCamera::cameraList;
 
 void QArvCamera::init() {
+#if !GLIB_CHECK_VERSION(2, 35, 1)
   g_type_init();
+#endif
   arv_enable_interface("Fake");
 }
 
