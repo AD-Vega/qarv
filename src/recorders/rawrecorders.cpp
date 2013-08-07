@@ -29,6 +29,8 @@ extern "C" {
 
 using namespace QArv;
 
+// Make sure settings format matches qarvrecordedvideo.cpp!
+
 static const QString descExt(".desc");
 static const QRegExp descExtRegexp("\\.desc$");
 
@@ -51,7 +53,7 @@ public:
                int FPS,
                bool appendToFile,
                bool writeInfo) :
-    file(fileName), decoder(decoder_) {
+    file(fileName), decoder(decoder_), bytesizeWritten(false) {
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
     if (isOK() && !appendToFile && writeInfo) {
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);
@@ -67,13 +69,21 @@ public:
   }
 
   void recordFrame(QByteArray raw, cv::Mat decoded) {
-    if (isOK())
+    if (isOK()) {
       file.write(raw);
+      if (!bytesizeWritten) {
+        bytesizeWritten = true;
+        QSettings s(file.fileName() + descExt, QSettings::Format::IniFormat);
+        s.beginGroup("qarv_raw_video_description");
+        s.setValue("frame_bytes", raw.size());
+      }
+    }
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
+  bool bytesizeWritten;
 };
 
 class RawDecoded8: public Recorder {
@@ -88,14 +98,17 @@ public:
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
     if (isOK() && !appendToFile && writeInfo) {
       enum PixelFormat fmt;
+      int frameBytes;
       switch (decoder->cvType()) {
       case CV_8UC1:
       case CV_16UC1:
         fmt = PIX_FMT_GRAY8;
+        frameBytes = size.width()*size.height();
         break;
       case CV_8UC3:
       case CV_16UC3:
         fmt = PIX_FMT_BGR24;
+        frameBytes = size.width()*size.height()*3;
         break;
       default:
         qDebug() << "Recorder: Invalid CV image format";
@@ -106,6 +119,7 @@ public:
       s.setValue("encoding_type", "libavutil");
       s.setValue("libavutil_pixel_format", fmt);
       s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
+      s.setValue("frame_bytes", frameBytes);
     }
   }
 
@@ -148,14 +162,17 @@ public:
     file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
     if (isOK() && !appendToFile && writeInfo) {
       enum PixelFormat fmt;
+      int frameBytes;
       switch (decoder->cvType()) {
       case CV_8UC1:
       case CV_16UC1:
         fmt = PIX_FMT_GRAY16;
+        frameBytes = size.width()*size.height()*2;
         break;
       case CV_8UC3:
       case CV_16UC3:
         fmt = PIX_FMT_BGR48;
+        frameBytes = size.width()*size.height()*6;
         break;
       default:
         qDebug() << "Recorder: Invalid CV image format";
@@ -166,6 +183,7 @@ public:
       s.setValue("encoding_type", "libavutil");
       s.setValue("libavutil_pixel_format", fmt);
       s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
+      s.setValue("frame_bytes", frameBytes);
     }
   }
 

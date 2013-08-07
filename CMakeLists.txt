@@ -45,7 +45,7 @@ set_prefixed(qarv_SRCS src/ qarvmainwindow.cpp main.cpp
   glvideowidget.cpp glhistogramwidget.cpp globals.cpp
   roicombobox.cpp qarvfeaturetree.cpp qarvtype.cpp api/qarvgui.cpp
   api/qarvcamera.cpp api/qarvdecoder.cpp api/qarvcameradelegate.cpp
-  recorders/recorder.cpp)
+  recorders/recorder.cpp api/qarvrecordedvideo.cpp)
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono12packed.h monounpackeddecoders.h)
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
