@@ -695,6 +695,11 @@ Predlagamo večji MTU.</translation>
     <name>QArvVideoPlayer</name>
     <message>
         <location filename="../src/utils/qarv_videoplayer.cpp" line="64"/>
+        <source>qarv video description (*.qarv);;All file types (*.*)</source>
+        <translation>qarv opis videa (*.qarv);;Vsi tipi datotek (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.cpp" line="65"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>

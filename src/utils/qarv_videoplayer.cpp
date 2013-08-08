@@ -61,7 +61,8 @@ void QArvVideoPlayer::on_playButton_toggled(bool checked) {
 }
 
 void QArvVideoPlayer::on_openButton_clicked(bool checked) {
-  auto name = QFileDialog::getOpenFileName(this, tr("Open file"));
+  QString filter = tr("qarv video description (*.qarv);;All file types (*.*)");
+  auto name = QFileDialog::getOpenFileName(this, tr("Open file"), QString(), filter);
   if (!name.isNull())
     open(name);
 }
