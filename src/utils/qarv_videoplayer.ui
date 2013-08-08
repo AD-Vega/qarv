@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>QArv Video Player</string>
+   <string>qarv Video Player</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -28,11 +28,16 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="openButton">
+       <property name="toolTip">
+        <string>Open a video description file for raw video.</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="document-open"/>
+        <iconset theme="document-open">
+         <normaloff/>
+        </iconset>
        </property>
       </widget>
      </item>
@@ -41,11 +46,16 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="toolTip">
+        <string>Play or pause video.</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
-        <iconset theme="media-playback-start"/>
+        <iconset theme="media-playback-start">
+         <normaloff/>
+        </iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>

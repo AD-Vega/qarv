@@ -445,10 +445,6 @@
         <translation>Skupaj z videom shrani tudi nastavitve kamere</translation>
     </message>
     <message>
-        <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .desc extension will be created and will contain video format information.</source>
-        <translation type="obsolete">Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .desc, ki vsebuje te informacije.</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="1027"/>
         <source>Write video information file</source>
         <translation>Zapiši informacije o videu</translation>
@@ -740,8 +736,18 @@ Predlagamo večji MTU.</translation>
     <name>VideoPlayer</name>
     <message>
         <location filename="../src/utils/qarv_videoplayer.ui" line="14"/>
-        <source>QArv Video Player</source>
-        <translation>QArv video predvajalnik</translation>
+        <source>qarv Video Player</source>
+        <translation>qarv video predvajalnik</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.ui" line="32"/>
+        <source>Open a video description file for raw video.</source>
+        <translation>Odpri datoteko z opisom videa.</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.ui" line="50"/>
+        <source>Play or pause video.</source>
+        <translation>Predvajaj ali ustavi video.</translation>
     </message>
 </context>
 </TS>
