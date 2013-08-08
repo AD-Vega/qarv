@@ -70,6 +70,14 @@ add_executable(qarvexe src/main.cpp)
 target_link_libraries(qarvexe ${QT_LIBRARIES} qarv)
 set_target_properties(qarvexe PROPERTIES OUTPUT_NAME qarv)
 
+qt4_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
+qt4_wrap_cpp(qarv_videoplayer_MOC src/utils/qarv_videoplayer.h
+  src/glvideowidget.h)
+add_executable(qarv_videoplayer src/utils/qarv_videoplayer.cpp
+  src/glvideowidget.cpp src/globals.cpp
+  ${qarv_videoplayer_MOC} ${qarv_videoplayer_UI})
+target_link_libraries(qarv_videoplayer ${QT_LIBRARIES} qarv)
+
 set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
   edit-clear.svgz media-playback-start.svgz media-record.svgz video-display.svgz
   view-refresh.svgz zoom-original.svgz office-chart-bar.svgz
@@ -77,7 +85,7 @@ set_prefixed(qarv_ICONS res/icons/ document-open.svgz document-save.svgz
   edit-clear-locationbar-rtl.svgz edit-select.svgz media-playback-stop.svgz
   media-playback-pause.svgz)
 
-install(TARGETS qarv qarvexe
+install(TARGETS qarv qarvexe qarv_videoplayer
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
 set_prefixed(qarv_IHDR src/api/
