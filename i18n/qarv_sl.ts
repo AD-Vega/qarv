@@ -445,9 +445,8 @@
         <translation>Skupaj z videom shrani tudi nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1024"/>
         <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .desc extension will be created and will contain video format information.</source>
-        <translation>Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .desc, ki vsebuje te informacije.</translation>
+        <translation type="obsolete">Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .desc, ki vsebuje te informacije.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1027"/>
@@ -503,6 +502,11 @@
         <location filename="../src/mainwindow.ui" line="90"/>
         <source>Record video. Depress to pause recording, press again to resume.</source>
         <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="1024"/>
+        <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</source>
+        <translation>Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .qarv, ki vsebuje te informacije. To datoteko lahko predvaja qarv video predvajalnik.</translation>
     </message>
     <message utf8="true">
         <location filename="../src/mainwindow.ui" line="1051"/>
@@ -692,36 +696,52 @@ Predlagamo večji MTU.</translation>
     </message>
 </context>
 <context>
+    <name>QArvVideoPlayer</name>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.cpp" line="64"/>
+        <source>Open file</source>
+        <translation>Odpri datoteko</translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
-        <location filename="../src/qarvtype.h" line="119"/>
+        <location filename="../src/qarvtype.h" line="120"/>
         <source>on/true</source>
         <comment>QArvCamera</comment>
         <translation>vklopljeno</translation>
     </message>
     <message>
-        <location filename="../src/qarvtype.h" line="120"/>
+        <location filename="../src/qarvtype.h" line="121"/>
         <source>off/false</source>
         <comment>QArvCamera</comment>
         <translation>izklopljeno</translation>
     </message>
     <message>
-        <location filename="../src/qarvtype.h" line="128"/>
+        <location filename="../src/qarvtype.h" line="129"/>
         <source>&lt;command&gt;</source>
         <comment>QArvCamera</comment>
         <translation>&lt;ukaz&gt;</translation>
     </message>
     <message>
-        <location filename="../src/api/qarvcamera.cpp" line="412"/>
+        <location filename="../src/api/qarvcamera.cpp" line="414"/>
         <source>Incompatible camera settings</source>
         <comment>QArvCamera</comment>
         <translation>Nekompatibilne nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/qarvtype.cpp" line="165"/>
+        <location filename="../src/qarvtype.cpp" line="170"/>
         <source>Execute</source>
         <comment>QArvCamera</comment>
         <translation>Izvedi</translation>
+    </message>
+</context>
+<context>
+    <name>VideoPlayer</name>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.ui" line="14"/>
+        <source>QArv Video Player</source>
+        <translation>QArv video predvajalnik</translation>
     </message>
 </context>
 </TS>
