@@ -32,14 +32,13 @@ using namespace QArv;
 // Make sure settings format matches qarvrecordedvideo.cpp!
 
 static const QString descExt(".desc");
-static const QRegExp descExtRegexp("\\.desc$");
 
 void initDescfile(QSettings& s, QSize size, int FPS) {
   s.beginGroup("qarv_raw_video_description");
   s.remove("");
   s.setValue("description_version", "0.1");
   QFileInfo finfo(s.fileName());
-  QString fname(finfo.baseName().remove(descExtRegexp));
+  QString fname(finfo.completeBaseName());
   s.setValue("file_name", fname);
   s.setValue("frame_size", size);
   s.setValue("nominal_fps", FPS);
