@@ -694,12 +694,12 @@ Predlagamo večji MTU.</translation>
 <context>
     <name>QArvVideoPlayer</name>
     <message>
-        <location filename="../src/utils/qarv_videoplayer.cpp" line="64"/>
+        <location filename="../src/utils/qarv_videoplayer.cpp" line="65"/>
         <source>qarv video description (*.qarv);;All file types (*.*)</source>
         <translation>qarv opis videa (*.qarv);;Vsi tipi datotek (*.*)</translation>
     </message>
     <message>
-        <location filename="../src/utils/qarv_videoplayer.cpp" line="65"/>
+        <location filename="../src/utils/qarv_videoplayer.cpp" line="66"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
@@ -750,7 +750,17 @@ Predlagamo večji MTU.</translation>
         <translation>Odpri datoteko z opisom videa.</translation>
     </message>
     <message>
+        <location filename="../src/utils/qarv_videoplayer.ui" line="47"/>
+        <source>Set video frame rate.</source>
+        <translation>Nastavi hitrost predvajanja v okvirjih na sekundo (FPS).</translation>
+    </message>
+    <message>
         <location filename="../src/utils/qarv_videoplayer.ui" line="50"/>
+        <source> FPS</source>
+        <translation> FPS</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/qarv_videoplayer.ui" line="66"/>
         <source>Play or pause video.</source>
         <translation>Predvajaj ali ustavi video.</translation>
     </message>
