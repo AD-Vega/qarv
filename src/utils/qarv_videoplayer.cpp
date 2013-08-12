@@ -41,10 +41,10 @@ bool QArvVideoPlayer::open(QString filename) {
   decoder.reset(recording->makeDecoder());
   slider->blockSignals(true);
   slider->setEnabled(recording->isSeekable());
-  slider->setMaximum(recording->numberOfFrames());
+  slider->setMaximum(recording->numberOfFrames() - 1);
   slider->setValue(0);
-  slider->blockSignals(false);
   on_slider_valueChanged(0);
+  slider->blockSignals(false);
   fpsSpinbox->setValue(recording->framerate());
 
   playButton->setEnabled(true);
@@ -68,11 +68,13 @@ void QArvVideoPlayer::on_openButton_clicked(bool checked) {
     open(name);
 }
 
-void QArvVideoPlayer::readNextFrame() {
+void QArvVideoPlayer::readNextFrame(bool seeking) {
   auto frame = recording->read();
-  slider->blockSignals(true);
-  slider->setValue(slider->value()+1);
-  slider->blockSignals(false);
+  if (!seeking && slider->isEnabled()) {
+    slider->blockSignals(true);
+    slider->setValue(slider->value()+1);
+    slider->blockSignals(false);
+  }
   if (frame.isNull()) {
     playButton->setChecked(false);
     videoWidget->setImage();
@@ -92,7 +94,8 @@ void QArvVideoPlayer::showNextFrame() {
 
 void QArvVideoPlayer::on_slider_valueChanged(int value) {
   recording->seek(value);
-  readNextFrame();
+  readNextFrame(true);
+  recording->seek(value);
   showNextFrame();
 }
 

@@ -39,7 +39,7 @@ private slots:
   void on_openButton_clicked(bool checked);
   void on_slider_valueChanged(int value);
   void showNextFrame();
-  void readNextFrame();
+  void readNextFrame(bool seeking = false);
 
 private:
   QTimer* showTimer;
