@@ -45,7 +45,7 @@ bool QArvVideoPlayer::open(QString filename) {
   slider->setValue(0);
   slider->blockSignals(false);
   on_slider_valueChanged(0);
-  showTimer->setInterval(1000 / recording->framerate());
+  fpsSpinbox->setValue(recording->framerate());
 
   playButton->setEnabled(true);
   return true;
@@ -54,6 +54,7 @@ bool QArvVideoPlayer::open(QString filename) {
 void QArvVideoPlayer::on_playButton_toggled(bool checked) {
   if (checked) {
     readNextFrame();
+    showTimer->setInterval(1000 / fpsSpinbox->value());
     showTimer->start();
   } else {
     showTimer->stop();
@@ -83,8 +84,10 @@ void QArvVideoPlayer::readNextFrame() {
 
 void QArvVideoPlayer::showNextFrame() {
   videoWidget->swapFrames();
-  if (playButton->isChecked())
+  if (playButton->isChecked()) {
+    showTimer->setInterval(1000 / fpsSpinbox->value());
     QTimer::singleShot(0, this, SLOT(readNextFrame()));
+  }
 }
 
 void QArvVideoPlayer::on_slider_valueChanged(int value) {
