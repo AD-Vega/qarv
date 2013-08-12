@@ -95,6 +95,10 @@ install(FILES ${qarv_IHDR}
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION share/qarv/)
 install(FILES res/icons/qarv.svgz
+        RENAME application-x-qarv.svgz
         DESTINATION share/icons/)
-install(FILES res/qarv.desktop
+install(FILES res/qarv.desktop res/qarv-player.desktop
         DESTINATION share/applications/)
+install(FILES res/qarv.xml
+        DESTINATION share/mime/packages/)
+

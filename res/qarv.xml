@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+  <mime-type type="application/x-qarv">  
+  <comment>Raw video recorded using qarv</comment>
+  <comment xml:lang="si">Surov video posnet s qarv</comment>
+  <glob pattern="*.qarv"/>
+ </mime-type>
+</mime-info>
