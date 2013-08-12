@@ -24,7 +24,7 @@
 #include <QGLWidget>
 #include <QImage>
 #include <QMouseEvent>
-#include <QIcon>
+#include <QSvgRenderer>
 #include <opencv2/core/core.hpp>
 
 namespace QArv
@@ -57,7 +57,7 @@ private:
 
   QImage image, unusedImage;
   QRect in, out;
-  QIcon idleImageIcon;
+  QSvgRenderer idleImageRenderer;
 
   bool idling, selecting, drawRectangle, fixedSelection;
   QPoint corner1, corner2;

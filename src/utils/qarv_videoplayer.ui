@@ -84,6 +84,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../res/icons/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

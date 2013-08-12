@@ -27,14 +27,10 @@ using namespace QArv;
 
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
   QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
-  idleImageIcon(), selecting(false), drawRectangle(false),
-  fixedSelection(false), corner1(), corner2(), rectangle(),
-  whitepen(Qt::white), blackpen(Qt::black) {
-  QFile iconfile(QString(qarv_datafiles) + "/video-display.svgz");
-  if (iconfile.exists())
-    idleImageIcon = QIcon(iconfile.fileName());
-  else
-    idleImageIcon = QIcon::fromTheme("video-display");
+  idleImageRenderer(QString(":/icons/qarv.svgz")),
+  idling(true), selecting(false),
+  drawRectangle(false), fixedSelection(false), corner1(), corner2(),
+  rectangle(), whitepen(Qt::white), blackpen(Qt::black) {
   whitepen.setWidth(0);
   whitepen.setStyle(Qt::DotLine);
   blackpen.setWidth(0);
@@ -45,7 +41,6 @@ GLVideoWidget::~GLVideoWidget() {}
 void GLVideoWidget::setImage(const QImage& image_) {
   if (image_.isNull()) {
     idling = true;
-    image = idleImageIcon.pixmap(size()).toImage();
   } else {
     idling = false;
     image = image_;
@@ -75,11 +70,15 @@ QImage* GLVideoWidget::unusedFrame() {
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {
   QGLWidget::resizeEvent(event);
-  if (idling) setImage();
   auto view = rect();
   out = view;
-  if (in.size() != view.size()) {
-    float aspect = in.width() / (float)in.height();
+  QSize thesize;
+  if (idling)
+    thesize = idleImageRenderer.defaultSize();
+  else
+    thesize = in.size();
+  if (thesize != view.size()) {
+    float aspect = thesize.width() / (float)thesize.height();
     float vaspect = view.width() / (float)view.height();
     int x, y, w, h;
     if (vaspect > aspect) {
@@ -99,15 +98,19 @@ void GLVideoWidget::resizeEvent(QResizeEvent* event) {
 
 void GLVideoWidget::paintGL() {
   QPainter painter(this);
-  if (in.size() != out.size())
-    painter.setRenderHint(QPainter::SmoothPixmapTransform);
-  painter.drawImage(out, image);
+  if (!idling) {
+    if (in.size() != out.size())
+      painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.drawImage(out, image);
 
-  if (drawRectangle) {
-    painter.setPen(blackpen);
-    painter.drawRect(drawnRectangle);
-    painter.setPen(whitepen);
-    painter.drawRect(drawnRectangle);
+    if (drawRectangle) {
+      painter.setPen(blackpen);
+      painter.drawRect(drawnRectangle);
+      painter.setPen(whitepen);
+      painter.drawRect(drawnRectangle);
+    }
+  } else {
+    idleImageRenderer.render(&painter, out);
   }
 }
 

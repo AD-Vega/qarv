@@ -11,7 +11,7 @@ macro(set_prefixed varname string)
   endforeach(name)
 endmacro(set_prefixed)
 
-find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL QtNetwork)
+find_package(Qt4 REQUIRED QtCore QtGui QtOpenGL QtNetwork QtSVG)
 include(FindPkgConfig)
 pkg_check_modules(ARAVIS REQUIRED aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
