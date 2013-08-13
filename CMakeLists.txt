@@ -89,7 +89,7 @@ install(TARGETS qarv qarvexe qarv_videoplayer
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
 set_prefixed(qarv_IHDR src/api/
-             qarvcamera.h qarvcameradelegate.h qarvgui.h qarvdecoder.h)
+             qarvcamera.h qarvcameradelegate.h qarvgui.h qarvdecoder.h qarvrecordedvideo.h)
 install(FILES ${qarv_IHDR} 
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
