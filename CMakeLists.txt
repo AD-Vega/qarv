@@ -24,7 +24,10 @@ pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
 pkg_check_modules(AVCODEC REQUIRED libavcodec)
 pkg_check_modules(AVUTIL REQUIRED libavutil)
-find_package( OpenCV REQUIRED )
+find_package(OpenCV REQUIRED)
+# This version of gstreamer is linked in by other dependencies,
+# can't use version 1.0
+pkg_check_modules(GSTREAMER REQUIRED gstreamer-0.10) 
 
 include(${QT_USE_FILE})
 
@@ -34,6 +37,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${ARAVIS_INCLUDE_DIRS}
   ${GIO_INCLUDE_DIRS}
+  ${GSTREAMER_INCLUDE_DIRS}
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fvisibility-inlines-hidden -fvisibility=hidden")
@@ -91,10 +95,12 @@ set_prefixed(qarv_decoders_SRC src/decoders/
 )
 set_prefixed(qarv_recorders_MOCS src/recorders/
   rawrecorders.h
+  gstrecorders.h
 )
 qt4_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
 set_prefixed(qarv_recorders_SRC src/recorders/
   rawrecorders.cpp
+  gstrecorders.cpp
 )
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
@@ -117,6 +123,7 @@ target_link_libraries(qarv
   ${AVCODEC_LDFLAGS}
   ${AVUTIL_LDFLAGS}
   ${OpenCV_LIBS}
+  ${GSTREAMER_LIBRARIES}
 )
 set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
 

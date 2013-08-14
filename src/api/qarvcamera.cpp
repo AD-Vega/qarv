@@ -21,6 +21,7 @@ extern "C" {
   #include <arv.h>
   #include <gio/gio.h>
   #include <sys/socket.h>
+  #include <gst/gst.h>
 }
 #include <cstdlib>
 #include <cstring>
@@ -42,7 +43,13 @@ void QArvCamera::init() {
 #if !GLIB_CHECK_VERSION(2, 35, 1)
   g_type_init();
 #endif
+  // TODO: clean this up
   arv_enable_interface("Fake");
+  auto name = "qarv";
+  auto name2 = const_cast<char*>(name);
+  char ** nameaddr = &name2;
+  int len = 1;
+  gst_init(&len, &nameaddr);
 }
 
 QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
