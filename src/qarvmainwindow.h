@@ -81,6 +81,7 @@ private slots:
   void on_sliderUpdateSpinbox_valueChanged(int i);
   void on_histogramUpdateSpinbox_valueChanged(int i);
   void on_statusTimeoutSpinbox_valueChanged(int i);
+  void on_videoFormatSelector_currentIndexChanged(int i);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();

@@ -30,6 +30,7 @@
 #include <QTextDocument>
 #include <QStatusBar>
 #include <QtConcurrentRun>
+#include <QPluginLoader>
 
 #include <type_traits>
 
@@ -126,7 +127,12 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     snapButton->setEnabled(false);
   }
 
-  videoFormatSelector->addItems(OutputFormat::outputFormats());
+  auto plugins = QPluginLoader::staticInstances();
+  foreach (auto plugin, plugins) {
+    auto fmt = qobject_cast<OutputFormat*>(plugin);
+    if (fmt != NULL)
+      videoFormatSelector->addItem(fmt->name(), QVariant::fromValue(fmt));
+  }
   videoFormatSelector->setCurrentIndex(0);
 
   auto timer = new QTimer(this);
@@ -1155,5 +1161,15 @@ void QArvMainWindow::restoreProgramSettings() {
       w->setValue(data.toInt());
     else
       qDebug() << "FIXME: don't know how to restore setting" << i.key();
+  }
+}
+
+void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
+  auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
+  if (fmt) {
+    recordApendCheck->setEnabled(fmt->canAppend());
+    recordInfoCheck->setEnabled(fmt->canWriteInfo());
+  } else {
+    qDebug() << "Video format data not OutputFormat";
   }
 }

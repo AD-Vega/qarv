@@ -23,6 +23,7 @@
 #include "api/qarvdecoder.h"
 #include <QList>
 #include <QString>
+#include <QMetaType>
 
 namespace QArv {
 
@@ -45,6 +46,12 @@ public:
   //! Returns the name of the output format.
   virtual QString name() = 0;
 
+  //! Returns true if data can be appended to an existing file.
+  virtual bool canAppend() = 0;
+
+  //! Returns true if metadata should be written to a .qarv file.
+  virtual bool canWriteInfo() = 0;
+
   //! Instantiates a recorder using this plugin.
   virtual Recorder* makeRecorder(QArvDecoder* decoder,
                                  QString fileName,
@@ -61,14 +68,12 @@ public:
                                 int framesPerSecond,
                                 bool appendToFile,
                                 bool writeInfo);
-
-  //! Returns a list of supported output formats.
-  static QList<QString> outputFormats();
 };
 
 }
 
 Q_DECLARE_INTERFACE(QArv::OutputFormat,
                     "si.ad-vega.qarv.QArvOutputFormat/0.1")
+Q_DECLARE_METATYPE(QArv::OutputFormat*)
 
 #endif

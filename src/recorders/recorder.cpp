@@ -38,14 +38,3 @@ Recorder* OutputFormat::makeRecorder(QArvDecoder* decoder,
   }
   return NULL;
 }
-
-QList< QString > OutputFormat::outputFormats() {
-  QList<QString> out;
-  auto plugins = QPluginLoader::staticInstances();
-  foreach (auto plugin, plugins) {
-    auto fmt = qobject_cast<OutputFormat*>(plugin);
-    if (fmt != NULL)
-      out << fmt->name();
-  }
-  return out;
-}
