@@ -700,7 +700,10 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       filenameEdit,
       chooseFilenameButton,
       recordApendCheck,
-      videoFormatSelector
+      videoFormatSelector,
+      recordInfoCheck,
+      recordMetadataCheck,
+      recordTimestampsCheck
     };
   }
 
@@ -770,6 +773,7 @@ skip_all_file_opening:
   closeFileButton->setEnabled(!recording && open);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording && !open);
+    on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
   }
 
   emit recordingStarted(recording);
@@ -1020,6 +1024,7 @@ void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
   closeFileButton->setEnabled(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
+    on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
   }
   foreach (auto wgt, toDisableWhenPlaying) {
     wgt->setEnabled(!started);
@@ -1167,8 +1172,9 @@ void QArvMainWindow::restoreProgramSettings() {
 void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
   if (fmt) {
-    recordApendCheck->setEnabled(fmt->canAppend());
-    recordInfoCheck->setEnabled(fmt->canWriteInfo());
+    bool b = !recording && !closeFileButton->isEnabled();
+    recordApendCheck->setEnabled(fmt->canAppend() && b);
+    recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
   } else {
     qDebug() << "Video format data not OutputFormat";
   }
