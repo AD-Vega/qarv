@@ -66,6 +66,7 @@ static const bool gstOK = checkPluginAvailability({ "fdsrc",
 class GstRecorder: public Recorder {
 private:
   QProcess gstprocess;
+  cv::Mat tmpMat;
 
 public:
   GstRecorder(QString outputFormat,
@@ -84,9 +85,9 @@ public:
 
     case CV_16UC1:
 #if G_BYTE_ORDER == G_BIG_ENDIAN
-      informat = "gray16be";
+      informat = "gray16-be";
 #else
-      informat = "gray16le";
+      informat = "gray16-le";
 #endif
       break;
 
@@ -95,6 +96,7 @@ public:
       break;
 
     case CV_16UC3:
+      tmpMat = cv::Mat(size.height(), size.width(), CV_16UC4, cv::Scalar(65535, 0, 0, 0));
       informat = "argb64";
       break;
 
@@ -146,18 +148,18 @@ public:
   void recordFrame(QByteArray raw, cv::Mat decoded) {
     if (!isOK())
       return;
+    char* p;
+    int bytes;
     if (decoded.type() == CV_16UC3) {
-      for (uint i = 0; i < decoded.total(); i+=3) {
-        auto p = reinterpret_cast<char*>(decoded.data + i);
-        gstprocess.putChar(0);
-        gstprocess.putChar(p[2]);
-        gstprocess.putChar(p[1]);
-        gstprocess.putChar(p[0]);
-      }
+      const int mix[] = { 2, 1, 1, 2, 0, 3 };
+      cv::mixChannels(&decoded, 1, &tmpMat, 1, mix, 3);
+      p = reinterpret_cast<char*>(tmpMat.data);
+      bytes = tmpMat.total()*tmpMat.elemSize();
     } else {
-      auto p = reinterpret_cast<char*>(decoded.data);
-      gstprocess.write(p, decoded.total()*decoded.elemSize());
+      p = reinterpret_cast<char*>(decoded.data);
+      bytes = decoded.total()*decoded.elemSize();
     }
+    gstprocess.write(p, bytes);
   }
 };
 
