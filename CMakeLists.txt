@@ -91,10 +91,12 @@ set_prefixed(qarv_decoders_SRC src/decoders/
 )
 set_prefixed(qarv_recorders_MOCS src/recorders/
   rawrecorders.h
+  gstrecorders.h
 )
 qt4_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
 set_prefixed(qarv_recorders_SRC src/recorders/
   rawrecorders.cpp
+  gstrecorders.cpp
 )
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
