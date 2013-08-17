@@ -159,6 +159,8 @@ public:
       p = reinterpret_cast<char*>(decoded.data);
       bytes = decoded.total()*decoded.elemSize();
     }
+    while (gstprocess.bytesToWrite() > 200*bytes)
+      gstprocess.waitForBytesWritten(-1);
     gstprocess.write(p, bytes);
   }
 };
