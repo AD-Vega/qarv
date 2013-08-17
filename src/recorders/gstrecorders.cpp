@@ -20,6 +20,7 @@
 #include "recorders/gstrecorders.h"
 #include <QProcess>
 #include <QFileInfo>
+#include <QStringList>
 #include <QDebug>
 
 using namespace QArv;
@@ -29,9 +30,43 @@ using namespace QArv;
  * dependencies link to gstreamer-0.10, which is too old for us.
  */
 
+static bool checkPluginAvailability(const QStringList& plugins) {
+  static bool haveInspector = false, failed = false;
+  if (failed) return false;
+  if (!haveInspector) {
+    QProcess I;
+    I.start("gst-inspect-1.0 --version");
+    if (!I.waitForFinished(1000) || I.exitCode() != 0) {
+      qDebug() << "gst-inspector not available";
+      failed = true;
+      return false;
+    }
+    haveInspector = true;
+  }
+  QString cmd("gst-inspect-1.0 --exists ");
+  bool ok = true;
+  foreach (QString p, plugins) {
+    QProcess I;
+    I.start(cmd + p);
+    I.waitForFinished();
+    if (I.exitCode() != 0) {
+      qDebug() << "gstreamer missing plugin" << p;
+      ok = false;
+    }
+  }
+  return ok;
+}
+
+static const bool gstOK = checkPluginAvailability({ "fdsrc",
+                                                    "videoparse",
+                                                    "queue",
+                                                    "videoconvert",
+                                                    "filesink" });
+
 class GstRecorder: public Recorder {
-private:;
+private:
   QProcess gstprocess;
+
 public:
   GstRecorder(QString outputFormat,
               QArvDecoder* decoder,
@@ -40,6 +75,7 @@ public:
               int FPS,
               bool appendToFile,
               bool writeInfo) {
+    if (!gstOK) return;
     QString informat;
     switch (decoder->cvType()) {
     case CV_8UC1:
@@ -96,6 +132,7 @@ public:
   }
 
   bool isOK() {
+    if (!gstOK) return false;
     if (gstprocess.state() == QProcess::Starting) {
       if (!gstprocess.waitForStarted(1000)) {
         qDebug() << "gstreamer failed to start";
@@ -129,9 +166,13 @@ Recorder* HuffyuvAviFormat::makeRecorder(QArvDecoder* decoder,
                                          int framesPerSecond,
                                          bool appendToFile,
                                          bool writeInfo) {
-  return new GstRecorder("avenc_huffyuv ! avimux",
-                         decoder, fileName, frameSize,
-                         framesPerSecond, appendToFile, writeInfo);
+  static bool OK = checkPluginAvailability({ "avenc_huffyuv", "avimux" });
+  if (OK)
+    return new GstRecorder("avenc_huffyuv ! avimux",
+                           decoder, fileName, frameSize,
+                           framesPerSecond, appendToFile, writeInfo);
+  else
+    return NULL;
 }
 
 Q_EXPORT_PLUGIN2(HuffyuvAvi, QArv::HuffyuvAviFormat)
