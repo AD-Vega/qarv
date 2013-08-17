@@ -113,8 +113,9 @@ void QArvVideoPlayer::readNextFrame(bool seeking) {
     if (!recorder) {
       QArvDecoder::CV2QImage(decoder->getCvImage(),
                              *(videoWidget->unusedFrame()));
-    } else if (!seeking) {
+    } else {
       recorder->recordFrame(frame, decoder->getCvImage());
+      transcodeBar->setValue(transcodeBar->value() + 1);
       if (recording->isSeekable() && slider->value() >= rightFrame) {
         transcodeButton->setChecked(false);
         return;
@@ -177,6 +178,9 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
         leftFrame = tmp;
       }
       slider->setValue(leftFrame);
+      transcodeBar->setMinimum(leftFrame);
+      transcodeBar->setMaximum(rightFrame);
+      transcodeBar->setValue(leftFrame);
     }
     QApplication::processEvents();
 
@@ -197,13 +201,19 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
       return;
     }
 
+    slider->setEnabled(false);
     playButton->setChecked(true);
     playButton->setEnabled(false);
   } else {
     playButton->setEnabled(true);
     playButton->setChecked(false);
     QApplication::processEvents();
+    transcodeBar->setValue(transcodeBar->minimum());
     recorder.reset();
+    if (recording->isSeekable()) {
+      slider->setEnabled(true);
+      slider->setValue(slider->minimum());
+    }
   }
 }
 
