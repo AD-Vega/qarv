@@ -128,7 +128,7 @@ public:
 
   virtual ~GstRecorder() {
     gstprocess.closeWriteChannel();
-    if (!gstprocess.waitForFinished(1000)) {
+    if (!gstprocess.waitForFinished(5000)) {
       qDebug() << "gstreamer process did not finish";
       gstprocess.kill();
     }
