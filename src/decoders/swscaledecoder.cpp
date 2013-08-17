@@ -100,10 +100,8 @@ int SwScaleDecoder::cvType() {
 void SwScaleDecoder::decode(QByteArray frame) {
   if (!OK) return;
   auto dataptr = reinterpret_cast<const uint8_t*>(frame.constData());
-  int calculatedSize =
-    avpicture_fill(&srcInfo, const_cast<uint8_t*>(dataptr),
-                   inputPixfmt, size.width(), size.height());
-  assert(calculatedSize == frame.size());
+  avpicture_fill(&srcInfo, const_cast<uint8_t*>(dataptr),
+                 inputPixfmt, size.width(), size.height());
   int outheight = sws_scale(ctx, srcInfo.data, srcInfo.linesize,
                             0, size.height(),
                             image_pointers, image_strides);
