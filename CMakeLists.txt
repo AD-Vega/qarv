@@ -97,6 +97,7 @@ qt4_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
 set_prefixed(qarv_recorders_SRC src/recorders/
   rawrecorders.cpp
   gstrecorders.cpp
+  gstrecorder_implementation.cpp
 )
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
@@ -135,6 +136,7 @@ add_executable(qarv_videoplayer
   src/utils/qarv_videoplayer.cpp
   src/glvideowidget.cpp
   src/globals.cpp
+  src/recorders/gstrecorder_implementation.cpp
   ${qarv_videoplayer_MOC}
   ${qarv_videoplayer_UI}
 )

@@ -23,6 +23,7 @@
 #include "ui_qarv_videoplayer.h"
 #include "api/qarvdecoder.h"
 #include "api/qarvrecordedvideo.h"
+#include "recorders/recorder.h"
 #include <QTimer>
 
 class QArvVideoPlayer: public QWidget, private Ui::VideoPlayer {
@@ -38,6 +39,10 @@ private slots:
   void on_playButton_toggled(bool checked);
   void on_openButton_clicked(bool checked);
   void on_slider_valueChanged(int value);
+  void on_transcodeBox_toggled(bool checked);
+  void on_transcodeButton_toggled(bool checked);
+  void on_leftMarkButton_clicked(bool checked);
+  void on_rightMarkButton_clicked(bool checked);
   void showNextFrame();
   void readNextFrame(bool seeking = false);
 
@@ -45,6 +50,8 @@ private:
   QTimer* showTimer;
   QScopedPointer<QArvDecoder> decoder;
   QScopedPointer<QArvRecordedVideo> recording;
+  QScopedPointer<QArv::Recorder> recorder;
+  int leftFrame, rightFrame;
 };
 
 #endif

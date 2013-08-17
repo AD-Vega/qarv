@@ -17,22 +17,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "recorders/gstrecorders.h"
-#include "recorders/gstrecorder_implementation.h"
+#ifndef GSTRECORDER_IMPLEMENTATION_H
+#define GSTRECORDER_IMPLEMENTATION_H
 
-using namespace QArv;
+#include "recorders/recorder.h"
+#include <QStringList>
 
-Recorder* HuffyuvAviFormat::makeRecorder(QArvDecoder* decoder,
-                                         QString fileName,
-                                         QSize frameSize,
-                                         int framesPerSecond,
-                                         bool appendToFile,
-                                         bool writeInfo) {
-  return makeGstRecorder({ "avenc_huffyuv", "avimux" },
-                         "avenc_huffyuv ! avimux",
-                         decoder, fileName, frameSize,
-                         framesPerSecond, appendToFile, writeInfo);
-}
+namespace QArv {
 
-Q_EXPORT_PLUGIN2(HuffyuvAvi, QArv::HuffyuvAviFormat)
-Q_IMPORT_PLUGIN(HuffyuvAvi)
+Recorder* makeGstRecorder(QStringList plugins,
+                          QString pipelineFragment,
+                          QArvDecoder* decoder,
+                          QString fileName,
+                          QSize size,
+                          int FPS,
+                          bool appendToFile,
+                          bool writeInfo);
+
+};
+
+#endif

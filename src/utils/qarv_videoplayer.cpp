@@ -18,7 +18,11 @@
  */
 
 #include "utils/qarv_videoplayer.h"
+#include "recorders/gstrecorder_implementation.h"
 #include <QFileDialog>
+#include <QPluginLoader>
+
+using namespace QArv;
 
 QArvVideoPlayer::QArvVideoPlayer(QString filename,
                                  QWidget* parent,
@@ -28,6 +32,17 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
   connect(showTimer, SIGNAL(timeout()), SLOT(showNextFrame()));
   if (!filename.isNull())
     open(filename);
+  transcodeBox->setEnabled(false);
+  transcodeBox->setChecked(false);
+
+  auto plugins = QPluginLoader::staticInstances();
+  foreach (auto plugin, plugins) {
+    auto fmt = qobject_cast<OutputFormat*>(plugin);
+    if (fmt != NULL && !fmt->name().startsWith("Raw "))
+      codecBox->addItem(fmt->name(), QVariant::fromValue(fmt));
+  }
+  codecBox->addItem("Custom...", QVariant::fromValue((void*)NULL));
+  codecBox->setCurrentIndex(0);
 }
 
 bool QArvVideoPlayer::open(QString filename) {
@@ -35,8 +50,10 @@ bool QArvVideoPlayer::open(QString filename) {
     playButton->setChecked(false);
   playButton->setEnabled(false);
   recording.reset(new QArvRecordedVideo(filename));
-  if (!recording->status())
+  if (!recording->status()) {
+    transcodeBox->setEnabled(false);
     return false;
+  }
 
   decoder.reset(recording->makeDecoder());
   slider->blockSignals(true);
@@ -46,16 +63,26 @@ bool QArvVideoPlayer::open(QString filename) {
   on_slider_valueChanged(0);
   slider->blockSignals(false);
   fpsSpinbox->setValue(recording->framerate());
+  
+  leftMarkButton->setEnabled(recording->isSeekable());
+  rightMarkButton->setEnabled(recording->isSeekable());
+  leftMarkButton->setChecked(false);
+  rightMarkButton->setChecked(false);
+  on_leftMarkButton_clicked(false);
+  on_rightMarkButton_clicked(false);
 
   playButton->setEnabled(true);
+  transcodeBox->setEnabled(true);
   return true;
 }
 
 void QArvVideoPlayer::on_playButton_toggled(bool checked) {
   if (checked) {
     readNextFrame();
-    showTimer->setInterval(1000 / fpsSpinbox->value());
-    showTimer->start();
+    if (!recorder) {
+      showTimer->setInterval(1000 / fpsSpinbox->value());
+      showTimer->start();
+    }
   } else {
     showTimer->stop();
   }
@@ -77,10 +104,29 @@ void QArvVideoPlayer::readNextFrame(bool seeking) {
   }
   if (frame.isNull()) {
     playButton->setChecked(false);
+    transcodeButton->setChecked(false);
+    QApplication::processEvents();
     videoWidget->setImage();
+    return;
   } else {
     decoder->decode(frame);
-    QArvDecoder::CV2QImage(decoder->getCvImage(), *(videoWidget->unusedFrame()));
+    if (!recorder) {
+      QArvDecoder::CV2QImage(decoder->getCvImage(),
+                             *(videoWidget->unusedFrame()));
+    } else if (!seeking) {
+      recorder->recordFrame(frame, decoder->getCvImage());
+      if (recording->isSeekable() && slider->value() >= rightFrame) {
+        transcodeButton->setChecked(false);
+        return;
+      }
+      if (recorder->isOK()) {
+        // When recording, schedule reads here instead of from showNextFrame.
+        QTimer::singleShot(0, this, SLOT(readNextFrame()));
+      } else {
+        transcodeButton->setChecked(false);
+        return;
+      }
+    }
   }
 }
 
@@ -97,6 +143,68 @@ void QArvVideoPlayer::on_slider_valueChanged(int value) {
   readNextFrame(true);
   recording->seek(value);
   showNextFrame();
+}
+
+void QArvVideoPlayer::on_transcodeBox_toggled(bool checked) {
+  foreach (QObject* child, transcodeBox->children()) {
+    QWidget* wgt;
+    if (NULL != (wgt = qobject_cast<QWidget*>(child)))
+      wgt->setVisible(checked);
+  }
+}
+
+void QArvVideoPlayer::on_leftMarkButton_clicked(bool checked) {
+  leftFrame = checked ? slider->value() : 0;
+}
+
+void QArvVideoPlayer::on_rightMarkButton_clicked(bool checked) {
+  rightFrame = checked ? slider->value() : slider->maximum();
+}
+
+void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
+  if (checked) {
+    QString fname = QFileDialog::getSaveFileName(this, tr("Destination file"));
+    if (fname.isNull()) {
+      transcodeButton->setChecked(false);
+      return;
+    }
+    playButton->setChecked(false);
+    QApplication::processEvents();
+    if (recording->isSeekable()) {
+      if (rightFrame < leftFrame) {
+        auto tmp = rightFrame;
+        rightFrame = leftFrame;
+        leftFrame = tmp;
+      }
+      slider->setValue(leftFrame);
+    }
+    QApplication::processEvents();
+
+    auto fmt =
+      qvariant_cast<OutputFormat*>(codecBox->itemData(codecBox->currentIndex()));
+    if (fmt) {
+      recorder.reset(fmt->makeRecorder(decoder.data(), fname,
+                                       recording->frameSize(),
+                                       fpsSpinbox->value(), false, false));
+    } else if (!gstLine->text().isEmpty()) {
+      recorder.reset(makeGstRecorder(QStringList(),
+                                     gstLine->text(),
+                                     decoder.data(), fname,
+                                     recording->frameSize(),
+                                     fpsSpinbox->value(), false, false));
+    } else {
+      transcodeButton->setChecked(false);
+      return;
+    }
+
+    playButton->setChecked(true);
+    playButton->setEnabled(false);
+  } else {
+    playButton->setEnabled(true);
+    playButton->setChecked(false);
+    QApplication::processEvents();
+    recorder.reset();
+  }
 }
 
 int main(int argc, char** argv) {
