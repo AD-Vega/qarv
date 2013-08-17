@@ -611,7 +611,8 @@ void QArvMainWindow::takeNextFrame() {
           timestampFile.write("\n");
         }
       } else {
-        closeFileButton->setChecked(false);
+        recordButton->click();
+        closeFileButton->click();
       }
     }
 
