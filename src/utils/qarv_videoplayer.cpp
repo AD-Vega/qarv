@@ -38,7 +38,7 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
   auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
     auto fmt = qobject_cast<OutputFormat*>(plugin);
-    if (fmt != NULL && !fmt->name().startsWith("Raw "))
+    if (fmt != NULL)
       codecBox->addItem(fmt->name(), QVariant::fromValue(fmt));
   }
   codecBox->addItem("Custom...", QVariant::fromValue((void*)NULL));
