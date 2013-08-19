@@ -41,6 +41,12 @@ static bool checkPluginAvailability(const QStringList& plugins) {
       failed = true;
       return false;
     }
+    I.start("gst-launch-1.0 --version");
+    if (!I.waitForFinished(1000) || I.exitCode() != 0) {
+      qDebug() << "gst-launch-1.0 not available";
+      failed = true;
+      return false;
+    }
     haveInspector = true;
   }
   QString cmd("gst-inspect-1.0 --exists ");
