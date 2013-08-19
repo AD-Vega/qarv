@@ -25,6 +25,8 @@
 
 using namespace QArv;
 
+const int processTimeout = 5000;
+
 /*
  * This class is currently implemented using a QProcess brecause our
  * dependencies link to gstreamer-0.10, which is too old for us.
@@ -36,13 +38,13 @@ static bool checkPluginAvailability(const QStringList& plugins) {
   if (!haveInspector) {
     QProcess I;
     I.start("gst-inspect-1.0 --version");
-    if (!I.waitForFinished(1000) || I.exitCode() != 0) {
+    if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
       qDebug() << "gst-inspect-1.0 not available";
       failed = true;
       return false;
     }
     I.start("gst-launch-1.0 --version");
-    if (!I.waitForFinished(1000) || I.exitCode() != 0) {
+    if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
       qDebug() << "gst-launch-1.0 not available";
       failed = true;
       return false;
@@ -128,13 +130,13 @@ public:
                           fileName);
     gstprocess.setProcessChannelMode(QProcess::ForwardedChannels);
     gstprocess.start(cmdline, QIODevice::ReadWrite);
-    if (!gstprocess.waitForStarted(1000))
+    if (!gstprocess.waitForStarted(processTimeout))
       qDebug() << "gstreamer failed to start";
   }
 
   virtual ~GstRecorder() {
     gstprocess.closeWriteChannel();
-    if (!gstprocess.waitForFinished(5000)) {
+    if (!gstprocess.waitForFinished(processTimeout)) {
       qDebug() << "gstreamer process did not finish";
       gstprocess.kill();
     }
@@ -143,7 +145,7 @@ public:
   bool isOK() {
     if (!gstOK) return false;
     if (gstprocess.state() == QProcess::Starting) {
-      if (!gstprocess.waitForStarted(1000)) {
+      if (!gstprocess.waitForStarted(processTimeout)) {
         qDebug() << "gstreamer failed to start";
 	return false;
       }
