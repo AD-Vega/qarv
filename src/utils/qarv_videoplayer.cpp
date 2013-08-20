@@ -30,10 +30,10 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
   setupUi(this);
   showTimer = new QTimer(this);
   connect(showTimer, SIGNAL(timeout()), SLOT(showNextFrame()));
-  if (!filename.isNull())
-    open(filename);
   transcodeBox->setEnabled(false);
   transcodeBox->setChecked(false);
+  if (!filename.isNull())
+    open(filename);
 
   auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
