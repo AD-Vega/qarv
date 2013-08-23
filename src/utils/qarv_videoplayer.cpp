@@ -19,6 +19,7 @@
 
 #include "utils/qarv_videoplayer.h"
 #include "recorders/gstrecorder_implementation.h"
+#include "globals.h"
 #include <QFileDialog>
 #include <QPluginLoader>
 
@@ -28,6 +29,16 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
                                  QWidget* parent,
                                  Qt::WindowFlags f) : QWidget(parent, f) {
   setupUi(this);
+  QMap<QAbstractButton*, QString> icons;
+  icons[openButton] = "document-open";
+  icons[playButton] = "media-play";
+  icons[transcodeButton] = "media-record";
+  icons[leftMarkButton] = "go-first";
+  icons[rightMarkButton] = "go-last";
+  for (auto i = icons.begin(); i != icons.end(); i++)
+    if (!QIcon::hasThemeIcon(*i))
+      i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+
   showTimer = new QTimer(this);
   connect(showTimer, SIGNAL(timeout()), SLOT(showNextFrame()));
   transcodeBox->setEnabled(false);

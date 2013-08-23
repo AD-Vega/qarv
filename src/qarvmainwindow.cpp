@@ -76,6 +76,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   icons[histogramLog] = "view-object-histogram-logarithmic";
   icons[pickROIButton] = "edit-select";
   icons[closeFileButton] = "media-playback-stop";
+  icons[messageButton] = "dialog-information";
   for (auto i = icons.begin(); i != icons.end(); i++)
     if (!QIcon::hasThemeIcon(*i))
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));

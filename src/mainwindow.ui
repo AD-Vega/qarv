@@ -72,8 +72,11 @@
       </item>
       <item>
        <widget class="QPushButton" name="messageButton">
-        <property name="text">
-         <string>Messages</string>
+        <property name="toolTip">
+         <string>Show or hide message log.</string>
+        </property>
+        <property name="icon">
+         <iconset theme="dialog-information"/>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -1233,7 +1236,7 @@
   </widget>
   <widget class="QDockWidget" name="messageDock">
    <property name="windowTitle">
-    <string>Messages</string>
+    <string>Message log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>

@@ -159,6 +159,9 @@ set_prefixed(qarv_ICONS res/icons/
   edit-select.svgz
   media-playback-stop.svgz
   media-playback-pause.svgz
+  dialog-information.svgz
+  go-first.svgz
+  go-last.svgz
 )
 
 install(TARGETS qarv qarvexe qarv_videoplayer
