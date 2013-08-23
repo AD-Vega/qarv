@@ -29,7 +29,7 @@ extern "C" {
 #include "api/qarvcamera.h"
 #include "qarvfeaturetree.h"
 #include "qarvtype.h"
-#include <QDebug>
+#include "globals.h"
 #include <QTextDocument>
 
 using namespace QArv;
@@ -365,7 +365,7 @@ QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
   sockaddr addr;
   int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
   if (!success) {
-    qDebug() << "Unable to translate IP address.";
+    logMessage() << "Unable to translate IP address.";
     return QHostAddress();
   }
   return QHostAddress(&addr);
@@ -411,7 +411,7 @@ QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
   QString vendor, model, id;
   in >> vendor >> model >> id;
   if (!(vendor == ID.vendor && model == ID.model && id == ID.id)) {
-    qWarning() << QObject::tr("Incompatible camera settings", "QArvCamera");
+    logMessage() << QObject::tr("Incompatible camera settings", "QArvCamera");
     return in;
   }
 
@@ -494,7 +494,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
   ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
 
   if (!ARV_IS_GC_FEATURE_NODE(node)) {
-    qDebug() << "data:" << "Node" << treenode->feature() << "is not valid!";
+    logMessage() << "data:" << "Node" << treenode->feature() << "is not valid!";
     return QVariant();
   }
 
@@ -508,7 +508,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
       if (string == NULL)
         string = arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
       if (string == NULL) {
-        qDebug() << "Node has no name!?";
+        logMessage() << "Node has no name!?";
         return QVariant();
       }
       return QVariant(string);

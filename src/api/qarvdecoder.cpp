@@ -23,11 +23,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QPluginLoader>
 #include <QMap>
-#include <QDebug>
+#include "globals.h"
 #include <type_traits>
 extern "C" {
   #include <arvenums.h>
 }
+
+using namespace QArv;
 
 template<bool grayscale, bool depth8>
 void CV2QImage_RGB24Template(const cv::Mat& image, QImage& img) {
@@ -85,7 +87,7 @@ void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& out) {
     CV2QImage_RGB24Template<false, true>(image, out);
     break;
   default:
-    qDebug() << "CV2QImage: Invalid CV image format";
+    logMessage() << "CV2QImage: Invalid CV image format";
     return;
   }
 }
@@ -154,7 +156,7 @@ void QArvDecoder::CV2QImage(const cv::Mat& image, QImage& out) {
     CV2QImageTemplate<false, true>(image, out);
     break;
   default:
-    qDebug() << "CV2QImage: Invalid CV image format";
+    logMessage() << "CV2QImage: Invalid CV image format";
     return;
   }
 }

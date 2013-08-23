@@ -1,6 +1,9 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+#include <QDebug>
+#include <QStandardItemModel>
+
 namespace QArv
 {
 
@@ -9,6 +12,23 @@ namespace QArv
 #endif
 
 extern const char* qarv_datafiles;
+
+class QArvDebug: public QDebug {
+private:
+  QArvDebug() : QDebug(&message) {}
+  QString message;
+
+public:
+  static QStandardItemModel model;
+  ~QArvDebug() {
+    qDebug("%s", message.toAscii().constData());
+    model.appendRow(new QStandardItem(message));
+  }
+
+  friend QArvDebug logMessage();
+};
+
+QArvDebug logMessage();
 
 }
 

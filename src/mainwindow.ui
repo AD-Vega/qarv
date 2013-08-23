@@ -71,6 +71,19 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="messageButton">
+        <property name="text">
+         <string>Messages</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="snapButton">
         <property name="toolTip">
          <string>Store a snapshot.</string>
@@ -1218,6 +1231,37 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="messageDock">
+   <property name="windowTitle">
+    <string>Messages</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QListView" name="messageList">
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1252,11 +1296,11 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>62</x>
-     <y>183</y>
+     <x>67</x>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
-     <x>58</x>
+     <x>676</x>
      <y>125</y>
     </hint>
    </hints>
@@ -1268,12 +1312,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>182</x>
-     <y>180</y>
+     <x>216</x>
+     <y>29</y>
     </hint>
     <hint type="destinationlabel">
-     <x>676</x>
-     <y>171</y>
+     <x>925</x>
+     <y>418</y>
     </hint>
    </hints>
   </connection>
@@ -1284,12 +1328,28 @@
    <slot>setLogarithmic(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>657</x>
-     <y>200</y>
+     <x>785</x>
+     <y>352</y>
     </hint>
     <hint type="destinationlabel">
-     <x>657</x>
-     <y>283</y>
+     <x>918</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>messageButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>messageDock</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>261</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>690</x>
+     <y>432</y>
     </hint>
    </hints>
   </connection>

@@ -24,7 +24,7 @@ namespace QArv
 {
 
 #include <QString>
-#include <QDebug>
+#include "globals.h"
 #include <cstring>
 
 extern "C" {

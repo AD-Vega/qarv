@@ -19,7 +19,7 @@
 
 #include "qarvmainwindow.h"
 
-#include <QDebug>
+#include "globals.h"
 #include <QNetworkInterface>
 #include <QFileInfo>
 #include <QFileDialog>
@@ -55,10 +55,11 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   setAttribute(Qt::WA_DeleteOnClose);
 
-  qWarning() << "Please ignore \"Could not resolve property\" warnings "
-                "unless icons look bad.";
+  logMessage() << "Please ignore \"Could not resolve property\" warnings "
+                  "unless icons look bad.";
   setupUi(this);
   on_statusTimeoutSpinbox_valueChanged(statusTimeoutSpinbox->value());
+  messageList->setModel(&QArvDebug::model);
 
   // Setup theme icons if available.
   QMap<QAbstractButton*, QString> icons;
@@ -295,7 +296,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
   camera = new QArvCamera(camid, this);
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
 
-  qDebug() << "Pixel formats:" << camera->getPixelFormats();
+  logMessage() << "Pixel formats:" << camera->getPixelFormats();
 
   auto ifaceIP = camera->getHostIP();
   QNetworkInterface cameraIface;
@@ -591,7 +592,7 @@ void QArvMainWindow::takeNextFrame() {
         break;
       default:
         video->setImage(invalidImage);
-        qDebug() << "Invalid CV image format";
+        logMessage() << "Invalid CV image format";
         return;
       }
       futureRender.setFuture(QtConcurrent::run(theFunc,
@@ -902,7 +903,7 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
       QString wanted = wholefile.readLine();
       QString actual = readBack.readLine();
       if (wanted != actual) {
-        qDebug() << "wanted:" << wanted << endl << "actual:" << actual;
+        logMessage() << "wanted:" << wanted << endl << "actual:" << actual;
         failures << wanted;
       }
     }
@@ -1111,11 +1112,10 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
 
-  // video display
+  // display widgets
   saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;
-
-  // histogram
   saved_widgets["qarv_histogram/logarithmic"] = histogramLog;
+  saved_widgets["qarv_messages/messages"] = messageButton;
 }
 
 void QArvMainWindow::saveProgramSettings() {
@@ -1138,7 +1138,7 @@ void QArvMainWindow::saveProgramSettings() {
     else if (auto *w = qobject_cast<QSpinBox*>(widget))
       settings.setValue(i.key(), w->value());
     else
-      qDebug() << "FIXME: don't know what to save under setting" << i.key();
+      logMessage() << "FIXME: don't know what to save under setting" << i.key();
   }
 }
 
@@ -1166,7 +1166,7 @@ void QArvMainWindow::restoreProgramSettings() {
     else if (auto *w = qobject_cast<QSpinBox*>(widget))
       w->setValue(data.toInt());
     else
-      qDebug() << "FIXME: don't know how to restore setting" << i.key();
+      logMessage() << "FIXME: don't know how to restore setting" << i.key();
   }
 }
 
@@ -1177,6 +1177,6 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
     recordApendCheck->setEnabled(fmt->canAppend() && b);
     recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
   } else {
-    qDebug() << "Video format data not OutputFormat";
+    logMessage() << "Video format data not OutputFormat";
   }
 }

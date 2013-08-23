@@ -21,10 +21,12 @@
 #include <QSettings>
 #include <QFileInfo>
 #include <QDir>
-#include <QDebug>
+#include "globals.h"
 extern "C" {
 #include <aravis-0.2/arvbuffer.h>
 }
+
+using namespace QArv;
 
 // Make sure settings format matches rawrecorders.cpp!
 
@@ -35,14 +37,14 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
   isOK = s.status() == QSettings::Status::NoError;
   if (!isOK) {
     return;
-    qDebug() << "Invalid description file.";
+    logMessage() << "Invalid description file.";
   }
   s.beginGroup("qarv_raw_video_description");
   QVariant v = s.value("description_version");
   isOK = v.toString() == "0.1";
   if (!isOK) {
     return;
-    qDebug() << "Invalid edscription file version.";
+    logMessage() << "Invalid video description file version.";
   }
 
   v = s.value("file_name");
@@ -53,7 +55,7 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
   uncompressed = true;
   if (!isOK) {
     // TODO: try opening compressed versions
-    qDebug() << "Unable to open video file" << v.toString();
+    logMessage() << "Unable to open video file" << v.toString();
     return;
   }
 
@@ -71,7 +73,7 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
     v = s.value("libavutil_pixel_format");
     swscalePixfmt = (enum PixelFormat)v.toLongLong();
   } else {
-    qDebug() << "Unable to determine decoder type.";
+    logMessage() << "Unable to determine decoder type.";
     isOK = false;
     return;
   }
@@ -80,7 +82,7 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
   frameBytes = v.toInt();
   if (!frameBytes) {
     isOK = false;
-    qDebug() << "Unable to read frame bytesize.";
+    logMessage() << "Unable to read frame bytesize.";
     return;
   }
 
@@ -115,7 +117,7 @@ QArvDecoder* QArvRecordedVideo::makeDecoder() {
     return QArvPixelFormat::makeSwScaleDecoder(swscalePixfmt, fsize);
   } else {
     isOK = false;
-    qDebug() << "Unknown decoder type.";
+    logMessage() << "Unknown decoder type.";
     return NULL;
   }
 }

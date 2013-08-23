@@ -137,6 +137,7 @@ add_executable(qarv_videoplayer
   src/glvideowidget.cpp
   src/globals.cpp
   src/recorders/gstrecorder_implementation.cpp
+  src/globals.cpp
   ${qarv_videoplayer_MOC}
   ${qarv_videoplayer_UI}
 )

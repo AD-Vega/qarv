@@ -22,7 +22,7 @@
 #include <QSettings>
 #include <QRegExp>
 #include <QFileInfo>
-#include <QDebug>
+#include "globals.h"
 extern "C" {
 #include <libavutil/pixdesc.h>
 }
@@ -110,7 +110,7 @@ public:
         frameBytes = size.width()*size.height()*3;
         break;
       default:
-        qDebug() << "Recorder: Invalid CV image format";
+        logMessage() << "Recorder: Invalid CV image format";
         return;
       }
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);
@@ -174,7 +174,7 @@ public:
         frameBytes = size.width()*size.height()*6;
         break;
       default:
-        qDebug() << "Recorder: Invalid CV image format";
+        logMessage() << "Recorder: Invalid CV image format";
         return;
       }
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);

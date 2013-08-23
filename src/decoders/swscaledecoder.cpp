@@ -20,7 +20,7 @@
 #include "decoders/swscaledecoder.h"
 #include <cstdlib>
 #include <opencv2/core/types_c.h>
-#include <QDebug>
+#include "globals.h"
 
 extern "C" {
 #include <libavutil/pixdesc.h>
@@ -36,7 +36,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
   inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
   if (size.width() != (size.width() / 2) * 2
       || size.height() != (size.height() / 2) * 2) {
-    qDebug() << "Frame size must be factor of two for SwScaleDecoder.";
+    logMessage() << "Frame size must be factor of two for SwScaleDecoder.";
     OK = false;
     return;
   }
@@ -72,7 +72,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
                            size.width(), size.height(), outputPixFmt,
                            swsFlags, 0, 0, 0);
   } else {
-    qDebug() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
+    logMessage() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
              << "is not supported for input.";
     OK = false;
   }
@@ -106,7 +106,7 @@ void SwScaleDecoder::decode(QByteArray frame) {
                             0, size.height(),
                             image_pointers, image_strides);
   if(outheight != size.height()) {
-    qDebug() << "swscale error! outheight =" << outheight;
+    logMessage() << "swscale error! outheight =" << outheight;
   }
 }
 

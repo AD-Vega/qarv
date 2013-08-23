@@ -21,7 +21,7 @@
 #include <QProcess>
 #include <QFileInfo>
 #include <QStringList>
-#include <QDebug>
+#include "globals.h"
 
 using namespace QArv;
 
@@ -39,13 +39,13 @@ static bool checkPluginAvailability(const QStringList& plugins) {
     QProcess I;
     I.start("gst-inspect-1.0 --version");
     if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
-      qDebug() << "gst-inspect-1.0 not available";
+      logMessage() << "gst-inspect-1.0 not available";
       failed = true;
       return false;
     }
     I.start("gst-launch-1.0 --version");
     if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
-      qDebug() << "gst-launch-1.0 not available";
+      logMessage() << "gst-launch-1.0 not available";
       failed = true;
       return false;
     }
@@ -58,7 +58,7 @@ static bool checkPluginAvailability(const QStringList& plugins) {
     I.start(cmd + p);
     I.waitForFinished();
     if (I.exitCode() != 0) {
-      qDebug() << "gstreamer missing plugin" << p;
+      logMessage() << "gstreamer missing plugin" << p;
       ok = false;
     }
   }
@@ -109,7 +109,7 @@ public:
       break;
 
     default:
-      qDebug() << "Recorder: Invalid CV image format";
+      logMessage() << "Recorder: Invalid CV image format";
       return;
     }
     QString cmdline("gst-launch-1.0 -e "
@@ -131,13 +131,13 @@ public:
     gstprocess.setProcessChannelMode(QProcess::ForwardedChannels);
     gstprocess.start(cmdline, QIODevice::ReadWrite);
     if (!gstprocess.waitForStarted(processTimeout))
-      qDebug() << "gstreamer failed to start";
+      logMessage() << "gstreamer failed to start";
   }
 
   virtual ~GstRecorder() {
     gstprocess.closeWriteChannel();
     if (!gstprocess.waitForFinished(processTimeout)) {
-      qDebug() << "gstreamer process did not finish";
+      logMessage() << "gstreamer process did not finish";
       gstprocess.kill();
     }
   }
@@ -146,7 +146,7 @@ public:
     if (!gstOK) return false;
     if (gstprocess.state() == QProcess::Starting) {
       if (!gstprocess.waitForStarted(processTimeout)) {
-        qDebug() << "gstreamer failed to start";
+        logMessage() << "gstreamer failed to start";
 	return false;
       }
     }
