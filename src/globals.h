@@ -21,7 +21,7 @@ private:
 public:
   static QStandardItemModel model;
   ~QArvDebug() {
-    qDebug("%s", message.toAscii().constData());
+    qDebug("QArv: %s", message.toAscii().constData());
     model.appendRow(new QStandardItem(message));
   }
 
