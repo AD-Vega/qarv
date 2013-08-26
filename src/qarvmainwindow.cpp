@@ -1043,6 +1043,19 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
   }
 }
 
+void QArvMainWindow::on_messageDock_visibilityChanged(bool visible) {
+  messageButton->blockSignals(true);
+  messageButton->setChecked(visible);
+  messageButton->blockSignals(false);
+}
+
+void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
+  if (floating) {
+    messageDock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    messageDock->setVisible(true);
+  }
+}
+
 void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
   recorder.reset();
   timestampFile.close();

@@ -76,6 +76,8 @@ private slots:
   void on_videodock_topLevelChanged(bool floating);
   void on_histogramdock_visibilityChanged(bool visible);
   void on_histogramdock_topLevelChanged(bool floating);
+  void on_messageDock_visibilityChanged(bool visible);
+  void on_messageDock_topLevelChanged(bool floating);
   void on_closeFileButton_clicked(bool checked);
   void on_ROIsizeCombo_newSizeSelected(QSize size);
   void on_sliderUpdateSpinbox_valueChanged(int i);
