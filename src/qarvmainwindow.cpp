@@ -179,6 +179,7 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
                        cameraSelector->count());
   statusBar()->showMessage(statusBar()->currentMessage() + message,
                            statusTimeoutMsec);
+  logMessage() << message.toAscii().constData();
   QSettings settings;
   QVariant data = settings.value("qarv_camera/selected");
   int previous_cam;
@@ -324,7 +325,9 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     QString message = tr("Network address not found, "
                          "trying best-effort MTU %1.");
     int mtu = 1500;
-    statusBar()->showMessage(message.arg(mtu), statusTimeoutMsec);
+    message = message.arg(mtu);
+    statusBar()->showMessage(message, statusTimeoutMsec);
+    logMessage() << message.toAscii().constData();
     camera->setMTU(mtu);
   }
 
@@ -593,7 +596,8 @@ void QArvMainWindow::takeNextFrame() {
         break;
       default:
         video->setImage(invalidImage);
-        logMessage() << "Invalid CV image format";
+        logMessage() << "Invalid CV image format" << currentRendering.type();
+        statusBar()->showMessage(tr("Decoder problems!"), statusTimeoutMsec);
         return;
       }
       futureRender.setFuture(QtConcurrent::run(theFunc,
@@ -613,6 +617,9 @@ void QArvMainWindow::takeNextFrame() {
           timestampFile.write("\n");
         }
       } else {
+        auto message = tr("Recording plugin failed, stopped recording.");
+        statusBar()->showMessage(message, statusTimeoutMsec);
+        logMessage() << message.toAscii().constData();
         recordButton->click();
         closeFileButton->click();
       }
@@ -648,9 +655,12 @@ void QArvMainWindow::startVideo(bool start) {
       invalidImage = QImage(camera->getFrameSize(),
                             QImage::Format_ARGB32_Premultiplied);
       invalidImage.fill(Qt::red);
-      if (decoder == NULL)
-        qCritical() << "Decoder for" << camera->getPixelFormat()
-                    << "doesn't exist!";
+      if (decoder == NULL) {
+        QString message = tr("Decoder for %1 doesn't exist!");
+        message = message.arg(camera->getPixelFormat());
+        logMessage() << message.toAscii().constData();
+        statusBar()->showMessage(message, statusTimeoutMsec);
+      }
       else {
         camera->setFrameQueueSize(streamFramesSpinbox->value());
         camera->startAcquisition();
@@ -738,6 +748,9 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
     bool open = recorder && recorder->isOK();
 
     if (!open) {
+      QString message = tr("Unable to initialize the recording plugin.");
+      logMessage() << message.toAscii().constData();
+      statusBar()->showMessage(message, statusTimeoutMsec);
       recordButton->setChecked(false);
       checked = false;
     } else {
@@ -760,7 +773,10 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
         if (!open)
           msg += " " + tr("Could not open timestamp file.");
       }
-      if (!msg.isNull()) statusBar()->showMessage(msg, statusTimeoutMsec);
+      if (!msg.isNull()) {
+        logMessage() << msg.toAscii().constData();
+        statusBar()->showMessage(msg, statusTimeoutMsec);
+      }
     }
   }
 
@@ -872,9 +888,11 @@ void QArvMainWindow::on_saveSettingsButton_clicked(bool checked) {
   if (open) {
     QTextStream file(&outfile);
     file << camera;
-  } else
-    statusBar()->showMessage(tr("Could not open settings file."),
-                             statusTimeoutMsec);
+  } else {
+    QString message = tr("Could not open settings file.");
+    statusBar()->showMessage(message, statusTimeoutMsec);
+    logMessage() << message.toAscii().constData();
+  }
 }
 
 void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
@@ -904,7 +922,9 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
       QString wanted = wholefile.readLine();
       QString actual = readBack.readLine();
       if (wanted != actual) {
-        logMessage() << "wanted:" << wanted << endl << "actual:" << actual;
+        logMessage() << "Setting failure, wanted:"
+                     << wanted << endl
+                     << "actual:" << actual;
         failures << wanted;
       }
     }
@@ -918,9 +938,11 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
       message += "</body></html>";
       QMessageBox::warning(this, tr("Loading settings failed"), message);
     }
-  } else
-    statusBar()->showMessage(tr("Could not open settings file."),
-                             statusTimeoutMsec);
+  } else {
+    QString message = tr("Could not open camera settings file.");
+    statusBar()->showMessage(message, statusTimeoutMsec);
+    logMessage() << message.toAscii().constData();
+  }
 }
 
 void QArvMainWindow::updateBandwidthEstimation() {
@@ -1178,6 +1200,7 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
     recordApendCheck->setEnabled(fmt->canAppend() && b);
     recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
   } else {
-    logMessage() << "Video format data not OutputFormat";
+    logMessage() << "Video format pointer is not an OutputFormat plugin";
+    statusBar()->showMessage(tr("Cannot select this video format."));
   }
 }
