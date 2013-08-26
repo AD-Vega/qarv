@@ -1019,7 +1019,7 @@ void QArvMainWindow::on_exposureSpinbox_editingFinished() {
 
 void QArvMainWindow::on_videodock_visibilityChanged(bool visible) {
   showVideoButton->blockSignals(true);
-  showVideoButton->setChecked(visible);
+  showVideoButton->setChecked(!videodock->isHidden());
   showVideoButton->blockSignals(false);
 }
 
@@ -1032,7 +1032,7 @@ void QArvMainWindow::on_videodock_topLevelChanged(bool floating) {
 
 void QArvMainWindow::on_histogramdock_visibilityChanged(bool visible) {
   showHistogramButton->blockSignals(true);
-  showHistogramButton->setChecked(visible);
+  showHistogramButton->setChecked(!histogramdock->isHidden());
   showHistogramButton->blockSignals(false);
 }
 
@@ -1045,7 +1045,7 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
 
 void QArvMainWindow::on_messageDock_visibilityChanged(bool visible) {
   messageButton->blockSignals(true);
-  messageButton->setChecked(visible);
+  messageButton->setChecked(!messageDock->isHidden());
   messageButton->blockSignals(false);
 }
 
@@ -1151,7 +1151,6 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   // display widgets
   saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;
   saved_widgets["qarv_histogram/logarithmic"] = histogramLog;
-  saved_widgets["qarv_messages/messages"] = messageButton;
 }
 
 void QArvMainWindow::saveProgramSettings() {
