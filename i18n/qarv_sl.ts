@@ -9,468 +9,468 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="301"/>
+        <location filename="../src/mainwindow.ui" line="303"/>
         <source>X of origin:</source>
         <translation>X izhodišča:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="311"/>
+        <location filename="../src/mainwindow.ui" line="313"/>
         <source>Y of origin:</source>
         <translation>Y izhodišča:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="145"/>
+        <location filename="../src/mainwindow.ui" line="147"/>
         <source>Basic settings</source>
         <translation>Osnovne nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="153"/>
+        <location filename="../src/mainwindow.ui" line="155"/>
         <source>Camera</source>
         <translation>Kamera</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="162"/>
+        <location filename="../src/mainwindow.ui" line="164"/>
         <source>Camera:</source>
         <translation>Kamera:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="198"/>
+        <location filename="../src/mainwindow.ui" line="200"/>
         <source>FPS:</source>
         <translation>Slik na sekundo:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="205"/>
+        <location filename="../src/mainwindow.ui" line="207"/>
         <source>Pixel format:</source>
         <translation>Tip zapisa pikslov:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="222"/>
+        <location filename="../src/mainwindow.ui" line="224"/>
         <source>Ethernet MTU:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="229"/>
-        <location filename="../src/mainwindow.ui" line="243"/>
+        <location filename="../src/mainwindow.ui" line="231"/>
+        <location filename="../src/mainwindow.ui" line="245"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="236"/>
+        <location filename="../src/mainwindow.ui" line="238"/>
         <source>Bandwidth:</source>
         <translation>Pasovna širina:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="268"/>
+        <location filename="../src/mainwindow.ui" line="270"/>
         <source>Actual: </source>
         <translation>Dejansko:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="290"/>
+        <location filename="../src/mainwindow.ui" line="292"/>
         <source>Region of interest</source>
         <translation>Izrez slike</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="321"/>
+        <location filename="../src/mainwindow.ui" line="323"/>
         <source>Width:</source>
         <translation>Širina:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="335"/>
+        <location filename="../src/mainwindow.ui" line="337"/>
         <source>Height:</source>
         <translation>Višina:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="349"/>
+        <location filename="../src/mainwindow.ui" line="351"/>
         <source>Binning:</source>
         <translation>Združevanje:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="398"/>
+        <location filename="../src/mainwindow.ui" line="400"/>
         <source>Pick</source>
         <translation>Označi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="368"/>
+        <location filename="../src/mainwindow.ui" line="370"/>
         <source>Apply</source>
         <translation>Uveljavi</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="171"/>
+        <location filename="../src/mainwindow.ui" line="173"/>
         <source>Select camera.</source>
         <translation>Izberi kamero.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="181"/>
+        <location filename="../src/mainwindow.ui" line="183"/>
         <source>Refresh camera list.</source>
         <translation>Osveži seznam kamer.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="212"/>
+        <location filename="../src/mainwindow.ui" line="214"/>
         <source>Select the camera&apos;s pixel format.</source>
         <translation>Izberi tip zapisa pikslov.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="252"/>
+        <location filename="../src/mainwindow.ui" line="254"/>
         <source>Camera&apos;s frame rate setting.</source>
         <translation>Nastavitev števila slik na sekundo.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="265"/>
-        <location filename="../src/mainwindow.ui" line="275"/>
+        <location filename="../src/mainwindow.ui" line="267"/>
+        <location filename="../src/mainwindow.ui" line="277"/>
         <source>Actual frame rate.</source>
         <translation>Dejansko število slik na sekundo.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="365"/>
+        <location filename="../src/mainwindow.ui" line="367"/>
         <source>Set the camera&apos;s ROI.</source>
         <translation>Nastavi izbrani izrez.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="395"/>
+        <location filename="../src/mainwindow.ui" line="397"/>
         <source>Select ROI by drawing a rectangle on the video display.</source>
         <translation>Za izbiro izreza nariši pravokotnik na prikazu videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="375"/>
+        <location filename="../src/mainwindow.ui" line="377"/>
         <source>Reset ROI to the maximum, effective immediately.</source>
         <translation>Nastavi izrez na največjo možno velikost. Izrez se uveljavi takoj.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="76"/>
-        <source>Show or hide message log.</source>
-        <translation>Prikaži ali skrij sporočila.</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="378"/>
+        <location filename="../src/mainwindow.ui" line="380"/>
         <source>Whole image</source>
         <translation>Celotna slika</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="413"/>
+        <location filename="../src/mainwindow.ui" line="415"/>
         <source>Choose a size of ROI used for picking.</source>
         <translation>Izberi želeno velikost izreza.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="434"/>
+        <location filename="../src/mainwindow.ui" line="436"/>
         <source>Exposure</source>
         <translation>Osvetlitev</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="445"/>
+        <location filename="../src/mainwindow.ui" line="447"/>
         <source>Gain:</source>
         <translation>Ojačanje:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="477"/>
-        <location filename="../src/mainwindow.ui" line="552"/>
+        <location filename="../src/mainwindow.ui" line="479"/>
+        <location filename="../src/mainwindow.ui" line="554"/>
         <source>Enter value manually.</source>
         <translation>Ročni vnos.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="494"/>
+        <location filename="../src/mainwindow.ui" line="496"/>
         <source>Let camera control sensor gain.</source>
         <translation>Naj kamera sama nadzoruje ojačanje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="497"/>
-        <location filename="../src/mainwindow.ui" line="572"/>
+        <location filename="../src/mainwindow.ui" line="499"/>
+        <location filename="../src/mainwindow.ui" line="574"/>
         <source>Auto</source>
         <translation>Avtomatsko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="511"/>
+        <location filename="../src/mainwindow.ui" line="513"/>
         <source>Exposure:</source>
         <translation>Čas osvetlitve:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="539"/>
-        <location filename="../src/mainwindow.ui" line="705"/>
-        <location filename="../src/mainwindow.ui" line="731"/>
+        <location filename="../src/mainwindow.ui" line="541"/>
+        <location filename="../src/mainwindow.ui" line="707"/>
+        <location filename="../src/mainwindow.ui" line="733"/>
         <source> ms</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="569"/>
+        <location filename="../src/mainwindow.ui" line="571"/>
         <source>Let camera control exposure time.</source>
         <translation>Naj kamera sama nadzoruje čas osvetlitve.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="615"/>
+        <location filename="../src/mainwindow.ui" line="617"/>
         <source>Invert colors</source>
         <translation>Obrni barve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="622"/>
+        <location filename="../src/mainwindow.ui" line="624"/>
         <source>Flip horizontally</source>
         <translation>Zrcali vodoravno</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="629"/>
+        <location filename="../src/mainwindow.ui" line="631"/>
         <source>Flip vertically</source>
         <translation>Zrcali navpično</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="648"/>
+        <location filename="../src/mainwindow.ui" line="650"/>
         <source>Invalid frames will not be recorded and will be displayed as pure red.</source>
         <translation>Okvarjene slike ne bodo posnete, bodo pa prikazane v rdeči barvi.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="651"/>
+        <location filename="../src/mainwindow.ui" line="653"/>
         <source>Drop incomplete/invalid frames</source>
         <translation>Zavrzi okvarjene slike</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="664"/>
+        <location filename="../src/mainwindow.ui" line="666"/>
         <source>Mark clipped highlights</source>
         <translation>Označi preosvetljene piksle</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="674"/>
+        <location filename="../src/mainwindow.ui" line="676"/>
         <source>Use fast color approximation</source>
         <translation>Uporabljaj hitro računanje barv</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="689"/>
+        <location filename="../src/mainwindow.ui" line="691"/>
         <source>Program settings</source>
         <translation>Nastavitve programa</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="695"/>
+        <location filename="../src/mainwindow.ui" line="697"/>
         <source>Exposure readout interval:</source>
         <translation>Interval odčitavanja osvetlitve:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="702"/>
+        <location filename="../src/mainwindow.ui" line="704"/>
         <source>Exposure and gain are periodically updated and sliders moved accordingly.</source>
         <translation>Program periodično odčita čas osvetlitve in ojačanje senzorja ter ustrezno nastavi drsnika.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="721"/>
+        <location filename="../src/mainwindow.ui" line="723"/>
         <source>Histogram update interval:</source>
         <translation>Interval izračuna histograma:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="728"/>
+        <location filename="../src/mainwindow.ui" line="730"/>
         <source>Calculating the histogram can be expensive, so it shouldn&apos;t be updated too often.</source>
         <translation>Izračun histograma je lahko dolgotrajen, zato naj se ne računa prepogosto.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="747"/>
+        <location filename="../src/mainwindow.ui" line="749"/>
         <source>Status message timeout:</source>
         <translation>Čas trajanja obvestil:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="754"/>
+        <location filename="../src/mainwindow.ui" line="756"/>
         <source>A message is shown in the status bar on certain events or errors. This message is cleared after the specified interval.</source>
         <translation>Statusna vrstica ob nekaterih dogodkih in napakah prikaže obvestilo. To obvestilo izgine po nastavljenem času.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="757"/>
+        <location filename="../src/mainwindow.ui" line="759"/>
         <source> s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="773"/>
+        <location filename="../src/mainwindow.ui" line="775"/>
         <source>If this option is selected, as little copying of images is done as possible, making the program significantly faster. But, if the computer is too slow to process images in a timely manner, it may happen that the camera will be faster and will overwrite a current image. If this is a problem, disable this option.</source>
         <translation>Če je ta možnost vklopljena, program pri delu s slikami uporablja čim manj kopiranja, kar občutno pohitri delo. Če pa je računalnik prepočasen in dela s posamezno sliko ne more zaključiti pravočasno, ga lahko kamera prehiti in sliko prepiše. Če se to dogaja, je potrebno to možnost izklopiti.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="776"/>
+        <location filename="../src/mainwindow.ui" line="778"/>
         <source>Transfer frames without copying</source>
         <translation>Prestavljaj slikovne okvirje brez kopiranja</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="786"/>
+        <location filename="../src/mainwindow.ui" line="788"/>
         <source>Number of frames on the queue:</source>
         <translation>Število slikovnih okvirjev v vrsti:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="874"/>
+        <location filename="../src/mainwindow.ui" line="876"/>
         <source>Recording</source>
         <translation>Snemanje</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="883"/>
+        <location filename="../src/mainwindow.ui" line="885"/>
         <source>Snapshot directory:</source>
         <translation>Direktorij za slike:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="899"/>
+        <location filename="../src/mainwindow.ui" line="901"/>
         <source>Open directory.</source>
         <translation>Odpri direktorij.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="933"/>
+        <location filename="../src/mainwindow.ui" line="935"/>
         <source>Snapshot format:</source>
         <translation>Tip slike:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="942"/>
+        <location filename="../src/mainwindow.ui" line="944"/>
         <source>Frame data is simply dumped into the file undecoded.</source>
         <translation>Slika bo shranjena v obliki, ki jo pošlje kamera.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="945"/>
+        <location filename="../src/mainwindow.ui" line="947"/>
         <source>Raw data</source>
         <translation>Surovi podatki</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="955"/>
+        <location filename="../src/mainwindow.ui" line="957"/>
         <source>The saved snapshot is as shown in the Video Display.</source>
         <translation>Shranjena bo slika, ki je na prikazovalniku.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="958"/>
+        <location filename="../src/mainwindow.ui" line="960"/>
         <source>PNG image</source>
         <translation>PNG slika</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="973"/>
+        <location filename="../src/mainwindow.ui" line="975"/>
         <source>Video file:</source>
         <translation>Datoteka za video:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="982"/>
+        <location filename="../src/mainwindow.ui" line="984"/>
         <source>The file to store recorded video.</source>
         <translation>Datoteka, kamor se bo snemal video.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="989"/>
+        <location filename="../src/mainwindow.ui" line="991"/>
         <source>Open file.</source>
         <translation>Odpri datoteko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1020"/>
+        <location filename="../src/mainwindow.ui" line="1022"/>
         <source>Normally, an existing file is overwritten. Press this to append to the end instead. Only works with raw video. Make sure camera settings are appropriate.</source>
         <translation>Označi to možnost, če naj snemanje dopolnjuje obstoječo datoteko, namesto da bi jo prepisalo. To je mogoče le pri surovem tipu videa. Nastavitve kamere morajo ustrezati obstoječemu videu.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1023"/>
+        <location filename="../src/mainwindow.ui" line="1025"/>
         <source>Append to existing file instead of truncating</source>
         <translation>Dopolnjuj obstoječo datoteko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1239"/>
-        <source>Message log</source>
-        <translation>Sporočila</translation>
+        <location filename="../src/mainwindow.ui" line="1241"/>
+        <source>Diagnostic log</source>
+        <translation>Diagnostična sporočila</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="851"/>
+        <location filename="../src/mainwindow.ui" line="853"/>
         <source>Choose a file to store camera settings.</source>
         <translation>Izberi datoteko za zapis nastavitev kamere.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1006"/>
+        <location filename="../src/mainwindow.ui" line="1008"/>
         <source>Video format:</source>
         <translation>Tip videa:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1013"/>
+        <location filename="../src/mainwindow.ui" line="1015"/>
         <source>Choose format of recorded video.</source>
         <translation>Izberi tip videa za snemanje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="127"/>
+        <location filename="../src/mainwindow.ui" line="129"/>
         <source>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</source>
         <translation>Izklop gumba &quot;Snemaj&quot; običajno le začasno ustavi snemanje. Ta gumb snemanje zaključi ter dokonča in zapre datoteko z videom.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="892"/>
+        <location filename="../src/mainwindow.ui" line="894"/>
         <source>Snapshots will be put in this directory.</source>
         <translation>Slike bodo shranjene v ta direktorij.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="923"/>
+        <location filename="../src/mainwindow.ui" line="925"/>
         <source>Snapshot file names will begin with this basename and will have the current date and time appended.</source>
         <translation>Imena slik se bodo začela s tem imenom. Preostanek imena datoteke bo čas posnetka.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="916"/>
+        <location filename="../src/mainwindow.ui" line="918"/>
         <source>Snapshot basename:</source>
         <translation>Osnova za ime slike:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="826"/>
+        <location filename="../src/mainwindow.ui" line="828"/>
         <source>Advanced settings</source>
         <translation>Napredne nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="601"/>
+        <location filename="../src/mainwindow.ui" line="603"/>
         <source>Settings</source>
         <translation>Nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="609"/>
+        <location filename="../src/mainwindow.ui" line="76"/>
+        <source>Show or hide diagnostic log.</source>
+        <translation>Prikaži ali skrij diagnostična sporočila.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="611"/>
         <source>Transform image</source>
         <translation>Preoblikovanje slike</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="642"/>
+        <location filename="../src/mainwindow.ui" line="644"/>
         <source>Miscellaneous image settings</source>
         <translation>Razne nastavitve slike</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="661"/>
+        <location filename="../src/mainwindow.ui" line="663"/>
         <source>Overexposed pixels are colored pink.</source>
         <translation>Preosvetljeni piksli se obarvajo rožnato.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="671"/>
+        <location filename="../src/mainwindow.ui" line="673"/>
         <source>Only affects certain pixel formats. Colors are calculated using a less exact interpolation.</source>
         <translation>Vpliva le na nekatere tipe zapisa pikslov. Barve se izračunajo z manj natančno interpolacijo.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="793"/>
+        <location filename="../src/mainwindow.ui" line="795"/>
         <source>The camera has a queue of frames which are cycled. There should be several to ensure smooth operation, but not too many because they increase memory usage. Also, if the &quot;Transfer frames without copying&quot; option is enabled, the frames are not copied before they are passed to the program. If there are not enough frames in the queue, the current frame is not shown or recorded quickly enough, it may get overwritten. This option takes effect when starting the video stream.</source>
         <translation>Kamera ima vrsto slikovnik okvirjev, v katere ciklično snema. V vrsti jih mora biti vsaj nekaj, da snemanje teče gladko, a ne preveč, saj zasedajo pomnilnik. Če je vklopljena možnost &quot;Premikaj slikovne okvirje brez kopiranja&quot;, se okvirji pred vstopom v program ne kopirajo. Če v vrsti ni dovolj okvirjev in če program trenutnega okvirja ne prikaže ali posname dovolj hitro, ga lahko kamera prepiše. Ta možnost se uveljavi ob začetku pretakanja videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="839"/>
+        <location filename="../src/mainwindow.ui" line="841"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This view provides direct access to the camera. Changes may not be reflected in the rest of the program.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gornji pogled predstavlja neposreden dostop do kamere. Spremembe morda v drugih delih programa ne bodo vidne.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="854"/>
+        <location filename="../src/mainwindow.ui" line="856"/>
         <source>Save settings</source>
         <translation>Shrani nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="861"/>
+        <location filename="../src/mainwindow.ui" line="863"/>
         <source>Choose a file to load camera settings.</source>
         <translation>Izberi datoteko z nastavitvami kamere.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="864"/>
+        <location filename="../src/mainwindow.ui" line="866"/>
         <source>Load Settings</source>
         <translation>Naloži nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1030"/>
+        <location filename="../src/mainwindow.ui" line="1032"/>
         <source>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</source>
         <translation>Ustvari dodatno datoteko s končnico .caminfo. Nastavitve je moč naložiti v zavihku Napredne nastavitve.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1033"/>
+        <location filename="../src/mainwindow.ui" line="1035"/>
         <source>Dump camera settings along with the video</source>
         <translation>Skupaj z videom shrani tudi nastavitve kamere</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1043"/>
+        <location filename="../src/mainwindow.ui" line="1045"/>
         <source>Write video information file</source>
         <translation>Zapiši informacije o videu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1050"/>
+        <location filename="../src/mainwindow.ui" line="1052"/>
         <source>An additional file with a .timestamps extension will be created and will contain frame timestamps in nanoseconds, one per line, in text form.</source>
         <translation>Ustvari dodatno datoteko s končnico .timestamps, ki vsebuje časovne oznake okvirjev v nanosekundah v tekstovni obliki, ena oznaka na vrstico.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1053"/>
+        <location filename="../src/mainwindow.ui" line="1055"/>
         <source>Write timestamp file</source>
         <translation>Zapiši časovne oznake</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1061"/>
+        <location filename="../src/mainwindow.ui" line="1063"/>
         <source>About</source>
         <translation>O programu</translation>
     </message>
@@ -485,62 +485,62 @@
         <translation>Prikaži ali skrij histogram.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1116"/>
+        <location filename="../src/mainwindow.ui" line="1118"/>
         <source>Display image</source>
         <translation>Prikaži sliko</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1131"/>
+        <location filename="../src/mainwindow.ui" line="1133"/>
         <source>Fix display size to video size.</source>
         <translation>Fiksiraj prikazovalnik na izvorno velikost videa.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1197"/>
+        <location filename="../src/mainwindow.ui" line="1199"/>
         <source>Logarithmic</source>
         <translation>Logaritemski</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="92"/>
+        <location filename="../src/mainwindow.ui" line="94"/>
         <source>Store a snapshot.</source>
         <translation>Shrani trenutno sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="106"/>
+        <location filename="../src/mainwindow.ui" line="108"/>
         <source>Record video. Depress to pause recording, press again to resume.</source>
         <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1040"/>
+        <location filename="../src/mainwindow.ui" line="1042"/>
         <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</source>
         <translation>Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .qarv, ki vsebuje te informacije. To datoteko lahko predvaja qarv video predvajalnik.</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1067"/>
+        <location filename="../src/mainwindow.ui" line="1069"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012, 2013 Jure Varlec and Andrej Lajovic, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012, 2013 Jure Varlec in Andrej Lajovic, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;qarv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona qarv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1113"/>
+        <location filename="../src/mainwindow.ui" line="1115"/>
         <source>Display live image.</source>
         <translation>Prikaži živo sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1134"/>
+        <location filename="../src/mainwindow.ui" line="1136"/>
         <source>Actual size</source>
         <translation>Dejanska velikost</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1194"/>
+        <location filename="../src/mainwindow.ui" line="1196"/>
         <source>Logarithmic histogram.</source>
         <translation>Logaritemski histogram.</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1101"/>
+        <location filename="../src/mainwindow.ui" line="1103"/>
         <source>Video Display – qarv</source>
         <translation>Prikaz videa – qarv</translation>
     </message>
     <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="1182"/>
+        <location filename="../src/mainwindow.ui" line="1184"/>
         <source>Histogram – qarv</source>
         <translation>Histogram – qarv</translation>
     </message>
@@ -589,103 +589,132 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="324"/>
+        <location filename="../src/qarvmainwindow.cpp" line="325"/>
         <source>Network address not found, trying best-effort MTU %1.</source>
         <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="332"/>
-        <location filename="../src/qarvmainwindow.cpp" line="929"/>
+        <location filename="../src/qarvmainwindow.cpp" line="335"/>
+        <location filename="../src/qarvmainwindow.cpp" line="951"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="336"/>
+        <location filename="../src/qarvmainwindow.cpp" line="339"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="340"/>
+        <location filename="../src/qarvmainwindow.cpp" line="343"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="405"/>
+        <location filename="../src/qarvmainwindow.cpp" line="408"/>
         <source>Region of interest too large, shrinking.</source>
         <translation>Izrez slike je prevelik, zmanjšujem.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="717"/>
+        <location filename="../src/qarvmainwindow.cpp" line="600"/>
+        <source>Decoder problems!</source>
+        <translation>Težave z dekodiranjem!</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="620"/>
+        <source>Recording plugin failed, stopped recording.</source>
+        <translation>Vtičnik za snemanje ne deluje, snemanje ustavljeno.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="659"/>
+        <source>Decoder for %1 doesn&apos;t exist!</source>
+        <translation>Dekoder za %1 ne obstaja!</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="727"/>
         <source>Please set the video file name.</source>
         <translation>Izberi ime video datoteke.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="754"/>
+        <location filename="../src/qarvmainwindow.cpp" line="751"/>
+        <source>Unable to initialize the recording plugin.</source>
+        <translation>Zagon vtičnika za snemanje ni uspel.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="767"/>
         <source>Could not dump camera settings.</source>
         <translation>Nastavitev kamere ni bilo mogoče shraniti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="761"/>
+        <location filename="../src/qarvmainwindow.cpp" line="774"/>
         <source>Could not open timestamp file.</source>
         <translation>Časovnih oznak ni mogoče zapisati.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="788"/>
+        <location filename="../src/qarvmainwindow.cpp" line="804"/>
         <source>Please set the snapshot directory and name.</source>
         <translation>Izberi direktorij in ime za slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="796"/>
+        <location filename="../src/qarvmainwindow.cpp" line="812"/>
         <source>Snapshot directory does not exist.</source>
         <translation>Direktorij za slike ne obstaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="801"/>
+        <location filename="../src/qarvmainwindow.cpp" line="817"/>
         <source>Video is not playing, no image to save.</source>
         <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="814"/>
-        <location filename="../src/qarvmainwindow.cpp" line="826"/>
+        <location filename="../src/qarvmainwindow.cpp" line="830"/>
+        <location filename="../src/qarvmainwindow.cpp" line="842"/>
         <source>Snapshot cannot be written.</source>
         <translation>Ne morem shraniti slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="819"/>
+        <location filename="../src/qarvmainwindow.cpp" line="835"/>
         <source>Current frame is invalid, try snapshotting again.</source>
         <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="832"/>
-        <location filename="../src/qarvmainwindow.cpp" line="868"/>
-        <location filename="../src/qarvmainwindow.cpp" line="882"/>
+        <location filename="../src/qarvmainwindow.cpp" line="848"/>
+        <location filename="../src/qarvmainwindow.cpp" line="884"/>
+        <location filename="../src/qarvmainwindow.cpp" line="900"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="837"/>
+        <location filename="../src/qarvmainwindow.cpp" line="853"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="876"/>
-        <location filename="../src/qarvmainwindow.cpp" line="922"/>
+        <location filename="../src/qarvmainwindow.cpp" line="892"/>
         <source>Could not open settings file.</source>
         <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="913"/>
+        <location filename="../src/qarvmainwindow.cpp" line="933"/>
         <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
         <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="919"/>
+        <location filename="../src/qarvmainwindow.cpp" line="939"/>
         <source>Loading settings failed</source>
         <translation>Nalaganje nastavitev ni uspelo</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="942"/>
+        <source>Could not open camera settings file.</source>
+        <translation>Datoteke z nastavitvami kamere ni moč odpreti.</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="1217"/>
+        <source>Cannot select this video format.</source>
+        <translation>Tega formata videa ni moč izbrati.</translation>
     </message>
 </context>
 <context>

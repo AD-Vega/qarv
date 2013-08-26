@@ -73,10 +73,12 @@
       <item>
        <widget class="QPushButton" name="messageButton">
         <property name="toolTip">
-         <string>Show or hide message log.</string>
+         <string>Show or hide diagnostic log.</string>
         </property>
         <property name="icon">
-         <iconset theme="dialog-information"/>
+         <iconset theme="dialog-information">
+          <normaloff/>
+         </iconset>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -1236,7 +1238,7 @@
   </widget>
   <widget class="QDockWidget" name="messageDock">
    <property name="windowTitle">
-    <string>Message log</string>
+    <string>Diagnostic log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1315,12 +1317,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>216</x>
+     <x>203</x>
      <y>29</y>
     </hint>
     <hint type="destinationlabel">
      <x>925</x>
-     <y>418</y>
+     <y>289</y>
     </hint>
    </hints>
   </connection>
@@ -1331,12 +1333,12 @@
    <slot>setLogarithmic(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>785</x>
-     <y>352</y>
+     <x>745</x>
+     <y>260</y>
     </hint>
     <hint type="destinationlabel">
      <x>918</x>
-     <y>411</y>
+     <y>282</y>
     </hint>
    </hints>
   </connection>
