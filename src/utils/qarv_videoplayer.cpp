@@ -74,7 +74,7 @@ bool QArvVideoPlayer::open(QString filename) {
   on_slider_valueChanged(0);
   slider->blockSignals(false);
   fpsSpinbox->setValue(recording->framerate());
-  
+
   leftMarkButton->setEnabled(recording->isSeekable());
   rightMarkButton->setEnabled(recording->isSeekable());
   leftMarkButton->setChecked(false);
@@ -90,10 +90,8 @@ bool QArvVideoPlayer::open(QString filename) {
 void QArvVideoPlayer::on_playButton_toggled(bool checked) {
   if (checked) {
     readNextFrame();
-    if (!recorder) {
-      showTimer->setInterval(1000 / fpsSpinbox->value());
-      showTimer->start();
-    }
+    showTimer->setInterval(1000 / fpsSpinbox->value());
+    showTimer->start();
   } else {
     showTimer->stop();
   }
@@ -115,30 +113,13 @@ void QArvVideoPlayer::readNextFrame(bool seeking) {
   }
   if (frame.isNull()) {
     playButton->setChecked(false);
-    transcodeButton->setChecked(false);
     QApplication::processEvents();
     videoWidget->setImage();
     return;
   } else {
     decoder->decode(frame);
-    if (!recorder) {
-      QArvDecoder::CV2QImage(decoder->getCvImage(),
-                             *(videoWidget->unusedFrame()));
-    } else {
-      recorder->recordFrame(frame, decoder->getCvImage());
-      transcodeBar->setValue(transcodeBar->value() + 1);
-      if (recording->isSeekable() && slider->value() >= rightFrame) {
-        transcodeButton->setChecked(false);
-        return;
-      }
-      if (recorder->isOK()) {
-        // When recording, schedule reads here instead of from showNextFrame.
-        QTimer::singleShot(0, this, SLOT(readNextFrame()));
-      } else {
-        transcodeButton->setChecked(false);
-        return;
-      }
-    }
+    QArvDecoder::CV2QImage(decoder->getCvImage(),
+                           *(videoWidget->unusedFrame()));
   }
 }
 
@@ -188,7 +169,7 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
         rightFrame = leftFrame;
         leftFrame = tmp;
       }
-      slider->setValue(leftFrame);
+      on_slider_valueChanged(leftFrame);
       transcodeBar->setMinimum(leftFrame);
       transcodeBar->setMaximum(rightFrame);
       transcodeBar->setValue(leftFrame);
@@ -213,17 +194,42 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
     }
 
     slider->setEnabled(false);
-    playButton->setChecked(true);
+    playButton->setChecked(false);
     playButton->setEnabled(false);
+    QApplication::processEvents();
+
+    // Work in a loop and abort if the user clicks this button again, which
+    // results in deallocating the recorder.
+    quint64 counter = 0;
+    forever {
+      if (!transcodeButton->isChecked())
+        break;
+      counter++;
+      auto frame = recording->read();
+      if (frame.isNull()) {
+        transcodeButton->setChecked(false);
+        break;
+      }
+      decoder->decode(frame);
+      recorder->recordFrame(frame, decoder->getCvImage());
+      if (!recorder->isOK()) {
+        transcodeButton->setChecked(false);
+        break;
+      }
+      if (counter % 10) {
+        transcodeBar->setValue(transcodeBar->value() + 10);
+        QApplication::processEvents();
+      }
+    }
   } else {
     playButton->setEnabled(true);
-    playButton->setChecked(false);
     QApplication::processEvents();
     transcodeBar->setValue(transcodeBar->minimum());
     recorder.reset();
     if (recording->isSeekable()) {
       slider->setEnabled(true);
-      slider->setValue(slider->minimum());
+      slider->setValue(0);
+      on_slider_valueChanged(0);
     }
   }
 }
