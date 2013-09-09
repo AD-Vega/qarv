@@ -25,7 +25,7 @@
 
 using namespace QArv;
 
-const int processTimeout = 5000;
+const int processTimeout = 10000;
 
 /*
  * This class is currently implemented using a QProcess brecause our
