@@ -31,7 +31,7 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
   setupUi(this);
   QMap<QAbstractButton*, QString> icons;
   icons[openButton] = "document-open";
-  icons[playButton] = "media-play";
+  icons[playButton] = "media-playback-start";
   icons[transcodeButton] = "media-record";
   icons[leftMarkButton] = "go-first";
   icons[rightMarkButton] = "go-last";
