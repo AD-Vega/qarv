@@ -92,7 +92,7 @@ public:
       break;
 
     case CV_16UC1:
-#if G_BYTE_ORDER == G_BIG_ENDIAN
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
       informat = "gray16-be";
 #else
       informat = "gray16-le";
