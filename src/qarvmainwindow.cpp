@@ -31,6 +31,8 @@
 #include <QStatusBar>
 #include <QtConcurrentRun>
 #include <QPluginLoader>
+#include <QMenu>
+#include <QToolButton>
 
 #include <type_traits>
 
@@ -63,30 +65,39 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   // Setup theme icons if available.
   QMap<QAbstractButton*, QString> icons;
-  icons[showVideoButton] = "video-display";
   icons[unzoomButton] = "zoom-original";
-  icons[recordButton] = "media-record";
   icons[playButton] = "media-playback-start";
   icons[refreshCamerasButton] = "view-refresh";
   icons[chooseFilenameButton] = "document-open";
   icons[chooseSnappathButton] = "document-open";
   icons[editGainButton] = "edit-clear-locationbar-rtl";
   icons[editExposureButton] = "edit-clear-locationbar-rtl";
-  icons[showHistogramButton] = "office-chart-bar";
   icons[histogramLog] = "view-object-histogram-logarithmic";
   icons[pickROIButton] = "edit-select";
-  icons[closeFileButton] = "media-playback-stop";
-  icons[messageButton] = "dialog-information";
   for (auto i = icons.begin(); i != icons.end(); i++)
     if (!QIcon::hasThemeIcon(*i))
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
-  playIcon = playButton->icon();
-  recordIcon = recordButton->icon();
-  if (QIcon::hasThemeIcon("media-playback-pause"))
-    pauseIcon = QIcon::fromTheme("media-playback-pause");
-  else
-    pauseIcon = QIcon(QString(
-                        qarv_datafiles) + "media-playback-pause" + ".svgz");
+  QMap<QAction*, QString> aicons;
+  aicons[showVideoAction] = "video-display";
+  aicons[recordAction] = "media-record";
+  aicons[closeFileAction] = "media-playback-stop";
+  aicons[showHistogramAction] = "office-chart-bar";
+  aicons[messageAction] = "dialog-information";
+  for (auto i = aicons.begin(); i != aicons.end(); i++)
+    if (!QIcon::hasThemeIcon(*i))
+      i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+
+  // Setup the subwindows menu.
+  auto submenu = new QMenu;
+  submenu->addAction(showVideoAction);
+  submenu->addAction(showHistogramAction);
+  submenu->addAction(messageAction);
+  auto toolbutton = new QToolButton;
+  toolbutton->setMenu(submenu);
+  toolbutton->setPopupMode(QToolButton::InstantPopup);
+  toolbutton->setToolButtonStyle(Qt::ToolButtonTextOnly);
+  toolbutton->setText(tr("Subwindows"));
+  toolBar->addWidget(toolbutton);
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
@@ -126,7 +137,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_QuitOnClose, false);
     tabWidget->removeTab(tabWidget->indexOf(recordingTab));
-    snapButton->setEnabled(false);
+    snapshotAction->setEnabled(false);
   }
 
   auto plugins = QPluginLoader::staticInstances();
@@ -153,7 +164,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 }
 
 QArvMainWindow::~QArvMainWindow() {
-  on_closeFileButton_clicked(true);
+  on_closeFileAction_triggered(true);
   saveProgramSettings();
 }
 
@@ -620,8 +631,8 @@ void QArvMainWindow::takeNextFrame() {
         auto message = tr("Recording plugin failed, stopped recording.");
         statusBar()->showMessage(message, statusTimeoutMsec);
         logMessage() << message.toAscii().constData();
-        recordButton->click();
-        closeFileButton->click();
+        recordAction->setChecked(false);
+        closeFileAction->trigger();
       }
     }
 
@@ -697,7 +708,7 @@ void QArvMainWindow::on_playButton_clicked(bool checked) {
   if (!playing) video->setImage();
 }
 
-void QArvMainWindow::on_recordButton_clicked(bool checked) {
+void QArvMainWindow::on_recordAction_toggled(bool checked) {
   if (toDisableWhenRecording.isEmpty()) {
     toDisableWhenRecording = {
       fpsSpinbox,
@@ -726,7 +737,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
     tabWidget->setCurrentWidget(recordingTab);
     statusBar()->showMessage(tr("Please set the video file name."),
                              statusTimeoutMsec);
-    recordButton->setChecked(false);
+    recordAction->setChecked(false);
     return;
   }
 
@@ -751,7 +762,7 @@ void QArvMainWindow::on_recordButton_clicked(bool checked) {
       QString message = tr("Unable to initialize the recording plugin.");
       logMessage() << message.toAscii().constData();
       statusBar()->showMessage(message, statusTimeoutMsec);
-      recordButton->setChecked(false);
+      recordAction->setChecked(false);
       checked = false;
     } else {
       statusBar()->clearMessage();
@@ -785,11 +796,10 @@ skip_all_file_opening:
   recording = checked;
   startVideo(recording || playing);
   recording = checked && started;
-  recordButton->setChecked(recording);
-  recordButton->setIcon(recording ? pauseIcon : recordIcon);
+  recordAction->setChecked(recording);
 
   bool open = recorder && recorder->isOK();
-  closeFileButton->setEnabled(!recording && open);
+  closeFileAction->setEnabled(!recording && open);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording && !open);
     on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
@@ -798,7 +808,7 @@ skip_all_file_opening:
   emit recordingStarted(recording);
 }
 
-void QArvMainWindow::on_snapButton_clicked(bool checked) {
+void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
   if (snappathEdit->text().isEmpty() || snapbasenameEdit->text().isEmpty()) {
     tabWidget->setCurrentWidget(recordingTab);
     statusBar()->showMessage(tr("Please set the snapshot directory and name."),
@@ -1017,10 +1027,14 @@ void QArvMainWindow::on_exposureSpinbox_editingFinished() {
   autoreadexposure->start();
 }
 
+void QArvMainWindow::on_showVideoAction_toggled(bool checked) {
+  videodock->setVisible(checked);
+}
+
 void QArvMainWindow::on_videodock_visibilityChanged(bool visible) {
-  showVideoButton->blockSignals(true);
-  showVideoButton->setChecked(!videodock->isHidden());
-  showVideoButton->blockSignals(false);
+  showVideoAction->blockSignals(true);
+  showVideoAction->setChecked(!videodock->isHidden());
+  showVideoAction->blockSignals(false);
 }
 
 void QArvMainWindow::on_videodock_topLevelChanged(bool floating) {
@@ -1030,10 +1044,14 @@ void QArvMainWindow::on_videodock_topLevelChanged(bool floating) {
   }
 }
 
+void QArvMainWindow::on_showHistogramAction_toggled(bool checked) {
+  histogramdock->setVisible(checked);
+}
+
 void QArvMainWindow::on_histogramdock_visibilityChanged(bool visible) {
-  showHistogramButton->blockSignals(true);
-  showHistogramButton->setChecked(!histogramdock->isHidden());
-  showHistogramButton->blockSignals(false);
+  showHistogramAction->blockSignals(true);
+  showHistogramAction->setChecked(!histogramdock->isHidden());
+  showHistogramAction->blockSignals(false);
 }
 
 void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
@@ -1043,10 +1061,14 @@ void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
   }
 }
 
+void QArvMainWindow::on_messageAction_toggled(bool checked) {
+  messageDock->setVisible(checked);
+}
+
 void QArvMainWindow::on_messageDock_visibilityChanged(bool visible) {
-  messageButton->blockSignals(true);
-  messageButton->setChecked(!messageDock->isHidden());
-  messageButton->blockSignals(false);
+  messageAction->blockSignals(true);
+  messageAction->setChecked(!messageDock->isHidden());
+  messageAction->blockSignals(false);
 }
 
 void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
@@ -1056,10 +1078,10 @@ void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
   }
 }
 
-void QArvMainWindow::on_closeFileButton_clicked(bool checked) {
+void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
   recorder.reset();
   timestampFile.close();
-  closeFileButton->setEnabled(recording);
+  closeFileAction->setEnabled(recording);
   foreach (auto wgt, toDisableWhenRecording) {
     wgt->setEnabled(!recording);
     on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
@@ -1208,7 +1230,7 @@ void QArvMainWindow::restoreProgramSettings() {
 void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
   if (fmt) {
-    bool b = !recording && !closeFileButton->isEnabled();
+    bool b = !recording && !closeFileAction->isEnabled();
     recordApendCheck->setEnabled(fmt->canAppend() && b);
     recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
   } else {

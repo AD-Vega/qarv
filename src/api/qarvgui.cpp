@@ -102,8 +102,8 @@ void QArvGui::getFrame(cv::Mat* processed,
  */
 void QArvGui::forceRecording() {
   if (!ext->mw->standalone) {
-    if (!ext->mw->recordButton->isChecked()) ext->mw->recordButton->click();
-    ext->mw->recordButton->setEnabled(false);
+    if (!ext->mw->recordAction->isChecked()) ext->mw->recordAction->setChecked(true);
+    ext->mw->recordAction->setEnabled(false);
   }
 }
 

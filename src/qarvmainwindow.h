@@ -56,8 +56,8 @@ private slots:
   void on_gainAutoButton_toggled(bool checked);
   void on_pixelFormatSelector_currentIndexChanged(int index);
   void on_playButton_clicked(bool checked);
-  void on_recordButton_clicked(bool checked);
-  void on_snapButton_clicked(bool checked);
+  void on_recordAction_toggled(bool checked);
+  void on_snapshotAction_triggered(bool checked);
   void on_chooseSnappathButton_clicked(bool checked);
   void on_chooseFilenameButton_clicked(bool checked);
   void on_fpsSpinbox_valueChanged(int value);
@@ -72,13 +72,16 @@ private slots:
   void on_editGainButton_clicked(bool checked);
   void on_exposureSpinbox_editingFinished();
   void on_gainSpinbox_editingFinished();
+  void on_showVideoAction_toggled(bool checked);
   void on_videodock_visibilityChanged(bool visible);
   void on_videodock_topLevelChanged(bool floating);
+  void on_showHistogramAction_toggled(bool checked);
   void on_histogramdock_visibilityChanged(bool visible);
   void on_histogramdock_topLevelChanged(bool floating);
+  void on_messageAction_toggled(bool checked);
   void on_messageDock_visibilityChanged(bool visible);
   void on_messageDock_topLevelChanged(bool floating);
-  void on_closeFileButton_clicked(bool checked);
+  void on_closeFileAction_triggered(bool checked);
   void on_ROIsizeCombo_newSizeSelected(QSize size);
   void on_sliderUpdateSpinbox_valueChanged(int i);
   void on_histogramUpdateSpinbox_valueChanged(int i);
@@ -117,7 +120,6 @@ private:
   QSize oldsize;
   QList<QWidget*> toDisableWhenPlaying;
   QList<QWidget*> toDisableWhenRecording;
-  QIcon recordIcon, pauseIcon, playIcon;
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;

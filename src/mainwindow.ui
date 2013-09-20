@@ -19,125 +19,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="0">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="showVideoButton">
-        <property name="toolTip">
-         <string>Show or hide video display.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="video-display">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="showHistogramButton">
-        <property name="toolTip">
-         <string>Show or hide histogram display.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="office-chart-bar">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="messageButton">
-        <property name="toolTip">
-         <string>Show or hide diagnostic log.</string>
-        </property>
-        <property name="icon">
-         <iconset theme="dialog-information">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="snapButton">
-        <property name="toolTip">
-         <string>Store a snapshot.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../res/icons/icons.qrc">
-          <normaloff>:/icons/snapshot.svgz</normaloff>:/icons/snapshot.svgz</iconset>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="recordButton">
-        <property name="toolTip">
-         <string>Record video. Depress to pause recording, press again to resume.</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="media-record">
-          <normaloff/>
-         </iconset>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="closeFileButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="toolTip">
-         <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
-        </property>
-        <property name="icon">
-         <iconset theme="media-playback-stop">
-          <normaloff/>
-         </iconset>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -1267,6 +1149,126 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonFollowStyle</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="snapshotAction"/>
+   <addaction name="recordAction"/>
+   <addaction name="closeFileAction"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="snapshotAction">
+   <property name="icon">
+    <iconset resource="../res/icons/icons.qrc">
+     <normaloff>:/icons/snapshot.svgz</normaloff>:/icons/snapshot.svgz</iconset>
+   </property>
+   <property name="text">
+    <string>Snapshot</string>
+   </property>
+   <property name="toolTip">
+    <string>Store a snapshot.</string>
+   </property>
+  </action>
+  <action name="recordAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="media-record"/>
+   </property>
+   <property name="text">
+    <string>Record</string>
+   </property>
+   <property name="toolTip">
+    <string>Record video. Depress to pause recording, press again to resume.</string>
+   </property>
+  </action>
+  <action name="closeFileAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="media-playback-stop"/>
+   </property>
+   <property name="text">
+    <string>Finish</string>
+   </property>
+   <property name="toolTip">
+    <string>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</string>
+   </property>
+  </action>
+  <action name="showVideoAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="video-display"/>
+   </property>
+   <property name="text">
+    <string>Video Display</string>
+   </property>
+   <property name="toolTip">
+    <string>Show or hide video display.</string>
+   </property>
+  </action>
+  <action name="showHistogramAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="office-chart-bar"/>
+   </property>
+   <property name="text">
+    <string>Histogram</string>
+   </property>
+   <property name="toolTip">
+    <string>Show or hide histogram display.</string>
+   </property>
+  </action>
+  <action name="messageAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="dialog-information"/>
+   </property>
+   <property name="text">
+    <string>Diagnostic Log</string>
+   </property>
+   <property name="toolTip">
+    <string>Show or hide diagnostic log.</string>
+   </property>
+  </action>
+  <action name="subwindowsAction">
+   <property name="text">
+    <string>Subwindows...</string>
+   </property>
+   <property name="iconText">
+    <string>Subwindows...</string>
+   </property>
+   <property name="toolTip">
+    <string>Subwindows</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -1295,38 +1297,6 @@
  </resources>
  <connections>
   <connection>
-   <sender>showVideoButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>videodock</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>67</x>
-     <y>29</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>676</x>
-     <y>125</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>showHistogramButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>histogramdock</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>203</x>
-     <y>29</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>925</x>
-     <y>289</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>histogramLog</sender>
    <signal>toggled(bool)</signal>
    <receiver>histogram</receiver>
@@ -1338,23 +1308,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>918</x>
-     <y>282</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>messageButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>messageDock</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>261</x>
-     <y>15</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>690</x>
-     <y>432</y>
+     <y>297</y>
     </hint>
    </hints>
   </connection>
