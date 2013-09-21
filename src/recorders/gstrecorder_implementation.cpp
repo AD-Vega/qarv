@@ -39,12 +39,16 @@ static bool checkPluginAvailability(const QStringList& plugins) {
     QProcess I;
     I.start("gst-inspect-1.0 --version");
     if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
+      if (I.bytesAvailable())
+        logMessage(false) << I.readAll().constData();
       logMessage() << "gst-inspect-1.0 not available";
       failed = true;
       return false;
     }
     I.start("gst-launch-1.0 --version");
     if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
+      if (I.bytesAvailable())
+        logMessage(false) << I.readAll().constData();
       logMessage() << "gst-launch-1.0 not available";
       failed = true;
       return false;
@@ -128,26 +132,38 @@ public:
                           QString::number(size.height()),
                           outputFormat,
                           fileName);
-    gstprocess.setProcessChannelMode(QProcess::ForwardedChannels);
+    gstprocess.setProcessChannelMode(QProcess::MergedChannels);
     gstprocess.start(cmdline, QIODevice::ReadWrite);
+    if (gstprocess.bytesAvailable())
+      logMessage(false) << gstprocess.readAll().constData();
     if (!gstprocess.waitForStarted(processTimeout))
       logMessage() << "gstreamer failed to start";
+    if (gstprocess.bytesAvailable())
+      logMessage(false) << gstprocess.readAll().constData();
   }
 
   virtual ~GstRecorder() {
     gstprocess.closeWriteChannel();
+    if (gstprocess.bytesAvailable())
+      logMessage(false) << gstprocess.readAll().constData();
     if (!gstprocess.waitForFinished(processTimeout)) {
+      if (gstprocess.bytesAvailable())
+        logMessage(false) << gstprocess.readAll().constData();
       logMessage() << "gstreamer process did not finish";
       gstprocess.kill();
     }
+    if (gstprocess.bytesAvailable())
+      logMessage(false) << gstprocess.readAll().constData();
   }
 
   bool isOK() {
     if (!gstOK) return false;
     if (gstprocess.state() == QProcess::Starting) {
       if (!gstprocess.waitForStarted(processTimeout)) {
+        if (gstprocess.bytesAvailable())
+          logMessage(false) << gstprocess.readAll().constData();
         logMessage() << "gstreamer failed to start";
-	return false;
+        return false;
       }
     }
     return gstprocess.state() == QProcess::Running;
@@ -170,6 +186,8 @@ public:
     while (gstprocess.bytesToWrite() > 200*bytes)
       gstprocess.waitForBytesWritten(-1);
     gstprocess.write(p, bytes);
+    if (gstprocess.bytesAvailable())
+      logMessage(false) << gstprocess.readAll().constData();
   }
 };
 

@@ -15,20 +15,24 @@ extern const char* qarv_datafiles;
 
 class QArvDebug: public QDebug {
 private:
-  QArvDebug() : QDebug(&message) {}
+  QArvDebug(bool prependProgramName) :
+    QDebug(&message), prepend(prependProgramName) {}
   QString message;
+  bool prepend;
 
 public:
   static QStandardItemModel model;
   ~QArvDebug() {
-    qDebug("QArv: %s", message.toAscii().constData());
+    qDebug(prepend ? "QArv: %s" : "%s", message.toAscii().constData());
     model.appendRow(new QStandardItem(message));
   }
 
-  friend QArvDebug logMessage();
+  friend QArvDebug logMessage(bool);
 };
 
-QArvDebug logMessage();
+inline QArvDebug logMessage(bool prependProgramName = true) {
+  return QArvDebug(prependProgramName);
+}
 
 }
 
