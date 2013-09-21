@@ -117,6 +117,15 @@ QArvCameraId QArvCamera::getId() {
   return QArvCameraId(id, vendor, model);
 }
 
+/*!
+ * This function is provided in case you need to hack around any QArv
+ * limitations. If you need to do so, we would like to hear about it.
+ * It might be more appropriate to extend the C++ API.
+ */
+ArvCamera* QArvCamera::aravisCamera() {
+  return camera;
+}
+
 QRect QArvCamera::getROI() {
   int x, y, width, height;
   arv_camera_get_region(camera, &x, &y, &width, &height);

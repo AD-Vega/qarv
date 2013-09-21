@@ -100,6 +100,9 @@ public:
 
   QArvCameraId getId(); //!< Returns the ID of the camera.
 
+  //! Returns the underlying Aravis camera struct.
+  ArvCamera* aravisCamera();
+
   //! \name Manipulate region of interest
   //@{
   QRect getROI();
