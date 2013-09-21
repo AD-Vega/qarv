@@ -62,6 +62,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   setupUi(this);
   on_statusTimeoutSpinbox_valueChanged(statusTimeoutSpinbox->value());
   messageList->setModel(&QArvDebug::model);
+  connect(&QArvDebug::model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
+          messageList, SLOT(scrollToBottom()));
 
   // Setup theme icons if available.
   QMap<QAbstractButton*, QString> icons;
