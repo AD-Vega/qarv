@@ -718,3 +718,40 @@ QVariant QArvCamera::headerData(int section, Qt::Orientation orientation,
   }
   return QVariant();
 }
+
+QList<QString> QArvCamera::categories() const {
+  QList<QString> list;
+  for (int i = 0; i < rowCount(); i++) {
+    auto idx = index(i, 0);
+    list << idx.data().toString();
+  }
+  return list;
+}
+
+QList<QString> QArvCamera::features(QString category) const {
+  QList<QString> list;
+  for (int i = 0; i < rowCount(); i++) {
+    auto idx = index(i, 0);
+    if (idx.data().toString() == category) {
+      for (int j = 0; j < rowCount(idx); j++) {
+        auto idx2 = idx.child(j, 0);
+        list << idx2.data().toString();
+      }
+      return list;
+    }
+  }
+  return list;
+}
+
+QModelIndex QArvCamera::featureIndex(QString feature) const {
+   for (int i = 0; i < rowCount(); i++) {
+    auto idx = index(i, 0);
+    for (int j = 0; j < rowCount(idx); j++) {
+      auto idx2 = idx.child(j, 0);
+      if (idx2.data().toString() == feature) {
+        return idx.child(j, 1);
+      }
+    }
+  }
+  return QModelIndex();
+}

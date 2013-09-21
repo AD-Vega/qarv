@@ -203,6 +203,15 @@ private:
 
 public:
   //! \name QAbstractItemModel implementation
+  /*!
+   * The model is a two-level table. The first level contains
+   * a single column with feature categories. Each category
+   * has a second level with two colums. The first contains
+   * the name of a feature, and the second contains its value.
+   * The latter has several roles contaning name, description, tooltip.
+   * QVariant returned using Qt::EditRole contains a QArvType
+   * with actual data.
+   */
   /**@{*/
   QModelIndex index(int row, int column,
                     const QModelIndex& parent = QModelIndex()) const;
@@ -216,6 +225,19 @@ public:
   Qt::ItemFlags flags(const QModelIndex& index) const;
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const;
+  /**@}*/
+
+  //! \name Convenience functions for camera feature access
+  /*!
+   * These functions can be used to avoid some of the QAbstractModel
+   * boilerplate. They can be used to quickly list features and find
+   * the index of a particular feature, which can then be used with
+   * data() and setData() in Qt::EditRole.
+   */
+  /**@{*/
+  QList<QString> categories() const;
+  QList<QString> features(QString category) const;
+  QModelIndex featureIndex(QString feature) const;
   /**@}*/
 
 private:
