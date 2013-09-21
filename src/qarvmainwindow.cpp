@@ -97,7 +97,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   toolbutton->setPopupMode(QToolButton::InstantPopup);
   toolbutton->setToolButtonStyle(Qt::ToolButtonTextOnly);
   toolbutton->setText(tr("Subwindows"));
-  toolBar->addWidget(toolbutton);
+  subwindowToolbar->addWidget(toolbutton);
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>926</width>
-    <height>534</height>
+    <height>567</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -982,7 +982,7 @@
   </widget>
   <widget class="QDockWidget" name="videodock">
    <property name="windowTitle">
-    <string>Video Display – qarv</string>
+    <string>Video Display</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1063,7 +1063,7 @@
   </widget>
   <widget class="QDockWidget" name="histogramdock">
    <property name="windowTitle">
-    <string>Histogram – qarv</string>
+    <string>Histogram</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1149,9 +1149,9 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="recordingToolbar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Recording</string>
    </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonFollowStyle</enum>
@@ -1165,7 +1165,17 @@
    <addaction name="snapshotAction"/>
    <addaction name="recordAction"/>
    <addaction name="closeFileAction"/>
-   <addaction name="separator"/>
+  </widget>
+  <widget class="QToolBar" name="subwindowToolbar">
+   <property name="windowTitle">
+    <string>Subwindows</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
   </widget>
   <action name="snapshotAction">
    <property name="icon">
@@ -1184,7 +1194,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="media-record"/>
+    <iconset theme="media-record">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Record</string>
@@ -1198,7 +1210,9 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="media-playback-stop"/>
+    <iconset theme="media-playback-stop">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Finish</string>
@@ -1215,7 +1229,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="video-display"/>
+    <iconset theme="video-display">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Video Display</string>
@@ -1232,7 +1248,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="office-chart-bar"/>
+    <iconset theme="office-chart-bar">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Histogram</string>
@@ -1249,7 +1267,9 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="dialog-information"/>
+    <iconset theme="dialog-information">
+     <normaloff/>
+    </iconset>
    </property>
    <property name="text">
     <string>Diagnostic Log</string>
