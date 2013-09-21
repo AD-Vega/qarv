@@ -20,10 +20,10 @@
 #ifndef QARVTYPE_H
 #define QARVTYPE_H
 
+#pragma GCC visibility push(default)
+
 #include <QWidget>
 #include <QMetaType>
-
-namespace QArv {
 
 //! QArvEditor is a QWidget that contains the actual editing widgets.
 /*! It is used to translate whichever signal is emitted by the actual widgets
@@ -76,10 +76,8 @@ struct QArvEnumeration : QArvType {
   QList<QString> values;
   QList<bool> isAvailable;
   int currentValue;
-  QArvEnumeration() : values(), isAvailable() {}
-  operator QString()  const {
-    return currentValue >= 0 ? names[currentValue] : QString();
-  }
+  QArvEnumeration();
+  operator QString()  const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -88,8 +86,8 @@ struct QArvEnumeration : QArvType {
 struct QArvString : QArvType {
   QString value;
   qint64 maxlength;
-  QArvString() : value() {}
-  operator QString() const { return value; }
+  QArvString();
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -98,8 +96,8 @@ struct QArvString : QArvType {
 struct QArvFloat : QArvType {
   double value, min, max;
   QString unit;
-  QArvFloat() : unit() {}
-  operator QString() const { return QString::number(value) + " " + unit; }
+  QArvFloat();
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -107,7 +105,7 @@ struct QArvFloat : QArvType {
 
 struct QArvInteger : QArvType {
   qint64 value, min, max, inc;
-  operator QString() const { return QString::number(value); }
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -115,18 +113,14 @@ struct QArvInteger : QArvType {
 
 struct QArvBoolean : QArvType {
   bool value;
-  operator QString() const {
-    return value
-           ? QObject::tr("on/true", "QArvCamera")
-           : QObject::tr("off/false", "QArvCamera");
-  }
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
 };
 
 struct QArvCommand : QArvType {
-  operator QString() const { return QObject::tr("<command>", "QArvCamera"); }
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -135,8 +129,8 @@ struct QArvCommand : QArvType {
 struct QArvRegister : QArvType {
   QByteArray value;
   qint64 length;
-  QArvRegister() : value() {}
-  operator QString() const { return QString("0x") + value.toHex(); }
+  QArvRegister();
+  operator QString() const;
   QArvEditor* createEditor(QWidget* parent) const;
   void populateEditor(QWidget* editor) const;
   void readFromEditor(QWidget* editor);
@@ -144,15 +138,15 @@ struct QArvRegister : QArvType {
 
 /**@}*/
 
-};
+Q_DECLARE_METATYPE(QArvType*)
+Q_DECLARE_METATYPE(QArvEnumeration)
+Q_DECLARE_METATYPE(QArvString)
+Q_DECLARE_METATYPE(QArvFloat)
+Q_DECLARE_METATYPE(QArvInteger)
+Q_DECLARE_METATYPE(QArvBoolean)
+Q_DECLARE_METATYPE(QArvCommand)
+Q_DECLARE_METATYPE(QArvRegister)
 
-Q_DECLARE_METATYPE(QArv::QArvType*)
-Q_DECLARE_METATYPE(QArv::QArvEnumeration)
-Q_DECLARE_METATYPE(QArv::QArvString)
-Q_DECLARE_METATYPE(QArv::QArvFloat)
-Q_DECLARE_METATYPE(QArv::QArvInteger)
-Q_DECLARE_METATYPE(QArv::QArvBoolean)
-Q_DECLARE_METATYPE(QArv::QArvCommand)
-Q_DECLARE_METATYPE(QArv::QArvRegister)
+#pragma GCC visibility pop
 
 #endif

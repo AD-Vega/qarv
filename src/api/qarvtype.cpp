@@ -26,7 +26,11 @@
 #include <QPushButton>
 #include <cassert>
 
-using namespace QArv;
+QArvEnumeration::QArvEnumeration(): values(), isAvailable() {}
+
+QArvEnumeration::operator QString() const  {
+  return currentValue >= 0 ? names[currentValue] : QString();
+}
 
 QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
@@ -61,6 +65,12 @@ void QArvEnumeration::readFromEditor(QWidget* editor) {
   currentValue = values.indexOf(val.toString());
 }
 
+QArvString::QArvString() : value() {}
+
+QArvString::operator QString() const {
+  return value;
+}
+
 QArvEditor* QArvString::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
   auto edline = new QLineEdit(editor);
@@ -84,6 +94,12 @@ void QArvString::readFromEditor(QWidget* editor) {
   auto edline = editor->findChild<QLineEdit*>("editString");
   assert(edline);
   value = edline->text();
+}
+
+QArvFloat::QArvFloat() : unit() {}
+
+QArvFloat::operator QString() const  {
+  return QString::number(value) + " " + unit;
 }
 
 QArvEditor* QArvFloat::createEditor(QWidget* parent) const {
@@ -113,6 +129,10 @@ void QArvFloat::readFromEditor(QWidget* editor) {
   value = edbox->value();
 }
 
+QArvInteger::operator QString() const  {
+  return QString::number(value);
+}
+
 QArvEditor* QArvInteger::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
   auto edbox = new QSpinBox(editor);
@@ -139,6 +159,12 @@ void QArvInteger::readFromEditor(QWidget* editor) {
   value = edbox->value();
 }
 
+QArvBoolean::operator QString() const {
+  return value
+         ? QObject::tr("on/true", "QArvCamera")
+         : QObject::tr("off/false", "QArvCamera");
+}
+
 QArvEditor* QArvBoolean::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
   auto check = new QCheckBox(editor);
@@ -163,6 +189,10 @@ void QArvBoolean::readFromEditor(QWidget* editor) {
   value = check->isChecked();
 }
 
+QArvCommand::operator QString() const {
+  return QObject::tr("<command>", "QArvCamera");
+}
+
 QArvEditor* QArvCommand::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);
   auto button = new QPushButton(editor);
@@ -179,6 +209,12 @@ QArvEditor* QArvCommand::createEditor(QWidget* parent) const {
 void QArvCommand::populateEditor(QWidget* editor) const {}
 
 void QArvCommand::readFromEditor(QWidget* editor) {}
+
+QArvRegister::QArvRegister() : value() {}
+
+QArvRegister::operator QString() const {
+  return QString("0x") + value.toHex();
+}
 
 QArvEditor* QArvRegister::createEditor(QWidget* parent) const {
   auto editor = new QArvEditor(parent);

@@ -56,7 +56,7 @@ set_prefixed(qarv_MOCS src/
   glhistogramwidget.h
   qarvmainwindow.h
   roicombobox.h
-  qarvtype.h
+  api/qarvtype.h
   api/qarvgui.h
   api/qarvcamera.h
   api/qarvcameradelegate.h
@@ -70,7 +70,7 @@ set_prefixed(qarv_SRCS src/
   globals.cpp
   roicombobox.cpp
   qarvfeaturetree.cpp
-  qarvtype.cpp
+  api/qarvtype.cpp
   recorders/recorder.cpp
   api/qarvgui.cpp
   api/qarvcamera.cpp
@@ -173,6 +173,7 @@ set_prefixed(qarv_IHDR src/api/
              qarvgui.h
              qarvdecoder.h
              qarvrecordedvideo.h
+             qarvtype.h
 )
 install(FILES ${qarv_IHDR}
         DESTINATION include/qarv-${qarv_API}/)

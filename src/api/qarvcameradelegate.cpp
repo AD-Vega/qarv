@@ -19,10 +19,8 @@
 
 #include "api/qarvcameradelegate.h"
 #include <cassert>
-#include "qarvtype.h"
+#include "api/qarvtype.h"
 #include <QLayout>
-
-using namespace QArv;
 
 QArvCameraDelegate::QArvCameraDelegate(QObject* parent) :
   QStyledItemDelegate(parent) {}
