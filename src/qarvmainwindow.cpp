@@ -65,6 +65,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   connect(&QArvDebug::model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
           messageList, SLOT(scrollToBottom()));
 
+  aboutLabel->setText(aboutLabel->text().arg(QARV_VERSION));
+
   // Setup theme icons if available.
   QMap<QAbstractButton*, QString> icons;
   icons[unzoomButton] = "zoom-original";
