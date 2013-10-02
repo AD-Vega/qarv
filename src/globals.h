@@ -7,8 +7,8 @@
 namespace QArv
 {
 
-#ifndef QARV_PREFIX
-#define QARV_PREFIX ""
+#ifndef QARV_DATA
+#define QARV_DATA "res/icons/"
 #endif
 
 extern const char* qarv_datafiles;

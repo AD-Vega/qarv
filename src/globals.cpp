@@ -2,6 +2,6 @@
 
 using namespace QArv;
 
-const char* QArv::qarv_datafiles = QARV_PREFIX "/share/qarv/";
+const char* QArv::qarv_datafiles = QARV_DATA;
 
 QStandardItemModel QArvDebug::model;

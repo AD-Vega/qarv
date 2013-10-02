@@ -1,8 +1,8 @@
 project(qarv)
 cmake_minimum_required(VERSION 2.8)
-set(qarv_VERSION 0.1.0)
-set(qarv_ABI 0)
-set(qarv_API 0)
+set(qarv_VERSION 1.0.0)
+set(qarv_ABI 1)
+set(qarv_API 1)
 
 macro(set_prefixed varname string)
   set(${varname})
@@ -43,7 +43,8 @@ if (NOT qarv_BTYPE MATCHES "debug")
 endif()
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -Wall -Werror")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
-add_definitions(-DQARV_PREFIX=\"${CMAKE_INSTALL_PREFIX}\" -DQT_STATICPLUGIN)
+add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/share/qarv/\" -DQT_STATICPLUGIN
+  -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=\"${qarv_API}\" -DQARV_ABI=\"${qarv_ABI}\")
 
 set_prefixed(qarv_UIS_pre src/
   mainwindow.ui
