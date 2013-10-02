@@ -22,6 +22,7 @@
 #include "globals.h"
 
 #include <QTranslator>
+#include <QHBoxLayout>
 
 using namespace QArv;
 
@@ -51,29 +52,17 @@ void QArvGui::init(QApplication* a) {
  * will be decoded and made available using getFrame().
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) :
-  QObject(parent), mainWindowAlive(true) {
+  QWidget(parent) {
 
   ext = new QArvGuiExtension;
-  ext->mw = new QArvMainWindow(parent, standalone);
-  thewidget = ext->mw;
+  ext->mw = new QArvMainWindow(NULL, standalone);
+  this->setLayout(new QHBoxLayout);
+  this->layout()->addWidget(ext->mw);
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
-  connect(ext->mw, SIGNAL(destroyed(QObject*)), SLOT(mainWindowDestroyed(QObject*)));
 }
 
 QArvGui::~QArvGui() {
   delete ext;
-  if (mainWindowAlive) {
-    thewidget->close();
-    delete thewidget;
-  }
-}
-
-void QArvGui::mainWindowDestroyed(QObject*) {
-  mainWindowAlive = false;
-}
-
-QWidget* QArvGui::widget() {
-  return thewidget;
 }
 
 void QArvGui::signalForwarding(bool enable) {

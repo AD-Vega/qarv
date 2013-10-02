@@ -32,6 +32,6 @@ int main(int argc, char** argv) {
   QCoreApplication::setApplicationName("qarv");
 
   QArvGui g;
-  g.widget()->show();
+  g.show();
   return a.exec();
 }

@@ -33,12 +33,12 @@ namespace cv {
   class Mat;
 }
 
-//! QArvGui contains the widget for working with a camera.
+//! QArvGui represents the widget for working with a camera.
 /*! The init() functions should be called to load translations and other setup.
- * After that, the GUI can be instantiated. It will create a widget, accessible
- * via the widget() method. This widget is hidden by default.
+ *  After that, the GUI can be instantiated. It will immediately start looking
+ *  for available cameras.
  */
-class QArvGui : public QObject {
+class QArvGui : public QWidget {
   Q_OBJECT
 
 public:
@@ -49,9 +49,6 @@ public:
   void getFrame(cv::Mat* processed,
                 QByteArray* raw,
                 ArvBuffer** rawAravisBuffer);
-
-  //! Returns the widget containing the GUI.
-  QWidget* widget();
 
   //! Does static initialization.
   static void init(QApplication* a);
@@ -66,13 +63,10 @@ signals:
   void frameReady();
 
 private slots:
-  void mainWindowDestroyed(QObject*);
   void signalForwarding(bool enable);
 
 private:
-  QWidget* thewidget;
   QArvGuiExtension* ext;
-  bool mainWindowAlive;
 
   friend class QArvGuiExtension;
 };
