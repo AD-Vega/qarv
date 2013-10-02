@@ -1,13 +1,13 @@
 [Desktop Entry]
 Type=Application
-Name=qarv Video Player
+Name=QArv Video Player
 Icon=application-x-qarv
 TryExec=qarv_videoplayer
 Exec=qarv_videoplayer %f
 Terminal=false
 Categories=Video;AudioVideo;
-Comment=A player for raw videos recorded using qarv
-Comment[sl]=Predvajalnik za surove videe, posnete s qarv
-GenericName=qarv video player
-GenericName[sl]=qarv video predvajalnik
+Comment=A player for raw videos recorded using QArv
+Comment[sl]=Predvajalnik za surove videe, posnete s QArv
+GenericName=QArv video player
+GenericName[sl]=QArv video predvajalnik
 MimeType=application/x-qarv;

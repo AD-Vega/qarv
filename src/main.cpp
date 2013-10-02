@@ -1,5 +1,5 @@
 /*
- *    qarv, a Qt interface to aravis.
+ *    QArv, a Qt interface to aravis.
  *    Copyright (C) 2012, 2013 Jure Varlec <jure.varlec@ad-vega.si>
  *                             Andrej Lajovic <andrej.lajovic@ad-vega.si>
  *
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
   QCoreApplication::setOrganizationDomain("ad-vega.si");
   QCoreApplication::setOrganizationName("AD Vega");
-  QCoreApplication::setApplicationName("qarv");
+  QCoreApplication::setApplicationName("QArv");
 
   QArvGui g;
   g.show();

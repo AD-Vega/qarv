@@ -1,5 +1,5 @@
 /*
-    qarv, a Qt interface to aravis.
+    QArv, a Qt interface to aravis.
     Copyright (C) 2012, 2013 Jure Varlec <jure.varlec@ad-vega.si>
                              Andrej Lajovic <andrej.lajovic@ad-vega.si>
 

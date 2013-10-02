@@ -4,11 +4,6 @@
 <context>
     <name>MainWindowUI</name>
     <message>
-        <location filename="../src/mainwindow.ui" line="14"/>
-        <source>qarv</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="185"/>
         <source>X of origin:</source>
         <translation>X izhodišča:</translation>
@@ -134,6 +129,11 @@
         <location filename="../src/mainwindow.ui" line="259"/>
         <source>Reset ROI to the maximum, effective immediately.</source>
         <translation>Nastavi izrez na največjo možno velikost. Izrez se uveljavi takoj.</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="14"/>
+        <source>QArv</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="262"/>
@@ -344,6 +344,11 @@
         <location filename="../src/mainwindow.ui" line="907"/>
         <source>Append to existing file instead of truncating</source>
         <translation>Dopolnjuj obstoječo datoteko</translation>
+    </message>
+    <message utf8="true">
+        <location filename="../src/mainwindow.ui" line="951"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012, 2013 Jure Varlec and Andrej Lajovic, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;QArv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with QArv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The QArv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012, 2013 Jure Varlec in Andrej Lajovic, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;QArv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona QArv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1123"/>
@@ -558,11 +563,6 @@
         <location filename="../src/mainwindow.ui" line="924"/>
         <source>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</source>
         <translation>Surovi tipi videa ne vsebujejo informacij o videu. Ta nastavitev ustvari dodatno datoteko s končnico .qarv, ki vsebuje te informacije. To datoteko lahko predvaja qarv video predvajalnik.</translation>
-    </message>
-    <message utf8="true">
-        <location filename="../src/mainwindow.ui" line="951"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012, 2013 Jure Varlec and Andrej Lajovic, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;qarv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with qarv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The qarv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;qarv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012, 2013 Jure Varlec in Andrej Lajovic, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;qarv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona qarv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="997"/>
@@ -825,8 +825,8 @@ Predlagamo večji MTU.</translation>
     <name>VideoPlayer</name>
     <message>
         <location filename="../src/utils/qarv_videoplayer.ui" line="14"/>
-        <source>qarv Video Player</source>
-        <translation>qarv video predvajalnik</translation>
+        <source>QArv Video Player</source>
+        <translation>QArv video predvajalnik</translation>
     </message>
     <message>
         <location filename="../src/utils/qarv_videoplayer.ui" line="32"/>
@@ -880,8 +880,8 @@ Predlagamo večji MTU.</translation>
     </message>
     <message>
         <location filename="../src/utils/qarv_videoplayer.ui" line="189"/>
-        <source>Enter a gstreamer pipeline fragment as you would for gst-launch. The first and last part of the pipeline are provided by qarv.</source>
-        <translation>Vpiši kos cevovoda za gstreamer v obliki, primerni za gst-launch. Prvi in zadnji kos cevovoda zagotovi qarv sam.</translation>
+        <source>Enter a gstreamer pipeline fragment as you would for gst-launch. The first and last part of the pipeline are provided by QArv.</source>
+        <translation>Vpiši kos cevovoda za gstreamer v obliki, primerni za gst-launch. Prvi in zadnji kos cevovoda zagotovi QArv sam.</translation>
     </message>
 </context>
 </TS>

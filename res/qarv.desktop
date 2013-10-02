@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=qarv
+Name=QArv
 Icon=application-x-qarv
 TryExec=qarv
 Exec=qarv

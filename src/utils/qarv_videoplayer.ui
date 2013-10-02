@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>qarv Video Player</string>
+   <string>QArv Video Player</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -186,7 +186,7 @@
            <bool>true</bool>
           </property>
           <property name="toolTip">
-           <string>Enter a gstreamer pipeline fragment as you would for gst-launch. The first and last part of the pipeline are provided by qarv.</string>
+           <string>Enter a gstreamer pipeline fragment as you would for gst-launch. The first and last part of the pipeline are provided by QArv.</string>
           </property>
           <property name="frame">
            <bool>true</bool>
