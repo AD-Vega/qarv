@@ -23,6 +23,7 @@
 
 #include <QTranslator>
 #include <QHBoxLayout>
+#include <QMetaProperty>
 
 using namespace QArv;
 
@@ -56,8 +57,17 @@ QArvGui::QArvGui(QWidget* parent, bool standalone) :
 
   ext = new QArvGuiExtension;
   ext->mw = new QArvMainWindow(NULL, standalone);
-  this->setLayout(new QHBoxLayout);
-  this->layout()->addWidget(ext->mw);
+  setLayout(new QHBoxLayout);
+  layout()->addWidget(ext->mw);
+  auto metaobject = ext->mw->metaObject();
+  for (int i = 0; i < metaobject->propertyCount(); i++) {
+    auto metaproperty = metaobject->property(i);
+    auto name = metaproperty.name();
+    auto idx = metaObject()->indexOfProperty(name);
+    if (idx != -1 && metaObject()->property(idx).isWritable()) {
+      setProperty(name, ext->mw->property(name));
+    }
+  }
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
 }
 
