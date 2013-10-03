@@ -1,0 +1,46 @@
+/*! \mainpage notitle
+
+Welcome to QArv API documentation!
+
+QArv is centered around the QArvCamera class, which isolates the Qt
+program from Aravis and Glib/GTK. It provides direct access to basic
+settings and emits signals when frames are ready. To access features
+not covered by the basic interface, it implements the
+QAbstractItemModel interface. This interface allows access to camera
+features using Qt's Model/View paradigm. The QArvCamera model can thus
+be plugged directly into a "view" widget, as is done in our GUI.
+
+You will notice that QArvCamera is sparsely documented. The reason is
+simple: most of it is merely a thin wrapper around Aravis' ArvCamera
+class and should behave the same. The QAbstractItemModel related
+functionality is documented in Qt documentation. Other classes are
+small and mostly self-explanatory once the QArvCamera interface is
+understood.
+
+Of the classes not directly related to QArvCamera, the most
+interesting is QArvGui. It is a QWidget that facilitates camera
+control. It can be run either in standalone or embedded mode. In the
+latter, it cannot record to a file but instead emits signals and
+allows the host application to receive frames from the camera. It can
+also be used to control camera settings while the application talks to
+the underlying QArvCamera directly.
+
+Related to the GUI is QArvRecordedVideo. This class provides a way to
+access frames recorded in raw form by the GUI through the .qarv
+description file stored with the raw video.
+
+Raw frames can be decoded using the QArvDecoder and QArvPixelFormat
+plugin interfaces. They can convert a raw frame into an OpenCV
+image. Convenience functions are available to obtain
+QImages. Currently provided are decoders for 8, 10, 12 (packed or
+unpacked) and 16 bit grayscale formats, plus anything supported by
+libav/ffmpeg. The libav plugin is exposed further to allow easy
+decoding of all pixel formats, not just those used by Aravis.
+
+https://qt-project.org/doc/qt-4.8/
+
+https://qt-project.org/doc/qt-4.8/qt4-interview.html
+
+https://wiki.gnome.org/Aravis
+
+*/

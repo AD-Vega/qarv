@@ -79,6 +79,24 @@ Q_DECLARE_METATYPE(QArvCameraId)
  * model has two columns, the first being the name of the feature and the
  * second being the (editable) feature value.
  *
+ * If you wish to read or modify a feature and don't want to deal with most
+ * of the QAbstractItemModel interface, you can use the provided convenience
+ * functions as in the following example:
+ * \code
+ * QArvCamera camera(id);
+ * QStringList cats = camera.categories();
+ * assert(cats.contains("ImageFormatControl"));
+ * QStringList feats = camera.features("ImageFormatControl");
+ * assert(feats.contains("SensorWidth"));
+ * QModelIndex f = camera.featureIndex("SensorWidth");
+ * QVariant val = f.data(Qt::EditRole);
+ * QArvInteger intval = qvariant_cast<QArvInteger>(val);
+ * qDebug() << intval.value;
+ * intval.value = 1024;
+ * val = QVariant::fromValue(intval);
+ * camera.setData(f, val, Qt::EditRole);
+ * \endcode
+ *
  * When the QAbstractItemModel::dataChanged() signal is emitted, it currently
  * fails to specify which data is affected. This may change in the future.
  */
@@ -116,12 +134,11 @@ public:
   void setBinning(QSize bin);
   /**@}*/
 
-  //! \name Choose pixel format
-  /**@{*/
-  /*!
+  /*! \name Choose pixel format
    * The lists returned by getPixelFormat(), getPixelFormatNames() and
    * getPixelFormatIds() are congruent.
    */
+  /**@{*/
   QList<QString> getPixelFormats();
   QList<QString> getPixelFormatNames();
   QList<ArvPixelFormat> getPixelFormatIds();
@@ -168,13 +185,12 @@ public:
                       ArvBuffer** rawbuffer = NULL);
   /**@}*/
 
-  //! \name Manipulate network parameters of an ethernet camera
-  /**@{*/
-  /*!
+  /*! \name Manipulate network parameters of an ethernet camera
    * MTU corresponds to "GevSCPSPacketSize", which should be set to the
    * MTU of the network interface. getHostIP() can be used to detect the
    * interface's address.
    */
+  /**@{*/
   void setMTU(int mtu);
   int getMTU();
   QHostAddress getIP();
@@ -202,8 +218,7 @@ private:
   friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
 
 public:
-  //! \name QAbstractItemModel implementation
-  /*!
+  /*! \name QAbstractItemModel implementation
    * The model is a two-level table. The first level contains
    * a single column with feature categories. Each category
    * has a second level with two colums. The first contains
@@ -227,8 +242,7 @@ public:
                       int role = Qt::DisplayRole) const;
   /**@}*/
 
-  //! \name Convenience functions for camera feature access
-  /*!
+  /*! \name Convenience functions for camera feature access
    * These functions can be used to avoid some of the QAbstractModel
    * boilerplate. They can be used to quickly list features and find
    * the index of a particular feature, which can then be used with

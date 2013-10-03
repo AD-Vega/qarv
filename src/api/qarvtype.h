@@ -51,18 +51,14 @@ private slots:
   friend class QArvRegister;
 };
 
-//! \name Types that correspond to types of feature nodes
-/**@{*/
-/*!
- * These types are used by the QArvCamera model and delegate to edit feature
- * node values. Sometimes, a feature has several possible types (e.g. an
+//! These types are used by the QArvCamera model and delegate to edit feature node values.
+/*! Sometimes, a feature has several possible types (e.g. an
  * enumeration can be either an enumeration, a string or an integer; an integer
  * can be cast to a float etc.), but the delegate needs to be able to identify
  * the type exactly. Therefore, each type is given a distinct class.
  * When deciding what type to return, the model tries to match the
  * highest-level type. Each type also provides its own editing widget.
  */
-
 struct QArvType {
   virtual ~QArvType() {}
   virtual operator QString() const = 0;
@@ -70,6 +66,9 @@ struct QArvType {
   virtual void populateEditor(QWidget* editor) const = 0;
   virtual void readFromEditor(QWidget* editor) = 0;
 };
+
+//! \name Types that correspond to types of feature nodes
+/**@{*/
 
 struct QArvEnumeration : QArvType {
   QList<QString> names;
