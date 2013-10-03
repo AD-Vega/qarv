@@ -1031,6 +1031,13 @@ void QArvMainWindow::on_exposureSpinbox_editingFinished() {
   autoreadexposure->start();
 }
 
+void makeDockAWindow(QDockWidget* dock) {
+  // Currently disabled as it causes jerkyness when undocking.
+  return;
+  dock->setWindowFlags(Qt::Window);
+  dock->show();
+}
+
 void QArvMainWindow::on_showVideoAction_toggled(bool checked) {
   videodock->setVisible(checked);
 }
@@ -1042,10 +1049,7 @@ void QArvMainWindow::on_videodock_visibilityChanged(bool visible) {
 }
 
 void QArvMainWindow::on_videodock_topLevelChanged(bool floating) {
-  if (floating) {
-    videodock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-    videodock->setVisible(true);
-  }
+  if (floating) makeDockAWindow(videodock);
 }
 
 void QArvMainWindow::on_showHistogramAction_toggled(bool checked) {
@@ -1059,10 +1063,7 @@ void QArvMainWindow::on_histogramdock_visibilityChanged(bool visible) {
 }
 
 void QArvMainWindow::on_histogramdock_topLevelChanged(bool floating) {
-  if (floating) {
-    histogramdock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-    histogramdock->setVisible(true);
-  }
+  if (floating) makeDockAWindow(histogramdock);
 }
 
 void QArvMainWindow::on_messageAction_toggled(bool checked) {
@@ -1076,10 +1077,7 @@ void QArvMainWindow::on_messageDock_visibilityChanged(bool visible) {
 }
 
 void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
-  if (floating) {
-    messageDock->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
-    messageDock->setVisible(true);
-  }
+  if (floating) makeDockAWindow(messageDock);
 }
 
 void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
