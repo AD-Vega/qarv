@@ -36,6 +36,7 @@ include_directories(
   ${GIO_INCLUDE_DIRS}
 )
 
+set(qarv_DATA share/qarv/${qarv_ABI}/)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
 if (NOT qarv_BTYPE MATCHES "debug")
@@ -43,7 +44,7 @@ if (NOT qarv_BTYPE MATCHES "debug")
 endif()
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -Wall -Werror")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
-add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/share/qarv/\" -DQT_STATICPLUGIN
+add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/${qarv_DATA}\" -DQT_STATICPLUGIN
   -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=\"${qarv_API}\" -DQARV_ABI=\"${qarv_ABI}\")
 
 set_prefixed(qarv_UIS_pre src/
@@ -179,7 +180,7 @@ set_prefixed(qarv_IHDR src/api/
 install(FILES ${qarv_IHDR}
         DESTINATION include/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
-        DESTINATION share/qarv/)
+        DESTINATION ${qarv_DATA})
 install(FILES res/icons/qarv.svgz
         RENAME application-x-qarv.svgz
         DESTINATION share/icons/)
