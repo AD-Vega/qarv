@@ -22,12 +22,7 @@ private:
 
 public:
   static QStandardItemModel model;
-  ~QArvDebug() {
-    foreach (auto line, message.split('\n')) {
-      qDebug(prepend ? "QArv: %s" : "%s", line.toAscii().constData());
-      model.appendRow(new QStandardItem(line));
-    }
-  }
+  ~QArvDebug();
 
   friend QArvDebug logMessage(bool);
 };

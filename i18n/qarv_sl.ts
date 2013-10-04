@@ -583,176 +583,176 @@
 <context>
     <name>QArv::QArvMainWindow</name>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="103"/>
+        <location filename="../src/qarvmainwindow.cpp" line="112"/>
         <source>Subwindows</source>
         <translation>Podokna</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="124"/>
+        <location filename="../src/qarvmainwindow.cpp" line="133"/>
         <source>No rotation</source>
         <translation>Brez zasuka</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="125"/>
+        <location filename="../src/qarvmainwindow.cpp" line="134"/>
         <source>90 degrees</source>
         <translation>90 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="126"/>
+        <location filename="../src/qarvmainwindow.cpp" line="135"/>
         <source>180 degrees</source>
         <translation>180 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="127"/>
+        <location filename="../src/qarvmainwindow.cpp" line="136"/>
         <source>270 degrees</source>
         <translation>270 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="167"/>
+        <location filename="../src/qarvmainwindow.cpp" line="176"/>
         <source>Welcome to qarv!</source>
         <translation>Dobrodošel v qarv!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="179"/>
+        <location filename="../src/qarvmainwindow.cpp" line="188"/>
         <source>Looking for cameras...</source>
         <translation>Iščem kamere...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/qarvmainwindow.cpp" line="192"/>
-        <source> Found %n cameras.</source>
+        <location filename="../src/qarvmainwindow.cpp" line="201"/>
+        <source>Found %n cameras.</source>
         <comment>Number of cameras</comment>
         <translation>
-            <numerusform> Našel sem %n kamero.</numerusform>
-            <numerusform> Našel sem %n kameri.</numerusform>
-            <numerusform> Našel sem %n kamere.</numerusform>
-            <numerusform> Našel sem %n kamere.</numerusform>
+            <numerusform>Našel sem %n kamero.</numerusform>
+            <numerusform>Našel sem %n kameri.</numerusform>
+            <numerusform>Našel sem %n kamere.</numerusform>
+            <numerusform>Našel sem %n kamere.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="340"/>
+        <location filename="../src/qarvmainwindow.cpp" line="349"/>
         <source>Network address not found, trying best-effort MTU %1.</source>
         <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="350"/>
-        <location filename="../src/qarvmainwindow.cpp" line="965"/>
+        <location filename="../src/qarvmainwindow.cpp" line="359"/>
+        <location filename="../src/qarvmainwindow.cpp" line="974"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="354"/>
+        <location filename="../src/qarvmainwindow.cpp" line="363"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="358"/>
+        <location filename="../src/qarvmainwindow.cpp" line="367"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="423"/>
+        <location filename="../src/qarvmainwindow.cpp" line="432"/>
         <source>Region of interest too large, shrinking.</source>
         <translation>Izrez slike je prevelik, zmanjšujem.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="615"/>
+        <location filename="../src/qarvmainwindow.cpp" line="624"/>
         <source>Decoder problems!</source>
         <translation>Težave z dekodiranjem!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="635"/>
+        <location filename="../src/qarvmainwindow.cpp" line="644"/>
         <source>Recording plugin failed, stopped recording.</source>
         <translation>Vtičnik za snemanje ne deluje, snemanje ustavljeno.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="674"/>
+        <location filename="../src/qarvmainwindow.cpp" line="683"/>
         <source>Decoder for %1 doesn&apos;t exist!</source>
         <translation>Dekoder za %1 ne obstaja!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="742"/>
+        <location filename="../src/qarvmainwindow.cpp" line="751"/>
         <source>Please set the video file name.</source>
         <translation>Izberi ime video datoteke.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="766"/>
+        <location filename="../src/qarvmainwindow.cpp" line="775"/>
         <source>Unable to initialize the recording plugin.</source>
         <translation>Zagon vtičnika za snemanje ni uspel.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="782"/>
+        <location filename="../src/qarvmainwindow.cpp" line="791"/>
         <source>Could not dump camera settings.</source>
         <translation>Nastavitev kamere ni bilo mogoče shraniti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="789"/>
+        <location filename="../src/qarvmainwindow.cpp" line="798"/>
         <source>Could not open timestamp file.</source>
         <translation>Časovnih oznak ni mogoče zapisati.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="818"/>
+        <location filename="../src/qarvmainwindow.cpp" line="827"/>
         <source>Please set the snapshot directory and name.</source>
         <translation>Izberi direktorij in ime za slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="826"/>
+        <location filename="../src/qarvmainwindow.cpp" line="835"/>
         <source>Snapshot directory does not exist.</source>
         <translation>Direktorij za slike ne obstaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="831"/>
+        <location filename="../src/qarvmainwindow.cpp" line="840"/>
         <source>Video is not playing, no image to save.</source>
         <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="844"/>
-        <location filename="../src/qarvmainwindow.cpp" line="856"/>
+        <location filename="../src/qarvmainwindow.cpp" line="853"/>
+        <location filename="../src/qarvmainwindow.cpp" line="865"/>
         <source>Snapshot cannot be written.</source>
         <translation>Ne morem shraniti slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="849"/>
+        <location filename="../src/qarvmainwindow.cpp" line="858"/>
         <source>Current frame is invalid, try snapshotting again.</source>
         <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="862"/>
-        <location filename="../src/qarvmainwindow.cpp" line="898"/>
-        <location filename="../src/qarvmainwindow.cpp" line="914"/>
+        <location filename="../src/qarvmainwindow.cpp" line="871"/>
+        <location filename="../src/qarvmainwindow.cpp" line="907"/>
+        <location filename="../src/qarvmainwindow.cpp" line="923"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="867"/>
+        <location filename="../src/qarvmainwindow.cpp" line="876"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="906"/>
+        <location filename="../src/qarvmainwindow.cpp" line="915"/>
         <source>Could not open settings file.</source>
         <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="947"/>
+        <location filename="../src/qarvmainwindow.cpp" line="956"/>
         <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
         <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="953"/>
+        <location filename="../src/qarvmainwindow.cpp" line="962"/>
         <source>Loading settings failed</source>
         <translation>Nalaganje nastavitev ni uspelo</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="956"/>
+        <location filename="../src/qarvmainwindow.cpp" line="965"/>
         <source>Could not open camera settings file.</source>
         <translation>Datoteke z nastavitvami kamere ni moč odpreti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="1242"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1249"/>
         <source>Cannot select this video format.</source>
         <translation>Tega formata videa ni moč izbrati.</translation>
     </message>

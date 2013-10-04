@@ -68,6 +68,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   aboutLabel->setText(aboutLabel->text().arg(QARV_VERSION));
 
   // Setup theme icons if available.
+  bool usingFallbackIcons = false;
   QMap<QAbstractButton*, QString> icons;
   icons[unzoomButton] = "zoom-original";
   icons[playButton] = "media-playback-start";
@@ -78,18 +79,26 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   icons[editExposureButton] = "edit-clear-locationbar-rtl";
   icons[histogramLog] = "view-object-histogram-logarithmic";
   icons[pickROIButton] = "edit-select";
-  for (auto i = icons.begin(); i != icons.end(); i++)
-    if (!QIcon::hasThemeIcon(*i))
+  for (auto i = icons.begin(); i != icons.end(); i++) {
+    if (!QIcon::hasThemeIcon(*i)) {
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+      usingFallbackIcons = true;
+    }
+  }
   QMap<QAction*, QString> aicons;
   aicons[showVideoAction] = "video-display";
   aicons[recordAction] = "media-record";
   aicons[closeFileAction] = "media-playback-stop";
   aicons[showHistogramAction] = "office-chart-bar";
   aicons[messageAction] = "dialog-information";
-  for (auto i = aicons.begin(); i != aicons.end(); i++)
-    if (!QIcon::hasThemeIcon(*i))
+  for (auto i = aicons.begin(); i != aicons.end(); i++) {
+    if (!QIcon::hasThemeIcon(*i)) {
       i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+      usingFallbackIcons = true;
+    }
+  }
+  if (usingFallbackIcons)
+    logMessage() << "Some icons are not available in your theme, using bundled icons.";
 
   // Setup the subwindows menu.
   auto submenu = new QMenu;
@@ -189,12 +198,12 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
   cameraSelector->setCurrentIndex(-1);
   cameraSelector->setEnabled(true);
   cameraSelector->blockSignals(false);
-  QString message = tr(" Found %n cameras.",
+  QString message = tr("Found %n cameras.",
                        "Number of cameras",
                        cameraSelector->count());
-  statusBar()->showMessage(statusBar()->currentMessage() + message,
+  statusBar()->showMessage(statusBar()->currentMessage() + " " + message,
                            statusTimeoutMsec);
-  logMessage() << message.toAscii().constData();
+  logMessage() << message;
   QSettings settings;
   QVariant data = settings.value("qarv_camera/selected");
   int previous_cam;
@@ -342,7 +351,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     int mtu = 1500;
     message = message.arg(mtu);
     statusBar()->showMessage(message, statusTimeoutMsec);
-    logMessage() << message.toAscii().constData();
+    logMessage() << message;
     camera->setMTU(mtu);
   }
 
@@ -634,7 +643,7 @@ void QArvMainWindow::takeNextFrame() {
       } else {
         auto message = tr("Recording plugin failed, stopped recording.");
         statusBar()->showMessage(message, statusTimeoutMsec);
-        logMessage() << message.toAscii().constData();
+        logMessage() << message;
         recordAction->setChecked(false);
         closeFileAction->trigger();
       }
@@ -673,7 +682,7 @@ void QArvMainWindow::startVideo(bool start) {
       if (decoder == NULL) {
         QString message = tr("Decoder for %1 doesn't exist!");
         message = message.arg(camera->getPixelFormat());
-        logMessage() << message.toAscii().constData();
+        logMessage() << message;
         statusBar()->showMessage(message, statusTimeoutMsec);
       }
       else {
@@ -764,7 +773,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 
     if (!open) {
       QString message = tr("Unable to initialize the recording plugin.");
-      logMessage() << message.toAscii().constData();
+      logMessage() << message;
       statusBar()->showMessage(message, statusTimeoutMsec);
       recordAction->setChecked(false);
       checked = false;
@@ -789,7 +798,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
           msg += " " + tr("Could not open timestamp file.");
       }
       if (!msg.isNull()) {
-        logMessage() << msg.toAscii().constData();
+        logMessage() << msg;
         statusBar()->showMessage(msg, statusTimeoutMsec);
       }
     }
@@ -905,7 +914,7 @@ void QArvMainWindow::on_saveSettingsButton_clicked(bool checked) {
   } else {
     QString message = tr("Could not open settings file.");
     statusBar()->showMessage(message, statusTimeoutMsec);
-    logMessage() << message.toAscii().constData();
+    logMessage() << message;
   }
 }
 
@@ -955,7 +964,7 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
   } else {
     QString message = tr("Could not open camera settings file.");
     statusBar()->showMessage(message, statusTimeoutMsec);
-    logMessage() << message.toAscii().constData();
+    logMessage() << message;
   }
 }
 

@@ -39,7 +39,9 @@ void QArvGui::init(QApplication* a) {
   auto locale = QLocale::system().name();
   if (trans->load(QString("qarv_") + locale, qarv_datafiles)) {
     a->installTranslator(trans);
+    logMessage() << "Loaded translations for language" << locale;
   } else {
+    logMessage() << "No translations available for language" << locale;
     delete trans;
   }
 
