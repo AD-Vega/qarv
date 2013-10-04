@@ -187,3 +187,18 @@ install(FILES res/qarv.desktop res/qarv-player.desktop
         DESTINATION share/applications/)
 install(FILES res/qarv.xml
         DESTINATION share/mime/packages/)
+
+# add a target to generate API documentation with Doxygen
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+add_custom_target(doc
+${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+COMMENT "Generating API documentation with Doxygen" VERBATIM
+COMMAND echo
+COMMAND echo
+COMMAND echo "API documentation can be found in ${CMAKE_CURRENT_BINARY_DIR}/apidoc/"
+COMMAND echo
+)
+endif(DOXYGEN_FOUND)
