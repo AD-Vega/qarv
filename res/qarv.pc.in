@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: QArv
+Description: Qt GUI and API interfaces to ethernet cameras via Aravis
+Version: @qarv_VERSION@
+Requires:
+Libs: -L${libdir} -lqarv
+Cflags: -I${includedir}/qarv-@qarv_API@

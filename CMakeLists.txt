@@ -189,6 +189,12 @@ install(FILES res/qarv.desktop res/qarv-player.desktop
 install(FILES res/qarv.xml
         DESTINATION share/mime/packages/)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/qarv.pc.in
+	       ${CMAKE_CURRENT_BINARY_DIR}/qarv-${qarv_API}.pc
+               @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qarv-${qarv_API}.pc
+	DESTINATION lib/pkgconfig/)
+
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
