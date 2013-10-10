@@ -26,7 +26,7 @@
 
 #pragma GCC visibility push(default)
 
-//! QArvRecordedVideo provides a means of opening a video descirption file.
+//! QArvRecordedVideo provides a means of opening a video description file.
 class QArvRecordedVideo {
 public:
   //! Opens the description file with the given filename.

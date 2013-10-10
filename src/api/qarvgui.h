@@ -37,6 +37,31 @@ namespace cv {
 /*! The init() functions should be called to load translations and other setup.
  *  After that, the GUI can be instantiated. It will immediately start looking
  *  for available cameras.
+ *
+ * Using QArvGui in standalone mode is very easy. The following example is
+ * basically the main() function for QArv's standalone program:
+ * \code
+   int main(int argc, char** argv) {
+     QApplication a(argc, argv);
+     QArvCamera::init();
+     QArvGui::init(&a);
+
+     QCoreApplication::setOrganizationDomain("myorganization.com");
+     QCoreApplication::setOrganizationName("My Organization");
+     QCoreApplication::setApplicationName("ProgramName");
+
+     QArvGui g;
+     g.show();
+   return a.exec();
+   }
+ * \endcode
+ *
+ * When not in standalone mode, the "Recording" tab disappears and the "Record"
+ * button enables or disables the frameReady() signal. This can be overriden by
+ * forceRecording(), which permanenly enables the signal. The current frame can
+ * always be read using getFrame(), but is only updated when frameReady is
+ * emitted.
+ *
  */
 class QArvGui : public QWidget {
   Q_OBJECT
