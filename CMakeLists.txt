@@ -103,7 +103,9 @@ set_prefixed(qarv_recorders_SRC src/recorders/
 )
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
-add_library(qarv SHARED
+
+set(libqarv "qarv-${qarv_API}")
+add_library(${libqarv} SHARED
   ${qarv_recorders_MOCD}
   ${qarv_recorders_SRC}
   ${qarv_decoders_SRC}
@@ -114,7 +116,7 @@ add_library(qarv SHARED
   ${qarv_RCS}
   ${qarv_TRANS}
 )
-target_link_libraries(qarv
+target_link_libraries(${libqarv}
   ${QT_LIBRARIES}
   ${ARAVIS_LDFLAGS}
   ${GIO_LDFLAGS}
@@ -123,10 +125,10 @@ target_link_libraries(qarv
   ${AVUTIL_LDFLAGS}
   ${OpenCV_LIBS}
 )
-set_target_properties(qarv PROPERTIES SOVERSION ${qarv_ABI})
+set_target_properties(${libqarv} PROPERTIES SOVERSION ${qarv_ABI})
 
 add_executable(qarvexe src/main.cpp)
-target_link_libraries(qarvexe ${QT_LIBRARIES} qarv)
+target_link_libraries(qarvexe ${QT_LIBRARIES} ${libqarv})
 set_target_properties(qarvexe PROPERTIES OUTPUT_NAME qarv)
 
 qt4_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
@@ -143,7 +145,7 @@ add_executable(qarv_videoplayer
   ${qarv_videoplayer_MOC}
   ${qarv_videoplayer_UI}
 )
-target_link_libraries(qarv_videoplayer ${QT_LIBRARIES} qarv)
+target_link_libraries(qarv_videoplayer ${QT_LIBRARIES} ${libqarv})
 
 set_prefixed(qarv_ICONS res/icons/
   document-open.svgz
@@ -166,7 +168,7 @@ set_prefixed(qarv_ICONS res/icons/
   go-last.svgz
 )
 
-install(TARGETS qarv qarvexe qarv_videoplayer
+install(TARGETS ${libqarv} qarvexe qarv_videoplayer
         RUNTIME DESTINATION bin/
         LIBRARY DESTINATION lib/)
 set_prefixed(qarv_IHDR src/api/
