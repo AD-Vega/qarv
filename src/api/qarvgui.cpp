@@ -82,6 +82,7 @@ void QArvGui::signalForwarding(bool enable) {
     connect(ext->mw->camera, SIGNAL(frameReady()), SIGNAL(frameReady()));
   else
     disconnect(ext->mw->camera, SIGNAL(frameReady()), this, SIGNAL(frameReady()));
+  emit recordingToggled(enable);
 }
 
 /*!
@@ -114,4 +115,8 @@ void QArvGui::forceRecording() {
  */
 QArvCamera* QArvGui::camera() {
   return ext->mw->camera;
+}
+
+QMainWindow* QArvGui::mainWindow() {
+  return ext->mw;
 }

@@ -22,7 +22,7 @@
 #define QARVGUI_H
 
 #include "qarvcamera.h"
-#include <QWidget>
+#include <QMainWindow>
 #include <QApplication>
 
 #pragma GCC visibility push(default)
@@ -62,6 +62,9 @@ namespace cv {
  * always be read using getFrame(), but is only updated when frameReady is
  * emitted.
  *
+ * The underlying widget is a subclass of QMainWindow and can be accessed via
+ * mainWindow(). This allows the host application to control dock behaviour
+ * etc.
  */
 class QArvGui : public QWidget {
   Q_OBJECT
@@ -84,8 +87,15 @@ public:
   //! Returns the camera object.
   QArvCamera* camera();
 
+  //! Returns the underlying QMainWindow.
+  QMainWindow* mainWindow();
+
 signals:
+  //! Emitted when a new frame is available via getFrame().
   void frameReady();
+
+  //! Emmited when the Record button is toggled.
+  void recordingToggled(bool enabled);
 
 private slots:
   void signalForwarding(bool enable);
