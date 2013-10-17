@@ -20,7 +20,7 @@
 #ifndef QARVRECORDEDVIDEO_H
 #define QARVRECORDEDVIDEO_H
 
-#include "api/qarvdecoder.h"
+#include "qarvdecoder.h"
 #include <QString>
 #include <QFile>
 
