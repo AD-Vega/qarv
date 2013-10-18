@@ -67,6 +67,9 @@ public:
   //! Returns the pixel format supported by this decoder.
   virtual ArvPixelFormat pixelFormat() = 0;
 
+  //! Returns an opaque token that can be used to create another instance of this decoder.
+  virtual QByteArray decoderSpecification() = 0;
+
   /*!
    * Convenience function to convert an OpenCV image to QImage. Limited to
    * formats used by QArv (see cvType()). Returns Format_ARGB32_Premultiplied,
@@ -83,6 +86,21 @@ public:
    */
   static void CV2QImage_RGB24(const cv::Mat& image, QImage& out);
   static QImage CV2QImage_RGB24(const cv::Mat& image);
+
+  //! Uses the token returned by Decoder::decoderSpecification() to create another instance.
+  static QArvDecoder* makeDecoder(QByteArray specification);
+
+  /*!
+   * Creates a decoder for the requested format and frame size.
+   * Some decoders allow using a faster algorithm for decoding colors,
+   * which can be (but is not neccessarily) less precise.
+   */
+  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size, bool fast = true);
+
+  //! Convenience function to create a libswscale decoder, not limited to Aravis pixel formats.
+  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat fmt,
+                                         QSize size,
+                                         int swsFlags = 0);
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.
@@ -98,18 +116,6 @@ public:
 
   //! Returns the list of supported pixel formats.
   static QList<ArvPixelFormat> supportedFormats();
-
-  /*!
-   * Creates a decoder for the requested format and frame size.
-   * Some decoders allow using a faster algorithm for decoding colors,
-   * which can be (but is not neccessarily) less precise.
-   */
-  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size, bool fast = true);
-
-  //! Convenience function to create a libswscale decoder, not limited to Aravis pixel formats.
-  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat fmt,
-                                         QSize size,
-                                         int swsFlags = 0);
 };
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,

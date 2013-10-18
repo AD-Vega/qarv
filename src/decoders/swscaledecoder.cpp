@@ -33,7 +33,7 @@ using namespace QArv;
 SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
                                ArvPixelFormat arvPixFmt, int swsFlags) :
   size(size_),
-  inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt) {
+  inputPixfmt(inputPixfmt_), arvPixelFormat(arvPixFmt), flags(swsFlags) {
   if (size.width() != (size.width() / 2) * 2
       || size.height() != (size.height() / 2) * 2) {
     logMessage() << "Frame size must be factor of two for SwScaleDecoder.";
@@ -70,7 +70,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
     if (OK)
       ctx = sws_getContext(size.width(), size.height(), inputPixfmt,
                            size.width(), size.height(), outputPixFmt,
-                           swsFlags, 0, 0, 0);
+                           flags, 0, 0, 0);
   } else {
     logMessage() << "Pixel format" << av_get_pix_fmt_name(inputPixfmt)
              << "is not supported for input.";
@@ -115,4 +115,11 @@ const cv::Mat SwScaleDecoder::getCvImage() {
   cv::Mat M(size.height(), size.width(), cvMatType,
             image_pointers[0], image_strides[0]);
   return M;
+}
+
+QByteArray SwScaleDecoder::decoderSpecification() {
+  QByteArray b;
+  QDataStream s(&b, QIODevice::WriteOnly);
+  s << QString("SwScale") << size << (qlonglong)outputPixFmt << flags;
+  return b;
 }

@@ -47,6 +47,13 @@ public:
 
   ArvPixelFormat pixelFormat() { return pixFmt; }
 
+  QByteArray decoderSpecification() {
+    QByteArray b;
+    QDataStream s(&b, QIODevice::WriteOnly);
+    s << QString("Aravis") << size << pixFmt << false;
+    return b;
+  }
+
   int cvType() { return cvMatType; };
 
   void decode(QByteArray frame) {

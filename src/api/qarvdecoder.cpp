@@ -195,12 +195,44 @@ QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
   return list;
 }
 
+/*
+ * "specification" contains serialized decoder type and necessary
+ * parameters. This function simply dispatches on type, which is
+ * a string. All decoders also contain the size.
+ */
+QArvDecoder* QArvDecoder::makeDecoder(QByteArray specification) {
+  static QStringList types = {
+    "Aravis",
+    "SwScale",
+  };
+  QDataStream s(&specification, QIODevice::ReadOnly);
+  QString type;
+  QSize size;
+  s >> type;
+  if (!types.contains(type)) return NULL;
+  s >> size;
+  if (type == "Aravis") {
+    ArvPixelFormat fmt;
+    bool fast;
+    s >> fmt >> fast;
+    return QArvDecoder::makeDecoder(fmt, size, fast);
+  } else if (type == "SwScale") {
+    static_assert(sizeof(PixelFormat) <= sizeof(qlonglong),
+                  "qlonglong not large enough to hold libav PixelFormat.");
+    qlonglong fmt;
+    int flags;
+    s >> fmt >> flags;
+    return QArvDecoder::makeSwScaleDecoder((PixelFormat)fmt, size, flags);
+  }
+  return NULL;
+}
+
 /*!
  * Returns NULL if the format is not supported.
  */
-QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format,
-                                          QSize size,
-                                          bool fast) {
+QArvDecoder* QArvDecoder::makeDecoder(ArvPixelFormat format,
+                                      QSize size,
+                                      bool fast) {
   foreach (auto fmt, pluginFormats) {
     if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
   }
@@ -219,9 +251,9 @@ QArvDecoder* QArvPixelFormat::makeDecoder(ArvPixelFormat format,
 /*!
  * Returns NULL if the format is not supported.
  */
-QArvDecoder* QArvPixelFormat::makeSwScaleDecoder(PixelFormat fmt,
-                                                 QSize size,
-                                                 int swsFlags) {
+QArvDecoder* QArvDecoder::makeSwScaleDecoder(PixelFormat fmt,
+                                             QSize size,
+                                             int swsFlags) {
   if (swsFlags)
     return new QArv::SwScaleDecoder(size, fmt, 0, swsFlags);
   else

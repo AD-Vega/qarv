@@ -112,9 +112,9 @@ QSize QArvRecordedVideo::frameSize() {
 QArvDecoder* QArvRecordedVideo::makeDecoder() {
   if (!isOK) return NULL;
   if (arvPixfmt != 0) {
-    return QArvPixelFormat::makeDecoder(arvPixfmt, fsize);
+    return QArvDecoder::makeDecoder(arvPixfmt, fsize);
   } else if (swscalePixfmt != PIX_FMT_NONE) {
-    return QArvPixelFormat::makeSwScaleDecoder(swscalePixfmt, fsize);
+    return QArvDecoder::makeSwScaleDecoder(swscalePixfmt, fsize);
   } else {
     isOK = false;
     logMessage() << "Unknown decoder type.";

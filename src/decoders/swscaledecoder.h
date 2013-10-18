@@ -46,6 +46,7 @@ public:
   const cv::Mat getCvImage();
   int cvType();
   ArvPixelFormat pixelFormat();
+  QByteArray decoderSpecification();
   enum PixelFormat swscalePixelFormat();
 
 private:
@@ -59,6 +60,7 @@ private:
   enum PixelFormat inputPixfmt, outputPixFmt;
   struct AVPicture srcInfo;
   ArvPixelFormat arvPixelFormat;
+  int flags;
 };
 
 }

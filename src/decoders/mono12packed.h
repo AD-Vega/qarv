@@ -34,6 +34,7 @@ public:
   const cv::Mat getCvImage();
   int cvType() { return CV_16UC1; }
   ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
+  QByteArray decoderSpecification();
 
 private:
   QSize size;
