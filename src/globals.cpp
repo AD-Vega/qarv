@@ -4,7 +4,7 @@ using namespace QArv;
 
 const char* QArv::qarv_datafiles = QARV_DATA;
 
-QStandardItemModel QArvDebug::model;
+QStandardItemModel QArvDebug::model __attribute__((init_priority(1000)));
 
 QArvDebug::~QArvDebug() {
   foreach (auto line, message.split('\n')) {
