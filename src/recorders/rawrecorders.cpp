@@ -50,11 +50,10 @@ public:
                QString fileName,
                QSize size,
                int FPS,
-               bool appendToFile,
                bool writeInfo) :
     file(fileName), decoder(decoder_), bytesizeWritten(false) {
-    file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
-    if (isOK() && !appendToFile && writeInfo) {
+    file.open(QIODevice::WriteOnly);
+    if (isOK() && writeInfo) {
       QSettings s(fileName + descExt, QSettings::Format::IniFormat);
       initDescfile(s, size, FPS);
       s.setValue("encoding_type", "aravis");
@@ -91,11 +90,10 @@ public:
               QString fileName,
               QSize size,
               int FPS,
-              bool appendToFile,
               bool writeInfo) :
     file(fileName), decoder(decoder_), OK(true) {
-    file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
-    if (isOK() && !appendToFile && writeInfo) {
+    file.open(QIODevice::WriteOnly);
+    if (isOK() && writeInfo) {
       enum PixelFormat fmt;
       int frameBytes;
       switch (decoder->cvType()) {
@@ -155,11 +153,10 @@ public:
                QString fileName,
                QSize size,
                int FPS,
-               bool appendToFile,
                bool writeInfo) :
     file(fileName), decoder(decoder_), OK(true) {
-    file.open(appendToFile ? QIODevice::Append : QIODevice::WriteOnly);
-    if (isOK() && !appendToFile && writeInfo) {
+    file.open(QIODevice::WriteOnly);
+    if (isOK() && writeInfo) {
       enum PixelFormat fmt;
       int frameBytes;
       switch (decoder->cvType()) {
@@ -221,27 +218,24 @@ Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,
                                            QString fileName,
                                            QSize frameSize,
                                            int framesPerSecond,
-                                           bool appendToFile,
                                            bool writeInfo) {
-  return new RawUndecoded(decoder, fileName, frameSize, framesPerSecond, appendToFile, writeInfo);
+  return new RawUndecoded(decoder, fileName, frameSize, framesPerSecond, writeInfo);
 }
 
 Recorder* RawDecoded8Format::makeRecorder(QArvDecoder* decoder,
                                           QString fileName,
                                           QSize frameSize,
                                           int framesPerSecond,
-                                          bool appendToFile,
                                           bool writeInfo) {
-  return new RawDecoded8(decoder, fileName, frameSize, framesPerSecond, appendToFile, writeInfo);
+  return new RawDecoded8(decoder, fileName, frameSize, framesPerSecond, writeInfo);
 }
 
 Recorder* RawDecoded16Format::makeRecorder(QArvDecoder* decoder,
                                            QString fileName,
                                            QSize frameSize,
                                            int framesPerSecond,
-                                           bool appendToFile,
                                            bool writeInfo) {
-  return new RawDecoded16(decoder, fileName, frameSize, framesPerSecond, appendToFile, writeInfo);
+  return new RawDecoded16(decoder, fileName, frameSize, framesPerSecond, writeInfo);
 }
 
 Q_EXPORT_PLUGIN2(RawUndecoded, QArv::RawUndecodedFormat)

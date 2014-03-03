@@ -31,7 +31,6 @@ Recorder* makeGstRecorder(QStringList plugins,
                           QString fileName,
                           QSize size,
                           int FPS,
-                          bool appendToFile,
                           bool writeInfo);
 
 };

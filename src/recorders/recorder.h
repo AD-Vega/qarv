@@ -46,9 +46,6 @@ public:
   //! Returns the name of the output format.
   virtual QString name() = 0;
 
-  //! Returns true if data can be appended to an existing file.
-  virtual bool canAppend() = 0;
-
   //! Returns true if metadata should be written to a .qarv file.
   virtual bool canWriteInfo() = 0;
 
@@ -57,7 +54,6 @@ public:
                                  QString fileName,
                                  QSize frameSize,
                                  int framesPerSecond,
-                                 bool appendToFile,
                                  bool writeInfo) = 0;
 
   //! Creates a recorder for the requested output format.
@@ -66,7 +62,6 @@ public:
                                 QString outputFormat,
                                 QSize frameSize,
                                 int framesPerSecond,
-                                bool appendToFile,
                                 bool writeInfo);
 };
 

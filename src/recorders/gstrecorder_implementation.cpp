@@ -86,7 +86,6 @@ public:
               QString fileName,
               QSize size,
               int FPS,
-              bool appendToFile,
               bool writeInfo) {
     if (!gstOK) return;
     QString informat;
@@ -197,13 +196,12 @@ Recorder* QArv::makeGstRecorder(QStringList plugins,
                           QString fileName,
                           QSize size,
                           int FPS,
-                          bool appendToFile,
                           bool writeInfo) {
   static bool OK = checkPluginAvailability(plugins);
   if (OK)
     return new GstRecorder(pipelineFragment,
                            decoder, fileName, size,
-                           FPS, appendToFile, writeInfo);
+                           FPS, writeInfo);
   else
     return NULL;
 }

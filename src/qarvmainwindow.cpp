@@ -736,7 +736,6 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
       transformBox,
       filenameEdit,
       chooseFilenameButton,
-      recordAppendCheck,
       videoFormatSelector,
       recordInfoCheck,
       recordMetadataCheck,
@@ -756,19 +755,13 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 
   if ((checked && !recorder) || !recorder->isOK()) {
     startVideo(true); // Initialize the decoder and all that.
-    bool doAppend;
-    if (recordAppendCheck->isChecked() && recordAppendCheck->isEnabled())
-      doAppend = true;
-    else
-      doAppend = false;
 
     auto rct = camera->getROI();
     recorder.reset(OutputFormat::makeRecorder(decoder,
                                               filenameEdit->text(),
                                               videoFormatSelector->currentText(),
                                               rct.size(), fpsSpinbox->value(),
-                                              doAppend,
-                                              recordInfoCheck->isChecked() && !doAppend));
+                                              recordInfoCheck->isChecked()));
     bool open = recorder && recorder->isOK();
 
     if (!open) {
@@ -780,7 +773,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
     } else {
       statusBar()->clearMessage();
       QString msg;
-      if (recordMetadataCheck->isChecked() && !doAppend) {
+      if (recordMetadataCheck->isChecked()) {
         auto metaFileName = filenameEdit->text() + ".caminfo";
         QFile metaFile(metaFileName);
         bool open = metaFile.open(QIODevice::WriteOnly);
@@ -790,7 +783,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
         } else
           msg += tr("Could not dump camera settings.");
       }
-      if (recordTimestampsCheck->isChecked() && !doAppend) {
+      if (recordTimestampsCheck->isChecked()) {
         auto tsFileName = filenameEdit->text() + ".timestamps";
         timestampFile.setFileName(tsFileName);
         bool open = timestampFile.open(QIODevice::WriteOnly);
@@ -1176,7 +1169,6 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/snapshot_raw"] = snapshotRaw;
   saved_widgets["qarv_recording/video_file"] = filenameEdit;
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
-  saved_widgets["qarv_recording/append_video"] = recordAppendCheck;
   saved_widgets["qarv_recording/write_info"] = recordInfoCheck;
   saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
@@ -1242,16 +1234,9 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
   if (fmt) {
     bool b = !recording && !closeFileAction->isEnabled();
-    recordAppendCheck->setEnabled(fmt->canAppend() && b);
-    recordInfoCheck->setEnabled(fmt->canWriteInfo() && !recordAppendCheck->isChecked() && b);
+    recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
   } else {
     logMessage() << "Video format pointer is not an OutputFormat plugin";
     statusBar()->showMessage(tr("Cannot select this video format."));
   }
-}
-
-void QArvMainWindow::on_recordApendCheck_toggled(bool checked) {
-  recordInfoCheck->setEnabled(!checked);
-  recordTimestampsCheck->setEnabled(!checked);
-  recordMetadataCheck->setEnabled(!checked);
 }

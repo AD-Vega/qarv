@@ -181,13 +181,13 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
     if (fmt) {
       recorder.reset(fmt->makeRecorder(decoder.data(), fname,
                                        recording->frameSize(),
-                                       fpsSpinbox->value(), false, false));
+                                       fpsSpinbox->value(), false));
     } else if (!gstLine->text().isEmpty()) {
       recorder.reset(makeGstRecorder(QStringList(),
                                      gstLine->text(),
                                      decoder.data(), fname,
                                      recording->frameSize(),
-                                     fpsSpinbox->value(), false, false));
+                                     fpsSpinbox->value(), false));
     } else {
       transcodeButton->setChecked(false);
       return;

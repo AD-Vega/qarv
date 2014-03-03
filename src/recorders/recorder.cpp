@@ -27,14 +27,13 @@ Recorder* OutputFormat::makeRecorder(QArvDecoder* decoder,
                                      QString outputFormat,
                                      QSize frameSize,
                                      int framesPerSecond,
-                                     bool appendToFile,
                                      bool writeInfo) {
   auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
     auto fmt = qobject_cast<OutputFormat*>(plugin);
     if (fmt != NULL && outputFormat == fmt->name())
       return fmt->makeRecorder(decoder, fileName, frameSize,
-                               framesPerSecond, appendToFile, writeInfo);
+                               framesPerSecond, writeInfo);
   }
   return NULL;
 }
