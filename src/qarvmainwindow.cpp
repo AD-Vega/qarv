@@ -736,7 +736,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
       transformBox,
       filenameEdit,
       chooseFilenameButton,
-      recordApendCheck,
+      recordAppendCheck,
       videoFormatSelector,
       recordInfoCheck,
       recordMetadataCheck,
@@ -757,7 +757,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
   if ((checked && !recorder) || !recorder->isOK()) {
     startVideo(true); // Initialize the decoder and all that.
     bool doAppend;
-    if (recordApendCheck->isChecked() && recordApendCheck->isEnabled())
+    if (recordAppendCheck->isChecked() && recordAppendCheck->isEnabled())
       doAppend = true;
     else
       doAppend = false;
@@ -1176,7 +1176,7 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/snapshot_raw"] = snapshotRaw;
   saved_widgets["qarv_recording/video_file"] = filenameEdit;
   saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
-  saved_widgets["qarv_recording/append_video"] = recordApendCheck;
+  saved_widgets["qarv_recording/append_video"] = recordAppendCheck;
   saved_widgets["qarv_recording/write_info"] = recordInfoCheck;
   saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
@@ -1242,8 +1242,8 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
   if (fmt) {
     bool b = !recording && !closeFileAction->isEnabled();
-    recordApendCheck->setEnabled(fmt->canAppend() && b);
-    recordInfoCheck->setEnabled(fmt->canWriteInfo() && !recordApendCheck->isChecked() && b);
+    recordAppendCheck->setEnabled(fmt->canAppend() && b);
+    recordInfoCheck->setEnabled(fmt->canWriteInfo() && !recordAppendCheck->isChecked() && b);
   } else {
     logMessage() << "Video format pointer is not an OutputFormat plugin";
     statusBar()->showMessage(tr("Cannot select this video format."));
