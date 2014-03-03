@@ -87,6 +87,7 @@ private slots:
   void on_histogramUpdateSpinbox_valueChanged(int i);
   void on_statusTimeoutSpinbox_valueChanged(int i);
   void on_videoFormatSelector_currentIndexChanged(int i);
+  void on_recordApendCheck_toggled(bool checked);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();

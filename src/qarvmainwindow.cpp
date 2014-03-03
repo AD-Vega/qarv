@@ -768,7 +768,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
                                               videoFormatSelector->currentText(),
                                               rct.size(), fpsSpinbox->value(),
                                               doAppend,
-                                              recordInfoCheck->isChecked()));
+                                              recordInfoCheck->isChecked() && !doAppend));
     bool open = recorder && recorder->isOK();
 
     if (!open) {
@@ -780,7 +780,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
     } else {
       statusBar()->clearMessage();
       QString msg;
-      if (recordMetadataCheck->isChecked()) {
+      if (recordMetadataCheck->isChecked() && !doAppend) {
         auto metaFileName = filenameEdit->text() + ".caminfo";
         QFile metaFile(metaFileName);
         bool open = metaFile.open(QIODevice::WriteOnly);
@@ -790,7 +790,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
         } else
           msg += tr("Could not dump camera settings.");
       }
-      if (recordTimestampsCheck->isChecked()) {
+      if (recordTimestampsCheck->isChecked() && !doAppend) {
         auto tsFileName = filenameEdit->text() + ".timestamps";
         timestampFile.setFileName(tsFileName);
         bool open = timestampFile.open(QIODevice::WriteOnly);
@@ -1243,9 +1243,15 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   if (fmt) {
     bool b = !recording && !closeFileAction->isEnabled();
     recordApendCheck->setEnabled(fmt->canAppend() && b);
-    recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
+    recordInfoCheck->setEnabled(fmt->canWriteInfo() && !recordApendCheck->isChecked() && b);
   } else {
     logMessage() << "Video format pointer is not an OutputFormat plugin";
     statusBar()->showMessage(tr("Cannot select this video format."));
   }
+}
+
+void QArvMainWindow::on_recordApendCheck_toggled(bool checked) {
+  recordInfoCheck->setEnabled(!checked);
+  recordTimestampsCheck->setEnabled(!checked);
+  recordMetadataCheck->setEnabled(!checked);
 }
