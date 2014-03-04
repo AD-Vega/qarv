@@ -29,6 +29,7 @@
 #include "recorders/recorder.h"
 
 #include <QTimer>
+#include <QTime>
 #include <QFile>
 #include <QTransform>
 #include <QFutureWatcher>
@@ -101,6 +102,7 @@ private slots:
   void saveProgramSettings();
   void restoreProgramSettings();
   void frameRendered();
+  void updateRecordingTime();
 
 private:
   void readROILimits();
@@ -129,6 +131,9 @@ private:
   QFutureWatcher<void> futureRender;
   bool futureHoldsAHistogram;
   QFile timestampFile;
+  QLabel* recordingTimeLabel;
+  QTime recordingTime;
+  int recordingTimeCumulative;
 
   friend class ::QArvGui;
 };

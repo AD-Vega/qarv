@@ -53,7 +53,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   recording(false), started(false), drawHistogram(false),
   standalone(standalone_), imageTransform(),
   imageTransform_flip(0), imageTransform_rot(0), framecounter(0),
-  toDisableWhenPlaying(), toDisableWhenRecording(), futureHoldsAHistogram(false) {
+  toDisableWhenPlaying(), toDisableWhenRecording(), futureHoldsAHistogram(false),
+  recordingTimeCumulative(0) {
 
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -173,6 +174,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   updateImageTransform();
 
+  recordingTimeLabel = new QLabel;
+  statusBar()->addPermanentWidget(recordingTimeLabel);
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
 
@@ -750,6 +753,8 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
     statusBar()->showMessage(tr("Please set the video file name."),
                              statusTimeoutMsec);
     recordAction->setChecked(false);
+    recordingTime = QTime();
+    recordingTimeCumulative = 0;
     return;
   }
 
@@ -811,6 +816,14 @@ skip_all_file_opening:
     on_videoFormatSelector_currentIndexChanged(videoFormatSelector->currentIndex());
   }
 
+  if (recording) {
+      recordingTime.start();
+      updateRecordingTime();
+  } else {
+      // Update the elapsed time before invalidating the timer.
+      updateRecordingTime();
+      recordingTime = QTime();
+  }
   emit recordingStarted(recording);
 }
 
@@ -1095,6 +1108,8 @@ void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
   }
   pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
                                   && !started);
+  recordingTimeCumulative = 0;
+  recordingTimeLabel->clear();
 }
 
 void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {
@@ -1238,5 +1253,26 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   } else {
     logMessage() << "Video format pointer is not an OutputFormat plugin";
     statusBar()->showMessage(tr("Cannot select this video format."));
+  }
+}
+
+void QArvMainWindow::updateRecordingTime()
+{
+  if (!recordingTime.isNull()) {
+    static const QChar zero('0');
+    const QString txt(tr("Recording time: %1:%2:%3"));
+    recordingTimeCumulative += recordingTime.restart();
+    int ms = recordingTimeCumulative;
+    int s = ms / 1000;
+    ms -= s * 1000;
+    int m = s / 60;
+    s -= m * 60;
+    int h = m / 60;
+    h -= m * 60;
+    QString msg = txt.arg(h, 2, 10, zero)
+                     .arg(m, 2, 10, zero)
+                     .arg(s, 2, 10, zero);
+    recordingTimeLabel->setText(msg);
+    QTimer::singleShot(1000, this, SLOT(updateRecordingTime()));
   }
 }
