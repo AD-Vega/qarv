@@ -79,14 +79,16 @@ class GstRecorder: public Recorder {
 private:
   QProcess gstprocess;
   cv::Mat tmpMat;
+  QString fileName;
 
 public:
   GstRecorder(QString outputFormat,
               QArvDecoder* decoder,
-              QString fileName,
+              QString fileName_,
               QSize size,
               int FPS,
               bool writeInfo) {
+    fileName = fileName_;
     if (!gstOK) return;
     QString informat;
     switch (decoder->cvType()) {
@@ -187,6 +189,11 @@ public:
     gstprocess.write(p, bytes);
     if (gstprocess.bytesAvailable())
       logMessage(false) << gstprocess.readAll().constData();
+  }
+
+  qint64 fileSize() {
+    QFileInfo file(fileName);
+    return file.size();
   }
 };
 

@@ -39,6 +39,11 @@ public:
    * is up to the recorder to decide whether the decoded form is useful.
    */
   virtual void recordFrame(QByteArray raw, cv::Mat decoded) = 0;
+
+  /*!
+   * Returns the size of recorded file in bytes.
+   */
+  virtual qint64 fileSize() = 0;
 };
 
 class OutputFormat {

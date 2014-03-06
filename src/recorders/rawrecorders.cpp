@@ -78,6 +78,10 @@ public:
     }
   }
 
+  qint64 fileSize() {
+    return file.size();
+  }
+
 private:
   QFile file;
   QArvDecoder* decoder;
@@ -139,6 +143,10 @@ public:
         file.putChar(*reinterpret_cast<char*>(&tmp));
       }
     }
+  }
+
+  qint64 fileSize() {
+    return file.size();
   }
 
 private:
@@ -206,6 +214,10 @@ public:
         file.putChar(tmpp[1]);
       }
     }
+  }
+
+  qint64 fileSize() {
+    return file.size();
   }
 
 private:
