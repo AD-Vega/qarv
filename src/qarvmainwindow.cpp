@@ -758,7 +758,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
     return;
   }
 
-  if ((checked && !recorder) || !recorder->isOK()) {
+  if ((checked && !recorder) || (recorder && !recorder->isOK())) {
     startVideo(true); // Initialize the decoder and all that.
 
     auto rct = camera->getROI();
