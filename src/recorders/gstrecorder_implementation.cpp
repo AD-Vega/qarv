@@ -119,6 +119,7 @@ public:
     }
     QString cmdline("gst-launch-1.0 -e "
                     "fdsrc fd=0 do-timestamp=true ! "
+                    "funnel ! "
                     "videoparse "
                     "format=%1 "
                     "framerate=%2/1 "
