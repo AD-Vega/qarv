@@ -36,6 +36,7 @@ include_directories(
   ${GIO_INCLUDE_DIRS}
 )
 
+
 set(qarv_DATA share/qarv/${qarv_ABI}/)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
@@ -46,6 +47,12 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -Wall -Wer
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror")
 add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/${qarv_DATA}\" -DQT_STATICPLUGIN
   -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=\"${qarv_API}\" -DQARV_ABI=\"${qarv_ABI}\")
+
+set(CMAKE_REQUIRED_LIBRARIES ${AVUTIL_LDFLAGS})
+check_symbol_exists(av_pix_fmt_desc_get libavutil/pixdesc.h HAVE_FMT_DESC_GET)
+if (HAVE_FMT_DESC_GET)
+  add_definitions(-DHAVE_FMT_DESC_GET)
+endif()
 
 set_prefixed(qarv_UIS_pre src/
   mainwindow.ui
