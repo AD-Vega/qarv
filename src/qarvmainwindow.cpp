@@ -759,6 +759,10 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 
   if ((checked && !recorder) || (recorder && !recorder->isOK())) {
     startVideo(true); // Initialize the decoder and all that.
+    if (!started) {
+      recordAction->setChecked(false);
+      goto skip_all_file_opening;
+    }
 
     auto rct = camera->getROI();
     recorder.reset(OutputFormat::makeRecorder(decoder,
@@ -805,8 +809,11 @@ skip_all_file_opening:
 
   recording = checked;
   startVideo(recording || playing);
+  bool error = checked && !started;
   recording = checked && started;
+  recordAction->blockSignals(true);
   recordAction->setChecked(recording);
+  recordAction->blockSignals(false);
 
   bool open = recorder && recorder->isOK();
   closeFileAction->setEnabled(!recording && open);
@@ -823,7 +830,8 @@ skip_all_file_opening:
       updateRecordingTime();
       recordingTime = QTime();
   }
-  emit recordingStarted(recording);
+  if (!error)
+    emit recordingStarted(recording);
 }
 
 void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
@@ -1271,7 +1279,9 @@ void QArvMainWindow::updateRecordingTime()
     QString msg = txt.arg(h, 2, 10, zero)
                      .arg(m, 2, 10, zero)
                      .arg(s, 2, 10, zero);
-    qint64 fs = recorder->fileSize();
+    qint64 fs = 0;
+    if (recorder)
+      fs = recorder->fileSize();
     if (fs != 0) {
         const QString txt2(tr("size %1 Mb"));
         msg += ", " + txt2.arg(fs / 1024 / 1024);
