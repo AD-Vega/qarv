@@ -62,9 +62,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
                   "unless icons look bad.";
   setupUi(this);
   on_statusTimeoutSpinbox_valueChanged(statusTimeoutSpinbox->value());
-  messageList->setModel(&QArvDebug::model);
-  connect(&QArvDebug::model, SIGNAL(rowsInserted(const QModelIndex&, int, int)),
-          messageList, SLOT(scrollToBottom()));
+  messageList->connect(&QArvDebug::messageSender, SIGNAL(newDebugMessage(QString)),
+                       SLOT(appendPlainText(QString)));
 
   aboutLabel->setText(aboutLabel->text().arg(QARV_VERSION));
 

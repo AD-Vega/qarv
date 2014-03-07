@@ -58,6 +58,7 @@ set_prefixed(qarv_MOCS src/
   glhistogramwidget.h
   qarvmainwindow.h
   roicombobox.h
+  globals.h
   api/qarvtype.h
   api/qarvgui.h
   api/qarvcamera.h
@@ -135,6 +136,7 @@ qt4_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
 qt4_wrap_cpp(qarv_videoplayer_MOC
   src/utils/qarv_videoplayer.h
   src/glvideowidget.h
+  src/globals.h
 )
 add_executable(qarv_videoplayer
   src/utils/qarv_videoplayer.cpp
