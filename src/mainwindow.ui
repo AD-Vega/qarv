@@ -709,178 +709,193 @@
        <attribute name="title">
         <string>Recording</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout_4">
-        <property name="fieldGrowthPolicy">
-         <enum>QFormLayout::ExpandingFieldsGrow</enum>
-        </property>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_15">
-          <property name="text">
-           <string>Snapshot directory:</string>
+       <layout class="QVBoxLayout" name="verticalLayout_11">
+        <item>
+         <widget class="QGroupBox" name="snapshotBox">
+          <property name="title">
+           <string>Snapshots</string>
           </property>
+          <layout class="QFormLayout" name="formLayout_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_15">
+             <property name="text">
+              <string>Snapshot directory:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <item>
+              <widget class="QLineEdit" name="snappathEdit">
+               <property name="toolTip">
+                <string>Snapshots will be put in this directory.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="chooseSnappathButton">
+               <property name="toolTip">
+                <string>Open directory.</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset theme="document-open">
+                 <normaloff/>
+                </iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>Snapshot basename:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="snapbasenameEdit">
+             <property name="toolTip">
+              <string>Snapshot file names will begin with this basename and will have the current date and time appended.</string>
+             </property>
+             <property name="text">
+              <string notr="true">qarv_snapshot-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Snapshot format:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="QRadioButton" name="snapshotRaw">
+               <property name="toolTip">
+                <string>Frame data is simply dumped into the file undecoded.</string>
+               </property>
+               <property name="text">
+                <string>Raw data</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroup</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="snapshotPNG">
+               <property name="toolTip">
+                <string>The saved snapshot is as shown in the Video Display.</string>
+               </property>
+               <property name="text">
+                <string>PNG image</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroup</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
-        <item row="2" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QLineEdit" name="snappathEdit">
-            <property name="toolTip">
-             <string>Snapshots will be put in this directory.</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="chooseSnappathButton">
-            <property name="toolTip">
-             <string>Open directory.</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>Snapshot basename:</string>
+        <item>
+         <widget class="QGroupBox" name="videoBox">
+          <property name="title">
+           <string>Video</string>
           </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="snapbasenameEdit">
-          <property name="toolTip">
-           <string>Snapshot file names will begin with this basename and will have the current date and time appended.</string>
-          </property>
-          <property name="text">
-           <string notr="true">qarv_snapshot-</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_16">
-          <property name="text">
-           <string>Snapshot format:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
-          <item>
-           <widget class="QRadioButton" name="snapshotRaw">
-            <property name="toolTip">
-             <string>Frame data is simply dumped into the file undecoded.</string>
-            </property>
-            <property name="text">
-             <string>Raw data</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="snapshotPNG">
-            <property name="toolTip">
-             <string>The saved snapshot is as shown in the Video Display.</string>
-            </property>
-            <property name="text">
-             <string>PNG image</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup</string>
-            </attribute>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>Video file:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLineEdit" name="filenameEdit">
-            <property name="toolTip">
-             <string>The file to store recorded video.</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="chooseFilenameButton">
-            <property name="toolTip">
-             <string>Open file.</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="label_17">
-          <property name="text">
-           <string>Video format:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QComboBox" name="videoFormatSelector">
-          <property name="toolTip">
-           <string>Choose format of recorded video.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <widget class="QCheckBox" name="recordInfoCheck">
-          <property name="toolTip">
-           <string>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</string>
-          </property>
-          <property name="text">
-           <string>Write video information file</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1">
-         <widget class="QCheckBox" name="recordTimestampsCheck">
-          <property name="toolTip">
-           <string>An additional file with a .timestamps extension will be created and will contain frame timestamps in nanoseconds, one per line, in text form.</string>
-          </property>
-          <property name="text">
-           <string>Write timestamp file</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="1">
-         <widget class="QCheckBox" name="recordMetadataCheck">
-          <property name="toolTip">
-           <string>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</string>
-          </property>
-          <property name="text">
-           <string>Dump camera settings along with the video</string>
-          </property>
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Video file:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLineEdit" name="filenameEdit">
+               <property name="toolTip">
+                <string>The file to store recorded video.</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="chooseFilenameButton">
+               <property name="toolTip">
+                <string>Open file.</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset theme="document-open">
+                 <normaloff/>
+                </iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>Video format:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="videoFormatSelector">
+             <property name="toolTip">
+              <string>Choose format of recorded video.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="recordInfoCheck">
+             <property name="toolTip">
+              <string>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</string>
+             </property>
+             <property name="text">
+              <string>Write video information file</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="recordTimestampsCheck">
+             <property name="toolTip">
+              <string>An additional file with a .timestamps extension will be created and will contain frame timestamps in nanoseconds, one per line, in text form.</string>
+             </property>
+             <property name="text">
+              <string>Write timestamp file</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QCheckBox" name="recordMetadataCheck">
+             <property name="toolTip">
+              <string>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</string>
+             </property>
+             <property name="text">
+              <string>Dump camera settings along with the video</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
