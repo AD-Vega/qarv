@@ -469,8 +469,10 @@ cv::Mat transformImage(cv::Mat img,
                     bool imageTransform_invert,
                     int imageTransform_flip,
                     int imageTransform_rot) {
-  if (imageTransform_invert)
-    cv::subtract((1<<16)-1, img, img);
+  if (imageTransform_invert) {
+    int bits = img.depth() == CV_8U ? 8 : 16;
+    cv::subtract((1 << bits) - 1, img, img);
+  }
 
   if (imageTransform_flip != -100)
     cv::flip(img, img, imageTransform_flip);
