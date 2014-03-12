@@ -539,7 +539,7 @@ void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
           if (hists)
             histograms[px][tmp]++;
           clipped = clipped || tmp == 255;
-          imgLine[4*j + px] = tmp;
+          imgLine[4*j + 2 - px] = tmp;
         }
         imgLine[4*j + 3] = 255;
         if (clipped && markClipped) {

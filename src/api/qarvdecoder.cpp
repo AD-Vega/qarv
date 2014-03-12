@@ -115,9 +115,9 @@ void CV2QImageTemplate(const cv::Mat& image_, QImage& image) {
         auto& bgr = imageLine[j];
         for (int px = 0; px < 3; px++) {
           if (depth8)
-            imgLine[4*j + px] = bgr[2-px];
+            imgLine[4*j + 2 - px] = bgr[2-px];
           else
-            imgLine[4*j + px] = bgr[2-px] >> 8;
+            imgLine[4*j + 2 - px] = bgr[2-px] >> 8;
         }
         imgLine[4*j + 3] = 255;
       }
