@@ -173,7 +173,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   updateImageTransform();
 
-  recordingTimeLabel = new QLabel;
+  recordingTimeLabel = new QLabel(tr("Recording stopped"));
   statusBar()->addPermanentWidget(recordingTimeLabel);
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
@@ -1118,7 +1118,7 @@ void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
   pixelFormatSelector->setEnabled(pixelFormatSelector->count() > 1
                                   && !started);
   recordingTimeCumulative = 0;
-  recordingTimeLabel->clear();
+  recordingTimeLabel->setText(tr("Recording stopped"));
 }
 
 void QArvMainWindow::on_ROIsizeCombo_newSizeSelected(QSize size) {

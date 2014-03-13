@@ -608,6 +608,12 @@
         <translation>270 stopinj</translation>
     </message>
     <message>
+        <location filename="../src/qarvmainwindow.cpp" line="176"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1121"/>
+        <source>Recording stopped</source>
+        <translation>Snemanje ustavljeno</translation>
+    </message>
+    <message>
         <location filename="../src/qarvmainwindow.cpp" line="178"/>
         <source>Welcome to qarv!</source>
         <translation>Dobrodošel v qarv!</translation>
