@@ -41,7 +41,7 @@ SwScaleDecoder::SwScaleDecoder(QSize size_, PixelFormat inputPixfmt_,
     return;
   }
   if (sws_isSupportedInput(inputPixfmt) > 0) {
-#ifdef HAVE_FMT_DESC_GET
+#ifndef HAVE_FMT_DESC_GET
     int bitsPerPixel =
       av_get_bits_per_pixel(av_pix_fmt_descriptors + inputPixfmt);
     uint8_t components = av_pix_fmt_descriptors[inputPixfmt].nb_components;
