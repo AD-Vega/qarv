@@ -74,6 +74,7 @@ private slots:
   void on_exposureSpinbox_editingFinished();
   void on_gainSpinbox_editingFinished();
   void on_showVideoAction_toggled(bool checked);
+  void on_replayButton_clicked(bool checked);
   void on_videodock_visibilityChanged(bool visible);
   void on_videodock_topLevelChanged(bool floating);
   void on_showHistogramAction_toggled(bool checked);

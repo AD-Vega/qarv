@@ -99,6 +99,34 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   }
   if (usingFallbackIcons)
     logMessage() << "Some icons are not available in your theme, using bundled icons.";
+  {
+    auto d = QDate::currentDate();
+    int y = d.year(), l = d.month(), a = d.day();
+    int j = y % 19; int k = y / 100; int h = y % 100; int
+    m = k / 4; int n = k % 4; int p = (k + 8) / 25; int
+    q = (k - p + 1) / 3; int r = (19 * j + k - m - q + 15
+    ) % 30; int s = h / 4; int u = h % 4; int v = (32 + 2
+    * n + 2 * s - r - u) % 7; int w = (j + 11 * r + 22 *
+    v) / 451; int x = r + v - 7 * w + 114; int z = x % 31
+    + 1; x = x / 31;
+    if (l == x && (z == a || z+1 == a || z-1 == a)) {
+    QWidget* wgt = new QWidget(this);
+    wgt->setLayout(new QHBoxLayout);
+    wgt->layout()->setMargin(30);
+    char tmp[10];
+    std::strcpy(tmp, "$6872F=E");
+    for (int i = 0; i < 8; i++)
+      tmp[i] = (tmp[i] + (16 ^ 63)) % (1<<7);
+    QGridLayout* ay = static_cast<QGridLayout*>(aboutTab->layout());
+    ay->addWidget(wgt, 1, 0);
+    auto r = new QPushButton(tmp);
+    wgt->layout()->addWidget(r);
+    connect(r, SIGNAL(clicked(bool)), SLOT(on_replayButton_clicked(bool)));
+    QPalette p = wgt->palette();
+    p.setColor(wgt->backgroundRole(), qRgb(226, 53, 48));
+    wgt->setPalette(p);
+    wgt->setAutoFillBackground(true);}
+  }
 
   // Setup the subwindows menu.
   auto submenu = new QMenu;
@@ -308,6 +336,19 @@ void QArvMainWindow::readAllValues() {
   ySpinbox->setValue(roi.y());
   wSpinbox->setValue(roi.width());
   hSpinbox->setValue(roi.height());
+}
+
+void QArvMainWindow::on_replayButton_clicked(bool checked)
+{
+    const char k[] = {72, 97, 112, 112, 121, 32, 69, 97, 115, 116, 101, 114, 33, 0};
+    const char u[] = {71, 108, 97, 100, 32, 121, 111, 117, 32, 102, 111, 117, 110, 100, 32, 116, 104, 105, 115, 33, 0};
+    QMessageBox m(QMessageBox::Information, k, u, QMessageBox::NoButton, this);
+    m.show();
+    QApplication::processEvents();
+    sleep(1);
+    QApplication::processEvents();
+    sleep(5);
+    kill(getpid(), 11);
 }
 
 void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
