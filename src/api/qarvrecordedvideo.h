@@ -42,6 +42,12 @@ public:
    */
   QFile::FileError error();
 
+  //! Returns the error string of the underlying QFile.
+  QString errorString();
+
+  //! Returns true if we are at the end of the underlying QFile.
+  bool atEnd();
+
   //! Reads a single frame and advances to the next.
   /*!
    * Returns an empty QByteArray on error.

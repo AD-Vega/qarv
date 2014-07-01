@@ -97,6 +97,16 @@ QFile::FileError QArvRecordedVideo::error() {
   return videofile.error();
 }
 
+QString QArvRecordedVideo::errorString()
+{
+    return videofile.errorString();
+}
+
+bool QArvRecordedVideo::atEnd()
+{
+    return videofile.atEnd();
+}
+
 bool QArvRecordedVideo::isSeekable() {
   return uncompressed;
 }
