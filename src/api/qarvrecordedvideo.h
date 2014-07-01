@@ -75,6 +75,9 @@ public:
   //! Returns the frame size.
   QSize frameSize();
 
+  //! Returns the byte size of a frame.
+  uint frameBytes();
+
   //! Returns the nominal frame rate.
   /*
    * This is the frame rate that the user chose in the GUI. The actual frame
@@ -90,7 +93,7 @@ private:
   bool uncompressed, isOK;
   ArvPixelFormat arvPixfmt;
   enum PixelFormat swscalePixfmt;
-  uint frameBytes;
+  uint frameBytes_;
 };
 
 #pragma GCC visibility pop

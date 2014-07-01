@@ -32,7 +32,7 @@ using namespace QArv;
 
 QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
  fps(0), uncompressed(true), arvPixfmt(0), swscalePixfmt(PIX_FMT_NONE),
- frameBytes(0) {
+ frameBytes_(0) {
   QSettings s(filename, QSettings::Format::IniFormat);
   isOK = s.status() == QSettings::Status::NoError;
   if (!isOK) {
@@ -79,8 +79,8 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
   }
 
   v = s.value("frame_bytes");
-  frameBytes = v.toInt();
-  if (!frameBytes) {
+  frameBytes_ = v.toInt();
+  if (!frameBytes_) {
     isOK = false;
     logMessage() << "Unable to read frame bytesize.";
     return;
@@ -99,12 +99,12 @@ QFile::FileError QArvRecordedVideo::error() {
 
 QString QArvRecordedVideo::errorString()
 {
-    return videofile.errorString();
+  return videofile.errorString();
 }
 
 bool QArvRecordedVideo::atEnd()
 {
-    return videofile.atEnd();
+  return videofile.atEnd();
 }
 
 bool QArvRecordedVideo::isSeekable() {
@@ -117,6 +117,11 @@ int QArvRecordedVideo::framerate() {
 
 QSize QArvRecordedVideo::frameSize() {
   return fsize;
+}
+
+uint QArvRecordedVideo::frameBytes()
+{
+  return frameBytes_;
 }
 
 QArvDecoder* QArvRecordedVideo::makeDecoder() {
@@ -133,13 +138,13 @@ QArvDecoder* QArvRecordedVideo::makeDecoder() {
 }
 
 bool QArvRecordedVideo::seek(uint frame) {
-  return videofile.seek(frame*frameBytes);
+  return videofile.seek(frame*frameBytes_);
 }
 
 QByteArray QArvRecordedVideo::read() {
-  return videofile.read(frameBytes);
+  return videofile.read(frameBytes_);
 }
 
 uint QArvRecordedVideo::numberOfFrames() {
-  return videofile.size() / frameBytes;
+  return videofile.size() / frameBytes_;
 }
