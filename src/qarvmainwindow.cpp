@@ -310,7 +310,7 @@ void QArvMainWindow::readAllValues() {
     pixelFormatSelector->addItem(formatnames.at(i), formats.at(i));
   auto format = camera->getPixelFormat();
   pixelFormatSelector->setCurrentIndex(pixelFormatSelector->findData(format));
-  pixelFormatSelector->setEnabled(noofframes > 1);
+  pixelFormatSelector->setEnabled(noofframes > 1 && !started);
   pixelFormatSelector->blockSignals(false);
 
   QSize binsize = camera->getBinning();
