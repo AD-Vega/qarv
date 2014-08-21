@@ -131,16 +131,19 @@ public:
   void recordFrame(QByteArray raw, cv::Mat decoded) {
     if (!isOK())
       return;
+    int pixPerRow = decoded.cols*decoded.channels();
     if (decoded.depth() == CV_8U) {
-      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
-           in != end; in++) {
-        file.putChar(*reinterpret_cast<char*>(&(*in)));
+      for (int row = 0; row < decoded.rows; ++row) {
+        auto ptr = decoded.ptr<uint8_t>(row);
+        file.write(reinterpret_cast<char*>(ptr), pixPerRow);
       }
     } else {
-      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
-           in != end; in++) {
-        uint8_t tmp = (*in) >> 8;
-        file.putChar(*reinterpret_cast<char*>(&tmp));
+      QVector<uint8_t> line(pixPerRow);
+      for (int row = 0; row < decoded.rows; ++row) {
+        auto ptr = decoded.ptr<uint16_t>(row);
+        for (int col = 0; col < pixPerRow; ++col)
+          line[col] = ptr[col] >> 8;
+        file.write(reinterpret_cast<const char*>(line.constData()), pixPerRow);
       }
     }
   }
@@ -198,20 +201,19 @@ public:
   void recordFrame(QByteArray raw, cv::Mat decoded) {
     if (!isOK())
       return;
+    int pixPerRow = decoded.cols * decoded.channels();
     if (decoded.depth() == CV_16U) {
-      for (auto in = decoded.begin<uint16_t>(), end = decoded.end<uint16_t>();
-           in != end; in++) {
-        char* tmpp = reinterpret_cast<char*>(&(*in));
-        file.putChar(tmpp[0]);
-        file.putChar(tmpp[1]);
+      for (int row = 0; row < decoded.rows; ++row) {
+        auto ptr = decoded.ptr<uint16_t>(row);
+        file.write(reinterpret_cast<char*>(ptr), pixPerRow*2);
       }
     } else {
-      for (auto in = decoded.begin<uint8_t>(), end = decoded.end<uint8_t>();
-           in != end; in++) {
-        uint16_t tmp = (*in) << 8;
-        char* tmpp = reinterpret_cast<char*>(&tmp);
-        file.putChar(tmpp[0]);
-        file.putChar(tmpp[1]);
+      QVector<uint16_t> line(pixPerRow);
+      for (int row = 0; row < decoded.rows; ++row) {
+        auto ptr = decoded.ptr<uint8_t>(row);
+        for (int col = 0; col < pixPerRow; ++col)
+          line[col] = ptr[col] << 8;
+        file.write(reinterpret_cast<const char*>(line.constData()), pixPerRow*2);
       }
     }
   }
