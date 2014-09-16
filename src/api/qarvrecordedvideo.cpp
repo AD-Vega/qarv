@@ -23,7 +23,7 @@
 #include <QDir>
 #include "globals.h"
 extern "C" {
-#include <aravis-0.2/arvbuffer.h>
+#include <arvbuffer.h>
 }
 
 using namespace QArv;
