@@ -357,15 +357,27 @@ QByteArray QArvCamera::getFrame(bool dropInvalid,
                                 bool nocopy,
                                 ArvBuffer** rawbuffer) {
   if (rawbuffer != NULL) *rawbuffer = currentFrame;
-  if (currentFrame->status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
+  ArvBufferStatus status;
+#ifdef ARAVIS_OLD_BUFFER
+  status = currentFrame->status;
+#else
+  status = arv_buffer_get_status(currentFrame);
+#endif
+  if (status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
     return QByteArray();
   else {
+    size_t size;
+    const void* data;
+#ifdef ARAVIS_OLD_BUFFER
+    data = currentFrame->data;
+    size = currentFrame->size;
+#else
+    data = arv_buffer_get_data(currentFrame, &size);
+#endif
     if (nocopy)
-      return QByteArray::fromRawData(static_cast<char*>(currentFrame->data),
-                                     currentFrame->size);
+      return QByteArray::fromRawData(static_cast<const char*>(data), size);
     else
-      return QByteArray(static_cast<char*>(currentFrame->data),
-                        currentFrame->size);
+      return QByteArray(static_cast<const char*>(data), size);
   }
 }
 

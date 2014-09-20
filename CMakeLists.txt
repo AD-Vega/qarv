@@ -53,6 +53,9 @@ check_symbol_exists(av_pix_fmt_desc_get libavutil/pixdesc.h HAVE_FMT_DESC_GET)
 if (HAVE_FMT_DESC_GET)
   add_definitions(-DHAVE_FMT_DESC_GET)
 endif()
+if (ARAVIS_VERSION VERSION_LESS "0.3.5")
+  add_definitions(-DARAVIS_OLD_BUFFER)
+endif()
 
 set_prefixed(qarv_UIS_pre src/
   mainwindow.ui

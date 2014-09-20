@@ -681,7 +681,12 @@ void QArvMainWindow::takeNextFrame() {
       recorder->recordFrame(currentRawFrame, currentFrame);
       if (recorder->isOK()) {
         if (timestampFile.isOpen()) {
-          quint64 ts = currentArvFrame->timestamp_ns;
+          quint64 ts;
+#ifdef ARAVIS_OLD_BUFFER
+          ts = currentArvFrame->timestamp_ns;
+#else
+          ts = arv_buffer_get_timestamp(currentArvFrame);
+#endif
           timestampFile.write(QString::number(ts).toAscii());
           timestampFile.write("\n");
         }
