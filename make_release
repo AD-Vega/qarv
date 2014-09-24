@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+version=$1
+[[ -z "$version" ]] && exit 1
+
+name=qarv-$version
+git archive --prefix=$name/ --output=$name.tar $name
+xz -9 $name.tar
