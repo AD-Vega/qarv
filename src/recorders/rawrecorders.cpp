@@ -112,6 +112,7 @@ public:
         frameBytes = size.width()*size.height()*3;
         break;
       default:
+        OK = false;
         logMessage() << "Recorder: Invalid CV image format";
         return;
       }
@@ -182,6 +183,7 @@ public:
         frameBytes = size.width()*size.height()*6;
         break;
       default:
+        OK = false;
         logMessage() << "Recorder: Invalid CV image format";
         return;
       }

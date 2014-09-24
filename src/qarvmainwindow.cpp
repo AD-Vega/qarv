@@ -18,6 +18,7 @@
  */
 
 #include "qarvmainwindow.h"
+#include "decoders/unsupported.h"
 
 #include "globals.h"
 #include <QNetworkInterface>
@@ -734,8 +735,11 @@ void QArvMainWindow::startVideo(bool start) {
         message = message.arg(camera->getPixelFormat());
         logMessage() << message;
         statusBar()->showMessage(message, statusTimeoutMsec);
+        if (standalone)
+          decoder = new Unsupported(camera->getPixelFormatId(),
+                                    camera->getFrameSize());
       }
-      else {
+      if (decoder != NULL) {
         camera->setFrameQueueSize(streamFramesSpinbox->value());
         camera->startAcquisition();
         started = true;
