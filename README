@@ -65,10 +65,11 @@ For a programmer, qarv provides:
       the qarv GUI and generate a QArvDecoder for decoding the frames.
 
     - All of this is provided as libqarv, with headers installed in a
-      standard location, such as /usr/include/qarv-0/.
+      standard location, such as /usr/include/qarv-1/.
 
-Homepage: http://gitorious.org/adv-staging/qarv
-Aravis: https://live.gnome.org/Aravis
+Homepage:   http://www.ad-vega.si/software/qarv
+Repository: http://gitorious.org/adv/qarv/
+Aravis:     https://live.gnome.org/Aravis
 
 
 REQUIREMENTS AND INSTALLATION
@@ -112,4 +113,4 @@ information.
 
 The qarv icon itself is derived from the oxygen theme as well.
 
-Copyright 2012, 2013 Jure Varlec
+Copyright 2012-2014 Jure Varlec
