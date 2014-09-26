@@ -94,6 +94,7 @@ set_prefixed(qarv_SRCS src/
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono12packed.h
   monounpackeddecoders.h
+  bayer.h
 )
 qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
@@ -101,6 +102,7 @@ set_prefixed(qarv_decoders_SRC src/decoders/
   mono12packed.cpp
   monounpackeddecoders.cpp
   swscaledecoder.cpp
+  bayer.cpp
 )
 set_prefixed(qarv_recorders_MOCS src/recorders/
   rawrecorders.h
