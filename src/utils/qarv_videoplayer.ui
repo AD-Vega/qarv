@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>QArv Video Player</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../res/icons/icons.qrc">
+    <normaloff>:/icons/qarv.svgz</normaloff>:/icons/qarv.svgz</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QArv::GLVideoWidget" name="videoWidget" native="true">
