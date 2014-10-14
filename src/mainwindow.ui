@@ -815,6 +815,9 @@
            <string>Video</string>
           </property>
           <layout class="QFormLayout" name="formLayout_6">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::ExpandingFieldsGrow</enum>
+           </property>
            <item row="0" column="0">
             <widget class="QLabel" name="label_12">
              <property name="text">
@@ -894,6 +897,83 @@
               <string>Dump camera settings along with the video</string>
              </property>
             </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Stop recording:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QRadioButton" name="stopRecordingManuallyRadio">
+             <property name="toolTip">
+              <string>Recording will not be stopped automatically.</string>
+             </property>
+             <property name="text">
+              <string>Manually</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">stopRecordingRadios</string>
+             </attribute>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QRadioButton" name="stopRecordingFramesRadio">
+               <property name="toolTip">
+                <string>Recording will be stopped when the specified number of frames is recorded.</string>
+               </property>
+               <property name="text">
+                <string>After this many frames:</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">stopRecordingRadios</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="stopRecordingFrames">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="7" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
+             <item>
+              <widget class="QRadioButton" name="stopRecordingTimeRadio">
+               <property name="toolTip">
+                <string>Recording will be stopped when the specified amount of time elapses. Time is specified as hours:minutes:seconds.</string>
+               </property>
+               <property name="text">
+                <string>After this much time:</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">stopRecordingRadios</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QTimeEdit" name="stopRecordingTime">
+               <property name="displayFormat">
+                <string>HH:mm:ss</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -1347,5 +1427,6 @@
  </connections>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="stopRecordingRadios"/>
  </buttongroups>
 </ui>

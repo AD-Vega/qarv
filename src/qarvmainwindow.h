@@ -136,6 +136,7 @@ private:
   QLabel* recordingTimeLabel;
   QTime recordingTime;
   int recordingTimeCumulative;
+  int recordedFrames;
 
   friend class ::QArvGui;
 };

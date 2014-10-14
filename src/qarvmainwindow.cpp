@@ -682,6 +682,7 @@ void QArvMainWindow::takeNextFrame() {
     if (recording && standalone) {
       recorder->recordFrame(currentRawFrame, currentFrame);
       if (recorder->isOK()) {
+        recordedFrames++;
         if (timestampFile.isOpen()) {
           quint64 ts;
 #ifdef ARAVIS_OLD_BUFFER
@@ -691,6 +692,11 @@ void QArvMainWindow::takeNextFrame() {
 #endif
           timestampFile.write(QString::number(ts).toAscii());
           timestampFile.write("\n");
+        }
+        if (stopRecordingFramesRadio->isChecked() &&
+            recordedFrames >= stopRecordingFrames->value()) {
+          recordAction->setChecked(false);
+          closeFileAction->trigger();
         }
       } else {
         auto message = tr("Recording plugin failed, stopped recording.");
@@ -876,6 +882,7 @@ skip_all_file_opening:
   }
 
   if (recording) {
+      recordedFrames = 0;
       recordingTime.start();
       updateRecordingTime();
   } else {
@@ -1247,6 +1254,11 @@ void QArvMainWindow::setupListOfSavedWidgets() {
   saved_widgets["qarv_recording/write_info"] = recordInfoCheck;
   saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
   saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
+  saved_widgets["qarv_recording/stop_manually"] = stopRecordingManuallyRadio;
+  saved_widgets["qarv_recording/stop_frames"] = stopRecordingFramesRadio;
+  saved_widgets["qarv_recording/stop_time"] = stopRecordingTimeRadio;
+  saved_widgets["qarv_recording/stop_frames_value"] = stopRecordingFrames;
+  saved_widgets["qarv_recording/stop_time_value"] = stopRecordingTime;
 
   // display widgets
   saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;
@@ -1272,6 +1284,8 @@ void QArvMainWindow::saveProgramSettings() {
       settings.setValue(i.key(), w->text());
     else if (auto *w = qobject_cast<QSpinBox*>(widget))
       settings.setValue(i.key(), w->value());
+    else if (auto *w = qobject_cast<QTimeEdit*>(widget))
+      settings.setValue(i.key(), w->time());
     else
       logMessage() << "FIXME: don't know what to save under setting" << i.key();
   }
@@ -1300,6 +1314,8 @@ void QArvMainWindow::restoreProgramSettings() {
       w->setText(data.toString());
     else if (auto *w = qobject_cast<QSpinBox*>(widget))
       w->setValue(data.toInt());
+    else if (auto* w = qobject_cast<QTimeEdit*>(widget))
+      w->setTime(data.toTime());
     else
       logMessage() << "FIXME: don't know how to restore setting" << i.key();
   }
@@ -1341,6 +1357,13 @@ void QArvMainWindow::updateRecordingTime()
     }
     recordingTimeLabel->setText(msg);
     QTimer::singleShot(1000, this, SLOT(updateRecordingTime()));
+    QTime elapsed(h, m, s, 99);
+    if (recording &&
+        stopRecordingTimeRadio->isChecked() &&
+        elapsed >= stopRecordingTime->time()) {
+      recordAction->setChecked(false);
+      closeFileAction->trigger();
+    }
   }
 }
 
