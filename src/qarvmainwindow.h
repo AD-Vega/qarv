@@ -104,6 +104,7 @@ private slots:
   void restoreProgramSettings();
   void frameRendered();
   void updateRecordingTime();
+  void bufferUnderrunOccured();
 
 private:
   void readROILimits();

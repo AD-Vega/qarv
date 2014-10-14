@@ -201,6 +201,8 @@ public:
 signals:
   //! Emitted when a new frame is ready.
   void frameReady();
+  //! Emitted when a buffer underrun occurs.
+  void bufferUnderrun();
 
 private:
   QArvCameraExtension* ext;

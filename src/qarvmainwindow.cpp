@@ -364,6 +364,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     delete camera;
   }
   camera = new QArvCamera(camid, this);
+  this->connect(camera, SIGNAL(bufferUnderrun()), SLOT(bufferUnderrunOccured()));
   this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
 
   logMessage() << "Pixel formats:" << camera->getPixelFormats();
@@ -1341,4 +1342,11 @@ void QArvMainWindow::updateRecordingTime()
     recordingTimeLabel->setText(msg);
     QTimer::singleShot(1000, this, SLOT(updateRecordingTime()));
   }
+}
+
+void QArvMainWindow::bufferUnderrunOccured()
+{
+    QString msg = tr("Buffer underrun!");
+    logMessage() << msg;
+    statusBar()->showMessage(msg, statusTimeoutMsec);
 }

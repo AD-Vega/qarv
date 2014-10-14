@@ -34,7 +34,12 @@ extern "C" {
 
 using namespace QArv;
 
-class QArvCamera::QArvCameraExtension {};
+class QArvCamera::QArvCameraExtension {
+  friend class QArvCamera;
+
+private:
+  qint64 underruns;
+};
 
 QList<QArvCameraId> QArvCamera::cameraList;
 
@@ -287,6 +292,12 @@ void QArvCamera::swapBuffers() {
   arv_stream_push_buffer(stream, currentFrame);
   currentFrame = arv_stream_pop_buffer(stream);
   emit frameReady();
+  guint64 under;
+  arv_stream_get_statistics(stream, NULL, NULL, &under);
+  if (under != ext->underruns) {
+    ext->underruns = under;
+    emit bufferUnderrun();
+  }
 }
 
 //! A wrapper that calls cam's private callback to accept frames.
@@ -310,6 +321,7 @@ void QArvCamera::startAcquisition() {
   }
   arv_camera_start_acquisition(camera);
   acquiring = true;
+  ext->underruns = 0;
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
