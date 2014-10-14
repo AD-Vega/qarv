@@ -1,6 +1,6 @@
 project(qarv)
 cmake_minimum_required(VERSION 2.8)
-set(qarv_VERSION 1.0.0)
+set(qarv_VERSION 1.0.99)
 set(qarv_ABI 1)
 set(qarv_API 1)
 
