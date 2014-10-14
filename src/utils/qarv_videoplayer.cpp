@@ -1,7 +1,7 @@
 /*
     QArv, a Qt interface to aravis.
-    Copyright (C) 2012, 2013 Jure Varlec <jure.varlec@ad-vega.si>
-                             Andrej Lajovic <andrej.lajovic@ad-vega.si>
+    Copyright (C) 2012-2014 Jure Varlec <jure.varlec@ad-vega.si>
+                            Andrej Lajovic <andrej.lajovic@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -89,9 +89,9 @@ bool QArvVideoPlayer::open(QString filename) {
 
 void QArvVideoPlayer::on_playButton_toggled(bool checked) {
   if (checked) {
-    readNextFrame();
     showTimer->setInterval(1000 / fpsSpinbox->value());
     showTimer->start();
+    readNextFrame();
   } else {
     showTimer->stop();
   }
