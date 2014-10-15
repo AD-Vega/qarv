@@ -38,7 +38,7 @@ class QArvCamera::QArvCameraExtension {
   friend class QArvCamera;
 
 private:
-  qint64 underruns;
+  guint64 underruns;
 };
 
 QList<QArvCameraId> QArvCamera::cameraList;
