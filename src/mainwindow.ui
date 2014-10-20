@@ -484,90 +484,86 @@
        <attribute name="title">
         <string>Settings</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_10">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
-          <item>
-           <widget class="QGroupBox" name="transformBox">
-            <property name="title">
-             <string>Transform image</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <widget class="QCheckBox" name="invertColors">
-               <property name="text">
-                <string>Invert colors</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="flipHorizontal">
-               <property name="text">
-                <string>Flip horizontally</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="flipVertical">
-               <property name="text">
-                <string>Flip vertically</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="rotationSelector"/>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="miscBox">
-            <property name="title">
-             <string>Miscellaneous image settings</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_7">
-             <item>
-              <widget class="QCheckBox" name="dropInvalidFrames">
-               <property name="toolTip">
-                <string>Invalid frames will not be recorded and will be displayed as pure red.</string>
-               </property>
-               <property name="text">
-                <string>Drop incomplete/invalid frames</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="markClipped">
-               <property name="toolTip">
-                <string>Overexposed pixels are colored pink.</string>
-               </property>
-               <property name="text">
-                <string>Mark clipped highlights</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="useFastInterpolator">
-               <property name="toolTip">
-                <string>Only affects certain pixel formats. Colors are calculated using a less exact interpolation.</string>
-               </property>
-               <property name="text">
-                <string>Use fast color approximation</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="transformBox">
+          <property name="title">
+           <string>Transform image</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QCheckBox" name="invertColors">
+             <property name="text">
+              <string>Invert colors</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="flipHorizontal">
+             <property name="text">
+              <string>Flip horizontally</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="flipVertical">
+             <property name="text">
+              <string>Flip vertically</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="rotationSelector"/>
+           </item>
+          </layout>
+         </widget>
         </item>
-        <item>
+        <item row="0" column="1" colspan="2">
+         <widget class="QGroupBox" name="miscBox">
+          <property name="title">
+           <string>Miscellaneous image settings</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="QCheckBox" name="dropInvalidFrames">
+             <property name="toolTip">
+              <string>Invalid frames will not be recorded and will be displayed as pure red.</string>
+             </property>
+             <property name="text">
+              <string>Drop incomplete/invalid frames</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="markClipped">
+             <property name="toolTip">
+              <string>Overexposed pixels are colored pink.</string>
+             </property>
+             <property name="text">
+              <string>Mark clipped highlights</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="useFastInterpolator">
+             <property name="toolTip">
+              <string>Only affects certain pixel formats. Colors are calculated using a less exact interpolation.</string>
+             </property>
+             <property name="text">
+              <string>Use fast color approximation</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
          <widget class="QGroupBox" name="settingsBox">
           <property name="title">
            <string>Program settings</string>
@@ -690,18 +686,60 @@
           </layout>
          </widget>
         </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="1" column="2">
+         <widget class="QGroupBox" name="postprocBox">
+          <property name="title">
+           <string>Image postprocessing chain</string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>175</height>
-           </size>
-          </property>
-         </spacer>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <item>
+              <widget class="QToolButton" name="postprocAddButton">
+               <property name="text">
+                <string>Add filter...</string>
+               </property>
+               <property name="popupMode">
+                <enum>QToolButton::InstantPopup</enum>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextOnly</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="postprocRemoveButton">
+               <property name="text">
+                <string>Remove filter</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListView" name="postprocList">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="dragEnabled">
+              <bool>true</bool>
+             </property>
+             <property name="dragDropMode">
+              <enum>QAbstractItemView::InternalMove</enum>
+             </property>
+             <property name="defaultDropAction">
+              <enum>Qt::MoveAction</enum>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="movement">
+              <enum>QListView::Free</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1426,7 +1464,7 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="stopRecordingRadios"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

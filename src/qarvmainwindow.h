@@ -32,6 +32,7 @@
 #include <QTime>
 #include <QFile>
 #include <QTransform>
+#include <QStandardItemModel>
 #include <QFutureWatcher>
 
 class QArvGui;
@@ -89,6 +90,8 @@ private slots:
   void on_histogramUpdateSpinbox_valueChanged(int i);
   void on_statusTimeoutSpinbox_valueChanged(int i);
   void on_videoFormatSelector_currentIndexChanged(int i);
+  void on_postprocRemoveButton_clicked(bool checked);
+  void on_postprocList_doubleClicked(const QModelIndex & index);
   void pickedROI(QRect roi);
   void readExposure();
   void readGain();
@@ -105,6 +108,7 @@ private slots:
   void frameRendered();
   void updateRecordingTime();
   void bufferUnderrunOccured();
+  void addPostprocFilter();
 
 private:
   void readROILimits();
@@ -137,6 +141,7 @@ private:
   QTime recordingTime;
   int recordingTimeCumulative;
   int recordedFrames;
+  QStandardItemModel postprocChain;
 
   friend class ::QArvGui;
 };

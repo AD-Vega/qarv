@@ -73,6 +73,7 @@ set_prefixed(qarv_MOCS src/
   api/qarvgui.h
   api/qarvcamera.h
   api/qarvcameradelegate.h
+  filters/filter.h
 )
 qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/
@@ -85,6 +86,7 @@ set_prefixed(qarv_SRCS src/
   qarvfeaturetree.cpp
   api/qarvtype.cpp
   recorders/recorder.cpp
+  filters/filter.cpp
   api/qarvgui.cpp
   api/qarvcamera.cpp
   api/qarvdecoder.cpp
@@ -116,11 +118,25 @@ set_prefixed(qarv_recorders_SRC src/recorders/
   gstrecorder_implementation.cpp
   imagerecorder.cpp
 )
+set_prefixed(qarv_filters_MOCS src/filters/
+  levels.h
+)
+qt4_wrap_cpp(qarv_filters_MOCD ${qarv_filters_MOCS})
+set_prefixed(qarv_filters_SRC src/filters/
+  levels.cpp
+)
+set_prefixed(qarv_filters_UIS_pre src/filters/
+  levels.ui
+)
+qt4_wrap_ui(qarv_filters_UIS ${qarv_filters_UIS_pre})
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 
 set(libqarv "qarv-${qarv_API}")
 add_library(${libqarv} SHARED
+  ${qarv_filters_MOCD}
+  ${qarv_filters_SRC}
+  ${qarv_filters_UIS}
   ${qarv_recorders_MOCD}
   ${qarv_recorders_SRC}
   ${qarv_decoders_SRC}

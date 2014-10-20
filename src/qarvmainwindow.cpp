@@ -17,10 +17,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qarvmainwindow.h"
-#include "decoders/unsupported.h"
-
 #include "globals.h"
+#include "qarvmainwindow.h"
+#include "api/qarvcameradelegate.h"
+#include "getmtu_linux.h"
+#include "decoders/unsupported.h"
+#include "filters/filter.h"
+
 #include <QNetworkInterface>
 #include <QFileInfo>
 #include <QFileDialog>
@@ -35,19 +38,12 @@
 #include <QMenu>
 #include <QToolButton>
 
-#include <type_traits>
-
-#include "api/qarvcameradelegate.h"
-#include "getmtu_linux.h"
-#include "globals.h"
 
 extern "C" {
   #include <arvbuffer.h>
 }
 
 using namespace QArv;
-
-const int slidersteps = 1000;
 
 QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), decoder(NULL), playing(false),
@@ -141,6 +137,22 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   toolbutton->setText(tr("Subwindows"));
   subwindowToolbar->addWidget(toolbutton);
 
+  // Setup the postproc filter menu
+  auto plugins = QPluginLoader::staticInstances();
+  auto postprocMenu = new QMenu;
+  foreach (auto plugin, plugins) {
+    auto filterPlugin = qobject_cast<ImageFilterPlugin*>(plugin);
+    if (filterPlugin != NULL) {
+      auto action = new QAction(filterPlugin->name(), this);
+      action->setData(QVariant::fromValue(filterPlugin));
+      connect(action, SIGNAL(triggered(bool)), SLOT(addPostprocFilter()));
+      postprocMenu->addAction(action);
+    }
+  }
+  postprocAddButton->setMenu(postprocMenu);
+  postprocChain.setColumnCount(1);
+  postprocList->setModel(&postprocChain);
+
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
   this->connect(autoreadexposure, SIGNAL(timeout()), SLOT(readExposure()));
@@ -182,7 +194,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     snapshotAction->setEnabled(false);
   }
 
-  auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
     auto fmt = qobject_cast<OutputFormat*>(plugin);
     if (fmt != NULL)
@@ -264,19 +275,6 @@ void QArvMainWindow::on_unzoomButton_toggled(bool checked) {
     QApplication::flush();
     on_videodock_topLevelChanged(videodock->isFloating());
   }
-}
-
-static inline double slider2value_log(int slidervalue,
-                                      QPair<double, double>& range) {
-  double value = log2(range.second) - log2(range.first);
-  return exp2(value * slidervalue / slidersteps + log2(range.first));
-}
-
-static inline int value2slider_log(double value,
-                                   QPair<double, double>& range) {
-  return slidersteps
-         * (log2(value) - log2(range.first))
-         / (log2(range.second) - log2(range.first));
 }
 
 static inline double slider2value(int slidervalue,
@@ -640,6 +638,15 @@ void QArvMainWindow::takeNextFrame() {
                                            invertColors->isChecked(),
                                            imageTransform_flip,
                                            imageTransform_rot);
+    int imageType = currentFrame.type();
+    for (int row = 0, rows = postprocChain.rowCount(); row < rows; ++row) {
+      auto item = postprocChain.item(row);
+      if (item->checkState() == Qt::Checked) {
+        auto filter = var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
+        filter->filterImage(currentFrame);
+      }
+    }
+    currentFrame.convertTo(currentFrame, imageType);
 
     if ((playing || drawHistogram) && !futureRender.isRunning()) {
       Histograms* hists;
@@ -1332,6 +1339,32 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
   }
 }
 
+void QArvMainWindow::on_postprocRemoveButton_clicked(bool checked) {
+  auto item = postprocChain.itemFromIndex(postprocList->currentIndex());
+  auto editor = var2ptr<ImageFilterSettingsDialog>(item->data(Qt::UserRole + 2));
+  if (editor) {
+    editor->close();
+    editor->deleteLater();
+  }
+  delete var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
+  postprocChain.removeRow(postprocList->currentIndex().row());
+}
+
+void QArvMainWindow::on_postprocList_doubleClicked(const QModelIndex& index) {
+  auto item = postprocChain.itemFromIndex(index);
+  auto editor = var2ptr<ImageFilterSettingsDialog>(item->data(Qt::UserRole + 2));
+  if (!editor) {
+    auto filter = var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
+    editor = new ImageFilterSettingsDialog(filter->createSettingsWidget());
+    editor->setWindowTitle(item->text());
+    item->setData(ptr2var(editor), Qt::UserRole + 2);
+    addDockWidget(Qt::RightDockWidgetArea, editor);
+    editor->setFloating(true);
+  }
+  editor->show();
+  editor->setFocus();
+}
+
 void QArvMainWindow::updateRecordingTime()
 {
   if (!recordingTime.isNull()) {
@@ -1372,4 +1405,27 @@ void QArvMainWindow::bufferUnderrunOccured()
     QString msg = tr("Buffer underrun!");
     logMessage() << msg;
     statusBar()->showMessage(msg, statusTimeoutMsec);
+}
+
+void QArvMainWindow::addPostprocFilter()
+{
+  auto action = qobject_cast<QAction*>(sender());
+  QString label = action->text();
+  QString labelFmt = label + " %1";
+  int count = 2;
+  while (!postprocChain.findItems(label).isEmpty()) {
+    label = labelFmt.arg(count++);
+  }
+  auto item = new QStandardItem(label);
+  item->setFlags(Qt::ItemIsDragEnabled
+                 | Qt::ItemIsSelectable
+                 | Qt::ItemIsUserCheckable
+                 | Qt::ItemIsEnabled);
+  item->setCheckState(Qt::Unchecked);
+  auto plugin = action->data().value<ImageFilterPlugin*>();
+  auto filter = plugin->makeFilter();
+  filter->restoreSettings();
+  item->setData(ptr2var(filter), Qt::UserRole + 1);
+  item->setData(ptr2var<ImageFilterSettingsDialog>(NULL), Qt::UserRole + 2);
+  postprocChain.appendRow(item);
 }
