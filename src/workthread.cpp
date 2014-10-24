@@ -82,6 +82,7 @@ bool Workthread::cookFrame(int queueMax,
   cooker->decoder = decoder;
   cooker->imageTransform_invert = imageTransform_invert;
   cooker->imageTransform_flip = imageTransform_flip;
+  cooker->imageTransform_rot = imageTransform_rot;
   cooker->filterChain = filterChain;
   cooker->recorder = recorder;
   cooker->busy = true;
