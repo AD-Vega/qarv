@@ -223,6 +223,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
 QArvMainWindow::~QArvMainWindow() {
   on_closeFileAction_triggered(true);
+  startVideo(false);
   saveProgramSettings();
 }
 
@@ -638,7 +639,9 @@ void QArvMainWindow::startVideo(bool start) {
         pixelFormatSelector->setEnabled(false);
       }
     } else if (!start && started) {
-      QApplication::processEvents();
+      do {
+        QApplication::processEvents();
+      } while (workthread->isBusy());
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
       decoder = NULL;
@@ -1045,6 +1048,9 @@ void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
 }
 
 void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
+  do {
+    QApplication::processEvents();
+  } while (workthread->isBusy());
   recorder.reset();
   timestampFile.close();
   closeFileAction->setEnabled(recording);
