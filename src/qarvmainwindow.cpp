@@ -64,6 +64,10 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   aboutLabel->setText(aboutLabel->text().arg(QARV_VERSION));
 
+  workthread = new Workthread(this);
+  connect(workthread, SIGNAL(frameCooked(cv::Mat)), SLOT(frameProcessed(cv::Mat)));
+  connect(workthread, SIGNAL(frameRendered()), SLOT(frameRendered()));
+
   // Setup theme icons if available.
   bool usingFallbackIcons = false;
   QMap<QAbstractButton*, QString> icons;
@@ -184,7 +188,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
                 SLOT(updateImageTransform()));
   this->connect(flipVertical, SIGNAL(stateChanged(int)),
                 SLOT(updateImageTransform()));
-  connect(&futureRender, SIGNAL(finished()), SLOT(frameRendered()));
 
   if (!standalone) {
     setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
@@ -506,124 +509,8 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
   startVideo(tostart);
 }
 
-cv::Mat transformImage(cv::Mat img,
-                    bool imageTransform_invert,
-                    int imageTransform_flip,
-                    int imageTransform_rot) {
-  if (imageTransform_invert) {
-    int bits = img.depth() == CV_8U ? 8 : 16;
-    cv::subtract((1 << bits) - 1, img, img);
-  }
-
-  if (imageTransform_flip != -100)
-    cv::flip(img, img, imageTransform_flip);
-
-  switch (imageTransform_rot) {
-  case 1:
-    cv::transpose(img, img);
-    cv::flip(img, img, 0);
-    break;
-  case 2:
-    cv::flip(img, img, -1);
-    break;
-  case 3:
-    cv::transpose(img, img);
-    cv::flip(img, img, 1);
-    break;
-  }
-  return img;
-}
-
-cv::Mat decodeAndTransformFrame(QByteArray frame,
-                                QArvDecoder* decoder,
-                                bool imageTransform_invert,
-                                int imageTransform_flip,
-                                int imageTransform_rot) {
-  decoder->decode(frame);
-  return transformImage(decoder->getCvImage(), imageTransform_invert,
-                        imageTransform_flip, imageTransform_rot);
-}
-
-// Interestingly, QtConcurrent::run cannot take reference arguments.
-template<bool grayscale, bool depth8>
-void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
-                 Histograms* hists = NULL, bool logarithmic = false) {
-  typedef typename ::std::conditional<depth8, uint8_t, uint16_t>::type ImageType;
-  float * histRed, * histGreen, * histBlue;
-  if (hists) {
-    histRed = hists->red;
-    histGreen = hists->green;
-    histBlue = hists->blue;
-    for (int i = 0; i < 256; i++) {
-      histRed[i] = histGreen[i] = histBlue[i] = 0;
-    }
-  } else {
-    histRed = histGreen = histBlue = NULL;
-  }
-  QImage& image = *image_;
-  const int h = frame.rows, w = frame.cols;
-  QSize s = image.size();
-  if (s.height() != h
-      || s.width() != w
-      || image.format() != QImage::Format_ARGB32_Premultiplied)
-    image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
-  if (!grayscale) {
-    float* histograms[3] = { histRed, histGreen, histBlue };
-    for (int i = 0; i < h; i++) {
-      auto imgLine = image.scanLine(i);
-      auto imageLine = frame.ptr<cv::Vec<ImageType, 3> >(i);
-      for (int j = 0; j < w; j++) {
-        auto& bgr = imageLine[j];
-        bool clipped = false;
-        for (int px = 0; px < 3; px++) {
-          uint8_t tmp = depth8 ? bgr[2-px] : bgr[2-px] >> 8;
-          if (hists)
-            histograms[px][tmp]++;
-          clipped = clipped || tmp == 255;
-          imgLine[4*j + 2 - px] = tmp;
-        }
-        imgLine[4*j + 3] = 255;
-        if (clipped && markClipped) {
-          imgLine[4*j + 0] = 255;
-          imgLine[4*j + 1] = 0;
-          imgLine[4*j + 2] = 200;
-        }
-      }
-    }
-    if (hists && logarithmic) {;
-      for (int c = 0; c < 3; c++)
-        for (int i = 0; i < 256; i++) {
-          float* h = histograms[c] + i;
-          *h = log2(*h + 1);
-        }
-    }
-  } else {
-    for (int i = 0; i < h; i++) {
-      auto imgLine = image.scanLine(i);
-      auto imageLine = frame.ptr<ImageType>(i);
-      for (int j = 0; j < w; j++) {
-        uint8_t gray = depth8 ? imageLine[j] : imageLine[j] >> 8;
-        if (hists)
-          histRed[gray]++;
-        if (gray == 255 && markClipped) {
-          imgLine[4*j + 0] = 255;
-          imgLine[4*j + 1] = 0;
-          imgLine[4*j + 2] = 200;
-        } else {
-          for (int px = 0; px < 3; px++) {
-            imgLine[4*j + px] = gray;
-          }
-        }
-        imgLine[4*j + 3] = 255;
-      }
-    }
-    if (hists && logarithmic)
-      for (int i = 0; i < 256; i++)
-        histRed[i] = log2(histRed[i] + 1);
-  }
-}
-
 void QArvMainWindow::takeNextFrame() {
+  framecounter++;
   if (playing || recording) {
     currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
                                        nocopyCheck->isChecked(),
@@ -634,87 +521,75 @@ void QArvMainWindow::takeNextFrame() {
       return ;
     }
 
-    currentFrame = decodeAndTransformFrame(currentRawFrame, decoder,
-                                           invertColors->isChecked(),
-                                           imageTransform_flip,
-                                           imageTransform_rot);
-    int imageType = currentFrame.type();
+    // TODO: only do this on dataChanged()
+    postprocChainAsList.clear();
     for (int row = 0, rows = postprocChain.rowCount(); row < rows; ++row) {
       auto item = postprocChain.item(row);
       if (item->checkState() == Qt::Checked) {
         auto filter = var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
-        filter->filterImage(currentFrame);
+        postprocChainAsList << filter;
       }
     }
-    currentFrame.convertTo(currentFrame, imageType);
 
-    if ((playing || drawHistogram) && !futureRender.isRunning()) {
-      Histograms* hists;
-      if (drawHistogram) {
-        futureHoldsAHistogram = true;
-        drawHistogram = false;
-        hists = histogram->unusedHistograms();
-      } else {
-        hists = nullptr;
-      }
-      currentRendering = currentFrame.clone();
-      void (*theFunc) (const cv::Mat, QImage*, bool, QArv::Histograms*, bool);
-      switch (currentRendering.type()) {
-      case CV_16UC1:
-        theFunc = renderFrame<true, false>;
-        break;
-      case CV_16UC3:
-        theFunc = renderFrame<false, false>;
-        break;
-      case CV_8UC1:
-        theFunc = renderFrame<true, true>;
-        break;
-      case CV_8UC3:
-        theFunc = renderFrame<false, true>;
-        break;
-      default:
-        video->setImage(invalidImage);
-        logMessage() << "Invalid CV image format" << currentRendering.type();
-        statusBar()->showMessage(tr("Decoder problems!"), statusTimeoutMsec);
-        return;
-      }
-      futureRender.setFuture(QtConcurrent::run(theFunc,
-                                               currentRendering,
-                                               video->unusedFrame(),
-                                               markClipped->isChecked(),
-                                               hists,
-                                               histogramLog->isChecked()));
+    Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
+    bool running = workthread->cookFrame(currentRawFrame,
+                                         decoder,
+                                         invertColors->isChecked(),
+                                         imageTransform_flip,
+                                         imageTransform_rot,
+                                         postprocChainAsList,
+                                         myrecorder);
+    if (!running) {
+      QString msg = tr("Too slow, dropping frames!");
+      logMessage() << msg;
+      statusBar()->showMessage(msg, statusTimeoutMsec);
     }
+  }
+}
 
-    if (recording && standalone) {
-      recorder->recordFrame(currentRawFrame, currentFrame);
-      if (recorder->isOK()) {
-        recordedFrames++;
-        if (timestampFile.isOpen()) {
-          quint64 ts;
+void QArvMainWindow::frameProcessed(cv::Mat frame) {
+  currentFrame = frame;
+  if ((playing || drawHistogram)) {
+    Histograms* hists;
+    if (drawHistogram) {
+      futureHoldsAHistogram = true;
+      drawHistogram = false;
+      hists = histogram->unusedHistograms();
+    } else {
+      hists = nullptr;
+    }
+    workthread->renderFrame(currentFrame,
+                            video->unusedFrame(),
+                            markClipped->isChecked(),
+                            hists,
+                            histogramLog->isChecked());
+  }
+
+  if (recording && standalone) {
+    if (recorder->isOK()) {
+      recordedFrames++;
+      if (timestampFile.isOpen()) {
+        quint64 ts;
 #ifdef ARAVIS_OLD_BUFFER
-          ts = currentArvFrame->timestamp_ns;
+        ts = currentArvFrame->timestamp_ns;
 #else
-          ts = arv_buffer_get_timestamp(currentArvFrame);
+        ts = arv_buffer_get_timestamp(currentArvFrame);
 #endif
-          timestampFile.write(QString::number(ts).toAscii());
-          timestampFile.write("\n");
-        }
-        if (stopRecordingFramesRadio->isChecked() &&
-            recordedFrames >= stopRecordingFrames->value()) {
-          recordAction->setChecked(false);
-          closeFileAction->trigger();
-        }
-      } else {
-        auto message = tr("Recording plugin failed, stopped recording.");
-        statusBar()->showMessage(message, statusTimeoutMsec);
-        logMessage() << message;
+        timestampFile.write(QString::number(ts).toAscii());
+        timestampFile.write("\n");
+      }
+      if (stopRecordingFramesRadio->isChecked() &&
+          recordedFrames >= stopRecordingFrames->value()) {
         recordAction->setChecked(false);
         closeFileAction->trigger();
       }
+    } else {
+      auto message = tr("Recording plugin failed, stopped recording.");
+      statusBar()->showMessage(message, statusTimeoutMsec);
+      logMessage() << message;
+      recordAction->setChecked(false);
+      closeFileAction->trigger();
     }
-
-    framecounter++;
   }
 }
 
@@ -723,7 +598,7 @@ void QArvMainWindow::frameRendered() {
     video->swapFrames();
   if (futureHoldsAHistogram) {
     futureHoldsAHistogram = false;
-    histogram->swapHistograms(currentRendering.channels() == 1);
+    histogram->swapHistograms(currentFrame.channels() == 1);
   }
 }
 

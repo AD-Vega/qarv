@@ -17,6 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * ATTENTION!!!!
+ * The filter will run in a different thread than the GUI and must be
+ * written with this in mind, especially the live updates!
+ * It may not matter, however: e.g. the Levels plugin does not really care
+ * about partial parameter updates.
+ */
+
 #ifndef FILTER_H
 #define FILTER_H
 

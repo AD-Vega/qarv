@@ -24,6 +24,7 @@
 #include "ui_mainwindow.h"
 
 #include "glvideowidget.h"
+#include "workthread.h"
 #include "api/qarvcamera.h"
 #include "api/qarvdecoder.h"
 #include "recorders/recorder.h"
@@ -97,6 +98,7 @@ private slots:
   void readGain();
   void startVideo(bool start);
   void takeNextFrame();
+  void frameProcessed(cv::Mat frame);
   void updateBandwidthEstimation();
   void updateImageTransform();
   void showFPS();
@@ -131,10 +133,9 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
-  cv::Mat currentFrame, currentRendering;
+  cv::Mat currentFrame;
   QByteArray currentRawFrame;
   ArvBuffer* currentArvFrame;
-  QFutureWatcher<void> futureRender;
   bool futureHoldsAHistogram;
   QFile timestampFile;
   QLabel* recordingTimeLabel;
@@ -142,6 +143,8 @@ private:
   int recordingTimeCumulative;
   int recordedFrames;
   QStandardItemModel postprocChain;
+  QList<ImageFilter*> postprocChainAsList;
+  Workthread* workthread;
 
   friend class ::QArvGui;
 };

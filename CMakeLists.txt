@@ -69,6 +69,7 @@ set_prefixed(qarv_MOCS src/
   qarvmainwindow.h
   roicombobox.h
   globals.h
+  workthread.h
   api/qarvtype.h
   api/qarvgui.h
   api/qarvcamera.h
@@ -84,6 +85,7 @@ set_prefixed(qarv_SRCS src/
   globals.cpp
   roicombobox.cpp
   qarvfeaturetree.cpp
+  workthread.cpp
   api/qarvtype.cpp
   recorders/recorder.cpp
   filters/filter.cpp
