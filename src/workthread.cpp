@@ -25,19 +25,16 @@
 #include "recorders/recorder.h"
 #include <QThread>
 
+#include <QDebug>
+
 using namespace QArv;
 
 Workthread::Workthread(QObject* parent) : QObject(parent) {
   auto cookerThread = new QThread(this);
-  cooker1 = new Cooker;
-  cooker1->moveToThread(cookerThread);
-  connect(cookerThread, SIGNAL(finished()), cooker1, SLOT(deleteLater()));
-  connect(cooker1, SIGNAL(done()), SLOT(cookerFinished()));
-
-  cooker2 = new Cooker;
-  cooker2->moveToThread(cookerThread);
-  connect(cookerThread, SIGNAL(finished()), cooker2, SLOT(deleteLater()));
-  connect(cooker2, SIGNAL(done()), SLOT(cookerFinished()));
+  cooker = new Cooker;
+  cooker->moveToThread(cookerThread);
+  connect(cookerThread, SIGNAL(finished()), cooker, SLOT(deleteLater()));
+  connect(cooker, SIGNAL(done()), SLOT(cookerFinished()));
 
   cookerThread->setObjectName("QArv Cooker");
   cookerThread->start();
@@ -53,7 +50,7 @@ Workthread::Workthread(QObject* parent) : QObject(parent) {
 }
 
 Workthread::~Workthread() {
-  auto cookerThread = cooker1->thread();
+  auto cookerThread = cooker->thread();
   auto rendererThread = renderer->thread();
   cookerThread->quit();
   rendererThread->quit();
@@ -62,42 +59,33 @@ Workthread::~Workthread() {
 }
 
 bool Workthread::isBusy() {
-  return cooker1->busy || cooker2->busy
-         || cooker1->scheduled || cooker2->scheduled
-         || renderer->busy;
+  return cooker->busy || renderer->busy;
 }
 
-bool Workthread::cookFrame(QByteArray frame,
+bool Workthread::cookFrame(int queueMax,
+                           QByteArray frame,
                            QArvDecoder* decoder,
                            bool imageTransform_invert,
                            int imageTransform_flip,
                            int imageTransform_rot,
                            QList<ImageFilterPtr> filterChain,
                            Recorder* recorder) {
-  Cooker* cooker;
-  bool shouldStart;
-  if (!cooker1->busy && !cooker1->scheduled) {
-    cooker = cooker1;
-    shouldStart = !cooker2->busy;
-  } else if (!cooker2->busy && !cooker2->scheduled) {
-    cooker = cooker2;
-    shouldStart = !cooker1->busy;
-  } else {
-    return false;
+  if (cooker->busy) {
+    if (queue.size() < queueMax) {
+      queue.enqueue(frame);
+      return true;
+    } else {
+      return false;
+    }
   }
-
   cooker->frame = frame;
   cooker->decoder = decoder;
   cooker->imageTransform_invert = imageTransform_invert;
   cooker->imageTransform_flip = imageTransform_flip;
   cooker->filterChain = filterChain;
   cooker->recorder = recorder;
-  if (shouldStart) {
-    cooker->busy = true;
-    QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
-  } else {
-    cooker->scheduled = true;
-  }
+  cooker->busy = true;
+  QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
   return true;
 }
 
@@ -119,14 +107,12 @@ bool Workthread::renderFrame(const cv::Mat frame,
 
 void Workthread::cookerFinished() {
   auto cooker = qobject_cast<Cooker*>(sender());
-  cooker->busy = cooker->scheduled = false;
-  if (cooker1->scheduled) {
-    cooker1->busy = true;
-    QMetaObject::invokeMethod(cooker1, "start", Qt::QueuedConnection);
-  }
-  if (cooker2->scheduled) {
-    cooker2->busy = true;
-    QMetaObject::invokeMethod(cooker2, "start", Qt::QueuedConnection);
+  auto frame = cooker->processedFrame;
+  if (!queue.empty()) {
+    cooker->frame = queue.dequeue();
+    QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
+  } else {
+    cooker->busy = false;
   }
   emit frameCooked(cooker->processedFrame);
 }

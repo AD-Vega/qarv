@@ -523,7 +523,8 @@ void QArvMainWindow::takeNextFrame() {
     }
 
     Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
-    bool running = workthread->cookFrame(currentRawFrame,
+    bool running = workthread->cookFrame(streamFramesSpinbox->value(),
+                                         currentRawFrame,
                                          decoder,
                                          invertColors->isChecked(),
                                          imageTransform_flip,

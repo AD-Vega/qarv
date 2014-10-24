@@ -29,6 +29,7 @@
 
 #include "filters/filter.h"
 #include <QImage>
+#include <QQueue>
 #include <opencv2/core/core.hpp>
 
 class QArvDecoder;
@@ -61,7 +62,7 @@ private:
   Recorder* recorder;
 
   cv::Mat processedFrame;
-  bool busy = false, scheduled = false;
+  bool busy = false;
 };
 
 class Renderer: public QObject {
@@ -95,7 +96,8 @@ public:
 
   // These two return false if the corresponding threads are busy and
   // work cannot be started.
-  bool cookFrame(QByteArray rawFrame,
+  bool cookFrame(int queueMax,
+                 QByteArray rawFrame,
                  QArvDecoder* decoder,
                  bool imageTransform_invert,
                  int imageTransform_flip,
@@ -118,8 +120,9 @@ private slots:
   void rendererFinished();
 
 private:
-  Cooker* cooker1, *cooker2;
+  Cooker* cooker;
   Renderer* renderer;
+  QQueue<QByteArray> queue;
 };
 
 };
