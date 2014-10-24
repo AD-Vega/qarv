@@ -60,6 +60,7 @@ private:
   Recorder* recorder;
 
   cv::Mat processedFrame;
+  bool busy = false, scheduled = false;
 };
 
 class Renderer: public QObject {
@@ -80,6 +81,8 @@ private:
   bool markClipped;
   Histograms* hists;
   bool logarithmic;
+
+  bool busy = false;
 };
 
 class Workthread: public QObject {
@@ -114,10 +117,8 @@ private slots:
   void rendererFinished();
 
 private:
-  Cooker* cooker;
+  Cooker* cooker1, *cooker2;
   Renderer* renderer;
-  bool cookerBusy = false,
-       rendererBusy = false;
 };
 
 };
