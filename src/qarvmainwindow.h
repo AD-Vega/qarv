@@ -1,7 +1,7 @@
 /*
     QArv, a Qt interface to aravis.
-    Copyright (C) 2012, 2013 Jure Varlec <jure.varlec@ad-vega.si>
-                             Andrej Lajovic <andrej.lajovic@ad-vega.si>
+    Copyright (C) 2012-2014 Jure Varlec <jure.varlec@ad-vega.si>
+                            Andrej Lajovic <andrej.lajovic@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -111,6 +111,7 @@ private slots:
   void updateRecordingTime();
   void bufferUnderrunOccured();
   void addPostprocFilter();
+  void updatePostprocQList();
 
 private:
   void readROILimits();
@@ -143,7 +144,7 @@ private:
   int recordingTimeCumulative;
   int recordedFrames;
   QStandardItemModel postprocChain;
-  QList<ImageFilter*> postprocChainAsList;
+  QList<ImageFilterPtr> postprocChainAsList;
   Workthread* workthread;
 
   friend class ::QArvGui;

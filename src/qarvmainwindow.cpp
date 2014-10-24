@@ -156,6 +156,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   postprocAddButton->setMenu(postprocMenu);
   postprocChain.setColumnCount(1);
   postprocList->setModel(&postprocChain);
+  connect(&postprocChain, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updatePostprocQList()));
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
@@ -519,16 +520,6 @@ void QArvMainWindow::takeNextFrame() {
       if (playing)
         video->setImage(invalidImage);
       return ;
-    }
-
-    // TODO: only do this on dataChanged()
-    postprocChainAsList.clear();
-    for (int row = 0, rows = postprocChain.rowCount(); row < rows; ++row) {
-      auto item = postprocChain.item(row);
-      if (item->checkState() == Qt::Checked) {
-        auto filter = var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
-        postprocChainAsList << filter;
-      }
     }
 
     Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
@@ -1222,12 +1213,15 @@ void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
 
 void QArvMainWindow::on_postprocRemoveButton_clicked(bool checked) {
   auto item = postprocChain.itemFromIndex(postprocList->currentIndex());
+  if (!item)
+    return;
   auto editor = var2ptr<ImageFilterSettingsDialog>(item->data(Qt::UserRole + 2));
   if (editor) {
     editor->close();
     editor->deleteLater();
   }
-  delete var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
+  // Once the row is removed, the filter itself will be deleted
+  // when all its shared pointers are gone.
   postprocChain.removeRow(postprocList->currentIndex().row());
 }
 
@@ -1309,4 +1303,28 @@ void QArvMainWindow::addPostprocFilter()
   item->setData(ptr2var(filter), Qt::UserRole + 1);
   item->setData(ptr2var<ImageFilterSettingsDialog>(NULL), Qt::UserRole + 2);
   postprocChain.appendRow(item);
+}
+
+void QArvMainWindow::updatePostprocQList() {
+    auto oldList = postprocChainAsList;
+    decltype(oldList) newList;
+    for (int row = 0, rows = postprocChain.rowCount(); row < rows; ++row) {
+      auto item = postprocChain.item(row);
+      if (item->checkState() == Qt::Checked) {
+        auto filter = var2ptr<ImageFilter>(item->data(Qt::UserRole + 1));
+        auto existing = ::std::find(oldList.begin(), oldList.end(), filter);
+        if (existing != oldList.end()) {
+          // Keep existing shared pointer.
+          newList << *existing;
+        } else {
+          // This is a new filter, allocate a new shared pointer.
+          newList << ImageFilterPtr(filter);
+        }
+      }
+    }
+    // This will delete all filters that have disappeared from
+    // the postprocChain. Because we use shared pointers, any
+    // that are still used by the filter will remain while the
+    // filter needs them.
+    postprocChainAsList = newList;
 }

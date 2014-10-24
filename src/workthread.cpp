@@ -72,7 +72,7 @@ bool Workthread::cookFrame(QByteArray frame,
                            bool imageTransform_invert,
                            int imageTransform_flip,
                            int imageTransform_rot,
-                           QList< ImageFilter* > filterChain,
+                           QList<ImageFilterPtr> filterChain,
                            Recorder* recorder) {
   Cooker* cooker;
   bool shouldStart;

@@ -37,6 +37,8 @@ namespace QArv {
 class ImageFilter;
 class ImageFilterPlugin;
 
+typedef QSharedPointer<ImageFilter> ImageFilterPtr;
+
 class ImageFilterSettingsWidget : public QWidget {
   Q_OBJECT
 

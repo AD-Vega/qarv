@@ -27,6 +27,7 @@
 #ifndef WORKTHREAD_H
 #define WORKTHREAD_H
 
+#include "filters/filter.h"
 #include <QImage>
 #include <opencv2/core/core.hpp>
 
@@ -56,7 +57,7 @@ private:
   bool imageTransform_invert;
   int imageTransform_flip;
   int imageTransform_rot;
-  QList<ImageFilter*> filterChain;
+  QList<ImageFilterPtr> filterChain;
   Recorder* recorder;
 
   cv::Mat processedFrame;
@@ -99,7 +100,7 @@ public:
                  bool imageTransform_invert,
                  int imageTransform_flip,
                  int imageTransform_rot,
-                 QList<ImageFilter*> filterChain,
+                 QList<ImageFilterPtr> filterChain,
                  Recorder* recorder = NULL);
   bool renderFrame(const cv::Mat frame,
                    QImage* destinationImage,
