@@ -62,7 +62,7 @@ Workthread::~Workthread() {
 }
 
 bool Workthread::isBusy() {
-  return cooker->busy || renderer->busy;
+  return cooker->busy || !queue.empty() || renderer->busy;
 }
 
 void Workthread::startCooker() {
