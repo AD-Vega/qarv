@@ -47,23 +47,40 @@ class Cooker: public QObject {
   friend class Workthread;
   explicit Cooker(QObject* parent = 0);
 
+  struct QueueItem {
+    QByteArray rawFrame;
+    quint64 timestamp;
+  };
+
+  struct Parameters {
+    bool imageTransform_invert;
+    int imageTransform_flip;
+    int imageTransform_rot;
+    QList<ImageFilterPtr> filterChain;
+    QArvDecoder* decoder;
+    QFile* timestampFile;
+    Recorder* recorder;
+
+    bool operator==(const Parameters& o) {
+      return imageTransform_invert == o.imageTransform_invert
+             && imageTransform_flip == o.imageTransform_flip
+             && imageTransform_rot == o.imageTransform_rot
+             && filterChain == o.filterChain
+             && decoder == o.decoder
+             && timestampFile == o.timestampFile
+             && recorder == o.recorder;
+    }
+  };
+
 private slots:
   void start();
 
 signals:
-  void done();
+  void done(cv::Mat frame);
 
 private:
-  QByteArray frame;
-  quint64 timestamp;
-  QArvDecoder* decoder;
-  bool imageTransform_invert;
-  int imageTransform_flip;
-  int imageTransform_rot;
-  QList<ImageFilterPtr> filterChain;
-  QFile* timestampFile;
-  Recorder* recorder;
-
+  Parameters p;
+  QQueue<QueueItem> queue;
   cv::Mat processedFrame;
   bool busy = false;
 };
@@ -122,13 +139,16 @@ signals:
   void frameRendered();
 
 private slots:
-  void cookerFinished();
+  void cookerFinished(cv::Mat frame);
   void rendererFinished();
 
 private:
+  void startCooker();
+
   Cooker* cooker;
   Renderer* renderer;
-  QQueue<QByteArray> queue;
+  QQueue<Cooker::QueueItem> queue;
+  Cooker::Parameters cookerParams;
 };
 
 };

@@ -27,12 +27,17 @@
 
 using namespace QArv;
 
+static int init = [] () {
+  qRegisterMetaType<cv::Mat>("cv::Mat");
+  return 0;
+}();
+
 Workthread::Workthread(QObject* parent) : QObject(parent) {
   auto cookerThread = new QThread(this);
   cooker = new Cooker;
   cooker->moveToThread(cookerThread);
   connect(cookerThread, SIGNAL(finished()), cooker, SLOT(deleteLater()));
-  connect(cooker, SIGNAL(done()), SLOT(cookerFinished()));
+  connect(cooker, SIGNAL(done(cv::Mat)), SLOT(cookerFinished(cv::Mat)));
 
   cookerThread->setObjectName("QArv Cooker");
   cookerThread->start();
@@ -60,6 +65,14 @@ bool Workthread::isBusy() {
   return cooker->busy || renderer->busy;
 }
 
+void Workthread::startCooker() {
+  cooker->p = cookerParams;
+  cooker->queue = queue;
+  queue.clear();
+  cooker->busy = true;
+  QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
+}
+
 bool Workthread::cookFrame(int queueMax,
                            QByteArray frame,
                            quint64 timestamp,
@@ -70,26 +83,29 @@ bool Workthread::cookFrame(int queueMax,
                            QList<ImageFilterPtr> filterChain,
                            QFile& timestampFile,
                            Recorder* recorder) {
+  queue.enqueue({ frame, timestamp });
+
+  // Cache parameters for a later update.
+  cookerParams.decoder = decoder;
+  cookerParams.imageTransform_invert = imageTransform_invert;
+  cookerParams.imageTransform_flip = imageTransform_flip;
+  cookerParams.imageTransform_rot = imageTransform_rot;
+  cookerParams.filterChain = filterChain;
+  cookerParams.timestampFile = &timestampFile;
+  cookerParams.recorder = recorder;
+
   if (cooker->busy) {
-    if (queue.size() < queueMax) {
-      queue.enqueue(frame);
+    // Only allow half of max queue length, because there
+    // are two queues -- one is in the cooker.
+    if (queue.size() < (queueMax / 2)) {
       return true;
     } else {
       return false;
     }
+  } else {
+    startCooker();
+    return true;
   }
-  cooker->frame = frame;
-  cooker->timestamp = timestamp;
-  cooker->decoder = decoder;
-  cooker->imageTransform_invert = imageTransform_invert;
-  cooker->imageTransform_flip = imageTransform_flip;
-  cooker->imageTransform_rot = imageTransform_rot;
-  cooker->filterChain = filterChain;
-  cooker->timestampFile = &timestampFile;
-  cooker->recorder = recorder;
-  cooker->busy = true;
-  QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
-  return true;
 }
 
 bool Workthread::renderFrame(const cv::Mat frame,
@@ -108,16 +124,11 @@ bool Workthread::renderFrame(const cv::Mat frame,
   return renderer->busy = true;
 }
 
-void Workthread::cookerFinished() {
-  auto cooker = qobject_cast<Cooker*>(sender());
-  auto frame = cooker->processedFrame;
-  if (!queue.empty()) {
-    cooker->frame = queue.dequeue();
-    QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
-  } else {
-    cooker->busy = false;
+void Workthread::cookerFinished(cv::Mat frame) {
+  if (!cooker->busy && !queue.empty()) {
+    startCooker();
   }
-  emit frameCooked(cooker->processedFrame);
+  emit frameCooked(frame);
 }
 
 void Workthread::rendererFinished() {
@@ -128,50 +139,55 @@ void Workthread::rendererFinished() {
 Cooker::Cooker(QObject* parent) : QObject(parent) {}
 
 void Cooker::start() {
-  decoder->decode(frame);
-  cv::Mat img = decoder->getCvImage().clone();
+  while ((busy = !queue.isEmpty())) {
+    auto item = queue.dequeue();
+    auto& frame = item.rawFrame;
 
-  if (imageTransform_invert) {
-    int bits = img.depth() == CV_8U ? 8 : 16;
-    cv::subtract((1 << bits) - 1, img, img);
-  }
+    p.decoder->decode(frame);
+    cv::Mat img = p.decoder->getCvImage().clone();
 
-  if (imageTransform_flip != -100)
-    cv::flip(img, img, imageTransform_flip);
-
-  switch (imageTransform_rot) {
-  case 1:
-    cv::transpose(img, img);
-    cv::flip(img, img, 0);
-    break;
-  case 2:
-    cv::flip(img, img, -1);
-    break;
-  case 3:
-    cv::transpose(img, img);
-    cv::flip(img, img, 1);
-    break;
-  }
-
-  if (filterChain.isEmpty()) {
-    processedFrame = img;
-  } else {
-    int imageType = img.type();
-    for (auto filter : filterChain) {
-      filter->filterImage(img);
+    if (p.imageTransform_invert) {
+      int bits = img.depth() == CV_8U ? 8 : 16;
+      cv::subtract((1 << bits) - 1, img, img);
     }
-    img.convertTo(processedFrame, imageType);
-  }
 
-  if (recorder) {
-    recorder->recordFrame(frame, processedFrame);
-    if (recorder->isOK() && timestampFile->isOpen()) {
-      timestampFile->write(QString::number(timestamp).toAscii());
-      timestampFile->write("\n");
+    if (p.imageTransform_flip != -100)
+      cv::flip(img, img, p.imageTransform_flip);
+
+    switch (p.imageTransform_rot) {
+    case 1:
+      cv::transpose(img, img);
+      cv::flip(img, img, 0);
+      break;
+    case 2:
+      cv::flip(img, img, -1);
+      break;
+    case 3:
+      cv::transpose(img, img);
+      cv::flip(img, img, 1);
+      break;
     }
-  }
 
-  emit done();
+    if (p.filterChain.isEmpty()) {
+      processedFrame = img;
+    } else {
+      int imageType = img.type();
+      for (auto filter : p.filterChain) {
+        filter->filterImage(img);
+      }
+      img.convertTo(processedFrame, imageType);
+    }
+
+    if (p.recorder && p.recorder->isOK()) {
+      p.recorder->recordFrame(frame, processedFrame);
+      if (p.timestampFile->isOpen()) {
+        p.timestampFile->write(QString::number(item.timestamp).toAscii());
+        p.timestampFile->write("\n");
+      }
+    }
+
+    emit done(processedFrame);
+  }
 }
 
 template<bool grayscale, bool depth8>
