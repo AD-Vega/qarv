@@ -522,14 +522,22 @@ void QArvMainWindow::takeNextFrame() {
       return ;
     }
 
+    quint64 ts;
+#ifdef ARAVIS_OLD_BUFFER
+    ts = currentArvFrame->timestamp_ns;
+#else
+    ts = arv_buffer_get_timestamp(currentArvFrame);
+#endif
     Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
     bool running = workthread->cookFrame(streamFramesSpinbox->value(),
                                          currentRawFrame,
+                                         ts,
                                          decoder,
                                          invertColors->isChecked(),
                                          imageTransform_flip,
                                          imageTransform_rot,
                                          postprocChainAsList,
+                                         timestampFile,
                                          myrecorder);
     if (!running) {
       QString msg = tr("Too slow, dropping frames!");
@@ -561,16 +569,6 @@ void QArvMainWindow::frameProcessed(cv::Mat frame) {
   if (recording && standalone) {
     if (recorder->isOK()) {
       recordedFrames++;
-      if (timestampFile.isOpen()) {
-        quint64 ts;
-#ifdef ARAVIS_OLD_BUFFER
-        ts = currentArvFrame->timestamp_ns;
-#else
-        ts = arv_buffer_get_timestamp(currentArvFrame);
-#endif
-        timestampFile.write(QString::number(ts).toAscii());
-        timestampFile.write("\n");
-      }
       if (stopRecordingFramesRadio->isChecked() &&
           recordedFrames >= stopRecordingFrames->value()) {
         recordAction->setChecked(false);

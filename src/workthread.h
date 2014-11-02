@@ -30,6 +30,7 @@
 #include "filters/filter.h"
 #include <QImage>
 #include <QQueue>
+#include <QFile>
 #include <opencv2/core/core.hpp>
 
 class QArvDecoder;
@@ -54,11 +55,13 @@ signals:
 
 private:
   QByteArray frame;
+  quint64 timestamp;
   QArvDecoder* decoder;
   bool imageTransform_invert;
   int imageTransform_flip;
   int imageTransform_rot;
   QList<ImageFilterPtr> filterChain;
+  QFile* timestampFile;
   Recorder* recorder;
 
   cv::Mat processedFrame;
@@ -94,16 +97,19 @@ public:
   explicit Workthread(QObject* parent = 0);
   ~Workthread();
 
-  // These two return false if the corresponding threads are busy and
-  // work cannot be started.
+  // Returns false on queue overflow.
   bool cookFrame(int queueMax,
                  QByteArray rawFrame,
+                 quint64 timestamp,
                  QArvDecoder* decoder,
                  bool imageTransform_invert,
                  int imageTransform_flip,
                  int imageTransform_rot,
                  QList<ImageFilterPtr> filterChain,
+                 QFile& timestampFile,
                  Recorder* recorder = NULL);
+
+  // Returns false if the thread is busy.
   bool renderFrame(const cv::Mat frame,
                    QImage* destinationImage,
                    bool markClipped = false,

@@ -25,8 +25,6 @@
 #include "recorders/recorder.h"
 #include <QThread>
 
-#include <QDebug>
-
 using namespace QArv;
 
 Workthread::Workthread(QObject* parent) : QObject(parent) {
@@ -64,11 +62,13 @@ bool Workthread::isBusy() {
 
 bool Workthread::cookFrame(int queueMax,
                            QByteArray frame,
+                           quint64 timestamp,
                            QArvDecoder* decoder,
                            bool imageTransform_invert,
                            int imageTransform_flip,
                            int imageTransform_rot,
                            QList<ImageFilterPtr> filterChain,
+                           QFile& timestampFile,
                            Recorder* recorder) {
   if (cooker->busy) {
     if (queue.size() < queueMax) {
@@ -79,11 +79,13 @@ bool Workthread::cookFrame(int queueMax,
     }
   }
   cooker->frame = frame;
+  cooker->timestamp = timestamp;
   cooker->decoder = decoder;
   cooker->imageTransform_invert = imageTransform_invert;
   cooker->imageTransform_flip = imageTransform_flip;
   cooker->imageTransform_rot = imageTransform_rot;
   cooker->filterChain = filterChain;
+  cooker->timestampFile = &timestampFile;
   cooker->recorder = recorder;
   cooker->busy = true;
   QMetaObject::invokeMethod(cooker, "start", Qt::QueuedConnection);
@@ -163,6 +165,10 @@ void Cooker::start() {
 
   if (recorder) {
     recorder->recordFrame(frame, processedFrame);
+    if (recorder->isOK() && timestampFile->isOpen()) {
+      timestampFile->write(QString::number(timestamp).toAscii());
+      timestampFile->write("\n");
+    }
   }
 
   emit done();
