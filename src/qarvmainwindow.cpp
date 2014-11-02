@@ -545,6 +545,17 @@ void QArvMainWindow::takeNextFrame() {
       logMessage() << msg;
       statusBar()->showMessage(msg, statusTimeoutMsec);
     }
+
+    // Actual recording is delayed, but we need to count the
+    // frames now if we want to stop recording after a set number.
+    if (recording && standalone) {
+      recordedFrames++;
+      if (stopRecordingFramesRadio->isChecked() &&
+          recordedFrames >= stopRecordingFrames->value()) {
+        recordAction->setChecked(false);
+        closeFileAction->trigger();
+      }
+    }
   }
 }
 
@@ -567,14 +578,7 @@ void QArvMainWindow::frameProcessed(cv::Mat frame) {
   }
 
   if (recording && standalone) {
-    if (recorder->isOK()) {
-      recordedFrames++;
-      if (stopRecordingFramesRadio->isChecked() &&
-          recordedFrames >= stopRecordingFrames->value()) {
-        recordAction->setChecked(false);
-        closeFileAction->trigger();
-      }
-    } else {
+    if (!recorder->isOK()) {
       auto message = tr("Recording plugin failed, stopped recording.");
       statusBar()->showMessage(message, statusTimeoutMsec);
       logMessage() << message;
