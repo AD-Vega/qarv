@@ -512,6 +512,7 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
 }
 
 void QArvMainWindow::takeNextFrame() {
+  framecounter++;
   if (playing || recording) {
     currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
                                        nocopyCheck->isChecked(),
@@ -548,7 +549,6 @@ void QArvMainWindow::takeNextFrame() {
 }
 
 void QArvMainWindow::frameProcessed(cv::Mat frame) {
-  framecounter++;
   currentFrame = frame;
   if ((playing || drawHistogram)) {
     Histograms* hists;
