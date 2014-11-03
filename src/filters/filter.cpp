@@ -70,6 +70,7 @@ ImageFilterSettingsDialog::ImageFilterSettingsDialog(
   connect(buttons, SIGNAL(accepted()), SLOT(accept()));
   connect(buttons, SIGNAL(rejected()), SLOT(reject()));
   connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)), SLOT(apply()));
+  live->setChecked(true);
 }
 
 void ImageFilterSettingsDialog::accept() {
