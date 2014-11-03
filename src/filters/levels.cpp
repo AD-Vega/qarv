@@ -32,9 +32,9 @@ ImageFilter* LevelsPlugin::makeFilter() {
 }
 
 void LevelsFilter::filterImage(cv::Mat& image) {
-  float g = 1. / gamma;
-  float b = pow(black, g);
-  float w = pow(white, g);
+  float g = 1. / gamma.load(std::memory_order_relaxed);
+  float b = pow(black.load(std::memory_order_relaxed), g);
+  float w = pow(white.load(std::memory_order_relaxed), g);
   image.convertTo(image, CV_32F);
   double max;
   cv::minMaxIdx(image, NULL, &max);
@@ -44,20 +44,30 @@ void LevelsFilter::filterImage(cv::Mat& image) {
 }
 
 LevelsFilter::LevelsFilter(ImageFilterPlugin* plugin) :
-  ImageFilter(plugin) {}
+  ImageFilter(plugin) {
+  black.store(0);
+  white.store(1);
+  gamma.store(1);
+}
 
 void LevelsFilter::restoreSettings() {
   QSettings settings;
-  gamma = settings.value("qarv_filters_levels/gamma", 1.0).toDouble();
-  black = settings.value("qarv_filters_levels/black", 0.0).toDouble();
-  white = settings.value("qarv_filters_levels/white", 1.0).toDouble();
+  double g = settings.value("qarv_filters_levels/gamma", 1.0).toDouble();
+  double b = settings.value("qarv_filters_levels/black", 0.0).toDouble();
+  double w = settings.value("qarv_filters_levels/white", 1.0).toDouble();
+  gamma.store(g, std::memory_order_relaxed);
+  black.store(b, std::memory_order_relaxed);
+  white.store(w, std::memory_order_relaxed);
 }
 
 void LevelsFilter::saveSettings() {
   QSettings settings;
-  settings.setValue("qarv_filters_levels/gamma", gamma);
-  settings.setValue("qarv_filters_levels/black", black);
-  settings.setValue("qarv_filters_levels/white", white);
+  double g = gamma.load(std::memory_order_relaxed),
+         b = black.load(std::memory_order_relaxed),
+         w = white.load(std::memory_order_relaxed);
+  settings.setValue("qarv_filters_levels/gamma", g);
+  settings.setValue("qarv_filters_levels/black", b);
+  settings.setValue("qarv_filters_levels/white", w);
 }
 
 ImageFilterSettingsWidget* LevelsFilter::createSettingsWidget() {
@@ -70,15 +80,15 @@ LevelsSettingsWidget::LevelsSettingsWidget(ImageFilter* filter_,
   ImageFilterSettingsWidget(filter_, parent, f) {
   setupUi(this);
   QMetaObject::connectSlotsByName(this);
-  blackSpinbox->setValue(filter()->black);
-  whiteSpinbox->setValue(filter()->white);
-  gammaSpinbox->setValue(filter()->gamma);
+  blackSpinbox->setValue(filter()->black.load(std::memory_order_relaxed));
+  whiteSpinbox->setValue(filter()->white.load(std::memory_order_relaxed));
+  gammaSpinbox->setValue(filter()->gamma.load(std::memory_order_relaxed));
 }
 
 void LevelsSettingsWidget::applySettings() {
-  filter()->black = blackSpinbox->value();
-  filter()->white = whiteSpinbox->value();
-  filter()->gamma = gammaSpinbox->value();
+  filter()->black.store(blackSpinbox->value(), std::memory_order_relaxed);
+  filter()->white.store(whiteSpinbox->value(), std::memory_order_relaxed);
+  filter()->gamma.store(gammaSpinbox->value(), std::memory_order_relaxed);
 }
 
 void LevelsSettingsWidget::setLiveUpdate(bool enabled) {

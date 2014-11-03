@@ -22,6 +22,7 @@
 
 #include "filters/filter.h"
 #include "ui_levels.h"
+#include <atomic>
 
 namespace QArv {
 
@@ -34,7 +35,7 @@ public:
   void filterImage(cv::Mat& image);
 
 private:
-  double black = 0, white = 1, gamma = 1;
+  std::atomic<double> black, white, gamma;
 
   friend class LevelsSettingsWidget;
 };
