@@ -471,8 +471,13 @@ void QArvMainWindow::on_pixelFormatSelector_currentIndexChanged(int index) {
 void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
   xSpinbox->setValue((xSpinbox->value() / 2) * 2);
   ySpinbox->setValue((ySpinbox->value() / 2) * 2);
-  wSpinbox->setValue((wSpinbox->value() / 2) * 2);
-  hSpinbox->setValue((hSpinbox->value() / 2) * 2);
+  double tmp;
+  tmp = (wSpinbox->value() / 2) * 2;
+  tmp = tmp < 8 ? 8 : tmp;
+  wSpinbox->setValue(tmp);
+  tmp = (hSpinbox->value() / 2) * 2;
+  tmp = tmp < 8 ? 8 : tmp;
+  hSpinbox->setValue(tmp);
   QRect ROI(xSpinbox->value(), ySpinbox->value(),
             wSpinbox->value(), hSpinbox->value());
 
