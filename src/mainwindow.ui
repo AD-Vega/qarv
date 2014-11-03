@@ -187,7 +187,11 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QSpinBox" name="xSpinbox"/>
+                <widget class="QSpinBox" name="xSpinbox">
+                 <property name="singleStep">
+                  <number>2</number>
+                 </property>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_6">
@@ -197,7 +201,11 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QSpinBox" name="ySpinbox"/>
+                <widget class="QSpinBox" name="ySpinbox">
+                 <property name="singleStep">
+                  <number>2</number>
+                 </property>
+                </widget>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_7">

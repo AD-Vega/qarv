@@ -295,9 +295,9 @@ static inline int value2slider(double value,
 
 void QArvMainWindow::readROILimits() {
   auto roisize = camera->getROIMaxSize();
-  roirange = QRect(QPoint(1, 1), roisize.size());
-  xSpinbox->setRange(1, roisize.width());
-  ySpinbox->setRange(1, roisize.height());
+  roirange = QRect(QPoint(0, 0), roisize.size());
+  xSpinbox->setRange(0, roisize.width());
+  ySpinbox->setRange(0, roisize.height());
   wSpinbox->setRange(roisize.x(), roisize.width());
   hSpinbox->setRange(roisize.y(), roisize.height());
 }
@@ -334,8 +334,6 @@ void QArvMainWindow::readAllValues() {
 
   readROILimits();
   QRect roi = camera->getROI();
-  roi.setWidth((roi.width() / 2) * 2);
-  roi.setHeight((roi.height() / 2) * 2);
   xSpinbox->setValue(roi.x());
   ySpinbox->setValue(roi.y());
   wSpinbox->setValue(roi.width());
@@ -471,6 +469,10 @@ void QArvMainWindow::on_pixelFormatSelector_currentIndexChanged(int index) {
 }
 
 void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
+  xSpinbox->setValue((xSpinbox->value() / 2) * 2);
+  ySpinbox->setValue((ySpinbox->value() / 2) * 2);
+  wSpinbox->setValue((wSpinbox->value() / 2) * 2);
+  hSpinbox->setValue((hSpinbox->value() / 2) * 2);
   QRect ROI(xSpinbox->value(), ySpinbox->value(),
             wSpinbox->value(), hSpinbox->value());
 
@@ -480,27 +482,28 @@ void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
       statusBar()->showMessage(tr("Region of interest too large, shrinking."),
                                statusTimeoutMsec);
     ROI = ROI2;
+    ROI.setX((ROI.x() / 2) * 2);
+    ROI.setY((ROI.y() / 2) * 2);
+    ROI.setWidth((ROI.width() / 2) * 2);
+    ROI.setHeight((ROI.height() / 2) * 2);
   }
 
   bool tostart = started;
   startVideo(false);
-  ROI.setWidth((ROI.width() / 2 ) * 2);
-  ROI.setHeight((ROI.height() / 2) * 2);
   camera->setROI(ROI);
   startVideo(tostart);
 }
 
 void QArvMainWindow::on_resetROIButton_clicked(bool clicked) {
-  bool tostart = started;
-  startVideo(false);
   camera->setROI(camera->getROIMaxSize());
   // It needs to be applied twice to reach maximum size because
   // X and Y decrease available range.
   QRect ROI = camera->getROIMaxSize();
-  ROI.setWidth((ROI.width() / 2) * 2);
-  ROI.setHeight((ROI.height() / 2) * 2);
-  camera->setROI(ROI);
-  startVideo(tostart);
+  xSpinbox->setValue(0);
+  ySpinbox->setValue(0);
+  wSpinbox->setValue(ROI.width());
+  hSpinbox->setValue(ROI.height());
+  on_applyROIButton_clicked(true);
 }
 
 void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
