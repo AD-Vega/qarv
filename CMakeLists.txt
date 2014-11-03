@@ -38,7 +38,7 @@ include_directories(
 
 
 set(qarv_DATA share/qarv/${qarv_ABI}/)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fvisibility-inlines-hidden -fvisibility=hidden")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
 if (NOT qarv_BTYPE MATCHES "debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
