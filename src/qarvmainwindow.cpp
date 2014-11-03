@@ -1151,6 +1151,9 @@ void QArvMainWindow::saveProgramSettings() {
   QSettings settings;
 
   // main window geometry and state
+  for (QDockWidget* wgt: findChildren<QDockWidget*>("Filter settings widget")) {
+    wgt->close();
+  }
   settings.setValue("qarv_mainwindow/geometry", saveGeometry());
   settings.setValue("qarv_mainwindow/state", saveState());
 
@@ -1236,6 +1239,7 @@ void QArvMainWindow::on_postprocList_doubleClicked(const QModelIndex& index) {
     editor = new ImageFilterSettingsDialog(filter->createSettingsWidget());
     editor->setWindowTitle(item->text());
     item->setData(ptr2var(editor), Qt::UserRole + 2);
+    editor->setObjectName("Filter settings widget");
     addDockWidget(Qt::RightDockWidgetArea, editor);
     editor->setFloating(true);
   }
