@@ -168,12 +168,20 @@ void Cooker::start() {
       break;
     }
 
-    if (p.filterChain.isEmpty()) {
+    bool needFiltering = false;
+    for (auto filter : p.filterChain) {
+      if (filter->isEnabled()) {
+        needFiltering = true;
+        break;
+      }
+    }
+    if (!needFiltering) {
       processedFrame = img;
     } else {
       int imageType = img.type();
       for (auto filter : p.filterChain) {
-        filter->filterImage(img);
+        if (filter->isEnabled())
+          filter->filterImage(img);
       }
       img.convertTo(processedFrame, imageType);
     }

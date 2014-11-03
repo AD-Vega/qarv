@@ -60,16 +60,6 @@ class Cooker: public QObject {
     QArvDecoder* decoder;
     QFile* timestampFile;
     Recorder* recorder;
-
-    bool operator==(const Parameters& o) {
-      return imageTransform_invert == o.imageTransform_invert
-             && imageTransform_flip == o.imageTransform_flip
-             && imageTransform_rot == o.imageTransform_rot
-             && filterChain == o.filterChain
-             && decoder == o.decoder
-             && timestampFile == o.timestampFile
-             && recorder == o.recorder;
-    }
   };
 
 private slots:

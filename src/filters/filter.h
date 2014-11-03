@@ -31,6 +31,7 @@
 #include <QDockWidget>
 #include <QSettings>
 #include <opencv2/opencv.hpp>
+#include <atomic>
 
 namespace QArv {
 
@@ -81,8 +82,13 @@ public:
   //! The gist of the matter. It works in-place. It can return a float CV_TYPE!
   virtual void filterImage(cv::Mat& image) = 0;
 
+  //! Used by the main window to mark filter as enabled.
+  bool isEnabled() { return enabled.load(std::memory_order_relaxed); }
+  void setEnabled(bool enable) { enabled.store(enable, std::memory_order_relaxed); }
+
 private:
   ImageFilterPlugin* pluginPtr;
+  std::atomic<bool> enabled;
 };
 
 class ImageFilterPlugin {
