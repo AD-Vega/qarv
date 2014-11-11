@@ -219,6 +219,12 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   recordingTimeLabel = new QLabel(tr("Recording stopped"));
   statusBar()->addPermanentWidget(recordingTimeLabel);
+  queueUsage = new QProgressBar;
+  queueUsage->setTextVisible(false);
+  queueUsage->setOrientation(Qt::Vertical);
+  queueUsage->setMaximumHeight(recordingTimeLabel->height());
+  queueUsage->setVisible(false);
+  statusBar()->addPermanentWidget(queueUsage);
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
 
@@ -521,8 +527,19 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
 }
 
 void QArvMainWindow::takeNextFrame() {
+  int cookerQueue1, cookerQueue2;
+  queueUsage->setValue(workthread->queueSize(cookerQueue1, cookerQueue2));
+  int queueMax = streamFramesSpinbox->value();
+  /* "Full" should represent the state of queue1. However, we also want the
+   * bar to show how the queue empties when we stop acquisition. So we set
+   * the maximum such that the bar is full when queue1 is full and it also
+   * contains queue2.
+   */
+  queueUsage->setMaximum(queueMax / 2 + cookerQueue2);
+
   if (!started)
     return;
+
   framecounter++;
   if (playing || recording) {
     currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
@@ -541,7 +558,7 @@ void QArvMainWindow::takeNextFrame() {
     ts = arv_buffer_get_timestamp(currentArvFrame);
 #endif
     Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
-    bool running = workthread->cookFrame(streamFramesSpinbox->value(),
+    bool running = workthread->cookFrame(queueMax,
                                          currentRawFrame,
                                          ts,
                                          decoder,
@@ -644,11 +661,15 @@ void QArvMainWindow::startVideo(bool start) {
         }
         pixelFormatSelector->setEnabled(false);
       }
+      queueUsage->setMaximum(streamFramesSpinbox->value());
+      queueUsage->setValue(0);
+      queueUsage->setVisible(true);
     } else if (!start && started) {
       started = false;
       do {
         QApplication::processEvents();
       } while (workthread->isBusy());
+      queueUsage->setVisible(false);
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
       decoder = NULL;

@@ -123,7 +123,9 @@ public:
                    bool markClipped = false,
                    Histograms* hists = NULL,
                    bool logarithmic = false);
+
   bool isBusy();
+  int queueSize(int& controllerQueue, int& cookerQueue);
 
 signals:
   void frameCooked(cv::Mat frame);

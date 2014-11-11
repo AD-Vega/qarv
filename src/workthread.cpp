@@ -65,6 +65,12 @@ bool Workthread::isBusy() {
   return cooker->busy || !queue.empty() || renderer->busy;
 }
 
+int Workthread::queueSize(int& controllerQueue, int& cookerQueue) {
+  controllerQueue = queue.size();
+  cookerQueue = cooker->queue.size();
+  return controllerQueue + cookerQueue;
+}
+
 void Workthread::startCooker() {
   cooker->p = cookerParams;
   cooker->queue = queue;
