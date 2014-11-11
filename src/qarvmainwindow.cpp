@@ -223,8 +223,9 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 }
 
 QArvMainWindow::~QArvMainWindow() {
+  on_playButton_toggled(false);
+  on_recordAction_toggled(false);
   on_closeFileAction_triggered(true);
-  startVideo(false);
   saveProgramSettings();
 }
 
@@ -520,6 +521,8 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
 }
 
 void QArvMainWindow::takeNextFrame() {
+  if (!started)
+    return;
   framecounter++;
   if (playing || recording) {
     currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
@@ -614,6 +617,7 @@ void QArvMainWindow::startVideo(bool start) {
       useFastInterpolator,
     };
   if (camera != NULL) {
+    setEnabled(false);
     if (start && !started) {
       if (decoder != NULL) delete decoder;
       decoder = QArvDecoder::makeDecoder(camera->getPixelFormatId(),
@@ -641,13 +645,13 @@ void QArvMainWindow::startVideo(bool start) {
         pixelFormatSelector->setEnabled(false);
       }
     } else if (!start && started) {
+      started = false;
       do {
         QApplication::processEvents();
       } while (workthread->isBusy());
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
       decoder = NULL;
-      started = false;
       bool open = recorder && recorder->isOK();
       foreach (auto wgt, toDisableWhenPlaying) {
         wgt->setEnabled(!recording && !open);
@@ -656,12 +660,13 @@ void QArvMainWindow::startVideo(bool start) {
                                       && !open
                                       && !started);
     }
+    setEnabled(true);
   }
   // Set idle image on the histogram.
   histogram->setIdle();
 }
 
-void QArvMainWindow::on_playButton_clicked(bool checked) {
+void QArvMainWindow::on_playButton_toggled(bool checked) {
   playing = checked;
   startVideo(playing || recording);
   playing = checked && started;
@@ -693,17 +698,17 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 
   if (!standalone) goto skip_all_file_opening;
 
-  if (filenameEdit->text().isEmpty()) {
-    tabWidget->setCurrentWidget(recordingTab);
-    statusBar()->showMessage(tr("Please set the video file name."),
-                             statusTimeoutMsec);
-    recordAction->setChecked(false);
-    recordingTime = QTime();
-    recordingTimeCumulative = 0;
-    return;
-  }
-
   if ((checked && !recorder) || (recorder && !recorder->isOK())) {
+    if (filenameEdit->text().isEmpty()) {
+      tabWidget->setCurrentWidget(recordingTab);
+      statusBar()->showMessage(tr("Please set the video file name."),
+                               statusTimeoutMsec);
+      recordAction->setChecked(false);
+      recordingTime = QTime();
+      recordingTimeCumulative = 0;
+      return;
+    }
+
     startVideo(true); // Initialize the decoder and all that.
     if (!started) {
       recordAction->setChecked(false);
@@ -1050,6 +1055,8 @@ void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
 }
 
 void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
+  // This function assumes on_recordAction_toggled(false) was
+  // done before calling it.
   do {
     QApplication::processEvents();
   } while (workthread->isBusy());

@@ -66,13 +66,14 @@ private slots:
   void start();
 
 signals:
-  void done(cv::Mat frame);
+  void done(cv::Mat frame, bool cycleComplete);
 
 private:
   Parameters p;
   QQueue<QueueItem> queue;
   cv::Mat processedFrame;
   bool busy = false;
+  std::atomic_flag abortCycle;
 };
 
 class Renderer: public QObject {
@@ -129,7 +130,7 @@ signals:
   void frameRendered();
 
 private slots:
-  void cookerFinished(cv::Mat frame);
+  void cookerFinished(cv::Mat frame, bool cycleComplete);
   void rendererFinished();
 
 private:

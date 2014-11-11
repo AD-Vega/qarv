@@ -37,7 +37,7 @@ Workthread::Workthread(QObject* parent) : QObject(parent) {
   cooker = new Cooker;
   cooker->moveToThread(cookerThread);
   connect(cookerThread, SIGNAL(finished()), cooker, SLOT(deleteLater()));
-  connect(cooker, SIGNAL(done(cv::Mat)), SLOT(cookerFinished(cv::Mat)));
+  connect(cooker, SIGNAL(done(cv::Mat, bool)), SLOT(cookerFinished(cv::Mat, bool)));
 
   cookerThread->setObjectName("QArv Cooker");
   cookerThread->start();
@@ -100,6 +100,10 @@ bool Workthread::cookFrame(int queueMax,
     if (queue.size() < (queueMax / 2)) {
       return true;
     } else {
+      // We are too busy; drop both queues because we are going to be
+      // too late anyway.
+      queue.clear();
+      cooker->abortCycle.test_and_set();
       return false;
     }
   } else {
@@ -124,9 +128,13 @@ bool Workthread::renderFrame(const cv::Mat frame,
   return renderer->busy = true;
 }
 
-void Workthread::cookerFinished(cv::Mat frame) {
-  if (!cooker->busy && !queue.empty()) {
-    startCooker();
+void Workthread::cookerFinished(cv::Mat frame, bool cycleComplete) {
+  if (cycleComplete) {
+    if (!queue.empty()) {
+      startCooker();
+    } else {
+      cooker->busy = false;
+    }
   }
   emit frameCooked(frame);
 }
@@ -136,10 +144,12 @@ void Workthread::rendererFinished() {
   emit frameRendered();
 }
 
-Cooker::Cooker(QObject* parent) : QObject(parent) {}
+Cooker::Cooker(QObject* parent) : QObject(parent) {
+  abortCycle.clear();
+}
 
 void Cooker::start() {
-  while ((busy = !queue.isEmpty())) {
+  while (!queue.isEmpty()) {
     auto item = queue.dequeue();
     auto& frame = item.rawFrame;
 
@@ -194,7 +204,12 @@ void Cooker::start() {
       }
     }
 
-    emit done(processedFrame);
+    bool clear = abortCycle.test_and_set();
+    abortCycle.clear();
+    if (clear)
+      queue.clear();
+
+    emit done(processedFrame, queue.empty());
   }
 }
 

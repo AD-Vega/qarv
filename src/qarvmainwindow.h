@@ -58,7 +58,7 @@ private slots:
   void on_exposureAutoButton_toggled(bool checked);
   void on_gainAutoButton_toggled(bool checked);
   void on_pixelFormatSelector_currentIndexChanged(int index);
-  void on_playButton_clicked(bool checked);
+  void on_playButton_toggled(bool checked);
   void on_recordAction_toggled(bool checked);
   void on_snapshotAction_triggered(bool checked);
   void on_chooseSnappathButton_clicked(bool checked);
