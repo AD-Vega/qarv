@@ -100,6 +100,9 @@ signals:
 private slots:
   void signalForwarding(bool enable);
 
+protected:
+  void closeEvent(QCloseEvent* event);
+
 private:
   QArvGuiExtension* ext;
 

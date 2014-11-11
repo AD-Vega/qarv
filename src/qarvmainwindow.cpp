@@ -229,9 +229,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 }
 
 QArvMainWindow::~QArvMainWindow() {
-  on_playButton_toggled(false);
-  on_recordAction_toggled(false);
-  on_closeFileAction_triggered(true);
+  stopAllAcquisition();
   saveProgramSettings();
 }
 
@@ -1369,4 +1367,10 @@ void QArvMainWindow::updatePostprocQList() {
   // that are still used by the filter will remain while the
   // filter needs them.
   postprocChainAsList = newList;
+}
+
+void QArvMainWindow::stopAllAcquisition() {
+  on_playButton_toggled(false);
+  on_recordAction_toggled(false);
+  on_closeFileAction_triggered(true);
 }

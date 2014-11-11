@@ -120,3 +120,8 @@ QArvCamera* QArvGui::camera() {
 QMainWindow* QArvGui::mainWindow() {
   return ext->mw;
 }
+
+void QArvGui::closeEvent(QCloseEvent* event) {
+  return ext->mw->stopAllAcquisition();
+  QWidget::closeEvent(event);
+}
