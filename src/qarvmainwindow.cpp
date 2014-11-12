@@ -220,10 +220,17 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   recordingTimeLabel = new QLabel(tr("Recording stopped"));
   statusBar()->addPermanentWidget(recordingTimeLabel);
   queueUsage = new QProgressBar;
-  queueUsage->setTextVisible(false);
-  queueUsage->setOrientation(Qt::Vertical);
-  queueUsage->setMaximumHeight(recordingTimeLabel->height());
-  queueUsage->setVisible(false);
+  QString queueLabelText = tr("Buffer");
+  queueUsage->setFormat(queueLabelText);
+  queueUsage->setToolTip("<qt/>"
+                         + tr("This bar shows filling of the frame "
+                              "queue/buffer. If it overflows, the "
+                              "frames in the queue will be discarded."));
+  auto tmpLabel = new QLabel(queueLabelText);
+  statusBar()->addPermanentWidget(tmpLabel);
+  queueUsage->setMaximumWidth(tmpLabel->width() + 20);
+  delete tmpLabel;
+  queueUsage->setValue(0);
   statusBar()->addPermanentWidget(queueUsage);
   statusBar()->showMessage(tr("Welcome to qarv!"));
 }
@@ -661,13 +668,11 @@ void QArvMainWindow::startVideo(bool start) {
       }
       queueUsage->setMaximum(streamFramesSpinbox->value());
       queueUsage->setValue(0);
-      queueUsage->setVisible(true);
     } else if (!start && started) {
       started = false;
       do {
         QApplication::processEvents();
       } while (workthread->isBusy());
-      queueUsage->setVisible(false);
       camera->stopAcquisition();
       if (decoder != NULL) delete decoder;
       decoder = NULL;
