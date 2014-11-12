@@ -217,8 +217,16 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   updateImageTransform();
 
+  auto makeVerticalLine = [](){
+    auto l = new QFrame;
+    l->setFrameShape(QFrame::VLine);
+    l->setLineWidth(0);
+    return l;
+  };
+  statusBar()->addPermanentWidget(makeVerticalLine());
   recordingTimeLabel = new QLabel(tr("Recording stopped"));
   statusBar()->addPermanentWidget(recordingTimeLabel);
+  statusBar()->addPermanentWidget(makeVerticalLine());
   queueUsage = new QProgressBar;
   QString queueLabelText = tr("Buffer");
   queueUsage->setFormat(queueLabelText);
@@ -232,7 +240,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   delete tmpLabel;
   queueUsage->setValue(0);
   statusBar()->addPermanentWidget(queueUsage);
-  statusBar()->showMessage(tr("Welcome to qarv!"));
+  statusBar()->showMessage(tr("Welcome to QArv!"));
 }
 
 QArvMainWindow::~QArvMainWindow() {
