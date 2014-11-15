@@ -1,5 +1,7 @@
 #include "globals.h"
 
+#include <QTime>
+
 using namespace QArv;
 
 const char* QArv::qarv_datafiles = QARV_DATA;
@@ -33,14 +35,19 @@ void MessageSender::sendMessage(const QString& message)
 }
 
 QArvDebug::~QArvDebug() {
+  auto now = QTime::currentTime().toString("[hh:mm:ss] ");
   foreach (auto line, message.split('\n')) {
     if (line.startsWith('"')) {
       auto lineref = line.midRef(1, line.length() - 3);
-      qDebug(prepend ? "QArv: %s" : "%s", lineref.toLocal8Bit().constData());
-      messageSender.sendMessage(lineref.toString());
+      qDebug(prepend ? "QArv %s%s" : "%s%s",
+	      now.toLocal8Bit().constData(),
+	      lineref.toLocal8Bit().constData());
+      messageSender.sendMessage(now + lineref.toString());
     } else {
-      qDebug(prepend ? "QArv: %s" : "%s", line.toLocal8Bit().constData());
-      messageSender.sendMessage(line);
+      qDebug(prepend ? "QArv %s%s" : "%s%s",
+	      now.toLocal8Bit().constData(),
+	      line.toLocal8Bit().constData());
+      messageSender.sendMessage(now + line);
     }
   }
 }
