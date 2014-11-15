@@ -228,11 +228,11 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   statusBar()->addPermanentWidget(recordingTimeLabel);
   statusBar()->addPermanentWidget(makeVerticalLine());
   queueUsage = new QProgressBar;
-  QString queueLabelText = tr("Buffer");
+  QString queueLabelText = tr("Queue");
   queueUsage->setFormat(queueLabelText);
   queueUsage->setToolTip("<qt/>"
                          + tr("This bar shows filling of the frame "
-                              "queue/buffer. If it overflows, the "
+                              "queue. If it overflows, the "
                               "frames in the queue will be discarded."));
   auto tmpLabel = new QLabel(queueLabelText);
   statusBar()->addPermanentWidget(tmpLabel);

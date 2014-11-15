@@ -671,14 +671,14 @@
            <item row="3" column="0">
             <widget class="QLabel" name="label_25">
              <property name="text">
-              <string>Queue/buffer size:</string>
+              <string>Queue size:</string>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
             <widget class="QSpinBox" name="streamFramesSpinbox">
              <property name="toolTip">
-              <string>The camera has a queue of frames which are cycled. There should be several to ensure smooth operation, but not too many because they increase memory usage. Also, if the &quot;Transfer frames without copying&quot; option is enabled, the frames are not copied before they are passed to the program. If there are not enough frames in the queue, the current frame is not shown or recorded quickly enough, it may get overwritten. This option takes effect when starting the video stream.</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls both the camera and decoding/recording queues.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;The camera has a queue of frames which are cycled. There should be several to ensure smooth operation, but not too many because they increase memory usage. Also, if the &amp;quot;Transfer frames without copying&amp;quot; option is enabled, the frames are not copied before they are passed to the program, increasing performance.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;If the frames arrive faster than they can be decoded and/or recorded, the processing queue will overflow and will be dropped entirely. If this happens intermittently, increase the queue size. It it happens regularly, your system is too slow to handle the workload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="suffix">
               <string> frames</string>
