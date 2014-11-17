@@ -51,6 +51,8 @@ public:
 
 signals:
   void recordingStarted(bool started);
+  void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
+  void frameReady(cv::Mat processed);
 
 private slots:
   void on_refreshCamerasButton_clicked(bool clicked = false);

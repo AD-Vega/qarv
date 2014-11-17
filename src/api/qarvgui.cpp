@@ -78,24 +78,18 @@ QArvGui::~QArvGui() {
 }
 
 void QArvGui::signalForwarding(bool enable) {
-  if (enable)
-    connect(ext->mw->camera, SIGNAL(frameReady()), SIGNAL(frameReady()));
-  else
-    disconnect(ext->mw->camera, SIGNAL(frameReady()), this, SIGNAL(frameReady()));
+  if (enable) {
+    connect(ext->mw, SIGNAL(frameReady(QByteArray,ArvBuffer*)),
+            this, SIGNAL(frameReady(QByteArray, ArvBuffer*)));
+    connect(ext->mw, SIGNAL(frameReady(cv::Mat)),
+            this, SIGNAL(frameReady(cv::Mat)));
+  } else {
+    disconnect(ext->mw, SIGNAL(frameReady(QByteArray,ArvBuffer*)),
+               this, SIGNAL(frameReady(QByteArray, ArvBuffer*)));
+    disconnect(ext->mw, SIGNAL(frameReady(cv::Mat)),
+               this, SIGNAL(frameReady(cv::Mat)));
+  }
   emit recordingToggled(enable);
-}
-
-/*!
- * \param processed The frame as seen in the GUI video display. Is not copied, use cv::Mat::clone() if necessary.
- * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
- * \param rawAravisBuffer See QArvCamera::getFrame().
- */
-void QArvGui::getFrame(cv::Mat* processed,
-                       QByteArray* raw,
-                       ArvBuffer** rawAravisBuffer) {
-  if (raw) *raw = ext->mw->currentRawFrame;
-  if (processed) *processed = ext->mw->currentFrame;
-  if (rawAravisBuffer) *rawAravisBuffer = ext->mw->currentArvFrame;
 }
 
 /*! This function only works when not in standalone mode. It is useful when the

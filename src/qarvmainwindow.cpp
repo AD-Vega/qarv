@@ -564,6 +564,13 @@ void QArvMainWindow::takeNextFrame() {
       return ;
     }
 
+    if (!standalone) {
+      if (recording)
+        emit frameReady(currentRawFrame, currentArvFrame);
+      if (!playing)
+        return;
+    }
+
     quint64 ts;
 #ifdef ARAVIS_OLD_BUFFER
     ts = currentArvFrame->timestamp_ns;
@@ -629,6 +636,10 @@ void QArvMainWindow::frameProcessed(cv::Mat frame) {
       recordAction->setChecked(false);
       closeFileAction->trigger();
     }
+  }
+
+  if (recording && !standalone) {
+    emit frameReady(currentFrame);
   }
 }
 

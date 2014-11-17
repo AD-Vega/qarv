@@ -25,13 +25,11 @@
 #include <QMainWindow>
 #include <QApplication>
 
+#include <opencv2/opencv.hpp>
+
 #pragma GCC visibility push(default)
 
 class QArvGuiExtension;
-
-namespace cv {
-  class Mat;
-}
 
 //! QArvGui represents the widget for working with a camera.
 /*! The init() functions should be called to load translations and other setup.
@@ -73,11 +71,6 @@ public:
   QArvGui(QWidget* parent = 0, bool standalone = true);
   ~QArvGui();
 
-  //! Fills the non-NULL parameters with the current frame.
-  void getFrame(cv::Mat* processed,
-                QByteArray* raw,
-                ArvBuffer** rawAravisBuffer);
-
   //! Does static initialization.
   static void init(QApplication* a);
 
@@ -91,8 +84,25 @@ public:
   QMainWindow* mainWindow();
 
 signals:
-  //! Emitted when a new frame is available via getFrame().
-  void frameReady();
+  //! Emitted when a new frame arrives from the camera.
+  /*!
+   * If the QArvGui will not be used to display frames, connecting
+   * to this signal and using QArvDecoder is more efficient.
+   *
+   * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
+   * \param rawAravisBuffer See QArvCamera::getFrame().
+   */
+  void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
+
+  //! Emitted when a new frame arrives from the processing thread.
+  /*!
+   * If the QArvGui is used to display frames, it will need to decode
+   * and (possibly) process them. In that case, connecting to this signal
+   * is more efficient than using the raw frame and decoding it again.
+   *
+   * \param processed The frame as seen in the GUI video display. It is not copied, use cv::Mat::clone() if necessary.
+   */
+  void frameReady(cv::Mat processed);
 
   //! Emmited when the Record button is toggled.
   void recordingToggled(bool enabled);
