@@ -34,7 +34,7 @@ struct QArvEditor : QWidget {
   Q_OBJECT
 
 public:
-  QArvEditor(QWidget* parent = 0) : QWidget(parent) {}
+  QArvEditor(QWidget* parent = 0);
 
 signals:
   void editingFinished();

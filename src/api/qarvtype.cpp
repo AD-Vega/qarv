@@ -26,10 +26,20 @@
 #include <QPushButton>
 #include <cassert>
 
+QArvEditor::QArvEditor(QWidget* parent) : QWidget(parent) {
+  setAutoFillBackground(true);
+}
+
 QArvEnumeration::QArvEnumeration(): values(), isAvailable() {}
 
 QArvEnumeration::operator QString() const  {
   return currentValue >= 0 ? names[currentValue] : QString();
+}
+
+static void squeezeLeft(QLayout* layout) {
+  layout->addItem(new QSpacerItem(1, 1,
+                                  QSizePolicy::Expanding,
+                                  QSizePolicy::Expanding));
 }
 
 QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
@@ -40,6 +50,7 @@ QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(select);
+  squeezeLeft(layout);
   editor->connect(select, SIGNAL(activated(int)), SLOT(editingComplete()));
   return editor;
 }
@@ -79,6 +90,7 @@ QArvEditor* QArvString::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edline);
+  squeezeLeft(layout);
   editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
   return editor;
 }
@@ -110,6 +122,7 @@ QArvEditor* QArvFloat::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edbox);
+  squeezeLeft(layout);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
   return editor;
 }
@@ -141,6 +154,7 @@ QArvEditor* QArvInteger::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edbox);
+  squeezeLeft(layout);
   editor->connect(edbox, SIGNAL(editingFinished()), SLOT(editingComplete()));
   return editor;
 }
@@ -173,6 +187,7 @@ QArvEditor* QArvBoolean::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(check);
+  squeezeLeft(layout);
   editor->connect(check, SIGNAL(clicked(bool)), SLOT(editingComplete()));
   return editor;
 }
@@ -202,6 +217,7 @@ QArvEditor* QArvCommand::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(button);
+  squeezeLeft(layout);
   editor->connect(button, SIGNAL(clicked(bool)), SLOT(editingComplete()));
   return editor;
 }
@@ -224,6 +240,7 @@ QArvEditor* QArvRegister::createEditor(QWidget* parent) const {
   layout->setContentsMargins(0, 0, 0, 0);
   editor->setLayout(layout);
   layout->addWidget(edline);
+  squeezeLeft(layout);
   editor->connect(edline, SIGNAL(editingFinished()), SLOT(editingComplete()));
   return editor;
 }
