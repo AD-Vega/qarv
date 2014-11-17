@@ -159,51 +159,58 @@ void Cooker::start() {
     auto item = queue.dequeue();
     auto& frame = item.rawFrame;
 
-    p.decoder->decode(frame);
-    cv::Mat img = p.decoder->getCvImage().clone();
+    if (p.decoder) {
+      p.decoder->decode(frame);
+      cv::Mat img = p.decoder->getCvImage().clone();
 
-    if (p.imageTransform_invert) {
-      int bits = img.depth() == CV_8U ? 8 : 16;
-      cv::subtract((1 << bits) - 1, img, img);
-    }
+      if (p.imageTransform_invert) {
+        int bits = img.depth() == CV_8U ? 8 : 16;
+        cv::subtract((1 << bits) - 1, img, img);
+      }
 
-    if (p.imageTransform_flip != -100)
-      cv::flip(img, img, p.imageTransform_flip);
+      if (p.imageTransform_flip != -100)
+        cv::flip(img, img, p.imageTransform_flip);
 
-    switch (p.imageTransform_rot) {
-    case 1:
-      cv::transpose(img, img);
-      cv::flip(img, img, 0);
-      break;
-    case 2:
-      cv::flip(img, img, -1);
-      break;
-    case 3:
-      cv::transpose(img, img);
-      cv::flip(img, img, 1);
-      break;
-    }
+      switch (p.imageTransform_rot) {
+      case 1:
+        cv::transpose(img, img);
+        cv::flip(img, img, 0);
+        break;
 
-    bool needFiltering = false;
-    for (auto filter : p.filterChain) {
-      if (filter->isEnabled()) {
-        needFiltering = true;
+      case 2:
+        cv::flip(img, img, -1);
+        break;
+
+      case 3:
+        cv::transpose(img, img);
+        cv::flip(img, img, 1);
         break;
       }
-    }
-    if (!needFiltering) {
-      processedFrame = img;
-    } else {
-      int imageType = img.type();
+
+      bool needFiltering = false;
       for (auto filter : p.filterChain) {
-        if (filter->isEnabled())
-          filter->filterImage(img);
+        if (filter->isEnabled()) {
+          needFiltering = true;
+          break;
+        }
       }
-      img.convertTo(processedFrame, imageType);
+      if (!needFiltering) {
+        processedFrame = img;
+      } else {
+        int imageType = img.type();
+        for (auto filter : p.filterChain) {
+          if (filter->isEnabled())
+            filter->filterImage(img);
+        }
+        img.convertTo(processedFrame, imageType);
+      }
     }
 
     if (p.recorder && p.recorder->isOK()) {
-      p.recorder->recordFrame(frame, processedFrame);
+      if (p.recorder->recordsRaw())
+        p.recorder->recordFrame(frame);
+      else
+        p.recorder->recordFrame(processedFrame);
       if (p.timestampFile->isOpen()) {
         p.timestampFile->write(QString::number(item.timestamp).toAscii());
         p.timestampFile->write("\n");

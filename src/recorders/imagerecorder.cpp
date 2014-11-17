@@ -37,11 +37,15 @@ public:
 
   bool isOK() { return OK; }
 
+  bool recordsRaw() {
+    return false;
+  }
+
   qint64 fileSize() {
     return currentSize;
   }
 
-  void recordFrame(QByteArray raw, cv::Mat decoded) {
+  void recordFrame(cv::Mat decoded) {
     QString file = baseName.arg(currentNumber++, 19, 10, QChar('0'));
     OK = cv::imwrite(file.toStdString(), decoded);
     if (OK)

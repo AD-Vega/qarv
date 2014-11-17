@@ -34,11 +34,22 @@ public:
   //! Check if the recorder was initialized successfully
   virtual bool isOK() = 0;
 
+  //! Check whether the recorder takes raw input instead of processed.
+  virtual bool recordsRaw() = 0;
+
   /*!
-   * Write a single frame. Both raw and decoded forms must be provided, it
-   * is up to the recorder to decide whether the decoded form is useful.
+   * Write a single frame. Default implementations does nothing so
+   * that it does not need to be overriden for recorders that can't
+   * take raw video.
    */
-  virtual void recordFrame(QByteArray raw, cv::Mat decoded) = 0;
+  virtual void recordFrame(QByteArray raw) {};
+
+  /*!
+   * Write a single frame. Default implementations does nothing so
+   * that it does not need to be overriden for recorders that can't
+   * take processed video.
+   */
+  virtual void recordFrame(cv::Mat processed) {};
 
   /*!
    * Returns the size of recorded file in bytes.

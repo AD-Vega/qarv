@@ -66,7 +66,11 @@ public:
     return file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, cv::Mat decoded) {
+  bool recordsRaw() {
+    return true;
+  }
+
+  void recordFrame(QByteArray raw) {
     if (isOK()) {
       file.write(raw);
       if (!bytesizeWritten) {
@@ -129,7 +133,11 @@ public:
     return OK && file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, cv::Mat decoded) {
+  bool recordsRaw() {
+    return false;
+  }
+
+  void recordFrame(cv::Mat decoded) {
     if (!isOK())
       return;
     int pixPerRow = decoded.cols*decoded.channels();
@@ -200,7 +208,11 @@ public:
     return OK && file.isOpen() && (file.error() == QFile::NoError);
   }
 
-  void recordFrame(QByteArray raw, cv::Mat decoded) {
+  bool recordsRaw() {
+    return false;
+  }
+
+  void recordFrame(cv::Mat decoded) {
     if (!isOK())
       return;
     int pixPerRow = decoded.cols * decoded.channels();

@@ -171,7 +171,11 @@ public:
     return gstprocess.state() == QProcess::Running;
   }
 
-  void recordFrame(QByteArray raw, cv::Mat decoded) {
+  bool recordsRaw() {
+    return false;
+  }
+
+  void recordFrame(cv::Mat decoded) {
     if (!isOK())
       return;
     char* p;

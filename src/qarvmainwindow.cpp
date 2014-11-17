@@ -571,10 +571,13 @@ void QArvMainWindow::takeNextFrame() {
     ts = arv_buffer_get_timestamp(currentArvFrame);
 #endif
     Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
+    QArvDecoder* mydecoder = decoder;
+    if (myrecorder && !playing && myrecorder->recordsRaw())
+      mydecoder = NULL;
     bool running = workthread->cookFrame(queueMax,
                                          currentRawFrame,
                                          ts,
-                                         decoder,
+                                         mydecoder,
                                          invertColors->isChecked(),
                                          imageTransform_flip,
                                          imageTransform_rot,

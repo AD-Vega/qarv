@@ -211,7 +211,10 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
         break;
       }
       decoder->decode(frame);
-      recorder->recordFrame(frame, decoder->getCvImage());
+      if (recorder->recordsRaw())
+        recorder->recordFrame(frame);
+      else
+        recorder->recordFrame(decoder->getCvImage());
       if (!recorder->isOK()) {
         transcodeButton->setChecked(false);
         break;
