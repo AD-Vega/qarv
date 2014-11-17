@@ -28,6 +28,9 @@
 
 //! QArvRecordedVideo provides a means of opening a video description file.
 class QArvRecordedVideo {
+
+  class QArvRecordedVideoExtension;
+
 public:
   //! Opens the description file with the given filename.
   QArvRecordedVideo(const QString& filename);
@@ -87,6 +90,7 @@ public:
   int framerate();
 
 private:
+  QArvRecordedVideoExtension* ext;
   QFile videofile;
   QSize fsize;
   int fps;
