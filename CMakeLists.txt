@@ -1,8 +1,28 @@
 project(qarv)
 cmake_minimum_required(VERSION 2.8)
-set(qarv_VERSION 1.0.99)
-set(qarv_ABI 1)
-set(qarv_API 1)
+
+# Only set the version in release tarballs.
+#set(qarv_VERSION 1.0.99)
+set(qarv_ABI 2)
+set(qarv_API 2)
+
+if (NOT DEFINED qarv_VERSION)
+  message("Program version not specified, using git description.")
+  execute_process(COMMAND "git" "describe" "--tags"
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  OUTPUT_VARIABLE qarv_GIT_VERSION
+                  RESULT_VARIABLE qarv_GIT_RESULT)
+  if (NOT ${qarv_GIT_RESULT} EQUAL 0)
+    message("Not building from git, defaulting to version 99.99.99.")
+    set(qarv_VERSION "99.99.99")
+  else()
+    string(REPLACE "qarv-" ""
+           qarv_VERSION
+           ${qarv_GIT_VERSION})
+    string (STRIP ${qarv_VERSION} qarv_VERSION)
+  endif()
+endif()
+message("QArv version: ${qarv_VERSION}")
 
 macro(set_prefixed varname string)
   set(${varname})
