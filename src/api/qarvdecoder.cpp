@@ -167,7 +167,7 @@ QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
   return img;
 }
 
-QList<QArvPixelFormat*> initPluginFormats() {
+static QList<QArvPixelFormat*> initPluginFormats() {
   QList<QArvPixelFormat*> list;
   auto plugins = QPluginLoader::staticInstances();
   foreach (auto plugin, plugins) {
@@ -177,7 +177,7 @@ QList<QArvPixelFormat*> initPluginFormats() {
   return list;
 }
 
-QMap<ArvPixelFormat, enum PixelFormat> initSwScaleFormats();
+static QMap<ArvPixelFormat, enum PixelFormat> initSwScaleFormats();
 
 // List of formats supported by plugins.
 static QList<QArvPixelFormat*> pluginFormats = initPluginFormats();
@@ -260,7 +260,7 @@ QArvDecoder* QArvDecoder::makeSwScaleDecoder(PixelFormat fmt,
     return new QArv::SwScaleDecoder(size, fmt, 0);
 }
 
-QMap<ArvPixelFormat, PixelFormat> initSwScaleFormats() {
+static QMap<ArvPixelFormat, PixelFormat> initSwScaleFormats() {
   QMap<ArvPixelFormat, PixelFormat> m;
 
   m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = PIX_FMT_UYVY422;

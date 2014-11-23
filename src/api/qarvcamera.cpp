@@ -395,7 +395,7 @@ QByteArray QArvCamera::getFrame(bool dropInvalid,
 }
 
 //! Translates betwen the glib and Qt address types via a native sockaddr.
-QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
+static QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
   sockaddr addr;
   int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
   if (!success) {

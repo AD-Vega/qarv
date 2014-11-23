@@ -1051,7 +1051,7 @@ void QArvMainWindow::on_exposureSpinbox_editingFinished() {
   autoreadexposure->start();
 }
 
-void makeDockAWindow(QDockWidget* dock) {
+static void makeDockAWindow(QDockWidget* dock) {
   // Currently disabled as it causes jerkyness when undocking.
   return;
   dock->setWindowFlags(Qt::Window);

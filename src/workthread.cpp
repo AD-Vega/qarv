@@ -227,7 +227,7 @@ void Cooker::start() {
 }
 
 template<bool grayscale, bool depth8>
-void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
+static void renderFrame(const cv::Mat frame, QImage* image_, bool markClipped = false,
                  Histograms* hists = NULL, bool logarithmic = false) {
   typedef typename ::std::conditional<depth8, uint8_t, uint16_t>::type ImageType;
   float * histRed, * histGreen, * histBlue;

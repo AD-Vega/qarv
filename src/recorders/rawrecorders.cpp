@@ -33,7 +33,7 @@ using namespace QArv;
 
 static const QString descExt(".qarv");
 
-void initDescfile(QSettings& s, QSize size, int FPS) {
+static void initDescfile(QSettings& s, QSize size, int FPS) {
   s.beginGroup("qarv_raw_video_description");
   s.remove("");
   s.setValue("description_version", "0.1");
