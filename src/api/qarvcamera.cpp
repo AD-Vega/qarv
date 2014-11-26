@@ -38,7 +38,6 @@ class QArvCamera::QArvCameraExtension {
   friend class QArvCamera;
 
 private:
-  guint64 underruns;
 };
 
 QList<QArvCameraId> QArvCamera::cameraList;
@@ -295,8 +294,8 @@ void QArvCamera::swapBuffers() {
   emit frameReady();
   guint64 under;
   arv_stream_get_statistics(stream, NULL, NULL, &under);
-  if (under != ext->underruns) {
-    ext->underruns = under;
+  if (under != underruns) {
+    underruns = under;
     emit bufferUnderrun();
   }
 }
@@ -322,7 +321,7 @@ void QArvCamera::startAcquisition() {
   }
   arv_camera_start_acquisition(camera);
   acquiring = true;
-  ext->underruns = 0;
+  underruns = 0;
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 

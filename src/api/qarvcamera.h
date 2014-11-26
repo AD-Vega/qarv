@@ -205,8 +205,9 @@ signals:
   void bufferUnderrun();
 
 private:
-  QArvCameraExtension* ext;
   void swapBuffers();
+
+  QArvCameraExtension* ext;
   static QList<QArvCameraId> cameraList;
   ArvCamera* camera;
   ArvDevice* device;
@@ -214,6 +215,7 @@ private:
   ArvBuffer* currentFrame;
   bool acquiring;
   uint frameQueueSize;
+  quint64 underruns;
 
   friend void streamCallback(ArvStream* stream, QArvCamera* cam);
   friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
