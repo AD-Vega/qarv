@@ -173,16 +173,9 @@ public:
 
   //! \name Control acquisition
   /**@{*/
-  void startAcquisition();
+  void startAcquisition(bool zeroCopy = true, bool dropInvalidFrames = true);
   void stopAcquisition();
   void setFrameQueueSize(uint size = 30);
-  /**@}*/
-
-  //! \name Get a captured frame
-  /**@{*/
-  QSize getFrameSize();
-  QByteArray getFrame(bool dropInvalid = false, bool nocopy = false,
-                      ArvBuffer** rawbuffer = NULL);
   /**@}*/
 
   /*! \name Manipulate network parameters of an ethernet camera
@@ -200,24 +193,31 @@ public:
 
 signals:
   //! Emitted when a new frame is ready.
-  void frameReady();
+  /*! \param frame The raw frame data. May be empty for invalid frames.
+   *  \param aravisFrame The raw Aravis frame. This allows access to info
+   *  such as timestamp.
+   *  \sa ::startAcquisition()
+   */
+  void frameReady(QByteArray frame, ArvBuffer* aravisFrame);
   //! Emitted when a buffer underrun occurs.
   void bufferUnderrun();
 
-private:
-  void swapBuffers();
+private slots:
+  void receiveFrame();
 
+private:
   QArvCameraExtension* ext;
   static QList<QArvCameraId> cameraList;
   ArvCamera* camera;
   ArvDevice* device;
   ArvStream* stream;
-  ArvBuffer* currentFrame;
   bool acquiring;
   uint frameQueueSize;
   quint64 underruns;
+  bool nocopy;
+  bool dropInvalid;
 
-  friend void streamCallback(ArvStream* stream, QArvCamera* cam);
+  friend void QArvStreamCallback(void*, int, ArvBuffer*);
   friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
   friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
 

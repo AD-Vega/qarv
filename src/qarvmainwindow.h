@@ -51,8 +51,6 @@ public:
 
 signals:
   void recordingStarted(bool started);
-  void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
-  void frameReady(cv::Mat processed);
 
 private slots:
   void on_refreshCamerasButton_clicked(bool clicked = false);
@@ -100,8 +98,6 @@ private slots:
   void readExposure();
   void readGain();
   void startVideo(bool start);
-  void takeNextFrame();
-  void frameProcessed(cv::Mat frame);
   void updateBandwidthEstimation();
   void updateImageTransform();
   void showFPS();
@@ -138,9 +134,6 @@ private:
   int statusTimeoutMsec;
   QMap<QString, QWidget*> saved_widgets;
   QScopedPointer<Recorder> recorder;
-  cv::Mat currentFrame;
-  QByteArray currentRawFrame;
-  ArvBuffer* currentArvFrame;
   bool futureHoldsAHistogram;
   QFile timestampFile;
   QLabel* recordingTimeLabel;

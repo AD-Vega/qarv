@@ -37,11 +37,13 @@
 #include <QPluginLoader>
 #include <QMenu>
 #include <QToolButton>
-
+#include <QSignalSpy>
 
 extern "C" {
   #include <arvbuffer.h>
 }
+
+Q_DECLARE_METATYPE(cv::Mat)
 
 using namespace QArv;
 
@@ -65,7 +67,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   aboutLabel->setText(aboutLabel->text().arg(QARV_VERSION));
 
   workthread = new Workthread(this);
-  connect(workthread, SIGNAL(frameCooked(cv::Mat)), SLOT(frameProcessed(cv::Mat)));
   connect(workthread, SIGNAL(frameRendered()), SLOT(frameRendered()));
 
   // Setup theme icons if available.
@@ -246,6 +247,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 QArvMainWindow::~QArvMainWindow() {
   stopAllAcquisition();
   saveProgramSettings();
+  if (camera)
+    delete camera;
 }
 
 void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
@@ -384,9 +387,8 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     startVideo(false);
     delete camera;
   }
-  camera = new QArvCamera(camid, this);
+  camera = new QArvCamera(camid);
   this->connect(camera, SIGNAL(bufferUnderrun()), SLOT(bufferUnderrunOccured()));
-  this->connect(camera, SIGNAL(frameReady()), SLOT(takeNextFrame()));
 
   logMessage() << "Pixel formats:" << camera->getPixelFormats();
 
@@ -539,116 +541,22 @@ void QArvMainWindow::on_binSpinBox_valueChanged(int value) {
   startVideo(tostart);
 }
 
-void QArvMainWindow::takeNextFrame() {
-  int cookerQueue1, cookerQueue2;
-  queueUsage->setValue(workthread->queueSize(cookerQueue1, cookerQueue2));
-  int queueMax = streamFramesSpinbox->value();
-  /* "Full" should represent the state of queue1. However, we also want the
-   * bar to show how the queue empties when we stop acquisition. So we set
-   * the maximum such that the bar is full when queue1 is full and it also
-   * contains queue2.
-   */
-  queueUsage->setMaximum(queueMax / 2 + cookerQueue2);
-
-  if (!started)
-    return;
-
-  framecounter++;
-  if (playing || recording) {
-    currentRawFrame = camera->getFrame(dropInvalidFrames->isChecked(),
-                                       nocopyCheck->isChecked(),
-                                       &currentArvFrame);
-    if (currentRawFrame.isEmpty()) {
-      if (playing)
-        video->setImage(invalidImage);
-      return ;
-    }
-
-    if (!standalone) {
-      if (recording)
-        emit frameReady(currentRawFrame, currentArvFrame);
-      if (!playing)
-        return;
-    }
-
-    quint64 ts;
-#ifdef ARAVIS_OLD_BUFFER
-    ts = currentArvFrame->timestamp_ns;
-#else
-    ts = arv_buffer_get_timestamp(currentArvFrame);
-#endif
-    Recorder* myrecorder = (recording && standalone) ? recorder.data() : NULL;
-    QArvDecoder* mydecoder = decoder;
-    if (myrecorder && !playing && myrecorder->recordsRaw())
-      mydecoder = NULL;
-    bool running = workthread->cookFrame(queueMax,
-                                         currentRawFrame,
-                                         ts,
-                                         mydecoder,
-                                         invertColors->isChecked(),
-                                         imageTransform_flip,
-                                         imageTransform_rot,
-                                         postprocChainAsList,
-                                         timestampFile,
-                                         myrecorder);
-    if (!running) {
-      QString msg = tr("Too slow, dropping frames!");
-      logMessage() << msg;
-      statusBar()->showMessage(msg, statusTimeoutMsec);
-    }
-
-    // Actual recording is delayed, but we need to count the
-    // frames now if we want to stop recording after a set number.
-    if (recording && standalone) {
-      recordedFrames++;
-      if (stopRecordingFramesRadio->isChecked() &&
-          recordedFrames >= stopRecordingFrames->value()) {
-        recordAction->setChecked(false);
-        closeFileAction->trigger();
-      }
-    }
-  }
-}
-
-void QArvMainWindow::frameProcessed(cv::Mat frame) {
-  currentFrame = frame;
-  if ((playing || drawHistogram)) {
-    Histograms* hists;
-    if (drawHistogram) {
-      futureHoldsAHistogram = true;
-      drawHistogram = false;
-      hists = histogram->unusedHistograms();
-    } else {
-      hists = nullptr;
-    }
-    workthread->renderFrame(currentFrame,
-                            video->unusedFrame(),
-                            markClipped->isChecked(),
-                            hists,
-                            histogramLog->isChecked());
-  }
-
-  if (recording && standalone) {
-    if (!recorder->isOK()) {
-      auto message = tr("Recording plugin failed, stopped recording.");
-      statusBar()->showMessage(message, statusTimeoutMsec);
-      logMessage() << message;
-      recordAction->setChecked(false);
-      closeFileAction->trigger();
-    }
-  }
-
-  if (recording && !standalone) {
-    emit frameReady(currentFrame);
-  }
-}
-
 void QArvMainWindow::frameRendered() {
   if (playing)
     video->swapFrames();
   if (futureHoldsAHistogram) {
     futureHoldsAHistogram = false;
-    histogram->swapHistograms(currentFrame.channels() == 1);
+    if (decoder) // may have been deleted by now
+      histogram->swapHistograms(CV_MAT_CN(decoder->cvType()) == 1);
+  }
+  bool dohist = histogramdock->isVisible();
+  if (playing || dohist) {
+    futureHoldsAHistogram = dohist;
+    Histograms* hists = dohist ? histogram->unusedHistograms() : nullptr;
+    workthread->renderFrame(video->unusedFrame(),
+                            markClipped->isChecked(),
+                            hists,
+                            histogramLog->isChecked());
   }
 }
 
@@ -665,9 +573,9 @@ void QArvMainWindow::startVideo(bool start) {
     if (start && !started) {
       if (decoder != NULL) delete decoder;
       decoder = QArvDecoder::makeDecoder(camera->getPixelFormatId(),
-                                         camera->getFrameSize(),
+                                         camera->getROI().size(),
                                          useFastInterpolator->isChecked());
-      invalidImage = QImage(camera->getFrameSize(),
+      invalidImage = QImage(camera->getROI().size(),
                             QImage::Format_ARGB32_Premultiplied);
       invalidImage.fill(Qt::red);
       if (decoder == NULL) {
@@ -677,25 +585,24 @@ void QArvMainWindow::startVideo(bool start) {
         statusBar()->showMessage(message, statusTimeoutMsec);
         if (standalone)
           decoder = new Unsupported(camera->getPixelFormatId(),
-                                    camera->getFrameSize());
+                                    camera->getROI().size());
       }
       if (decoder != NULL) {
+        workthread->newCamera(camera, decoder);
         camera->setFrameQueueSize(streamFramesSpinbox->value());
-        camera->startAcquisition();
+        workthread->startCamera(nocopyCheck->isChecked(),
+                                dropInvalidFrames->isChecked());
         started = true;
         foreach (auto wgt, toDisableWhenPlaying) {
           wgt->setEnabled(false);
         }
         pixelFormatSelector->setEnabled(false);
       }
-      queueUsage->setMaximum(streamFramesSpinbox->value());
-      queueUsage->setValue(0);
     } else if (!start && started) {
       started = false;
-      do {
-        QApplication::processEvents();
-      } while (workthread->isBusy());
-      camera->stopAcquisition();
+      workthread->stopCamera();
+      workthread->waitUntilProcessingCycleCompletes();
+      workthread->newCamera(nullptr, nullptr);
       if (decoder != NULL) delete decoder;
       decoder = NULL;
       bool open = recorder && recorder->isOK();
@@ -717,7 +624,17 @@ void QArvMainWindow::on_playButton_toggled(bool checked) {
   startVideo(playing || recording);
   playing = checked && started;
   playButton->setChecked(playing);
-  if (!playing) video->setImage();
+  bool dohist = histogramdock->isVisible();
+  if (!playing) {
+    video->setImage();
+  } else {
+    futureHoldsAHistogram = dohist;
+    Histograms* hists = dohist ? histogram->unusedHistograms() : nullptr;
+    workthread->renderFrame(video->unusedFrame(),
+                            markClipped->isChecked(),
+                            hists,
+                            histogramLog->isChecked());
+  }
 }
 
 void QArvMainWindow::on_recordAction_toggled(bool checked) {
@@ -805,6 +722,8 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 skip_all_file_opening:
 
   recording = checked;
+  if (standalone && !recording)
+    workthread->stopRecording();
   startVideo(recording || playing);
   bool error = checked && !started;
   recording = checked && started;
@@ -820,13 +739,17 @@ skip_all_file_opening:
   }
 
   if (recording) {
-      recordedFrames = 0;
-      recordingTime.start();
-      updateRecordingTime();
+    if (standalone && recorder) {
+      workthread->newRecorder(recorder.data(), &timestampFile);
+      workthread->startRecording();
+    }
+    recordedFrames = 0;
+    recordingTime.start();
+    updateRecordingTime();
   } else {
-      // Update the elapsed time before invalidating the timer.
-      updateRecordingTime();
-      recordingTime = QTime();
+    // Update the elapsed time before invalidating the timer.
+    updateRecordingTime();
+    recordingTime = QTime();
   }
   if (!error)
     emit recordingStarted(recording);
@@ -859,12 +782,42 @@ void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
                      + snapbasenameEdit->text()
                      + time.toString("yyyy-MM-dd-hhmmss.zzz");
   if (snapshotPNG->isChecked()) {
-    QImage img = QArvDecoder::CV2QImage_RGB24(currentFrame);
+    QSignalSpy spy(workthread, SIGNAL(frameCooked(cv::Mat)));
+    if (!spy.isValid()) {
+      logMessage() << "Snapshot: invalid connection.";
+      return;
+    }
+    uint count = 0;
+    const uint limit = 3000;
+    while (spy.isEmpty() && count++ < limit)
+      usleep(1000);
+    if (count >= limit) {
+      QString msg = tr("No snapshot saved, timed out waiting for frame.");
+      logMessage() << msg;
+      statusBar()->showMessage(msg, statusTimeoutMsec);
+    }
+    QVariant var = spy.first().first();
+    QImage img = QArvDecoder::CV2QImage_RGB24(var.value<cv::Mat>());
     if (!img.save(fileName + ".png"))
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);
   } else if (snapshotRaw->isChecked()) {
-    auto frame = camera->getFrame(dropInvalidFrames->isChecked(), false);
+    QSignalSpy spy(workthread, SIGNAL(frameDelivered(QByteArray, ArvBuffer*)));
+    if (!spy.isValid()) {
+      logMessage() << "Snapshot: invalid connection.";
+      return;
+    }
+    uint count = 0;
+    const uint limit = 3000;
+    while (spy.isEmpty() && count++ < limit)
+      usleep(1000);
+    if (count >= limit) {
+      QString msg = tr("No snapshot saved, timed out waiting for frame.");
+      logMessage() << msg;
+      statusBar()->showMessage(msg, statusTimeoutMsec);
+    }
+    QVariant var = spy.first().first();
+    auto frame = var.value<QByteArray>();
     if (frame.isEmpty()) {
       statusBar()->showMessage(tr("Current frame is invalid, try "
                                   "snapshotting again."), statusTimeoutMsec);
@@ -1014,6 +967,9 @@ void QArvMainWindow::updateImageTransform() {
   else if (!flipHorizontal->isChecked() && !flipVertical->isChecked())
     imageTransform_flip = -100; // Magic value
   imageTransform_rot = angle / 90;
+
+  workthread->setImageTransform(invertColors->isChecked(),
+                                imageTransform_flip, imageTransform_rot);
 }
 
 void QArvMainWindow::showFPS() {
@@ -1103,9 +1059,7 @@ void QArvMainWindow::on_messageDock_topLevelChanged(bool floating) {
 void QArvMainWindow::on_closeFileAction_triggered(bool checked) {
   // This function assumes on_recordAction_toggled(false) was
   // done before calling it.
-  do {
-    QApplication::processEvents();
-  } while (workthread->isBusy());
+  workthread->waitUntilProcessingCycleCompletes();
   recorder.reset();
   timestampFile.close();
   closeFileAction->setEnabled(recording);
@@ -1394,6 +1348,7 @@ void QArvMainWindow::updatePostprocQList() {
   // that are still used by the filter will remain while the
   // filter needs them.
   postprocChainAsList = newList;
+  workthread->setFilterChain(postprocChainAsList);
 }
 
 void QArvMainWindow::stopAllAcquisition() {

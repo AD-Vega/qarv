@@ -22,6 +22,11 @@
 
 using namespace QArv;
 
+static int init = [] () {
+  qRegisterMetaType<Recorder*>("Recorder*");
+  return 0;
+}();
+
 Recorder* OutputFormat::makeRecorder(QArvDecoder* decoder,
                                      QString fileName,
                                      QString outputFormat,

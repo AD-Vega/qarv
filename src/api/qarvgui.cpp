@@ -79,14 +79,14 @@ QArvGui::~QArvGui() {
 
 void QArvGui::signalForwarding(bool enable) {
   if (enable) {
-    connect(ext->mw, SIGNAL(frameReady(QByteArray,ArvBuffer*)),
+    connect(ext->mw->workthread, SIGNAL(frameDelivered(QByteArray,ArvBuffer*)),
             this, SIGNAL(frameReady(QByteArray, ArvBuffer*)));
-    connect(ext->mw, SIGNAL(frameReady(cv::Mat)),
+    connect(ext->mw->workthread, SIGNAL(frameCooked(cv::Mat)),
             this, SIGNAL(frameReady(cv::Mat)));
   } else {
-    disconnect(ext->mw, SIGNAL(frameReady(QByteArray,ArvBuffer*)),
+    disconnect(ext->mw->workthread, SIGNAL(frameDelivered(QByteArray,ArvBuffer*)),
                this, SIGNAL(frameReady(QByteArray, ArvBuffer*)));
-    disconnect(ext->mw, SIGNAL(frameReady(cv::Mat)),
+    disconnect(ext->mw->workthread, SIGNAL(frameCooked(cv::Mat)),
                this, SIGNAL(frameReady(cv::Mat)));
   }
   emit recordingToggled(enable);

@@ -47,6 +47,7 @@ void QArvCamera::init() {
   g_type_init();
 #endif
   arv_enable_interface("Fake");
+  qRegisterMetaType<ArvBuffer*>("ArvBuffer*");
 }
 
 QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
@@ -288,34 +289,81 @@ void QArvCamera::setAutoGain(bool enable) {
 }
 
 //! Store the pointer to the current frame.
-void QArvCamera::swapBuffers() {
-  arv_stream_push_buffer(stream, currentFrame);
-  currentFrame = arv_stream_pop_buffer(stream);
-  emit frameReady();
+void QArvCamera::receiveFrame() {
+  if (!acquiring)
+    return; // Stream does not exist any more.
+
+  ArvBuffer* frame = arv_stream_pop_buffer(stream);
+  QByteArray baframe;
+  ArvBufferStatus status;
+#ifdef ARAVIS_OLD_BUFFER
+  status = frame->status;
+#else
+  status = arv_buffer_get_status(frame);
+#endif
+  if (status == ARV_BUFFER_STATUS_SUCCESS || !dropInvalid) {
+    size_t size;
+    const void* data;
+#ifdef ARAVIS_OLD_BUFFER
+    data = frame->data;
+    size = frame->size;
+#else
+    data = arv_buffer_get_data(frame, &size);
+#endif
+    if (nocopy) {
+      baframe = QByteArray::fromRawData(static_cast<const char*>(data), size);
+    } else {
+      baframe = QByteArray(static_cast<const char*>(data), size);
+    }
+  }
+
+  emit frameReady(baframe, frame);
+  arv_stream_push_buffer(stream, frame);
+
   guint64 under;
   arv_stream_get_statistics(stream, NULL, NULL, &under);
   if (under != underruns) {
     underruns = under;
+    int in, out;
+    arv_stream_get_n_buffers(stream, &in, &out);
+    qDebug() << "in out" << in << out;
     emit bufferUnderrun();
   }
 }
 
-//! A wrapper that calls cam's private callback to accept frames.
-void streamCallback(ArvStream* stream, QArvCamera* cam) {
-  cam->swapBuffers();
+inline void QArvStreamCallback(void* vcam, int type, ArvBuffer* bfr) {
+  if (type == ARV_STREAM_CALLBACK_TYPE_BUFFER_DONE) {
+    auto cam = static_cast<QArvCamera*>(vcam);
+    QMetaObject::invokeMethod(cam, "receiveFrame", Qt::QueuedConnection);
+  }
+}
+
+static void QArvStreamCallbackWrap(void* vcam,
+                            ArvStreamCallbackType type,
+                            ArvBuffer* bfr) {
+  QArvStreamCallback(vcam, type, bfr);
 }
 
 /*!
  * This function not only starts acquisition, but also pushes a number of
  * frames onto the stream and sets up the callback which accepts frames.
+ * \param dropInvalidFrames If true, the frameReady() signal will return
+ * an empty QByteArray when the frame is not complete.
+ * \param zeroCopy If true, the QByteArray sent by the
+ * frameReady() signal doesn't own the data. The
+ * caller guarantees that the frame will be used "quickly", i.e. before it is
+ * used to capture the next image. Only use this if the caller will decode or
+ * otherwise copy the data immediately. Note that the array itself is never
+ * invalidated after the grace period passes, it is merely overwritten.
+ * Also note that zeroCopy only applies to the QBytearray; the ArvBuffer is
+ * never copied.
  */
-void QArvCamera::startAcquisition() {
+void QArvCamera::startAcquisition(bool zeroCopy, bool dropInvalidFrames) {
+  nocopy = zeroCopy;
+  dropInvalid = dropInvalidFrames;
   if (acquiring) return;
   unsigned int framesize = arv_camera_get_payload(camera);
-  currentFrame = arv_buffer_new(framesize, NULL);
-  stream = arv_camera_create_stream(camera, NULL, NULL);
-  arv_stream_set_emit_signals(stream, TRUE);
-  g_signal_connect(stream, "new-buffer", G_CALLBACK(streamCallback), this);
+  stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this);
   for (uint i = 0; i < frameQueueSize; i++) {
     arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
   }
@@ -328,7 +376,6 @@ void QArvCamera::startAcquisition() {
 void QArvCamera::stopAcquisition() {
   if (!acquiring) return;
   arv_camera_stop_acquisition(camera);
-  g_object_unref(currentFrame);
   g_object_unref(stream);
   acquiring = false;
   emit dataChanged(QModelIndex(), QModelIndex());
@@ -336,9 +383,9 @@ void QArvCamera::stopAcquisition() {
 
 //! Set the number of frames on the stream. Takes effect on startAcquisition().
 /*! An Aravis stream has a queue of frame buffers which is cycled as frames are
- * acquired. The getFrame() function returns the frame that is currently being
+ * acquired. The frameReady() signal returns the frame that is currently being
  * cycled. Several frames should be put on the queue for smooth operation. More
- * should be used when using the nocopy facility of getFrame(), as this
+ * should be used when using the zeroCopy facility of startAcquisition(), as this
  * increases the grace period in which the returned frame is valid. For
  * example, with the queue size of 30 and framerate of 60 FPS, the grace period
  * is approximately one half second. Increasing the queue size increases the
@@ -346,51 +393,6 @@ void QArvCamera::stopAcquisition() {
  */
 void QArvCamera::setFrameQueueSize(uint size) {
   frameQueueSize = size;
-}
-
-QSize QArvCamera::getFrameSize() {
-  return getROI().size();
-}
-
-/*!
- * \param dropInvalid If true, return an empty QByteArray on an invalid frame.
- * \param nocopy If true, the  returned QByteArray doesn't own the data. The
- * caller guarantees that the frame will be used "quickly", i.e. before it is
- * used to capture the next image. Only use this if the caller will decode or
- * otherwise copy the data immediately. Note that the array itself is never
- * invalidated after the grace period passes, it is merely overwritten.
- * \param rawbuffer If not NULL, the pointer to the Aravis' frame struct is
- * stored here. It can be used to get additional information about the frame,
- * such as its timestamp. The caller must provide similar guarantees as if the
- * nocopy parameter were set to true.
- * \return A QByteArray with raw frame data of size given by getFrameSize().
- */
-QByteArray QArvCamera::getFrame(bool dropInvalid,
-                                bool nocopy,
-                                ArvBuffer** rawbuffer) {
-  if (rawbuffer != NULL) *rawbuffer = currentFrame;
-  ArvBufferStatus status;
-#ifdef ARAVIS_OLD_BUFFER
-  status = currentFrame->status;
-#else
-  status = arv_buffer_get_status(currentFrame);
-#endif
-  if (status != ARV_BUFFER_STATUS_SUCCESS && dropInvalid)
-    return QByteArray();
-  else {
-    size_t size;
-    const void* data;
-#ifdef ARAVIS_OLD_BUFFER
-    data = currentFrame->data;
-    size = currentFrame->size;
-#else
-    data = arv_buffer_get_data(currentFrame, &size);
-#endif
-    if (nocopy)
-      return QByteArray::fromRawData(static_cast<const char*>(data), size);
-    else
-      return QByteArray(static_cast<const char*>(data), size);
-  }
 }
 
 //! Translates betwen the glib and Qt address types via a native sockaddr.

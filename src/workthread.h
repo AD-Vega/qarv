@@ -22,18 +22,27 @@
  * no resources that are "really" shared, e.g. the decoder is only ever used
  * in the Cooker thread so there is no chance of a race. These resources are
  * only freed in the main thread after the work is complete.
+ *
+ * Exceptions: the camera lives in the Cooker's thread in order to deliver
+ * signals completely bypassing the GUI thread. Apart from its signals and
+ * acqusition control, its functions should be safe to use from the GUI thread
+ * because signals are the only thing it needs event loop for. Calls that need
+ * to be threadsafe are implemented via Workthread and Cooker.
  */
 
 #ifndef WORKTHREAD_H
 #define WORKTHREAD_H
 
 #include "filters/filter.h"
+#include "api/qarvcamera.h"
 #include <QImage>
 #include <QQueue>
 #include <QFile>
 #include <opencv2/core/core.hpp>
+#include <functional>
 
 class QArvDecoder;
+class QThread;
 
 namespace QArv {
 
@@ -47,33 +56,42 @@ class Cooker: public QObject {
   friend class Workthread;
   explicit Cooker(QObject* parent = 0);
 
-  struct QueueItem {
-    QByteArray rawFrame;
-    quint64 timestamp;
-  };
-
   struct Parameters {
-    bool imageTransform_invert;
-    int imageTransform_flip;
-    int imageTransform_rot;
+    bool imageTransform_invert = false;
+    int imageTransform_flip = 0;
+    int imageTransform_rot = 0;
     QList<ImageFilterPtr> filterChain;
-    QArvDecoder* decoder;
-    QFile* timestampFile;
-    Recorder* recorder;
+    QArvDecoder* decoder = nullptr;
+    QFile* timestampFile = nullptr;
+    Recorder* recorder = nullptr;
   };
 
 private slots:
-  void start();
+  void processEvents();
+
+  void returnCamera(QArvCamera* camera, QThread* thread);
+
+  void cameraAcquisition(QArvCamera* camera, bool start,
+                         bool zeroCopy, bool dropInvalidFrames);
+
+  void processFrame(QByteArray frame, ArvBuffer* aravisFrame);
+
+  void setImageTransform(bool imageTransform_invert,
+                         int imageTransform_flip,
+                         int imageTransform_rot);
+
+  void setFilterChain(QList<ImageFilterPtr> filterChain);
+
+  void setRecorder(Recorder* recorder, QFile* timestampFile);
 
 signals:
-  void done(cv::Mat frame, bool cycleComplete);
+  void frameCooked(cv::Mat frame);
+  void frameToRender(cv::Mat frame);
 
 private:
   Parameters p;
-  QQueue<QueueItem> queue;
   cv::Mat processedFrame;
-  bool busy = false;
-  std::atomic_flag abortCycle;
+  std::atomic_bool doRender;
 };
 
 class Renderer: public QObject {
@@ -83,19 +101,17 @@ class Renderer: public QObject {
   explicit Renderer(QObject* parent = 0);
 
 private slots:
-  void start();
+  void renderFrame(cv::Mat frame);
+  void processEvents();
 
 signals:
-  void done();
+  void frameRendered();
 
 private:
-  cv::Mat frame;
   QImage* destinationImage;
   bool markClipped;
   Histograms* hists;
   bool logarithmic;
-
-  bool busy = false;
 };
 
 class Workthread: public QObject {
@@ -105,43 +121,44 @@ public:
   explicit Workthread(QObject* parent = 0);
   ~Workthread();
 
-  // Returns false on queue overflow.
-  bool cookFrame(int queueMax,
-                 QByteArray rawFrame,
-                 quint64 timestamp,
-                 QArvDecoder* decoder,
-                 bool imageTransform_invert,
-                 int imageTransform_flip,
-                 int imageTransform_rot,
-                 QList<ImageFilterPtr> filterChain,
-                 QFile& timestampFile,
-                 Recorder* recorder = NULL);
+  // Replaces the old camera with the new one. After that, the old
+  // camera can be deleted. The new camera can be NULL, and so can the
+  // decoder.
+  void newCamera(QArvCamera* camera, QArvDecoder* decoder);
 
-  // Returns false if the thread is busy.
-  bool renderFrame(const cv::Mat frame,
-                   QImage* destinationImage,
+  // Can be NULL.
+  void newRecorder(Recorder* recorder, QFile* timestampFile);
+
+  void startRecording();
+  void stopRecording();
+
+  void startCamera(bool zeroCopy, bool dropInvalidFrames);
+  void stopCamera();
+
+  void setImageTransform(bool imageTransform_invert,
+                         int imageTransform_flip,
+                         int imageTransform_rot);
+
+  void setFilterChain(QList<ImageFilterPtr> filterChain);
+
+  void renderFrame(QImage* destinationImage,
                    bool markClipped = false,
                    Histograms* hists = NULL,
                    bool logarithmic = false);
 
-  bool isBusy();
-  int queueSize(int& controllerQueue, int& cookerQueue);
+  void waitUntilProcessingCycleCompletes();
 
 signals:
+  void frameDelivered(QByteArray frame, ArvBuffer* arvFrame);
   void frameCooked(cv::Mat frame);
   void frameRendered();
 
-private slots:
-  void cookerFinished(cv::Mat frame, bool cycleComplete);
-  void rendererFinished();
-
 private:
-  void startCooker();
-
+  QArvCamera* camera = nullptr;
+  Recorder* recorder = nullptr;
+  QFile* timestampFile = nullptr;
   Cooker* cooker;
   Renderer* renderer;
-  QQueue<Cooker::QueueItem> queue;
-  Cooker::Parameters cookerParams;
 };
 
 };
