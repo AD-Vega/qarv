@@ -36,7 +36,6 @@
 #include "filters/filter.h"
 #include "api/qarvcamera.h"
 #include <QImage>
-#include <QQueue>
 #include <QFile>
 #include <opencv2/core/core.hpp>
 #include <functional>

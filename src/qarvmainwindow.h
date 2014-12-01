@@ -143,7 +143,6 @@ private:
   QStandardItemModel postprocChain;
   QList<ImageFilterPtr> postprocChainAsList;
   Workthread* workthread;
-  QProgressBar* queueUsage;
 
   friend class ::QArvGui;
 };

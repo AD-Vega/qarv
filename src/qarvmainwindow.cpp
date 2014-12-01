@@ -228,19 +228,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   recordingTimeLabel = new QLabel(tr("Recording stopped"));
   statusBar()->addPermanentWidget(recordingTimeLabel);
   statusBar()->addPermanentWidget(makeVerticalLine());
-  queueUsage = new QProgressBar;
-  QString queueLabelText = tr("Queue");
-  queueUsage->setFormat(queueLabelText);
-  queueUsage->setToolTip("<qt/>"
-                         + tr("This bar shows filling of the frame "
-                              "queue. If it overflows, the "
-                              "frames in the queue will be discarded."));
-  auto tmpLabel = new QLabel(queueLabelText);
-  statusBar()->addPermanentWidget(tmpLabel);
-  queueUsage->setMaximumWidth(tmpLabel->width() + 20);
-  delete tmpLabel;
-  queueUsage->setValue(0);
-  statusBar()->addPermanentWidget(queueUsage);
   statusBar()->showMessage(tr("Welcome to QArv!"));
 }
 
