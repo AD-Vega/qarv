@@ -326,7 +326,6 @@ void QArvCamera::receiveFrame() {
     underruns = under;
     int in, out;
     arv_stream_get_n_buffers(stream, &in, &out);
-    qDebug() << "in out" << in << out;
     emit bufferUnderrun();
   }
 }
