@@ -37,6 +37,7 @@
 #include "api/qarvcamera.h"
 #include <QImage>
 #include <QFile>
+#include <QTime>
 #include <opencv2/core/core.hpp>
 #include <functional>
 
@@ -83,6 +84,8 @@ private slots:
 
   void setRecorder(Recorder* recorder, QFile* timestampFile, int maxFrames);
 
+  void getFps(uint* fps);
+
 signals:
   void frameCooked(cv::Mat frame);
   void frameToRender(cv::Mat frame);
@@ -94,6 +97,9 @@ private:
   std::atomic_bool doRender;
   int maxRecordedFrames;
   int recordedFrames;
+  uint receivedFrames;
+  QTime lastFpsRequest;
+  uint lastFpsRequestFrames;
 };
 
 class Renderer: public QObject {
@@ -153,6 +159,8 @@ public:
                    bool logarithmic = false);
 
   void waitUntilProcessingCycleCompletes();
+
+  uint getFps();
 
 signals:
   void frameDelivered(QByteArray frame, ArvBuffer* arvFrame);

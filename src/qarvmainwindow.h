@@ -127,7 +127,6 @@ private:
   bool playing, recording, started, drawHistogram, standalone;
   QTransform imageTransform;
   int imageTransform_flip, imageTransform_rot;
-  uint framecounter;
   QByteArray oldstate, oldgeometry;
   QSize oldsize;
   QList<QWidget*> toDisableWhenPlaying;

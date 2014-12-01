@@ -156,8 +156,16 @@ void Workthread::renderFrame(QImage* destinationImage,
   cooker->doRender.store(true);
 }
 
+uint Workthread::getFps() {
+  uint fps;
+  QMetaObject::invokeMethod(cooker, "getFps", Qt::BlockingQueuedConnection,
+                            Q_ARG(uint*, &fps));
+  return fps;
+}
+
 Cooker::Cooker(QObject* parent) : QObject(parent) {
   doRender.store(false);
+  lastFpsRequest.start();
 }
 
 void Cooker::processEvents() {
@@ -172,13 +180,18 @@ void Cooker::cameraAcquisition(QArvCamera* camera,
                                bool start,
                                bool zeroCopy,
                                bool dropInvalidFrames) {
-  if (start)
+  if (start) {
     camera->startAcquisition(zeroCopy, dropInvalidFrames);
-  else
+    lastFpsRequest = QTime::currentTime();
+    receivedFrames = 0;
+    lastFpsRequestFrames = 0;
+  } else {
     camera->stopAcquisition();
+  }
 }
 
 void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
+  ++receivedFrames;
   if (p.decoder) {
     p.decoder->decode(frame);
     cv::Mat img = p.decoder->getCvImage();
@@ -277,6 +290,16 @@ void Cooker::setRecorder(Recorder* recorder, QFile* timestampFile,
   if (maxFrames != -1) {
     maxRecordedFrames = maxFrames;
     recordedFrames = 0;
+  }
+}
+
+void Cooker::getFps(uint* fps) {
+  if (fps) {
+    uint ms = lastFpsRequest.elapsed();
+    double tmp = (receivedFrames - lastFpsRequestFrames) * 1000 / (double)ms;
+    *fps = nearbyint(tmp);
+    lastFpsRequest.start();
+    lastFpsRequestFrames = receivedFrames;
   }
 }
 

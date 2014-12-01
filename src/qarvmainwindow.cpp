@@ -51,7 +51,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   QMainWindow(parent), camera(NULL), decoder(NULL), playing(false),
   recording(false), started(false), drawHistogram(false),
   standalone(standalone_), imageTransform(),
-  imageTransform_flip(0), imageTransform_rot(0), framecounter(0),
+  imageTransform_flip(0), imageTransform_rot(0),
   toDisableWhenPlaying(), toDisableWhenRecording(), futureHoldsAHistogram(false),
   recordingTimeCumulative(0) {
 
@@ -973,8 +973,7 @@ void QArvMainWindow::updateImageTransform() {
 }
 
 void QArvMainWindow::showFPS() {
-  actualFPS->setText(QString::number(framecounter));
-  framecounter = 0;
+  actualFPS->setText(QString::number(workthread->getFps()));
 }
 
 void QArvMainWindow::on_editExposureButton_clicked(bool checked) {
