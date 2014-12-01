@@ -68,6 +68,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
   workthread = new Workthread(this);
   connect(workthread, SIGNAL(frameRendered()), SLOT(frameRendered()));
+  connect(workthread, SIGNAL(recordingStopped()), SLOT(stopRecording()));
 
   // Setup theme icons if available.
   bool usingFallbackIcons = false;
@@ -642,13 +643,18 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
       videoFormatSelector,
       recordInfoCheck,
       recordMetadataCheck,
-      recordTimestampsCheck
+      recordTimestampsCheck,
+      stopRecordingFrames,
+      stopRecordingTime,
     };
+    for (auto b: stopRecordingRadios->buttons())
+      toDisableWhenRecording << b;
   }
 
+  bool freshStart = (checked && !recorder) || (recorder && !recorder->isOK());
   if (!standalone) goto skip_all_file_opening;
 
-  if ((checked && !recorder) || (recorder && !recorder->isOK())) {
+  if (freshStart) {
     if (filenameEdit->text().isEmpty()) {
       tabWidget->setCurrentWidget(recordingTab);
       statusBar()->showMessage(tr("Please set the video file name."),
@@ -728,9 +734,16 @@ skip_all_file_opening:
   if (recording) {
     if (standalone && recorder) {
       workthread->newRecorder(recorder.data(), &timestampFile);
-      workthread->startRecording();
+      int maxFrames = 0;
+      if (stopRecordingFramesRadio->isChecked()) {
+        if (freshStart) {
+          maxFrames = stopRecordingFrames->value();
+        } else {
+          maxFrames = -1;
+        }
+      }
+      workthread->startRecording(maxFrames);
     }
-    recordedFrames = 0;
     recordingTime.start();
     updateRecordingTime();
   } else {
@@ -1251,6 +1264,12 @@ void QArvMainWindow::on_postprocList_doubleClicked(const QModelIndex& index) {
 
 void QArvMainWindow::updateRecordingTime()
 {
+  if (recording && !recorder->isOK()) {
+    logMessage() << tr("Recording failed!");
+    on_recordAction_toggled(false);
+    on_closeFileAction_triggered(true);
+    return;
+  }
   if (!recordingTime.isNull()) {
     static const QChar zero('0');
     const QString txt(tr("Recording time: %1:%2:%3"));
@@ -1282,6 +1301,14 @@ void QArvMainWindow::updateRecordingTime()
       closeFileAction->trigger();
     }
   }
+}
+
+void QArvMainWindow::stopRecording() {
+  if (!(recording && stopRecordingFramesRadio->isChecked())) {
+    logMessage() << tr("Recording stopped for some reason...");
+  }
+  recordAction->setChecked(false);
+  closeFileAction->trigger();
 }
 
 void QArvMainWindow::bufferUnderrunOccured()

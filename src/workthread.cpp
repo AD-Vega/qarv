@@ -44,6 +44,7 @@ Workthread::Workthread(QObject* parent) : QObject(parent) {
   cooker->moveToThread(cookerThread);
   connect(cookerThread, SIGNAL(finished()), cooker, SLOT(deleteLater()));
   connect(cooker, SIGNAL(frameCooked(cv::Mat)), SIGNAL(frameCooked(cv::Mat)));
+  connect(cooker, SIGNAL(recordingStopped()), SIGNAL(recordingStopped()));
 
   cookerThread->setObjectName("QArv Cooker");
   cookerThread->start();
@@ -96,16 +97,18 @@ void Workthread::newRecorder(Recorder* recorder_, QFile* timestampFile_) {
   timestampFile = timestampFile_;
 }
 
-void Workthread::startRecording() {
+void Workthread::startRecording(int maxFrames) {
   QMetaObject::invokeMethod(cooker, "setRecorder", Qt::QueuedConnection,
                             Q_ARG(Recorder*, recorder),
-                            Q_ARG(QFile*, timestampFile));
+                            Q_ARG(QFile*, timestampFile),
+                            Q_ARG(int, maxFrames));
 }
 
 void Workthread::stopRecording() {
   QMetaObject::invokeMethod(cooker, "setRecorder", Qt::QueuedConnection,
                             Q_ARG(Recorder*, nullptr),
-                            Q_ARG(QFile*, nullptr));
+                            Q_ARG(QFile*, nullptr),
+                            Q_ARG(int, -1));
 }
 
 void Workthread::startCamera(bool zeroCopy, bool dropInvalidFrames) {
@@ -225,19 +228,26 @@ void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
   }
 
   if (p.recorder && p.recorder->isOK()) {
-    if (p.recorder->recordsRaw())
-      p.recorder->recordFrame(frame);
-    else
-      p.recorder->recordFrame(processedFrame);
-    if (p.timestampFile && p.timestampFile->isOpen()) {
-      quint64 ts;
+    if (maxRecordedFrames > 0) {
+      if (recordedFrames < maxRecordedFrames) {
+        recordedFrames++;
+        if (p.recorder->recordsRaw())
+          p.recorder->recordFrame(frame);
+        else
+          p.recorder->recordFrame(processedFrame);
+        if (p.timestampFile && p.timestampFile->isOpen()) {
+          quint64 ts;
 #ifdef ARAVIS_OLD_BUFFER
-      ts = aravisFrame->timestamp_ns;
+          ts = aravisFrame->timestamp_ns;
 #else
-      ts = arv_buffer_get_timestamp(aravisFrame);
+          ts = arv_buffer_get_timestamp(aravisFrame);
 #endif
-      p.timestampFile->write(QString::number(ts).toAscii());
-      p.timestampFile->write("\n");
+          p.timestampFile->write(QString::number(ts).toAscii());
+          p.timestampFile->write("\n");
+        }
+      } else {
+        emit recordingStopped();
+      }
     }
   }
 
@@ -260,9 +270,14 @@ void Cooker::setFilterChain(QList<ImageFilterPtr> filterChain) {
   p.filterChain = filterChain;
 }
 
-void Cooker::setRecorder(Recorder* recorder, QFile* timestampFile) {
+void Cooker::setRecorder(Recorder* recorder, QFile* timestampFile,
+                         int maxFrames) {
   p.recorder = recorder;
   p.timestampFile = timestampFile;
+  if (maxFrames != -1) {
+    maxRecordedFrames = maxFrames;
+    recordedFrames = 0;
+  }
 }
 
 template<bool grayscale, bool depth8>

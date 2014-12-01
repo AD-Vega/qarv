@@ -108,6 +108,7 @@ private slots:
   void restoreProgramSettings();
   void frameRendered();
   void updateRecordingTime();
+  void stopRecording();
   void bufferUnderrunOccured();
   void addPostprocFilter();
   void updatePostprocQList();
@@ -139,7 +140,6 @@ private:
   QLabel* recordingTimeLabel;
   QTime recordingTime;
   int recordingTimeCumulative;
-  int recordedFrames;
   QStandardItemModel postprocChain;
   QList<ImageFilterPtr> postprocChainAsList;
   Workthread* workthread;

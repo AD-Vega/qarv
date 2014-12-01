@@ -81,16 +81,19 @@ private slots:
 
   void setFilterChain(QList<ImageFilterPtr> filterChain);
 
-  void setRecorder(Recorder* recorder, QFile* timestampFile);
+  void setRecorder(Recorder* recorder, QFile* timestampFile, int maxFrames);
 
 signals:
   void frameCooked(cv::Mat frame);
   void frameToRender(cv::Mat frame);
+  void recordingStopped();
 
 private:
   Parameters p;
   cv::Mat processedFrame;
   std::atomic_bool doRender;
+  int maxRecordedFrames;
+  int recordedFrames;
 };
 
 class Renderer: public QObject {
@@ -128,7 +131,11 @@ public:
   // Can be NULL.
   void newRecorder(Recorder* recorder, QFile* timestampFile);
 
-  void startRecording();
+  // maxFrames: max number of frames to record.
+  //   if > 0, set new limit and reset frame count;
+  //   if 0, set no limit and reset frame count;
+  //   if -1, keep limit, do not reset frame count.
+  void startRecording(int maxFrames);
   void stopRecording();
 
   void startCamera(bool zeroCopy, bool dropInvalidFrames);
@@ -151,6 +158,7 @@ signals:
   void frameDelivered(QByteArray frame, ArvBuffer* arvFrame);
   void frameCooked(cv::Mat frame);
   void frameRendered();
+  void recordingStopped();
 
 private:
   QArvCamera* camera = nullptr;
