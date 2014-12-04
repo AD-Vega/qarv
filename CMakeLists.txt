@@ -181,6 +181,21 @@ add_executable(qarv_videoplayer
 )
 target_link_libraries(qarv_videoplayer ${QT_LIBRARIES} ${libqarv})
 
+add_executable(testroi_qarv
+  src/utils/testroi_qarv.cpp
+)
+target_link_libraries(testroi_qarv ${QT_LIBRARIES} ${libqarv})
+
+add_executable(testroi_arvcamera
+  src/utils/testroi_arvcamera.cpp
+)
+target_link_libraries(testroi_arvcamera ${QT_LIBRARIES} ${libqarv})
+
+add_executable(testroi_feature
+  src/utils/testroi_feature.cpp
+)
+target_link_libraries(testroi_feature ${QT_LIBRARIES} ${libqarv})
+
 set_prefixed(qarv_ICONS res/icons/
   document-open.svgz
   document-save.svgz
