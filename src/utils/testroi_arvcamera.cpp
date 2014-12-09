@@ -30,7 +30,11 @@ int main(int argc, char** argv) {
 
   qDebug() << "Testing ArvCamera API.";
   ArvCamera* ac = cam->aravisCamera();
+  double exmin, exmax;
   int x, y, w, h, min, max;
+  qDebug() << "exposure_bounds";
+  arv_camera_get_exposure_time_bounds(ac, &exmin, &exmax);
+  qDebug() << ">> min max = " << exmin << exmax;
   qDebug() << "height_bounds";
   arv_camera_get_height_bounds(ac, &min, &max);
   qDebug() << ">> min max = " << min << max;

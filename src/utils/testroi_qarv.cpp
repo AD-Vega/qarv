@@ -26,6 +26,8 @@ int main(int argc, char** argv) {
 
   qDebug() << "Testing QArv API.";
   QRect roi;
+  qDebug() << "getExposureLimits";
+  qDebug() << ">>" << cam->getExposureLimits();
   qDebug() << "getROIWidthBounds";
   qDebug() << ">>" << cam->getROIWidthBounds();
   qDebug() << "getROIHeightBounds";
