@@ -137,14 +137,18 @@ QRect QArvCamera::getROI() {
   return QRect(x, y, width, height);
 }
 
-QRect QArvCamera::getROIMaxSize() {
-  int xmin, xmax, ymin, ymax;
-  arv_camera_get_width_bounds(camera, &xmin, &xmax);
-  arv_camera_get_height_bounds(camera, &ymin, &ymax);
+QPair<int, int> QArvCamera::getROIWidthBounds() {
+  int wmin, wmax;
+  arv_camera_get_width_bounds(camera, &wmin, &wmax);
   QRect roi = getROI();
-  QRect retval;
-  retval.setCoords(xmin, ymin, (xmax-xmin+roi.x()), (ymax-ymin+roi.y()));
-  return retval;
+  return qMakePair(wmin, wmax + roi.x());
+}
+
+QPair<int, int> QArvCamera::getROIHeightBounds() {
+  int hmin, hmax;
+  arv_camera_get_height_bounds(camera, &hmin, &hmax);
+  QRect roi = getROI();
+  return qMakePair(hmin, hmax + roi.y());
 }
 
 void QArvCamera::setROI(QRect roi) {

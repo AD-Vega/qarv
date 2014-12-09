@@ -305,12 +305,14 @@ static inline int value2slider(double value,
 }
 
 void QArvMainWindow::readROILimits() {
-  auto roisize = camera->getROIMaxSize();
-  roirange = QRect(QPoint(0, 0), roisize.size());
-  xSpinbox->setRange(0, roisize.width());
-  ySpinbox->setRange(0, roisize.height());
-  wSpinbox->setRange(roisize.x(), roisize.width());
-  hSpinbox->setRange(roisize.y(), roisize.height());
+  auto wBounds = camera->getROIWidthBounds();
+  auto hBounds = camera->getROIHeightBounds();
+  roirange = QRect(QPoint(0, 0),
+                   QSize(wBounds.second, hBounds.second));
+  xSpinbox->setRange(0, wBounds.second);
+  ySpinbox->setRange(0, hBounds.second);
+  wSpinbox->setRange(wBounds.first, wBounds.second);
+  hSpinbox->setRange(hBounds.first, hBounds.second);
 }
 
 void QArvMainWindow::readAllValues() {
@@ -510,14 +512,12 @@ void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
 }
 
 void QArvMainWindow::on_resetROIButton_clicked(bool clicked) {
-  camera->setROI(camera->getROIMaxSize());
-  // It needs to be applied twice to reach maximum size because
-  // X and Y decrease available range.
-  QRect ROI = camera->getROIMaxSize();
+  auto hBounds = camera->getROIHeightBounds();
+  auto wBounds = camera->getROIWidthBounds();
   xSpinbox->setValue(0);
   ySpinbox->setValue(0);
-  wSpinbox->setValue(ROI.width());
-  hSpinbox->setValue(ROI.height());
+  wSpinbox->setValue(wBounds.second);
+  hSpinbox->setValue(hBounds.second);
   on_applyROIButton_clicked(true);
 }
 

@@ -122,10 +122,16 @@ public:
   ArvCamera* aravisCamera();
 
   //! \name Manipulate region of interest
+  /*! The ROI behaves like a QRect and supports intersections and such. The
+   * bounds functions behave a bit differently than Aravis counterparts in
+   * that they return absolute limits for size of ROI, while Aravis functions
+   * return smaller limits if the offset is non-zero.
+   */
   //@{
   QRect getROI();
   void setROI(QRect roi);
-  QRect getROIMaxSize();
+  QPair<int, int> getROIWidthBounds();
+  QPair<int, int> getROIHeightBounds();
   //@}
 
   //! \name Manipulate pixel binning
