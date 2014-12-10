@@ -755,11 +755,20 @@ skip_all_file_opening:
     emit recordingStarted(recording);
 }
 
-void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
+void QArvMainWindow::on_snapshotAction_toggled(bool checked) {
+  if (!checked) {
+    disconnect(workthread, SIGNAL(frameDelivered(QByteArray,ArvBuffer*)),
+               this, SLOT(snapshotRare(QByteArray)));
+    disconnect(workthread, SIGNAL(frameCooked(cv::Mat)),
+               this, SLOT(snapshotCooked(cv::Mat)));
+    return;
+  }
+
   if (snappathEdit->text().isEmpty() || snapbasenameEdit->text().isEmpty()) {
     tabWidget->setCurrentWidget(recordingTab);
     statusBar()->showMessage(tr("Please set the snapshot directory and name."),
                              statusTimeoutMsec);
+    snapshotAction->setChecked(false);
     return;
   }
   QString name = snappathEdit->text();
@@ -768,56 +777,31 @@ void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
     tabWidget->setCurrentWidget(recordingTab);
     statusBar()->showMessage(tr("Snapshot directory does not exist."),
                              statusTimeoutMsec);
+    snapshotAction->setChecked(false);
     return;
   }
   if (!playing) {
     statusBar()->showMessage(tr("Video is not playing, no image to save."),
                              statusTimeoutMsec);
+    snapshotAction->setChecked(false);
     return;
   }
   statusBar()->clearMessage();
 
+  if (snapshotPNG->isChecked())
+    connect(workthread, SIGNAL(frameCooked(cv::Mat)),
+            this, SLOT(snapshotCooked(cv::Mat)));
+  else
+    connect(workthread, SIGNAL(frameDelivered(QByteArray,ArvBuffer*)),
+               this, SLOT(snapshotRare(QByteArray)));
+}
+
+void QArvMainWindow::snapshotRare(QByteArray frame) {
+  snapshotAction->setChecked(false);
   auto time = QDateTime::currentDateTime();
   QString fileName = snappathEdit->text() + "/"
                      + snapbasenameEdit->text()
                      + time.toString("yyyy-MM-dd-hhmmss.zzz");
-  if (snapshotPNG->isChecked()) {
-    QSignalSpy spy(workthread, SIGNAL(frameCooked(cv::Mat)));
-    if (!spy.isValid()) {
-      logMessage() << "Snapshot: invalid connection.";
-      return;
-    }
-    uint count = 0;
-    const uint limit = 3000;
-    while (spy.isEmpty() && count++ < limit)
-      usleep(1000);
-    if (count >= limit) {
-      QString msg = tr("No snapshot saved, timed out waiting for frame.");
-      logMessage() << msg;
-      statusBar()->showMessage(msg, statusTimeoutMsec);
-    }
-    QVariant var = spy.first().first();
-    QImage img = QArvDecoder::CV2QImage_RGB24(var.value<cv::Mat>());
-    if (!img.save(fileName + ".png"))
-      statusBar()->showMessage(tr("Snapshot cannot be written."),
-                               statusTimeoutMsec);
-  } else if (snapshotRaw->isChecked()) {
-    QSignalSpy spy(workthread, SIGNAL(frameDelivered(QByteArray, ArvBuffer*)));
-    if (!spy.isValid()) {
-      logMessage() << "Snapshot: invalid connection.";
-      return;
-    }
-    uint count = 0;
-    const uint limit = 3000;
-    while (spy.isEmpty() && count++ < limit)
-      usleep(1000);
-    if (count >= limit) {
-      QString msg = tr("No snapshot saved, timed out waiting for frame.");
-      logMessage() << msg;
-      statusBar()->showMessage(msg, statusTimeoutMsec);
-    }
-    QVariant var = spy.first().first();
-    auto frame = var.value<QByteArray>();
     if (frame.isEmpty()) {
       statusBar()->showMessage(tr("Current frame is invalid, try "
                                   "snapshotting again."), statusTimeoutMsec);
@@ -828,7 +812,17 @@ void QArvMainWindow::on_snapshotAction_triggered(bool checked) {
     else
       statusBar()->showMessage(tr("Snapshot cannot be written."),
                                statusTimeoutMsec);
-  }
+}
+
+void QArvMainWindow::snapshotCooked(cv::Mat frame) {
+  snapshotAction->setChecked(false);
+  auto time = QDateTime::currentDateTime();
+  QString fileName = snappathEdit->text() + "/"
+                     + snapbasenameEdit->text()
+                     + time.toString("yyyy-MM-dd-hhmmss.zzz");
+  if (!cv::imwrite((fileName + ".png").toStdString(), frame))
+    statusBar()->showMessage(tr("Snapshot cannot be written."),
+                             statusTimeoutMsec);
 }
 
 void QArvMainWindow::on_chooseFilenameButton_clicked(bool checked) {

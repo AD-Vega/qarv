@@ -61,7 +61,7 @@ private slots:
   void on_pixelFormatSelector_currentIndexChanged(int index);
   void on_playButton_toggled(bool checked);
   void on_recordAction_toggled(bool checked);
-  void on_snapshotAction_triggered(bool checked);
+  void on_snapshotAction_toggled(bool checked);
   void on_chooseSnappathButton_clicked(bool checked);
   void on_chooseFilenameButton_clicked(bool checked);
   void on_fpsSpinbox_valueChanged(int value);
@@ -112,6 +112,8 @@ private slots:
   void bufferUnderrunOccured();
   void addPostprocFilter();
   void updatePostprocQList();
+  void snapshotRare(QByteArray frame);
+  void snapshotCooked(cv::Mat frame);
 
 private:
   void readROILimits();

@@ -1319,6 +1319,9 @@
    </attribute>
   </widget>
   <action name="snapshotAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="../res/icons/icons.qrc">
      <normaloff>:/icons/snapshot.svgz</normaloff>:/icons/snapshot.svgz</iconset>
