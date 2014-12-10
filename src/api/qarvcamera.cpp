@@ -209,7 +209,7 @@ ArvPixelFormat QArvCamera::getPixelFormatId() {
   return arv_camera_get_pixel_format(camera);
 }
 
-void QArvCamera::setPixelFormat(QString format) {
+void QArvCamera::setPixelFormat(const QString& format) {
   auto tmp = format.toAscii();
   arv_camera_set_pixel_format_from_string(camera, tmp.constData());
   emit dataChanged(QModelIndex(), QModelIndex());
@@ -753,7 +753,7 @@ QList<QString> QArvCamera::categories() const {
   return list;
 }
 
-QList<QString> QArvCamera::features(QString category) const {
+QList<QString> QArvCamera::features(const QString& category) const {
   QList<QString> list;
   for (int i = 0; i < rowCount(); i++) {
     auto idx = index(i, 0);
@@ -768,7 +768,7 @@ QList<QString> QArvCamera::features(QString category) const {
   return list;
 }
 
-QModelIndex QArvCamera::featureIndex(QString feature) const {
+QModelIndex QArvCamera::featureIndex(const QString& feature) const {
    for (int i = 0; i < rowCount(); i++) {
     auto idx = index(i, 0);
     for (int j = 0; j < rowCount(idx); j++) {

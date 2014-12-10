@@ -144,7 +144,7 @@ public:
   QList<ArvPixelFormat> getPixelFormatIds();
   QString getPixelFormat();
   ArvPixelFormat getPixelFormatId();
-  void setPixelFormat(QString format);
+  void setPixelFormat(const QString& format);
   /**@}*/
 
   //! \name Manipulate frames-per-second.
@@ -254,8 +254,8 @@ public:
    */
   /**@{*/
   QList<QString> categories() const;
-  QList<QString> features(QString category) const;
-  QModelIndex featureIndex(QString feature) const;
+  QList<QString> features(const QString& category) const;
+  QModelIndex featureIndex(const QString& feature) const;
   /**@}*/
 
 private:
