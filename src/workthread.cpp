@@ -241,26 +241,24 @@ void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
   }
 
   if (p.recorder && p.recorder->isOK()) {
-    if (maxRecordedFrames > 0) {
-      if (recordedFrames < maxRecordedFrames) {
-        recordedFrames++;
-        if (p.recorder->recordsRaw())
-          p.recorder->recordFrame(frame);
-        else
-          p.recorder->recordFrame(processedFrame);
-        if (p.timestampFile && p.timestampFile->isOpen()) {
-          quint64 ts;
+    if (maxRecordedFrames == 0 || recordedFrames < maxRecordedFrames) {
+      recordedFrames++;
+      if (p.recorder->recordsRaw())
+        p.recorder->recordFrame(frame);
+      else
+        p.recorder->recordFrame(processedFrame);
+      if (p.timestampFile && p.timestampFile->isOpen()) {
+        quint64 ts;
 #ifdef ARAVIS_OLD_BUFFER
-          ts = aravisFrame->timestamp_ns;
+        ts = aravisFrame->timestamp_ns;
 #else
-          ts = arv_buffer_get_timestamp(aravisFrame);
+        ts = arv_buffer_get_timestamp(aravisFrame);
 #endif
-          p.timestampFile->write(QString::number(ts).toAscii());
-          p.timestampFile->write("\n");
-        }
-      } else {
-        emit recordingStopped();
+        p.timestampFile->write(QString::number(ts).toAscii());
+        p.timestampFile->write("\n");
       }
+    } else {
+      emit recordingStopped();
     }
   }
 
