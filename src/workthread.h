@@ -80,9 +80,9 @@ private slots:
                          int imageTransform_flip,
                          int imageTransform_rot);
 
-  void setFilterChain(QList<ImageFilterPtr> filterChain);
+  void setFilterChain(QList<QArv::ImageFilterPtr> filterChain);
 
-  void setRecorder(Recorder* recorder, QFile* timestampFile, int maxFrames);
+  void setRecorder(QArv::Recorder* recorder, QFile* timestampFile, int maxFrames);
 
   void getFps(uint* fps);
 

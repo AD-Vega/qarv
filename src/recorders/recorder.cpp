@@ -23,7 +23,7 @@
 using namespace QArv;
 
 static int init = [] () {
-  qRegisterMetaType<Recorder*>("Recorder*");
+  qRegisterMetaType<Recorder*>("QArv::Recorder*");
   return 0;
 }();
 

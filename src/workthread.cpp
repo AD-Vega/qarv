@@ -33,7 +33,7 @@ using namespace QArv;
 static int init = [] () {
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<QFile*>("QFile*");
-  qRegisterMetaType<QList<ImageFilterPtr>>("QList<ImageFilterPtr>");
+  qRegisterMetaType<QList<ImageFilterPtr>>("QList<QArv::ImageFilterPtr>");
   return 0;
 }();
 
@@ -99,14 +99,14 @@ void Workthread::newRecorder(Recorder* recorder_, QFile* timestampFile_) {
 
 void Workthread::startRecording(int maxFrames) {
   QMetaObject::invokeMethod(cooker, "setRecorder", Qt::QueuedConnection,
-                            Q_ARG(Recorder*, recorder),
+                            Q_ARG(QArv::Recorder*, recorder),
                             Q_ARG(QFile*, timestampFile),
                             Q_ARG(int, maxFrames));
 }
 
 void Workthread::stopRecording() {
   QMetaObject::invokeMethod(cooker, "setRecorder", Qt::QueuedConnection,
-                            Q_ARG(Recorder*, nullptr),
+                            Q_ARG(QArv::Recorder*, nullptr),
                             Q_ARG(QFile*, nullptr),
                             Q_ARG(int, -1));
 }
@@ -137,7 +137,7 @@ void Workthread::setImageTransform(bool imageTransform_invert,
 
 void Workthread::setFilterChain(QList<ImageFilterPtr> filterChain) {
   QMetaObject::invokeMethod(cooker, "setFilterChain", Qt::QueuedConnection,
-                            Q_ARG(QList<ImageFilterPtr>, filterChain));
+                            Q_ARG(QList<QArv::ImageFilterPtr>, filterChain));
 }
 
 void Workthread::waitUntilProcessingCycleCompletes() {
