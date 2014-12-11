@@ -275,6 +275,16 @@
         <translation>Prestavljaj slikovne okvirje brez kopiranja</translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.ui" line="674"/>
+        <source>Buffer size:</source>
+        <translation>Velikost medpomnilnika:</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="681"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls the number of frames standing ready for camera to fill, ensuring smooth operation. If the frames arrive faster than they can be decoded and/or recorded, the buffer will underflow. If this happens intermittently, increase the buffer size. It it happens regularly, your system is too slow to handle the workload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastavi število slikovnih okvirjev, ki so na voljo kameri, da lahko gladko obratuje. Če okvirji s kamere prihajajo hitreje, kot jih lahko obdelamo ali snemamo, se bo medpomnilnik izpraznil. Če se to zgodi občasno, pomaga povečanje medpomnilnika. Če se dogaja pogosto, je sistem preobremenjen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.ui" line="759"/>
         <location filename="../src/mainwindow.ui" line="1295"/>
         <source>Recording</source>
@@ -381,14 +391,14 @@
         <translation>Diagnostična sporočila</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1424"/>
         <location filename="../src/mainwindow.ui" line="1427"/>
+        <location filename="../src/mainwindow.ui" line="1430"/>
         <source>Subwindows...</source>
         <translation>Podokna...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1312"/>
-        <location filename="../src/mainwindow.ui" line="1430"/>
+        <location filename="../src/mainwindow.ui" line="1433"/>
         <source>Subwindows</source>
         <translation>Podokna</translation>
     </message>
@@ -408,7 +418,7 @@
         <translation>Izberi tip videa za snemanje.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1362"/>
+        <location filename="../src/mainwindow.ui" line="1365"/>
         <source>Depressing the Record button normally pauses recording, which can be resumed. Press this button to finalize the recording.</source>
         <translation>Izklop gumba &quot;Snemaj&quot; običajno le začasno ustavi snemanje. Ta gumb snemanje zaključi ter dokonča in zapre datoteko z videom.</translation>
     </message>
@@ -433,12 +443,12 @@
         <translation>Nastavitve</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1416"/>
+        <location filename="../src/mainwindow.ui" line="1419"/>
         <source>Diagnostic Log</source>
         <translation>Diagnostična sporočila</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1419"/>
+        <location filename="../src/mainwindow.ui" line="1422"/>
         <source>Show or hide diagnostic log.</source>
         <translation>Prikaži ali skrij diagnostična sporočila.</translation>
     </message>
@@ -503,11 +513,6 @@
         <translation>Zapiši informacije o videu</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="674"/>
-        <source>Queue size:</source>
-        <translation>Dolžina čakalne vrste:</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="684"/>
         <source> frames</source>
         <translation> okvirjev</translation>
@@ -548,39 +553,39 @@
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Različica %1.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafični vmesnik za Genicam mrežne kamere.&lt;/p&gt;&lt;p&gt;Avtorji © 2012, 2013 Jure Varlec in Andrej Lajovic, Astronomsko društvo Vega — Ljubljana&lt;/p&gt;&lt;p&gt;QArv je na voljo pod pogoji licence GNU General Public License, različica 3 ali novejša. Besedilo licence (v angleščini) pride s programom, na voljo je tudi na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;spletni strani Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikone, ki pridejo s programom, so del grafične teme oxygen, ki je del &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projekta KDE&lt;/span&gt;&lt;/a&gt;. Besedilo licence pride s programom.&lt;/p&gt;&lt;p&gt;Ikona QArv je osnovana na ikonah teme oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1327"/>
+        <location filename="../src/mainwindow.ui" line="1330"/>
         <source>Snapshot</source>
         <translation>Slikaj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1343"/>
+        <location filename="../src/mainwindow.ui" line="1346"/>
         <source>Record</source>
         <translation>Snemaj</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1359"/>
+        <location filename="../src/mainwindow.ui" line="1362"/>
         <source>Finish</source>
         <translation>Zaključi</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1135"/>
-        <location filename="../src/mainwindow.ui" line="1378"/>
+        <location filename="../src/mainwindow.ui" line="1381"/>
         <source>Video Display</source>
         <translation>Prikaz videa</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1381"/>
+        <location filename="../src/mainwindow.ui" line="1384"/>
         <source>Show or hide video display.</source>
         <translation>Prikaži ali skrij prikazovalnik videa.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1216"/>
-        <location filename="../src/mainwindow.ui" line="1397"/>
+        <location filename="../src/mainwindow.ui" line="1400"/>
         <source>Histogram</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1400"/>
+        <location filename="../src/mainwindow.ui" line="1403"/>
         <source>Show or hide histogram display.</source>
         <translation>Prikaži ali skrij histogram.</translation>
     </message>
@@ -588,11 +593,6 @@
         <location filename="../src/mainwindow.ui" line="1150"/>
         <source>Display image</source>
         <translation>Prikaži sliko</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.ui" line="681"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls both the camera and decoding/recording queues.&lt;/p&gt;&lt;p&gt;The camera has a queue of frames which are cycled. There should be several to ensure smooth operation, but not too many because they increase memory usage. Also, if the &amp;quot;Transfer frames without copying&amp;quot; option is enabled, the frames are not copied before they are passed to the program, increasing performance.&lt;/p&gt;&lt;p&gt;If the frames arrive faster than they can be decoded and/or recorded, the processing queue will overflow and will be dropped entirely. If this happens intermittently, increase the queue size. It it happens regularly, your system is too slow to handle the workload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ta nastavitev vpliva na dve vrsti: vrsto za kamero in vrsto za dekodiranje in snemanje.&lt;/p&gt;&lt;p&gt;Kamera ima vrsto, v kateri slikovni okvirji krožijo. Vrsta naj vsebuje dovolj okvirjev, da lahko kamera neprekinjeno snema, a ne preveč, saj to poveča porabo pomnilnika. Če je vklopljena možnost &amp;quot;Prestavljaj slikovne okvirje brez kopiranja&amp;quot;, program uporablja okvirje v kamerini vrsti neposredno, kar pohitri izvajanje programa.&lt;/p&gt;&lt;p&gt;Če slikovni okvirji prihajajo hitreje, kot jih je program sposoben obdelati, se bo čakalna vrsta za obdelavo prenapolnila. Tedaj program zavrže čakajoče okvirje. Če se to zgodi le poredkoma, pomaga daljša čakalna vrsta. Če pa se dogaja neprestano, je sistem prepočasen za delo.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1165"/>
@@ -605,12 +605,12 @@
         <translation>Logaritemski</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1330"/>
+        <location filename="../src/mainwindow.ui" line="1333"/>
         <source>Store a snapshot.</source>
         <translation>Shrani trenutno sliko.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="1346"/>
+        <location filename="../src/mainwindow.ui" line="1349"/>
         <source>Record video. Depress to pause recording, press again to resume.</source>
         <translation>Snemanje videa. Izklop gumba začasno ustavi snemanje, ponovni vklop snemanje nadaljuje.</translation>
     </message>
@@ -654,43 +654,43 @@
 <context>
     <name>QArv::QArvMainWindow</name>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="141"/>
+        <location filename="../src/qarvmainwindow.cpp" line="143"/>
         <source>Subwindows</source>
         <translation>Podokna</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="179"/>
+        <location filename="../src/qarvmainwindow.cpp" line="181"/>
         <source>No rotation</source>
         <translation>Brez zasuka</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="180"/>
+        <location filename="../src/qarvmainwindow.cpp" line="182"/>
         <source>90 degrees</source>
         <translation>90 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="181"/>
+        <location filename="../src/qarvmainwindow.cpp" line="183"/>
         <source>180 degrees</source>
         <translation>180 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="182"/>
+        <location filename="../src/qarvmainwindow.cpp" line="184"/>
         <source>270 degrees</source>
         <translation>270 stopinj</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="227"/>
-        <location filename="../src/qarvmainwindow.cpp" line="1122"/>
+        <location filename="../src/qarvmainwindow.cpp" line="229"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1069"/>
         <source>Recording stopped</source>
         <translation>Snemanje ustavljeno</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="255"/>
+        <location filename="../src/qarvmainwindow.cpp" line="246"/>
         <source>Looking for cameras...</source>
         <translation>Iščem kamere...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/qarvmainwindow.cpp" line="268"/>
+        <location filename="../src/qarvmainwindow.cpp" line="259"/>
         <source>Found %n cameras.</source>
         <comment>Number of cameras</comment>
         <translation>
@@ -701,162 +701,152 @@
         </translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="415"/>
+        <location filename="../src/qarvmainwindow.cpp" line="405"/>
         <source>Network address not found, trying best-effort MTU %1.</source>
         <translation>Omrežnega naslova ni najti, poskušam nastaviti kompromisni MTU %1.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="425"/>
-        <location filename="../src/qarvmainwindow.cpp" line="985"/>
+        <location filename="../src/qarvmainwindow.cpp" line="415"/>
+        <location filename="../src/qarvmainwindow.cpp" line="932"/>
         <source>Not an ethernet camera.</source>
         <translation>Kamera ni na ethernet vmesniku.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="429"/>
+        <location filename="../src/qarvmainwindow.cpp" line="419"/>
         <source>Camera is on interface %1,
 MTU set to %2.</source>
         <translation>Kamera je na vmesniku %1,
 MTU je %2.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="433"/>
+        <location filename="../src/qarvmainwindow.cpp" line="423"/>
         <source>
 Consider increasing the MTU!</source>
         <translation>
 Predlagamo večji MTU.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="507"/>
+        <location filename="../src/qarvmainwindow.cpp" line="497"/>
         <source>Region of interest too large, shrinking.</source>
         <translation>Izrez slike je prevelik, zmanjšujem.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="231"/>
-        <source>Queue</source>
-        <translation>Čakalna vrsta</translation>
-    </message>
-    <message>
-        <location filename="../src/qarvmainwindow.cpp" line="234"/>
-        <source>This bar shows filling of the frame queue. If it overflows, the frames in the queue will be discarded.</source>
-        <translation>Prikazovalnik polnjena čakalne vrste za obdelavo slikovnih okvirjev. Če se napolni, se stari okvirji zavržejo.</translation>
-    </message>
-    <message>
-        <location filename="../src/qarvmainwindow.cpp" line="243"/>
+        <location filename="../src/qarvmainwindow.cpp" line="232"/>
         <source>Welcome to QArv!</source>
         <translation>Dobrodošli v QArv!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="595"/>
-        <source>Too slow, dropping frames!</source>
-        <translation>Prepočasna obdelava, slikovni okvirji zavrženi!</translation>
-    </message>
-    <message>
-        <location filename="../src/qarvmainwindow.cpp" line="633"/>
-        <source>Recording plugin failed, stopped recording.</source>
-        <translation>Vtičnik za snemanje ne deluje, snemanje ustavljeno.</translation>
-    </message>
-    <message>
-        <location filename="../src/qarvmainwindow.cpp" line="674"/>
+        <location filename="../src/qarvmainwindow.cpp" line="570"/>
         <source>Decoder for %1 doesn&apos;t exist!</source>
         <translation>Dekoder za %1 ne obstaja!</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="750"/>
+        <location filename="../src/qarvmainwindow.cpp" line="660"/>
         <source>Please set the video file name.</source>
         <translation>Izberi ime video datoteke.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="773"/>
+        <location filename="../src/qarvmainwindow.cpp" line="683"/>
         <source>Unable to initialize the recording plugin.</source>
         <translation>Zagon vtičnika za snemanje ni uspel.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="789"/>
+        <location filename="../src/qarvmainwindow.cpp" line="699"/>
         <source>Could not dump camera settings.</source>
         <translation>Nastavitev kamere ni bilo mogoče shraniti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="796"/>
+        <location filename="../src/qarvmainwindow.cpp" line="706"/>
         <source>Could not open timestamp file.</source>
         <translation>Časovnih oznak ni mogoče zapisati.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="838"/>
+        <location filename="../src/qarvmainwindow.cpp" line="769"/>
         <source>Please set the snapshot directory and name.</source>
         <translation>Izberi direktorij in ime za slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="846"/>
+        <location filename="../src/qarvmainwindow.cpp" line="778"/>
         <source>Snapshot directory does not exist.</source>
         <translation>Direktorij za slike ne obstaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="851"/>
+        <location filename="../src/qarvmainwindow.cpp" line="784"/>
         <source>Video is not playing, no image to save.</source>
         <translation>Ne morem shraniti slike, ker se video ne predvaja.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="864"/>
-        <location filename="../src/qarvmainwindow.cpp" line="876"/>
+        <location filename="../src/qarvmainwindow.cpp" line="813"/>
+        <location filename="../src/qarvmainwindow.cpp" line="824"/>
         <source>Snapshot cannot be written.</source>
         <translation>Ne morem shraniti slike.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="869"/>
+        <location filename="../src/qarvmainwindow.cpp" line="806"/>
         <source>Current frame is invalid, try snapshotting again.</source>
         <translation>Trenutna slika je okvarjena, poskusi še enkrat.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="882"/>
-        <location filename="../src/qarvmainwindow.cpp" line="918"/>
-        <location filename="../src/qarvmainwindow.cpp" line="934"/>
+        <location filename="../src/qarvmainwindow.cpp" line="829"/>
+        <location filename="../src/qarvmainwindow.cpp" line="865"/>
+        <location filename="../src/qarvmainwindow.cpp" line="881"/>
         <source>Open file</source>
         <translation>Odpri datoteko</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="887"/>
+        <location filename="../src/qarvmainwindow.cpp" line="834"/>
         <source>Choose directory</source>
         <translation>Izberi direktorij</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="926"/>
+        <location filename="../src/qarvmainwindow.cpp" line="873"/>
         <source>Could not open settings file.</source>
         <translation>Ne morem odpreti datoteke z nastavitvami.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="967"/>
+        <location filename="../src/qarvmainwindow.cpp" line="914"/>
         <source>Settings could not be completely loaded. This can happen because camera features are interdependent and may require a specific loading order. The following settings failed:</source>
         <translation>Nastavitev ni moč naložiti popolnoma. To se lahko zgodi, ker so lastnosti kamere odvisne ena od druge in morda zahtevajo nek določen vrstni red nastavljanja. Neuspešne so bile naslednje nastavitve:</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="973"/>
+        <location filename="../src/qarvmainwindow.cpp" line="920"/>
         <source>Loading settings failed</source>
         <translation>Nalaganje nastavitev ni uspelo</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="976"/>
+        <location filename="../src/qarvmainwindow.cpp" line="923"/>
         <source>Could not open camera settings file.</source>
         <translation>Datoteke z nastavitvami kamere ni moč odpreti.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="1277"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1224"/>
         <source>Cannot select this video format.</source>
         <translation>Tega formata videa ni moč izbrati.</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="1315"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1261"/>
+        <source>Recording failed!</source>
+        <translation>Snemanje je spodletelo!</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="1268"/>
         <source>Recording time: %1:%2:%3</source>
         <translation>Trajanje snemanja: %1:%2:%3</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="1331"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1284"/>
         <source>size %1 Mb</source>
         <translation>velikost %1 Mb</translation>
     </message>
     <message>
-        <location filename="../src/qarvmainwindow.cpp" line="1348"/>
+        <location filename="../src/qarvmainwindow.cpp" line="1301"/>
+        <source>Recording stopped for some reason...</source>
+        <translation>Snemanje se je ustavilo iz neznanega razloga...</translation>
+    </message>
+    <message>
+        <location filename="../src/qarvmainwindow.cpp" line="1309"/>
         <source>Buffer underrun!</source>
-        <translation>Medpolnilnik se je izpraznil!</translation>
+        <translation>Medpomnilnik se je izpraznil!</translation>
     </message>
 </context>
 <context>
@@ -911,7 +901,7 @@ Predlagamo večji MTU.</translation>
         <translation>&lt;ukaz&gt;</translation>
     </message>
     <message>
-        <location filename="../src/api/qarvcamera.cpp" line="447"/>
+        <location filename="../src/api/qarvcamera.cpp" line="448"/>
         <source>Incompatible camera settings</source>
         <comment>QArvCamera</comment>
         <translation>Nekompatibilne nastavitve kamere</translation>
