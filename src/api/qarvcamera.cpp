@@ -154,7 +154,14 @@ QPair<int, int> QArvCamera::getROIHeightBounds() {
 void QArvCamera::setROI(QRect roi) {
   int x, y, width, height;
   roi.getRect(&x, &y, &width, &height);
-  arv_camera_set_region(camera, x, y, width, height);
+  auto hmin = getROIHeightBounds();
+  auto wmin = getROIWidthBounds();
+  arv_device_set_integer_feature_value(device, "Width", wmin.first);
+  arv_device_set_integer_feature_value(device, "Height", hmin.first);
+  arv_device_set_integer_feature_value(device, "OffsetX", x);
+  arv_device_set_integer_feature_value(device, "OffsetY", y);
+  arv_device_set_integer_feature_value(device, "Width", width);
+  arv_device_set_integer_feature_value(device, "Height", height);
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
