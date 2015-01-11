@@ -235,7 +235,8 @@ public:
    * the name of a feature, and the second contains its value.
    * The latter has several roles contaning name, description, tooltip.
    * QVariant returned using Qt::EditRole contains a QArvType
-   * with actual data.
+   * with actual data. To obtain an internal feature name instead of its
+   * display name, use Qt::UserRole.
    */
   /**@{*/
   QModelIndex index(int row, int column,
@@ -256,7 +257,9 @@ public:
    * These functions can be used to avoid some of the QAbstractModel
    * boilerplate. They can be used to quickly list features and find
    * the index of a particular feature, which can then be used with
-   * data() and setData() in Qt::EditRole.
+   * data() and setData() in Qt::EditRole. The featureIndex() function
+   * searches first using the name obtained witn Qt::UserRole, and if
+   * that fails searches again for the name obtained using Qt::DisplayRole.
    */
   /**@{*/
   QList<QString> categories() const;

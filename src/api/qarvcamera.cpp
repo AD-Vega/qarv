@@ -544,6 +544,15 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
   }
 
   const char* string;
+  const char* string2;
+
+  if (role == Qt::UserRole) {
+    string =
+      arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+    if (string == NULL)
+      return QVariant();
+    return QVariant(string);
+  }
 
   if (index.column() == 0) {
     switch (role) {
@@ -563,8 +572,12 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
     case Qt::WhatsThisRole:
       string =
         arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
-      if (string == NULL) return QVariant();
-      return QVariant("<qt/>" + Qt::escape(string));
+      string2 =
+        arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+      if (string == NULL || string2 == NULL)
+        return QVariant();
+      return QVariant("<qt/>" + Qt::escape(string2) +": "
+                      + Qt::escape(string));
 
     default:
       return QVariant();
@@ -780,11 +793,20 @@ QList<QString> QArvCamera::features(const QString& category) const {
 }
 
 QModelIndex QArvCamera::featureIndex(const QString& feature) const {
-   for (int i = 0; i < rowCount(); i++) {
+  for (int i = 0; i < rowCount(); i++) {
     auto idx = index(i, 0);
     for (int j = 0; j < rowCount(idx); j++) {
       auto idx2 = idx.child(j, 0);
-      if (idx2.data().toString() == feature) {
+      if (idx2.data(Qt::UserRole).toString() == feature) {
+        return idx.child(j, 1);
+      }
+    }
+  }
+  for (int i = 0; i < rowCount(); i++) {
+    auto idx = index(i, 0);
+    for (int j = 0; j < rowCount(idx); j++) {
+      auto idx2 = idx.child(j, 0);
+      if (idx2.data(Qt::DisplayRole).toString() == feature) {
         return idx.child(j, 1);
       }
     }
