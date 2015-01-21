@@ -1273,7 +1273,7 @@ void QArvMainWindow::updateRecordingTime()
     int m = s / 60;
     s -= m * 60;
     int h = m / 60;
-    h -= m * 60;
+    h -= h * 60;
     QString msg = txt.arg(h, 2, 10, zero)
                      .arg(m, 2, 10, zero)
                      .arg(s, 2, 10, zero);
