@@ -37,7 +37,6 @@
 #include <QPluginLoader>
 #include <QMenu>
 #include <QToolButton>
-#include <QSignalSpy>
 
 extern "C" {
   #include <arvbuffer.h>

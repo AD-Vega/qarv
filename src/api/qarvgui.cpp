@@ -24,6 +24,7 @@
 #include <QTranslator>
 #include <QHBoxLayout>
 #include <QMetaProperty>
+#include <QShortcut>
 
 using namespace QArv;
 
@@ -56,7 +57,6 @@ void QArvGui::init(QApplication* a) {
  */
 QArvGui::QArvGui(QWidget* parent, bool standalone) :
   QWidget(parent) {
-
   ext = new QArvGuiExtension;
   ext->mw = new QArvMainWindow(NULL, standalone);
   setLayout(new QHBoxLayout);
@@ -71,6 +71,8 @@ QArvGui::QArvGui(QWidget* parent, bool standalone) :
     }
   }
   connect(ext->mw, SIGNAL(recordingStarted(bool)), SLOT(signalForwarding(bool)));
+  if (standalone)
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(close()));
 }
 
 QArvGui::~QArvGui() {
