@@ -41,8 +41,8 @@ public:
     return false;
   }
 
-  qint64 fileSize() {
-    return currentSize;
+  QPair<qint64, qint64> fileSize() {
+    return qMakePair(currentSize, currentNumber);
   }
 
   void recordFrame(cv::Mat decoded) {

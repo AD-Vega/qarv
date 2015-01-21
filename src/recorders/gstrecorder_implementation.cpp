@@ -80,6 +80,7 @@ private:
   QProcess gstprocess;
   cv::Mat tmpMat;
   QString fileName;
+  qint64 numberOfFrames;
 
 public:
   GstRecorder(QString outputFormat,
@@ -88,6 +89,7 @@ public:
               QSize size,
               int FPS,
               bool writeInfo) {
+    numberOfFrames = 0;
     fileName = fileName_;
     if (!gstOK) return;
     QString informat;
@@ -178,6 +180,7 @@ public:
   void recordFrame(cv::Mat decoded) {
     if (!isOK())
       return;
+    numberOfFrames++;
     char* p;
     int bytes;
     if (decoded.type() == CV_16UC3) {
@@ -196,9 +199,9 @@ public:
       logMessage(false) << gstprocess.readAll().constData();
   }
 
-  qint64 fileSize() {
+  QPair<qint64, qint64> fileSize() {
     QFileInfo file(fileName);
-    return file.size();
+    return qMakePair(file.size(), numberOfFrames);
   }
 };
 

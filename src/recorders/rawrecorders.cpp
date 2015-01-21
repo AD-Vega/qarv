@@ -78,18 +78,27 @@ public:
         QSettings s(file.fileName() + descExt, QSettings::Format::IniFormat);
         s.beginGroup("qarv_raw_video_description");
         s.setValue("frame_bytes", raw.size());
+        frameBytes = raw.size();
       }
     }
   }
 
-  qint64 fileSize() {
-    return file.size();
+  QPair<qint64, qint64> fileSize() {
+    qint64 s, n;
+    if (!bytesizeWritten) {
+      s = n = 0;
+    } else {
+      s = file.size();
+      n = s / frameBytes;
+    }
+    return qMakePair(s, n);
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
   bool bytesizeWritten;
+  qint64 frameBytes;
 };
 
 class RawDecoded8: public Recorder {
@@ -103,7 +112,6 @@ public:
     file.open(QIODevice::WriteOnly);
     if (isOK() && writeInfo) {
       enum PixelFormat fmt;
-      int frameBytes;
       switch (decoder->cvType()) {
       case CV_8UC1:
       case CV_16UC1:
@@ -157,14 +165,17 @@ public:
     }
   }
 
-  qint64 fileSize() {
-    return file.size();
+  QPair<qint64, qint64> fileSize() {
+    qint64 s = file.size();
+    qint64 n = s / frameBytes;
+    return qMakePair(s, n);
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
   bool OK;
+  qint64 frameBytes;
 };
 
 class RawDecoded16: public Recorder {
@@ -178,7 +189,6 @@ public:
     file.open(QIODevice::WriteOnly);
     if (isOK() && writeInfo) {
       enum PixelFormat fmt;
-      int frameBytes;
       switch (decoder->cvType()) {
       case CV_8UC1:
       case CV_16UC1:
@@ -232,14 +242,17 @@ public:
     }
   }
 
-  qint64 fileSize() {
-    return file.size();
+  QPair<qint64, qint64> fileSize() {
+    qint64 s = file.size();
+    qint64 n = s / frameBytes;
+    return qMakePair(s, n);
   }
 
 private:
   QFile file;
   QArvDecoder* decoder;
   bool OK;
+  qint64 frameBytes;
 };
 
 Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,

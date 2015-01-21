@@ -24,6 +24,7 @@
 #include <QList>
 #include <QString>
 #include <QMetaType>
+#include <QPair>
 
 namespace QArv {
 
@@ -52,9 +53,10 @@ public:
   virtual void recordFrame(cv::Mat processed) {};
 
   /*!
-   * Returns the size of recorded file in bytes.
+   * Returns the size of recorded file in bytes and the number
+   * of recorded frames.
    */
-  virtual qint64 fileSize() = 0;
+  virtual QPair<qint64, qint64> fileSize() = 0;
 };
 
 class OutputFormat {

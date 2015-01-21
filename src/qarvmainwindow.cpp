@@ -1277,12 +1277,17 @@ void QArvMainWindow::updateRecordingTime()
     QString msg = txt.arg(h, 2, 10, zero)
                      .arg(m, 2, 10, zero)
                      .arg(s, 2, 10, zero);
-    qint64 fs = 0;
-    if (recorder)
-      fs = recorder->fileSize();
-    if (fs != 0) {
+    qint64 fs = 0, fn = 0;
+    if (recorder) {
+      auto pair = recorder->fileSize();
+      fs = pair.first;
+      fn = pair.second;
+    }
+    if (fn != 0) {
         const QString txt2(tr("size %1 Mb"));
-        msg += ", " + txt2.arg(fs / 1024 / 1024);
+        const QString txt3(tr("%1 frames"));
+        msg += ", " + txt2.arg(fs / 1024 / 1024)
+             + ", " + txt3.arg(fn);
     }
     recordingTimeLabel->setText(msg);
     QTimer::singleShot(1000, this, SLOT(updateRecordingTime()));
