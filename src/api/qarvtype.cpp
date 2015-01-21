@@ -18,13 +18,13 @@
  */
 
 #include "qarvtype.h"
+#include "globals.h"
 #include <QComboBox>
 #include <QLayout>
 #include <QLineEdit>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QPushButton>
-#include <cassert>
 
 QArvEditor::QArvEditor(QWidget* parent) : QWidget(parent) {
   setAutoFillBackground(true);
@@ -57,7 +57,10 @@ QArvEditor* QArvEnumeration::createEditor(QWidget* parent) const {
 
 void QArvEnumeration::populateEditor(QWidget* editor) const {
   auto select = editor->findChild<QComboBox*>("selectEnum");
-  assert(select);
+  if (!select) {
+    QArv::logMessage() << "Error populating editor: QArvEnumeration.";
+    return;
+  }
   select->clear();
   int choose = 0;
   for (int i = 0; i < names.size(); i++) {
@@ -71,7 +74,10 @@ void QArvEnumeration::populateEditor(QWidget* editor) const {
 
 void QArvEnumeration::readFromEditor(QWidget* editor) {
   auto select = editor->findChild<QComboBox*>("selectEnum");
-  assert(select);
+  if (!select) {
+    QArv::logMessage() << "Error reading from editor: QArvEnumeration.";
+    return;
+  }
   auto val = select->itemData(select->currentIndex());
   currentValue = values.indexOf(val.toString());
 }
@@ -97,14 +103,20 @@ QArvEditor* QArvString::createEditor(QWidget* parent) const {
 
 void QArvString::populateEditor(QWidget* editor) const {
   auto edline = editor->findChild<QLineEdit*>("editString");
-  assert(edline);
+  if (!edline) {
+    QArv::logMessage() << "Error populating editor: QArvString.";
+    return;
+  }
   edline->setMaxLength(maxlength);
   edline->setText(value);
 }
 
 void QArvString::readFromEditor(QWidget* editor) {
   auto edline = editor->findChild<QLineEdit*>("editString");
-  assert(edline);
+  if (!edline) {
+    QArv::logMessage() << "Error reading from editor: QArvString.";
+    return;
+  }
   value = edline->text();
 }
 
@@ -129,7 +141,10 @@ QArvEditor* QArvFloat::createEditor(QWidget* parent) const {
 
 void QArvFloat::populateEditor(QWidget* editor) const {
   auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
-  assert(edbox);
+  if (!edbox) {
+    QArv::logMessage() << "Error populating editor: QArvFloat.";
+    return;
+  }
   edbox->setMaximum(max);
   edbox->setMinimum(min);
   edbox->setValue(value);
@@ -138,7 +153,10 @@ void QArvFloat::populateEditor(QWidget* editor) const {
 
 void QArvFloat::readFromEditor(QWidget* editor) {
   auto edbox = editor->findChild<QDoubleSpinBox*>("editFloat");
-  assert(edbox);
+  if (!edbox) {
+    QArv::logMessage() << "Error reading from editor: QArvFloat.";
+    return;
+  }
   value = edbox->value();
 }
 
@@ -161,7 +179,10 @@ QArvEditor* QArvInteger::createEditor(QWidget* parent) const {
 
 void QArvInteger::populateEditor(QWidget* editor) const {
   auto edbox = editor->findChild<QSpinBox*>("editInteger");
-  assert(edbox);
+  if (!edbox) {
+    QArv::logMessage() << "Error populating editor: QArvInteger.";
+    return;
+  }
   edbox->setMaximum(max < INT_MAX ? max : INT_MAX);
   edbox->setMinimum(min > INT_MIN ? min : INT_MIN);
   edbox->setValue(value);
@@ -169,7 +190,10 @@ void QArvInteger::populateEditor(QWidget* editor) const {
 
 void QArvInteger::readFromEditor(QWidget* editor) {
   auto edbox = editor->findChild<QSpinBox*>("editInteger");
-  assert(edbox);
+  if (!edbox) {
+    QArv::logMessage() << "Error reading from editor: QArvInteger.";
+    return;
+  }
   value = edbox->value();
 }
 
@@ -194,13 +218,19 @@ QArvEditor* QArvBoolean::createEditor(QWidget* parent) const {
 
 void QArvBoolean::populateEditor(QWidget* editor) const {
   auto check = editor->findChild<QCheckBox*>("editBool");
-  assert(check);
+  if (!check) {
+    QArv::logMessage() << "Error populating editor: QArvBoolean.";
+    return;
+  }
   check->setChecked(value);
 }
 
 void QArvBoolean::readFromEditor(QWidget* editor) {
   auto check = editor->findChild<QCheckBox*>("editBool");
-  assert(check);
+  if (!check) {
+    QArv::logMessage() << "Error reading from editor: QArvBoolean.";
+    return;
+  }
   value = check->isChecked();
 }
 
@@ -247,7 +277,10 @@ QArvEditor* QArvRegister::createEditor(QWidget* parent) const {
 
 void QArvRegister::populateEditor(QWidget* editor) const {
   auto edline = editor->findChild<QLineEdit*>("editRegister");
-  assert(edline);
+  if (!edline) {
+    QArv::logMessage() << "Error populating editor: QArvRegister.";
+    return;
+  }
   auto hexval = value.toHex();
   QString imask("");
   for (int i = 0; i < hexval.length(); i++) imask += "H";
@@ -257,6 +290,9 @@ void QArvRegister::populateEditor(QWidget* editor) const {
 
 void QArvRegister::readFromEditor(QWidget* editor) {
   auto edline = editor->findChild<QLineEdit*>("editRegister");
-  assert(edline);
+  if (!edline) {
+    QArv::logMessage() << "Error reading from editor: QArvRegister.";
+    return;
+  }
   value.fromHex(edline->text().toAscii());
 }

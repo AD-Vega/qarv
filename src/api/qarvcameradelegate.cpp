@@ -18,8 +18,8 @@
  */
 
 #include "api/qarvcameradelegate.h"
-#include <cassert>
 #include "api/qarvtype.h"
+#include "globals.h"
 #include <QLayout>
 
 QArvCameraDelegate::QArvCameraDelegate(QObject* parent) :
@@ -40,7 +40,10 @@ QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
 void QArvCameraDelegate::setEditorData(QWidget* editor,
                                        const QModelIndex& index) const {
   auto var = index.model()->data(index, Qt::EditRole);
-  assert(var.isValid());
+  if (!var.isValid()) {
+    QArv::logMessage() << "Error setting editor data: QArvCameraDelegate";
+    return;
+  }
   auto val = static_cast<QArvType*>(var.data());
   val->populateEditor(editor);
 }
@@ -49,7 +52,10 @@ void QArvCameraDelegate::setModelData(QWidget* editor,
                                       QAbstractItemModel* model,
                                       const QModelIndex& index) const {
   auto var = model->data(index, Qt::EditRole);
-  assert(var.isValid());
+  if (!var.isValid()) {
+    QArv::logMessage() << "Error setting model data: QArvCameraDelegate";
+    return;
+  }
   auto val = static_cast<QArvType*>(var.data());
   val->readFromEditor(editor);
   model->setData(index, var);

@@ -24,7 +24,6 @@ extern "C" {
 }
 #include <cstdlib>
 #include <cstring>
-#include <cassert>
 
 #include "api/qarvcamera.h"
 #include "qarvfeaturetree.h"
