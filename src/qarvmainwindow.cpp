@@ -1256,7 +1256,7 @@ void QArvMainWindow::on_postprocList_doubleClicked(const QModelIndex& index) {
 
 void QArvMainWindow::updateRecordingTime()
 {
-  if (recording && !recorder->isOK()) {
+  if (recording && standalone && !recorder->isOK()) {
     logMessage() << tr("Recording failed!");
     on_recordAction_toggled(false);
     on_closeFileAction_triggered(true);
