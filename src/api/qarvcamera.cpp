@@ -275,13 +275,13 @@ void QArvCamera::setGain(double gain) {
   emit dataChanged(QModelIndex(), QModelIndex());
 }
 
-QPair< double, double > QArvCamera::getExposureLimits() {
+QPair< double, double > QArvCamera::getExposureBounds() {
   double expomin, expomax;
   arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax);
   return QPair<double, double>(expomin, expomax);
 }
 
-QPair< double, double > QArvCamera::getGainLimits() {
+QPair< double, double > QArvCamera::getGainBounds() {
   double gainmin, gainmax;
   arv_camera_get_gain_bounds(camera, &gainmin, &gainmax);
   return QPair<double, double>(gainmin, gainmax);

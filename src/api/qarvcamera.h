@@ -163,7 +163,7 @@ public:
   /**@{*/
   double getExposure();
   void setExposure(double exposure);
-  QPair<double, double> getExposureLimits();
+  QPair<double, double> getExposureBounds();
   bool hasAutoExposure();
   void setAutoExposure(bool enable);
   /**@}*/
@@ -172,7 +172,7 @@ public:
   /**@{*/
   double getGain();
   void setGain(double gain);
-  QPair<double, double> getGainLimits();
+  QPair<double, double> getGainBounds();
   bool hasAutoGain();
   void setAutoGain(bool enable);
   /**@}*/

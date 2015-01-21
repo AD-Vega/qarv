@@ -333,8 +333,8 @@ void QArvMainWindow::readAllValues() {
   QSize binsize = camera->getBinning();
   binSpinBox->setValue(binsize.width());
 
-  gainrange = camera->getGainLimits();
-  exposurerange = camera->getExposureLimits();
+  gainrange = camera->getGainBounds();
+  exposurerange = camera->getExposureBounds();
   gainSlider->setRange(0, slidersteps);
   exposureSlider->setRange(0, slidersteps);
   gainSpinbox->setRange(gainrange.first, gainrange.second);
