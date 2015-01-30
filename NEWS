@@ -1,0 +1,31 @@
+QArv NEWS -- history of user-visible changes.
+=============================================
+
+Version 2.0.0
+
+- Separate thread for capture and recording, preventing the GUI from
+  causing frame drops.
+- Recording of TIFF images.
+- Bayer decoders via OpenCV.
+- Warning when buffer underrun occurs.
+- Automatically stop recording after specified time.
+- Postprocessing plugins (only "Levels" at the moment).
+- Timestamped log messages.
+- Enhanced performance when recording undecoded data, avoiding any
+  decoding when possible.
+- Show number of recorded frames.
+- Ctrl+Q shortcut to quit the standalone application.
+- API changes:
+  * Changed frameReady API of QArvGui and QArvCamera for compatibility with
+    the new threaded processing model and to avoid unneccessary decoding.
+  * QString arguments of functions are declared const&.
+  * Both raw feature names and display names can be used with
+    QArvCamera::features().
+  * Change the way the ROI bounds are obtained.
+  * Change the names of the functions for obtaining bounds to make
+    them more similar to Aravis API.
+
+
+Version 1.0.0
+
+- This is the initial version released to the world.
