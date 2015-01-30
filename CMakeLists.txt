@@ -8,7 +8,7 @@ set(qarv_API 2)
 
 if (NOT DEFINED qarv_VERSION)
   message("Program version not specified, using git description.")
-  execute_process(COMMAND "git" "describe" "--tags"
+  execute_process(COMMAND "git" "show" "-s" "--format='%h'"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   OUTPUT_VARIABLE qarv_GIT_VERSION
                   RESULT_VARIABLE qarv_GIT_RESULT)
