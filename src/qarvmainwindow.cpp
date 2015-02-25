@@ -1,6 +1,6 @@
 /*
     QArv, a Qt interface to aravis.
-    Copyright (C) 2012-2014 Jure Varlec <jure.varlec@ad-vega.si>
+    Copyright (C) 2012-2015 Jure Varlec <jure.varlec@ad-vega.si>
                             Andrej Lajovic <andrej.lajovic@ad-vega.si>
 
     This program is free software: you can redistribute it and/or modify
@@ -654,10 +654,28 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
   if (!standalone) goto skip_all_file_opening;
 
   if (freshStart) {
+    bool earlyBail = false;
     if (filenameEdit->text().isEmpty()) {
       tabWidget->setCurrentWidget(recordingTab);
       statusBar()->showMessage(tr("Please set the video file name."),
                                statusTimeoutMsec);
+      earlyBail = true;
+    } else if (QFile(filenameEdit->text()).exists()) {
+      // This check does not work for gstreamer and images. However, images
+      // contain a timestamp and cannot be overwritten, and gstreamer
+      // support needs to be revamped anyhow.
+      QString msg = tr("Recording to: %1\nFile with this name already exists, overwrite?");
+      auto button =
+        QMessageBox::warning(this, tr("File exists!"),
+                             msg.arg(filenameEdit->text()),
+                             QMessageBox::Yes | QMessageBox::Abort,
+                             QMessageBox::Abort);
+      if (button == QMessageBox::Abort) {
+        earlyBail = true;
+      }
+    }
+
+    if (earlyBail) {
       recordAction->setChecked(false);
       recordingTime = QTime();
       recordingTimeCumulative = 0;
