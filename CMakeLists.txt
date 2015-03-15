@@ -177,13 +177,16 @@ set_prefixed(qarv_recorders_SRC src/recorders/
 )
 set_prefixed(qarv_filters_MOCS src/filters/
   levels.h
+  c41.h
 )
 qt5_wrap_cpp(qarv_filters_MOCD ${qarv_filters_MOCS})
 set_prefixed(qarv_filters_SRC src/filters/
   levels.cpp
+  c41.cpp
 )
 set_prefixed(qarv_filters_UIS_pre src/filters/
   levels.ui
+  c41.ui
 )
 qt5_wrap_ui(qarv_filters_UIS ${qarv_filters_UIS_pre})
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts cs.ts)

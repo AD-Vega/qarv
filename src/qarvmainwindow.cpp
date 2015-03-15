@@ -249,6 +249,21 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     statusBar()->addPermanentWidget(recordingTimeLabel);
     statusBar()->addPermanentWidget(makeVerticalLine());
     statusBar()->showMessage(tr("Welcome to QArv!"));
+
+    // Hack for Edouard: add a C41 instance and put it into a tab.
+    for (QAction* a: postprocMenu->actions()) {
+        ImageFilterPlugin* p = a->data().value<ImageFilterPlugin*>();
+        if (p->name() == "C41") {
+            a->trigger();
+            break;
+        }
+    }
+    auto idx = postprocChain.index(0, 0);
+    on_postprocList_doubleClicked(idx);
+    auto item = postprocChain.itemFromIndex(idx);
+    item->setCheckState(Qt::Checked);
+    auto editor = var2ptr<ImageFilterSettingsDialog>(item->data(Qt::UserRole + 2));
+    tabWidget->addTab(editor, "C41 settings");
 }
 
 QArvMainWindow::~QArvMainWindow() {

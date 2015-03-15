@@ -296,11 +296,11 @@ void QArvCamera::setGain(double gain) {
 }
 
 QPair< double, double > QArvCamera::getExposureBounds() {
-  auto idx = featureIndex("ExposureTimeRaw");
-  auto var = idx.data(Qt::EditRole);
-  auto qd = var.value<QArvInteger>();
-  qDebug() << qd.value << qd.min << qd.max;
-  return QPair<double, double>(qd.min, qd.max);
+    auto idx = featureIndex("ExposureTimeRaw");
+    auto var = idx.data(Qt::EditRole);
+    auto qd = var.value<QArvInteger>();
+    qDebug() << qd.value << qd.min << qd.max;
+    return QPair<double, double>(qd.min, qd.max);
 }
 
 QPair< double, double > QArvCamera::getGainBounds() {
