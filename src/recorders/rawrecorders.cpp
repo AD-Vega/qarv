@@ -85,7 +85,7 @@ public:
 
   QPair<qint64, qint64> fileSize() {
     qint64 s, n;
-    if (!bytesizeWritten) {
+    if (!bytesizeWritten || !frameBytes) {
       s = n = 0;
     } else {
       s = file.size();
