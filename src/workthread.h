@@ -84,22 +84,22 @@ private slots:
 
   void setRecorder(QArv::Recorder* recorder, QFile* timestampFile, int maxFrames);
 
-  void getFps(uint* fps);
-
 signals:
   void frameCooked(cv::Mat frame);
   void frameToRender(cv::Mat frame);
   void recordingStopped();
 
 private:
+  void getFps(uint* fps);
+
   Parameters p;
   cv::Mat processedFrame;
   std::atomic_bool doRender;
   int maxRecordedFrames;
   int recordedFrames;
-  uint receivedFrames;
-  QTime lastFpsRequest;
+  std::atomic<uint> receivedFrames;
   uint lastFpsRequestFrames;
+  QTime lastFpsRequest;
 };
 
 class Renderer: public QObject {
