@@ -157,7 +157,9 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
   postprocAddButton->setMenu(postprocMenu);
   postprocChain.setColumnCount(1);
   postprocList->setModel(&postprocChain);
-  connect(&postprocChain, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updatePostprocQList()));
+  connect(&postprocChain,
+          SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
+          SLOT(updatePostprocQList()));
 
   autoreadexposure = new QTimer(this);
   autoreadexposure->setInterval(sliderUpdateSpinbox->value());
@@ -1354,6 +1356,7 @@ void QArvMainWindow::addPostprocFilter()
   item->setData(ptr2var(filter), Qt::UserRole + 1);
   item->setData(ptr2var<ImageFilterSettingsDialog>(NULL), Qt::UserRole + 2);
   postprocChain.appendRow(item);
+  updatePostprocQList();
 }
 
 void QArvMainWindow::updatePostprocQList() {
