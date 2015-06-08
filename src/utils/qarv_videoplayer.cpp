@@ -238,10 +238,10 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
 }
 
 int main(int argc, char** argv) {
+  QApplication a(argc, argv);
   QString filename;
   if (argc > 1)
-    filename = argv[1];
-  QApplication a(argc, argv);
+    filename = QCoreApplication::arguments()[1];
   QArvVideoPlayer p(filename);
   p.show();
   return a.exec();
