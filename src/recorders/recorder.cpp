@@ -22,7 +22,7 @@
 
 using namespace QArv;
 
-static int init = [] () {
+static int init __attribute__((unused)) = [] () {
   qRegisterMetaType<Recorder*>("QArv::Recorder*");
   return 0;
 }();

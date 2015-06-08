@@ -30,7 +30,7 @@ extern "C" {
 
 using namespace QArv;
 
-static int init = [] () {
+static int init __attribute__((unused)) = [] () {
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<QFile*>("QFile*");
   qRegisterMetaType<QList<ImageFilterPtr>>("QList<QArv::ImageFilterPtr>");
