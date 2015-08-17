@@ -110,7 +110,7 @@ public:
               bool writeInfo) :
     file(fileName), decoder(decoder_), OK(true) {
     file.open(QIODevice::WriteOnly);
-    if (isOK() && writeInfo) {
+    if (isOK()) {
       enum PixelFormat fmt;
       switch (decoder->cvType()) {
       case CV_8UC1:
@@ -128,12 +128,14 @@ public:
         logMessage() << "Recorder: Invalid CV image format";
         return;
       }
-      QSettings s(fileName + descExt, QSettings::Format::IniFormat);
-      initDescfile(s, size, FPS);
-      s.setValue("encoding_type", "libavutil");
-      s.setValue("libavutil_pixel_format", fmt);
-      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
-      s.setValue("frame_bytes", frameBytes);
+      if (writeInfo) {
+        QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+        initDescfile(s, size, FPS);
+        s.setValue("encoding_type", "libavutil");
+        s.setValue("libavutil_pixel_format", fmt);
+        s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
+        s.setValue("frame_bytes", frameBytes);
+      }
     }
   }
 
@@ -187,7 +189,7 @@ public:
                bool writeInfo) :
     file(fileName), decoder(decoder_), OK(true) {
     file.open(QIODevice::WriteOnly);
-    if (isOK() && writeInfo) {
+    if (isOK()) {
       enum PixelFormat fmt;
       switch (decoder->cvType()) {
       case CV_8UC1:
@@ -205,12 +207,14 @@ public:
         logMessage() << "Recorder: Invalid CV image format";
         return;
       }
-      QSettings s(fileName + descExt, QSettings::Format::IniFormat);
-      initDescfile(s, size, FPS);
-      s.setValue("encoding_type", "libavutil");
-      s.setValue("libavutil_pixel_format", fmt);
-      s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
-      s.setValue("frame_bytes", frameBytes);
+      if (writeInfo) {
+        QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+        initDescfile(s, size, FPS);
+        s.setValue("encoding_type", "libavutil");
+        s.setValue("libavutil_pixel_format", fmt);
+        s.setValue("libavutil_pixel_format_name", av_get_pix_fmt_name(fmt));
+        s.setValue("frame_bytes", frameBytes);
+      }
     }
   }
 
