@@ -54,6 +54,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${ARAVIS_INCLUDE_DIRS}
   ${GIO_INCLUDE_DIRS}
+  ${AVUTIL_INCLUDE_DIRS}
 )
 
 
@@ -69,6 +70,7 @@ add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/${qarv_DATA}\" -DQT_STATIC
   -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=\"${qarv_API}\" -DQARV_ABI=\"${qarv_ABI}\")
 
 set(CMAKE_REQUIRED_LIBRARIES ${AVUTIL_LDFLAGS})
+set(CMAKE_REQUIRED_INCLUDES ${AVUTIL_INCLUDE_DIRS})
 check_symbol_exists(av_pix_fmt_desc_get libavutil/pixdesc.h HAVE_FMT_DESC_GET)
 if (HAVE_FMT_DESC_GET)
   add_definitions(-DHAVE_FMT_DESC_GET)
