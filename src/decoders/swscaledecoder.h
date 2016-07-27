@@ -38,7 +38,7 @@ namespace QArv {
 class SwScaleDecoder: public QArvDecoder {
 public:
   SwScaleDecoder(QSize size,
-                 enum PixelFormat inputPixfmt,
+                 enum AVPixelFormat inputPixfmt,
                  ArvPixelFormat arvPixFmt,
                  int swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT);
   virtual ~SwScaleDecoder();
@@ -47,7 +47,7 @@ public:
   int cvType();
   ArvPixelFormat pixelFormat();
   QByteArray decoderSpecification();
-  enum PixelFormat swscalePixelFormat();
+  enum AVPixelFormat swscalePixelFormat();
 
 private:
   bool OK;
@@ -57,7 +57,7 @@ private:
   int image_strides[4];
   uint8_t bufferBytesPerPixel;
   int cvMatType;
-  enum PixelFormat inputPixfmt, outputPixFmt;
+  enum AVPixelFormat inputPixfmt, outputPixFmt;
   struct AVPicture srcInfo;
   ArvPixelFormat arvPixelFormat;
   int flags;

@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QStandardItemModel>
+#include <cmath>
 
 namespace QArv
 {

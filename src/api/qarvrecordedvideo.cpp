@@ -31,7 +31,7 @@ using namespace QArv;
 // Make sure settings format matches rawrecorders.cpp!
 
 QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
- fps(0), uncompressed(true), arvPixfmt(0), swscalePixfmt(PIX_FMT_NONE),
+ fps(0), uncompressed(true), arvPixfmt(0), swscalePixfmt(AV_PIX_FMT_NONE),
  frameBytes_(0) {
   QSettings s(filename, QSettings::Format::IniFormat);
   isOK = s.status() == QSettings::Status::NoError;
@@ -71,7 +71,7 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
     arvPixfmt = v.toString().toULongLong(NULL, 16);
   } else if (type == "libavutil") {
     v = s.value("libavutil_pixel_format");
-    swscalePixfmt = (enum PixelFormat)v.toLongLong();
+    swscalePixfmt = (enum AVPixelFormat)v.toLongLong();
   } else {
     logMessage() << "Unable to determine decoder type.";
     isOK = false;
@@ -128,7 +128,7 @@ QArvDecoder* QArvRecordedVideo::makeDecoder() {
   if (!isOK) return NULL;
   if (arvPixfmt != 0) {
     return QArvDecoder::makeDecoder(arvPixfmt, fsize);
-  } else if (swscalePixfmt != PIX_FMT_NONE) {
+  } else if (swscalePixfmt != AV_PIX_FMT_NONE) {
     return QArvDecoder::makeSwScaleDecoder(swscalePixfmt, fsize);
   } else {
     isOK = false;

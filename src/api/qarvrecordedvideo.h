@@ -96,7 +96,7 @@ private:
   int fps;
   bool uncompressed, isOK;
   ArvPixelFormat arvPixfmt;
-  enum PixelFormat swscalePixfmt;
+  enum AVPixelFormat swscalePixfmt;
   uint frameBytes_;
 };
 

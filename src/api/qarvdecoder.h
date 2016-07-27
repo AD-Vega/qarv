@@ -98,7 +98,7 @@ public:
   static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size, bool fast = true);
 
   //! Convenience function to create a libswscale decoder, not limited to Aravis pixel formats.
-  static QArvDecoder* makeSwScaleDecoder(enum PixelFormat fmt,
+  static QArvDecoder* makeSwScaleDecoder(enum AVPixelFormat fmt,
                                          QSize size,
                                          int swsFlags = 0);
 };
