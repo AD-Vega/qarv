@@ -39,7 +39,7 @@ find_package(Qt4 REQUIRED
   QtSVG
 )
 include(FindPkgConfig)
-pkg_search_module(ARAVIS REQUIRED aravis-0.4 aravis-0.2)
+pkg_search_module(ARAVIS REQUIRED aravis-0.6 aravis-0.4 aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
 pkg_check_modules(AVCODEC REQUIRED libavcodec)
