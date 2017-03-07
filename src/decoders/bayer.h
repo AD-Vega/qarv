@@ -23,7 +23,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QDataStream>
 extern "C" {
-  #include <arvenums.h>
+  #include <arv.h>
 }
 
 

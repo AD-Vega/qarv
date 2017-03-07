@@ -25,7 +25,7 @@
 #include <QCoreApplication>
 
 extern "C" {
-#include <arvbuffer.h>
+#include <arv.h>
 }
 
 using namespace QArv;

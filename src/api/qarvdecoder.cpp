@@ -26,7 +26,7 @@
 #include "globals.h"
 #include <type_traits>
 extern "C" {
-  #include <arvenums.h>
+  #include <arv.h>
 }
 
 using namespace QArv;

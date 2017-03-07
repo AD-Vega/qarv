@@ -22,7 +22,7 @@
 
 #include "api/qarvdecoder.h"
 extern "C" {
-  #include <arvenums.h>
+  #include <arv.h>
 }
 
 namespace QArv {
