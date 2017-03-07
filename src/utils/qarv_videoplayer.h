@@ -20,6 +20,7 @@
 #ifndef VIDEOPLAYER_H
 #define VIDEOPLAYER_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include "ui_qarv_videoplayer.h"
 #include "api/qarvdecoder.h"
 #include "api/qarvrecordedvideo.h"

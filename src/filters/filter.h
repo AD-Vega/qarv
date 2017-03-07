@@ -28,6 +28,7 @@
 #ifndef FILTER_H
 #define FILTER_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include <QDockWidget>
 #include <QSettings>
 #include <opencv2/opencv.hpp>

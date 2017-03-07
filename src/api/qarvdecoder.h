@@ -20,6 +20,7 @@
 #ifndef QARVDECODER_H
 #define QARVDECODER_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include <QByteArray>
 #include <QString>
 #include <QSize>

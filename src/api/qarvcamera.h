@@ -20,6 +20,7 @@
 #ifndef QARVCAMERA_H
 #define QARVCAMERA_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include <QList>
 #include <QString>
 #include <QRect>

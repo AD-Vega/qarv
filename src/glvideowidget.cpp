@@ -18,8 +18,8 @@
  */
 
 
-#include "glvideowidget.h"
 #include "globals.h"
+#include "glvideowidget.h"
 #include "api/qarvdecoder.h"
 #include "globals.h"
 

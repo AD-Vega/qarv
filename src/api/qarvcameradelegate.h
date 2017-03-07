@@ -20,6 +20,7 @@
 #ifndef QARVCAMERADELEGATE_H
 #define QARVCAMERADELEGATE_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include <QStyledItemDelegate>
 
 #pragma GCC visibility push(default)

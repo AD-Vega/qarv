@@ -44,6 +44,7 @@ pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
 pkg_check_modules(AVCODEC REQUIRED libavcodec)
 pkg_check_modules(AVUTIL REQUIRED libavutil)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
 find_package( OpenCV REQUIRED )
 
 include(${QT_USE_FILE})
@@ -55,6 +56,7 @@ include_directories(
   ${ARAVIS_INCLUDE_DIRS}
   ${GIO_INCLUDE_DIRS}
   ${AVUTIL_INCLUDE_DIRS}
+  ${GLIB_INCLUDE_DIRS}
 )
 
 

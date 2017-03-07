@@ -20,6 +20,8 @@
 #ifndef QARVTYPE_H
 #define QARVTYPE_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
+
 #pragma GCC visibility push(default)
 
 #include <QWidget>

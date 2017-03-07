@@ -20,6 +20,7 @@
 #ifndef FFMPEG_DECODER_H
 #define FFMPEG_DECODER_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include <QSize>
 #include <QImage>
 #include <api/qarvdecoder.h>

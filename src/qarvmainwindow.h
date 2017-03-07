@@ -21,6 +21,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
 #include "ui_mainwindow.h"
 
 #include "glvideowidget.h"
