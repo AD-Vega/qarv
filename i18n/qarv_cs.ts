@@ -143,7 +143,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="305"/>
         <source>Choose a size of ROI used for picking.</source>
-        <translation>Vybrat kýženou velikost oblast výřezu.</translation>
+        <translation>Vybrat kýženou velikost oblasti výřezu.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="326"/>
@@ -159,7 +159,7 @@
         <location filename="../src/mainwindow.ui" line="369"/>
         <location filename="../src/mainwindow.ui" line="444"/>
         <source>Enter value manually.</source>
-        <translation>Vložit hodnotu ručně.</translation>
+        <translation>Zadat vlastní hodnotu.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="386"/>
@@ -282,7 +282,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="681"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls the number of frames standing ready for camera to fill, ensuring smooth operation. If the frames arrive faster than they can be decoded and/or recorded, the buffer will underflow. If this happens intermittently, increase the buffer size. It it happens regularly, your system is too slow to handle the workload.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastaví počet dostupných snímků, aby kamera fungovala hladce. Pokud snímky z kamery přicházejí rychleji, nežli je možné zpracovat nebo zaznamenat, vyrovnávací paměť se vyprázdní. Pokud se to stává příležitostně, pomůže zvýšení velikosti vyrovnávací paměťi. Pokud se to stává často, systém je příliš pomalý na zpracování úkolu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nastaví počet dostupných snímků, aby kamera fungovala hladce. Pokud snímky z kamery přicházejí rychleji, nežli je možné zpracovat nebo zaznamenat, vyrovnávací paměť podteče. Pokud se to stává příležitostně, pomůže zvýšení velikosti vyrovnávací paměťi. Pokud se to stává často, systém je příliš pomalý na zpracování úkolu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="759"/>
@@ -851,7 +851,7 @@ Zvažte zvětšení MTU!</translation>
     <message>
         <location filename="../src/qarvmainwindow.cpp" line="1313"/>
         <source>Buffer underrun!</source>
-        <translation>Vyrovnávací paměť vyprázdněna!</translation>
+        <translation>Podtečení vyrovnávací paměti!</translation>
     </message>
 </context>
 <context>
