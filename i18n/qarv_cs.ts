@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ">
+<TS version="2.1" language="cs_CZ">
 <context>
     <name>MainWindowUI</name>
     <message>
@@ -47,7 +47,7 @@
         <location filename="../src/mainwindow.ui" line="113"/>
         <location filename="../src/mainwindow.ui" line="127"/>
         <source>Not an ethernet camera.</source>
-        <translation>Kamera nevyužívá Ethernet</translation>
+        <translation>Není ethernetová kamera.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="120"/>
@@ -57,7 +57,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="152"/>
         <source>Actual: </source>
-        <translation>Aktuální:</translation>
+        <translation>Opravdová velikost: </translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="174"/>
@@ -323,7 +323,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="843"/>
         <source>The saved snapshot is as shown in the Video Display.</source>
-        <translation>Uložený snímek je zobrazen v náhledu videa</translation>
+        <translation>Uložený snímek je zobrazen v náhledu videa.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="846"/>
@@ -385,10 +385,10 @@
         <source>After this much time:</source>
         <translation>Po uplynutí této doby:</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../src/mainwindow.ui" line="1101"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Version %1.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A GUI interface to Genicam ethernet cameras.&lt;/p&gt;&lt;p&gt;Copyright © 2012-2015 Jure Varlec and Andrej Lajovic, Vega Astronomical Society — Ljubljana&lt;/p&gt;&lt;p&gt;QArv is provided under the GNU General Public License, version 3 or later. The license text is provided with the program and is also available at the &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;Free Software Foundation web page&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;The icons included with QArv are part of the oxygen theme from the &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;KDE project&lt;/span&gt;&lt;/a&gt;. License text is provided with the program.&lt;/p&gt;&lt;p&gt;The QArv icon itself is derived from the oxygen theme as well.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Verze %1.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafické rozhraní pro Ethernetové GenICam kamery.&lt;/p&gt;&lt;p&gt;Autorská práva © 2012-2015 Jure Varlec in Andrej Lajovic, Astronomický spolek Vega — Lublaň&lt;/p&gt;&lt;p&gt;QArv je distribuován pod licenční smlouvou GNU General Public License, verze 3 a novější. Text licence (v angličtině) je přiložen k programu a je také dostupný na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;web Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikony, které QArv obsahuje jsou součástí motivu oxygen vytvořeného &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projektem KDE&lt;/span&gt;&lt;/a&gt;. Licenční smlouva je dodávána s programem.&lt;/p&gt;&lt;p&gt;Ikona QArv je také odvozena z motivu oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt; {600;?} {600;?} {1.?} {2012-2015 ?} {3 ?} {0057a?} {0057a?}</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:x-large; font-weight:600;&quot;&gt;QArv&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Verze %1.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Grafické rozhraní pro Ethernetové GenICam kamery.&lt;/p&gt;&lt;p&gt;Autorská práva © 2012-2015 Jure Varlec in Andrej Lajovic, Astronomický spolek Vega — Lublaň&lt;/p&gt;&lt;p&gt;QArv je distribuován pod licenční smlouvou GNU General Public License, verze 3 a novější. Text licence (v angličtině) je přiložen k programu a je také dostupný na &lt;a href=&quot;http://www.gnu.org/licenses/gpl.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;web Free Software Foundation&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Ikony, které QArv obsahuje jsou součástí motivu oxygen vytvořeného &lt;a href=&quot;http://www.kde.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;projektem KDE&lt;/span&gt;&lt;/a&gt;. Licenční smlouva je dodávána s programem.&lt;/p&gt;&lt;p&gt;Ikona QArv je také odvozena z motivu oxygen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="1273"/>
@@ -694,10 +694,9 @@
         <source>Found %n cameras.</source>
         <comment>Number of cameras</comment>
         <translation>
-            <numerusform>Nalezeno %n kamer.</numerusform>
+            <numerusform>Nalezena %n kamera.</numerusform>
             <numerusform>Nalezeny %n kamery.</numerusform>
-            <numerusform>Nalezena %n kamera.</numerusform>
-            <numerusform>Nalezena %n kamera.</numerusform>
+            <numerusform>Nalezeno %n kamer.</numerusform>
         </translation>
     </message>
     <message>
