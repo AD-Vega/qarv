@@ -155,7 +155,7 @@ set_prefixed(qarv_filters_UIS_pre src/filters/
   levels.ui
 )
 qt4_wrap_ui(qarv_filters_UIS ${qarv_filters_UIS_pre})
-set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts)
+set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts cs.ts)
 qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 
 set(libqarv "qarv-${qarv_API}")
