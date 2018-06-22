@@ -54,15 +54,15 @@ QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
 QArvCameraId::QArvCameraId(const char* id_,
                            const char* vendor_,
                            const char* model_) {
-  id = strdup(id_);
-  vendor = strdup(vendor_);
-  model = strdup(model_);
+  id = strdup(id_ ? id_ : "");
+  vendor = strdup(vendor_ ? vendor_ : "");
+  model = strdup(model_ ? model_ : "");
 }
 
 QArvCameraId::QArvCameraId(const QArvCameraId& camid) {
-  id = strdup(camid.id);
-  vendor = strdup(camid.vendor);
-  model = strdup(camid.model);
+  id = strdup(camid.id ? camid.id : "");
+  vendor = strdup(camid.vendor ? camid.vendor : "");
+  model = strdup(camid.model ? camid.model : "");
 }
 
 QArvCameraId::~QArvCameraId() {
@@ -104,6 +104,9 @@ QList<QArvCameraId> QArvCamera::listCameras() {
   unsigned int N = arv_get_n_devices();
   for (unsigned int i = 0; i < N; i++) {
     const char* camid = arv_get_device_id(i);
+    if (!camid) {
+      continue;
+    }
     ArvCamera* camera = arv_camera_new(camid);
     QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
                     arv_camera_get_model_name(camera));
