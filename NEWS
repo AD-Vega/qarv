@@ -1,6 +1,12 @@
 QArv NEWS -- history of user-visible changes.
 =============================================
 
+Version 2.1.0
+
+- Czech translation.
+- Bug fixes.
+
+
 Version 2.0.0
 
 - Separate thread for capture and recording, preventing the GUI from
