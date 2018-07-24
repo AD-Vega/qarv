@@ -223,7 +223,7 @@ ArvPixelFormat QArvCamera::getPixelFormatId() {
 }
 
 void QArvCamera::setPixelFormat(const QString& format) {
-    auto tmp = format.toAscii();
+    auto tmp = format.toLatin1();
     arv_camera_set_pixel_format_from_string(camera, tmp.constData());
     emit dataChanged(QModelIndex(), QModelIndex());
 }
@@ -470,22 +470,22 @@ QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
         if (name == "Category") continue;
         ArvGcFeatureNode* node =
             ARV_GC_FEATURE_NODE(arv_gc_get_node(camera->genicam,
-                                                name.toAscii()));
+                                                name.toLatin1()));
 
         in >> type;
         in >> v;
         if (type == "Register") {
             QString hex;
             in >> hex;
-            auto b = QByteArray::fromHex(hex.toAscii());
+            auto b = QByteArray::fromHex(hex.toLatin1());
             arv_gc_register_set(ARV_GC_REGISTER(node), v.data(), v.toLongLong(),
                                 NULL);
         } else if (type == "Enumeration") {
             arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
-                                                v.toAscii().data(), NULL);
+                                                v.toLatin1().data(), NULL);
         } else if (type == "String") {
             arv_gc_string_set_value(ARV_GC_STRING(node),
-                                    v.toAscii().data(),
+                                    v.toLatin1().data(),
                                     NULL);
         } else if (type == "Float") {
             arv_gc_float_set_value(ARV_GC_FLOAT(node), v.toDouble(), NULL);
@@ -730,14 +730,14 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
         if (e.isAvailable.at(e.currentValue)) {
             arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
                                                 e.values.at(
-                                                    e.currentValue).toAscii().data(),
+                                                    e.currentValue).toLatin1().data(),
                                                 NULL);
         } else return false;
     } else if (value.canConvert<QArvCommand>()) {
         arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
     } else if (value.canConvert<QArvString>()) {
         auto s = qvariant_cast<QArvString>(value);
-        arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(),
+        arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toLatin1().data(),
                                 NULL);
     } else if (value.canConvert<QArvFloat>()) {
         auto f = qvariant_cast<QArvFloat>(value);

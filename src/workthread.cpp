@@ -264,7 +264,7 @@ void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
 #else
                 ts = arv_buffer_get_timestamp(aravisFrame);
 #endif
-                p.timestampFile->write(QString::number(ts).toAscii());
+                p.timestampFile->write(QString::number(ts).toLatin1());
                 p.timestampFile->write("\n");
             }
         } else {

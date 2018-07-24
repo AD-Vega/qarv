@@ -294,5 +294,5 @@ void QArvRegister::readFromEditor(QWidget* editor) {
         QArv::logMessage() << "Error reading from editor: QArvRegister.";
         return;
     }
-    value.fromHex(edline->text().toAscii());
+    value.fromHex(edline->text().toLatin1());
 }
