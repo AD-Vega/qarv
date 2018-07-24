@@ -18,7 +18,7 @@
  */
 
 #include <gio/gio.h>  // Workaround for gdbusintrospection's use of "signal".
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "api/qarvcamera.h"
 #include "api/qarvgui.h"
 
