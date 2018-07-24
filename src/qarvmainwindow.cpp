@@ -1146,7 +1146,7 @@ bool ToolTipToRichTextFilter::eventFilter(QObject* obj, QEvent* evt) {
                 && tooltip.size() > size_threshold) {
                 // Prefix <qt/> to make sure Qt detects this as rich text
                 // Escape the current message as HTML and replace \n by <br>
-                tooltip = "<qt/>" + Qt::escape(tooltip);
+                tooltip = "<qt/>" + QString((tooltip)).toHtmlEscaped();
                 widget->setToolTip(tooltip);
                 return true;
             }

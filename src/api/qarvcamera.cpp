@@ -588,8 +588,8 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
                 arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
             if (string == NULL || string2 == NULL)
                 return QVariant();
-            return QVariant("<qt/>" + Qt::escape(string2) +": "
-                            + Qt::escape(string));
+            return QVariant("<qt/>" + QString(string2).toHtmlEscaped() + ": "
+                            + QString(string).toHtmlEscaped());
 
         default:
             return QVariant();
