@@ -34,7 +34,7 @@ extern "C" {
 using namespace QArv;
 
 class QArvCamera::QArvCameraExtension {
-  friend class QArvCamera;
+    friend class QArvCamera;
 
 private:
 };
@@ -43,10 +43,10 @@ QList<QArvCameraId> QArvCamera::cameraList;
 
 void QArvCamera::init() {
 #if !GLIB_CHECK_VERSION(2, 35, 1)
-  g_type_init();
+    g_type_init();
 #endif
-  arv_enable_interface("Fake");
-  qRegisterMetaType<ArvBuffer*>("ArvBuffer*");
+    arv_enable_interface("Fake");
+    qRegisterMetaType<ArvBuffer*>("ArvBuffer*");
 }
 
 QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
@@ -54,42 +54,42 @@ QArvCameraId::QArvCameraId() : id(NULL), vendor(NULL), model(NULL) {}
 QArvCameraId::QArvCameraId(const char* id_,
                            const char* vendor_,
                            const char* model_) {
-  id = strdup(id_ ? id_ : "");
-  vendor = strdup(vendor_ ? vendor_ : "");
-  model = strdup(model_ ? model_ : "");
+    id = strdup(id_ ? id_ : "");
+    vendor = strdup(vendor_ ? vendor_ : "");
+    model = strdup(model_ ? model_ : "");
 }
 
 QArvCameraId::QArvCameraId(const QArvCameraId& camid) {
-  id = strdup(camid.id ? camid.id : "");
-  vendor = strdup(camid.vendor ? camid.vendor : "");
-  model = strdup(camid.model ? camid.model : "");
+    id = strdup(camid.id ? camid.id : "");
+    vendor = strdup(camid.vendor ? camid.vendor : "");
+    model = strdup(camid.model ? camid.model : "");
 }
 
 QArvCameraId::~QArvCameraId() {
-  if (id != NULL) free((void*)id);
-  if (vendor != NULL) free((void*)vendor);
-  if (model != NULL) free((void*)model);
+    if (id != NULL) free((void*)id);
+    if (vendor != NULL) free((void*)vendor);
+    if (model != NULL) free((void*)model);
 }
 
 /*!
  * Acquisition mode is set to CONTINUOUS when the camera is opened.
  */
 QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
-  QAbstractItemModel(parent), acquiring(false) {
-  ext = new QArvCameraExtension;
-  setFrameQueueSize();
-  camera = arv_camera_new(id.id);
-  arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
-  device = arv_camera_get_device(camera);
-  genicam = arv_device_get_genicam(device);
-  featuretree = QArvFeatureTree::createFeaturetree(genicam);
+    QAbstractItemModel(parent), acquiring(false) {
+    ext = new QArvCameraExtension;
+    setFrameQueueSize();
+    camera = arv_camera_new(id.id);
+    arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
+    device = arv_camera_get_device(camera);
+    genicam = arv_device_get_genicam(device);
+    featuretree = QArvFeatureTree::createFeaturetree(genicam);
 }
 
 QArvCamera::~QArvCamera() {
-  delete ext;
-  QArvFeatureTree::freeFeaturetree(featuretree);
-  stopAcquisition();
-  g_object_unref(camera);
+    delete ext;
+    QArvFeatureTree::freeFeaturetree(featuretree);
+    stopAcquisition();
+    g_object_unref(camera);
 }
 
 /*!
@@ -99,29 +99,29 @@ QArvCamera::~QArvCamera() {
  * TODO: see if this info can be obtained using a lower level API.
  */
 QList<QArvCameraId> QArvCamera::listCameras() {
-  cameraList.clear();
-  arv_update_device_list();
-  unsigned int N = arv_get_n_devices();
-  for (unsigned int i = 0; i < N; i++) {
-    const char* camid = arv_get_device_id(i);
-    if (!camid) {
-      continue;
+    cameraList.clear();
+    arv_update_device_list();
+    unsigned int N = arv_get_n_devices();
+    for (unsigned int i = 0; i < N; i++) {
+        const char* camid = arv_get_device_id(i);
+        if (!camid) {
+            continue;
+        }
+        ArvCamera* camera = arv_camera_new(camid);
+        QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
+                        arv_camera_get_model_name(camera));
+        g_object_unref(camera);
+        cameraList << id;
     }
-    ArvCamera* camera = arv_camera_new(camid);
-    QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
-                    arv_camera_get_model_name(camera));
-    g_object_unref(camera);
-    cameraList << id;
-  }
-  return QList<QArvCameraId>(cameraList);
+    return QList<QArvCameraId>(cameraList);
 }
 
 QArvCameraId QArvCamera::getId() {
-  const char* id, * vendor, * model;
-  id = arv_camera_get_device_id(camera);
-  vendor = arv_camera_get_vendor_name(camera);
-  model = arv_camera_get_model_name(camera);
-  return QArvCameraId(id, vendor, model);
+    const char* id, * vendor, * model;
+    id = arv_camera_get_device_id(camera);
+    vendor = arv_camera_get_vendor_name(camera);
+    model = arv_camera_get_model_name(camera);
+    return QArvCameraId(id, vendor, model);
 }
 
 /*!
@@ -130,230 +130,231 @@ QArvCameraId QArvCamera::getId() {
  * It might be more appropriate to extend the C++ API.
  */
 ArvCamera* QArvCamera::aravisCamera() {
-  return camera;
+    return camera;
 }
 
 QRect QArvCamera::getROI() {
-  int x, y, width, height;
-  arv_camera_get_region(camera, &x, &y, &width, &height);
-  return QRect(x, y, width, height);
+    int x, y, width, height;
+    arv_camera_get_region(camera, &x, &y, &width, &height);
+    return QRect(x, y, width, height);
 }
 
 QPair<int, int> QArvCamera::getROIWidthBounds() {
-  int wmin, wmax;
-  arv_camera_get_width_bounds(camera, &wmin, &wmax);
-  QRect roi = getROI();
-  return qMakePair(wmin, wmax + roi.x());
+    int wmin, wmax;
+    arv_camera_get_width_bounds(camera, &wmin, &wmax);
+    QRect roi = getROI();
+    return qMakePair(wmin, wmax + roi.x());
 }
 
 QPair<int, int> QArvCamera::getROIHeightBounds() {
-  int hmin, hmax;
-  arv_camera_get_height_bounds(camera, &hmin, &hmax);
-  QRect roi = getROI();
-  return qMakePair(hmin, hmax + roi.y());
+    int hmin, hmax;
+    arv_camera_get_height_bounds(camera, &hmin, &hmax);
+    QRect roi = getROI();
+    return qMakePair(hmin, hmax + roi.y());
 }
 
 void QArvCamera::setROI(QRect roi) {
-  int x, y, width, height;
-  roi.getRect(&x, &y, &width, &height);
-  auto hmin = getROIHeightBounds();
-  auto wmin = getROIWidthBounds();
-  arv_device_set_integer_feature_value(device, "Width", wmin.first);
-  arv_device_set_integer_feature_value(device, "Height", hmin.first);
-  arv_device_set_integer_feature_value(device, "OffsetX", x);
-  arv_device_set_integer_feature_value(device, "OffsetY", y);
-  arv_device_set_integer_feature_value(device, "Width", width);
-  arv_device_set_integer_feature_value(device, "Height", height);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    int x, y, width, height;
+    roi.getRect(&x, &y, &width, &height);
+    auto hmin = getROIHeightBounds();
+    auto wmin = getROIWidthBounds();
+    arv_device_set_integer_feature_value(device, "Width", wmin.first);
+    arv_device_set_integer_feature_value(device, "Height", hmin.first);
+    arv_device_set_integer_feature_value(device, "OffsetX", x);
+    arv_device_set_integer_feature_value(device, "OffsetY", y);
+    arv_device_set_integer_feature_value(device, "Width", width);
+    arv_device_set_integer_feature_value(device, "Height", height);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QSize QArvCamera::getBinning() {
-  int x, y;
-  arv_camera_get_binning(camera, &x, &y);
-  return QSize(x, y);
+    int x, y;
+    arv_camera_get_binning(camera, &x, &y);
+    return QSize(x, y);
 }
 
 void QArvCamera::setBinning(QSize bin) {
-  arv_camera_set_binning(camera, bin.width(), bin.height());
-  emit dataChanged(QModelIndex(), QModelIndex());
+    arv_camera_set_binning(camera, bin.width(), bin.height());
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QList< QString > QArvCamera::getPixelFormats() {
-  unsigned int numformats;
-  const char** formats =
-    arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
-  QList<QString> list;
-  for (uint i = 0; i < numformats; i++)
-    list << formats[i];
-  free(formats);
-  return list;
+    unsigned int numformats;
+    const char** formats =
+        arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
+    QList<QString> list;
+    for (uint i = 0; i < numformats; i++)
+        list << formats[i];
+    free(formats);
+    return list;
 }
 
 QList< QString > QArvCamera::getPixelFormatNames() {
-  unsigned int numformats;
-  const char** formats =
-    arv_camera_get_available_pixel_formats_as_display_names(camera,
-                                                            &numformats);
-  QList<QString> list;
-  for (uint i = 0; i < numformats; i++) {
-    list << formats[i];
-  }
-  free(formats);
-  return list;
+    unsigned int numformats;
+    const char** formats =
+        arv_camera_get_available_pixel_formats_as_display_names(camera,
+                                                                &numformats);
+    QList<QString> list;
+    for (uint i = 0; i < numformats; i++) {
+        list << formats[i];
+    }
+    free(formats);
+    return list;
 }
 
 QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
-  unsigned int numformats;
-  gint64* formats =
-    arv_camera_get_available_pixel_formats(camera, &numformats);
-  QList<ArvPixelFormat> list;
-  for (uint i = 0; i < numformats; i++) {
-    list << formats[i];
-  }
-  free(formats);
-  return list;
+    unsigned int numformats;
+    gint64* formats =
+        arv_camera_get_available_pixel_formats(camera, &numformats);
+    QList<ArvPixelFormat> list;
+    for (uint i = 0; i < numformats; i++) {
+        list << formats[i];
+    }
+    free(formats);
+    return list;
 }
 
 QString QArvCamera::getPixelFormat() {
-  return QString(arv_camera_get_pixel_format_as_string(camera));
+    return QString(arv_camera_get_pixel_format_as_string(camera));
 }
 
 ArvPixelFormat QArvCamera::getPixelFormatId() {
-  return arv_camera_get_pixel_format(camera);
+    return arv_camera_get_pixel_format(camera);
 }
 
 void QArvCamera::setPixelFormat(const QString& format) {
-  auto tmp = format.toAscii();
-  arv_camera_set_pixel_format_from_string(camera, tmp.constData());
-  emit dataChanged(QModelIndex(), QModelIndex());
+    auto tmp = format.toAscii();
+    arv_camera_set_pixel_format_from_string(camera, tmp.constData());
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double QArvCamera::getFPS() {
-  return arv_camera_get_frame_rate(camera);
+    return arv_camera_get_frame_rate(camera);
 }
 
 void QArvCamera::setFPS(double fps) {
-  arv_camera_set_frame_rate(camera, fps);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    arv_camera_set_frame_rate(camera, fps);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 int QArvCamera::getMTU() {
-  return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
+    return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
 }
 
 void QArvCamera::setMTU(int mtu) {
-  arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
-  arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
+    arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double QArvCamera::getExposure() {
-  return arv_camera_get_exposure_time(camera);
+    return arv_camera_get_exposure_time(camera);
 }
 
 void QArvCamera::setExposure(double exposure) {
-  arv_camera_set_exposure_time(camera, exposure);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    arv_camera_set_exposure_time(camera, exposure);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 bool QArvCamera::hasAutoExposure() {
-  return arv_camera_is_exposure_auto_available(camera);
+    return arv_camera_is_exposure_auto_available(camera);
 }
 
 void QArvCamera::setAutoExposure(bool enable) {
-  if (enable)
-    arv_camera_set_exposure_time_auto(camera, ARV_AUTO_CONTINUOUS);
-  else
-    arv_camera_set_exposure_time_auto(camera, ARV_AUTO_OFF);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    if (enable)
+        arv_camera_set_exposure_time_auto(camera, ARV_AUTO_CONTINUOUS);
+    else
+        arv_camera_set_exposure_time_auto(camera, ARV_AUTO_OFF);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double QArvCamera::getGain() {
-  return arv_camera_get_gain(camera);
+    return arv_camera_get_gain(camera);
 }
 
 void QArvCamera::setGain(double gain) {
-  arv_camera_set_gain(camera, gain);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    arv_camera_set_gain(camera, gain);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QPair< double, double > QArvCamera::getExposureBounds() {
-  double expomin, expomax;
-  arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax);
-  return QPair<double, double>(expomin, expomax);
+    double expomin, expomax;
+    arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax);
+    return QPair<double, double>(expomin, expomax);
 }
 
 QPair< double, double > QArvCamera::getGainBounds() {
-  double gainmin, gainmax;
-  arv_camera_get_gain_bounds(camera, &gainmin, &gainmax);
-  return QPair<double, double>(gainmin, gainmax);
+    double gainmin, gainmax;
+    arv_camera_get_gain_bounds(camera, &gainmin, &gainmax);
+    return QPair<double, double>(gainmin, gainmax);
 }
 
 bool QArvCamera::hasAutoGain() {
-  return arv_camera_is_gain_auto_available(camera);
+    return arv_camera_is_gain_auto_available(camera);
 }
 
 void QArvCamera::setAutoGain(bool enable) {
-  if (enable)
-    arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
-  else
-    arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
-  emit dataChanged(QModelIndex(), QModelIndex());
+    if (enable)
+        arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
+    else
+        arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 //! Store the pointer to the current frame.
 void QArvCamera::receiveFrame() {
-  if (!acquiring)
-    return; // Stream does not exist any more.
+    if (!acquiring)
+        return; // Stream does not exist any more.
 
-  ArvBuffer* frame = arv_stream_pop_buffer(stream);
-  QByteArray baframe;
-  ArvBufferStatus status;
+    ArvBuffer* frame = arv_stream_pop_buffer(stream);
+    QByteArray baframe;
+    ArvBufferStatus status;
 #ifdef ARAVIS_OLD_BUFFER
-  status = frame->status;
+    status = frame->status;
 #else
-  status = arv_buffer_get_status(frame);
+    status = arv_buffer_get_status(frame);
 #endif
-  if (status == ARV_BUFFER_STATUS_SUCCESS || !dropInvalid) {
-    size_t size;
-    const void* data;
+    if (status == ARV_BUFFER_STATUS_SUCCESS || !dropInvalid) {
+        size_t size;
+        const void* data;
 #ifdef ARAVIS_OLD_BUFFER
-    data = frame->data;
-    size = frame->size;
+        data = frame->data;
+        size = frame->size;
 #else
-    data = arv_buffer_get_data(frame, &size);
+        data = arv_buffer_get_data(frame, &size);
 #endif
-    if (nocopy) {
-      baframe = QByteArray::fromRawData(static_cast<const char*>(data), size);
-    } else {
-      baframe = QByteArray(static_cast<const char*>(data), size);
+        if (nocopy) {
+            baframe = QByteArray::fromRawData(static_cast<const char*>(data),
+                                              size);
+        } else {
+            baframe = QByteArray(static_cast<const char*>(data), size);
+        }
     }
-  }
 
-  emit frameReady(baframe, frame);
-  arv_stream_push_buffer(stream, frame);
+    emit frameReady(baframe, frame);
+    arv_stream_push_buffer(stream, frame);
 
-  guint64 under;
-  arv_stream_get_statistics(stream, NULL, NULL, &under);
-  if (under != underruns) {
-    underruns = under;
-    int in, out;
-    arv_stream_get_n_buffers(stream, &in, &out);
-    emit bufferUnderrun();
-  }
+    guint64 under;
+    arv_stream_get_statistics(stream, NULL, NULL, &under);
+    if (under != underruns) {
+        underruns = under;
+        int in, out;
+        arv_stream_get_n_buffers(stream, &in, &out);
+        emit bufferUnderrun();
+    }
 }
 
 inline void QArvStreamCallback(void* vcam, int type, ArvBuffer* bfr) {
-  if (type == ARV_STREAM_CALLBACK_TYPE_BUFFER_DONE) {
-    auto cam = static_cast<QArvCamera*>(vcam);
-    QMetaObject::invokeMethod(cam, "receiveFrame", Qt::QueuedConnection);
-  }
+    if (type == ARV_STREAM_CALLBACK_TYPE_BUFFER_DONE) {
+        auto cam = static_cast<QArvCamera*>(vcam);
+        QMetaObject::invokeMethod(cam, "receiveFrame", Qt::QueuedConnection);
+    }
 }
 
 static void QArvStreamCallbackWrap(void* vcam,
-                            ArvStreamCallbackType type,
-                            ArvBuffer* bfr) {
-  QArvStreamCallback(vcam, type, bfr);
+                                   ArvStreamCallbackType type,
+                                   ArvBuffer* bfr) {
+    QArvStreamCallback(vcam, type, bfr);
 }
 
 /*!
@@ -371,26 +372,26 @@ static void QArvStreamCallbackWrap(void* vcam,
  * never copied.
  */
 void QArvCamera::startAcquisition(bool zeroCopy, bool dropInvalidFrames) {
-  nocopy = zeroCopy;
-  dropInvalid = dropInvalidFrames;
-  if (acquiring) return;
-  unsigned int framesize = arv_camera_get_payload(camera);
-  stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this);
-  for (uint i = 0; i < frameQueueSize; i++) {
-    arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
-  }
-  arv_camera_start_acquisition(camera);
-  acquiring = true;
-  underruns = 0;
-  emit dataChanged(QModelIndex(), QModelIndex());
+    nocopy = zeroCopy;
+    dropInvalid = dropInvalidFrames;
+    if (acquiring) return;
+    unsigned int framesize = arv_camera_get_payload(camera);
+    stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this);
+    for (uint i = 0; i < frameQueueSize; i++) {
+        arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
+    }
+    arv_camera_start_acquisition(camera);
+    acquiring = true;
+    underruns = 0;
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 void QArvCamera::stopAcquisition() {
-  if (!acquiring) return;
-  arv_camera_stop_acquisition(camera);
-  g_object_unref(stream);
-  acquiring = false;
-  emit dataChanged(QModelIndex(), QModelIndex());
+    if (!acquiring) return;
+    arv_camera_stop_acquisition(camera);
+    g_object_unref(stream);
+    acquiring = false;
+    emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 //! Set the number of frames on the stream. Takes effect on startAcquisition().
@@ -404,47 +405,47 @@ void QArvCamera::stopAcquisition() {
  * memory usage, as all buffers are allocated when acquisition starts.
  */
 void QArvCamera::setFrameQueueSize(uint size) {
-  frameQueueSize = size;
+    frameQueueSize = size;
 }
 
 //! Translates betwen the glib and Qt address types via a native sockaddr.
 static QHostAddress GSocketAddress_to_QHostAddress(GSocketAddress* gaddr) {
-  sockaddr addr;
-  int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
-  if (!success) {
-    logMessage() << "Unable to translate IP address.";
-    return QHostAddress();
-  }
-  return QHostAddress(&addr);
+    sockaddr addr;
+    int success = g_socket_address_to_native(gaddr, &addr, sizeof(addr), NULL);
+    if (!success) {
+        logMessage() << "Unable to translate IP address.";
+        return QHostAddress();
+    }
+    return QHostAddress(&addr);
 }
 
 QHostAddress QArvCamera::getIP() {
-  if (ARV_IS_GV_DEVICE(device)) {
-    auto gaddr = arv_gv_device_get_device_address(ARV_GV_DEVICE(device));
-    return GSocketAddress_to_QHostAddress(gaddr);
-  } else return QHostAddress();
+    if (ARV_IS_GV_DEVICE(device)) {
+        auto gaddr = arv_gv_device_get_device_address(ARV_GV_DEVICE(device));
+        return GSocketAddress_to_QHostAddress(gaddr);
+    } else return QHostAddress();
 }
 
 QHostAddress QArvCamera::getHostIP() {
-  if (ARV_IS_GV_DEVICE(device)) {
-    auto gaddr = arv_gv_device_get_interface_address(ARV_GV_DEVICE(device));
-    return GSocketAddress_to_QHostAddress(gaddr);
-  } else return QHostAddress();
+    if (ARV_IS_GV_DEVICE(device)) {
+        auto gaddr = arv_gv_device_get_interface_address(ARV_GV_DEVICE(device));
+        return GSocketAddress_to_QHostAddress(gaddr);
+    } else return QHostAddress();
 }
 
 int QArvCamera::getEstimatedBW() {
-  return arv_device_get_integer_feature_value(device, "GevSCDCT");
+    return arv_device_get_integer_feature_value(device, "GevSCDCT");
 }
 
 QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
-  auto id = camera->getId();
-  out << id.vendor << endl
-      << id.model << endl
-      << id.id << endl;
-  QArvCamera::QArvFeatureTree::recursiveSerialization(out,
-                                                      camera,
-                                                      camera->featuretree);
-  return out;
+    auto id = camera->getId();
+    out << id.vendor << endl
+        << id.model << endl
+        << id.id << endl;
+    QArvCamera::QArvFeatureTree::recursiveSerialization(out,
+                                                        camera,
+                                                        camera->featuretree);
+    return out;
 }
 
 /*!
@@ -454,364 +455,385 @@ QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
  * cannot be fixed until Aravis provides dependecy information.
  */
 QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
-  auto ID = camera->getId();
-  QString vendor, model, id;
-  in >> vendor >> model >> id;
-  if (!(vendor == ID.vendor && model == ID.model && id == ID.id)) {
-    logMessage() << QObject::tr("Incompatible camera settings", "QArvCamera");
-    return in;
-  }
-
-  while (!in.atEnd()) {
-    QString name, type, v;
-    in >> name;
-    if (name == "Category") continue;
-    ArvGcFeatureNode* node =
-      ARV_GC_FEATURE_NODE(arv_gc_get_node(camera->genicam, name.toAscii()));
-
-    in >> type;
-    in >> v;
-    if (type == "Register") {
-      QString hex;
-      in >> hex;
-      auto b = QByteArray::fromHex(hex.toAscii());
-      arv_gc_register_set(ARV_GC_REGISTER(node), v.data(), v.toLongLong(),
-                          NULL);
-    } else if (type == "Enumeration") {
-      arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
-                                          v.toAscii().data(), NULL);
-    } else if (type == "String") {
-      arv_gc_string_set_value(ARV_GC_STRING(node), v.toAscii().data(), NULL);
-    } else if (type == "Float") {
-      arv_gc_float_set_value(ARV_GC_FLOAT(node), v.toDouble(), NULL);
-    } else if (type == "Boolean") {
-      arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), v.toInt(), NULL);
-    } else if (type == "Integer") {
-      arv_gc_integer_set_value(ARV_GC_INTEGER(node), v.toLongLong(), NULL);
+    auto ID = camera->getId();
+    QString vendor, model, id;
+    in >> vendor >> model >> id;
+    if (!(vendor == ID.vendor && model == ID.model && id == ID.id)) {
+        logMessage()
+            << QObject::tr("Incompatible camera settings", "QArvCamera");
+        return in;
     }
-  }
 
-  return in;
+    while (!in.atEnd()) {
+        QString name, type, v;
+        in >> name;
+        if (name == "Category") continue;
+        ArvGcFeatureNode* node =
+            ARV_GC_FEATURE_NODE(arv_gc_get_node(camera->genicam,
+                                                name.toAscii()));
+
+        in >> type;
+        in >> v;
+        if (type == "Register") {
+            QString hex;
+            in >> hex;
+            auto b = QByteArray::fromHex(hex.toAscii());
+            arv_gc_register_set(ARV_GC_REGISTER(node), v.data(), v.toLongLong(),
+                                NULL);
+        } else if (type == "Enumeration") {
+            arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
+                                                v.toAscii().data(), NULL);
+        } else if (type == "String") {
+            arv_gc_string_set_value(ARV_GC_STRING(node),
+                                    v.toAscii().data(),
+                                    NULL);
+        } else if (type == "Float") {
+            arv_gc_float_set_value(ARV_GC_FLOAT(node), v.toDouble(), NULL);
+        } else if (type == "Boolean") {
+            arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), v.toInt(), NULL);
+        } else if (type == "Integer") {
+            arv_gc_integer_set_value(ARV_GC_INTEGER(node), v.toLongLong(),
+                                     NULL);
+        }
+    }
+
+    return in;
 }
 
 /* QAbstractItemModel implementation ######################################## */
 
 QModelIndex QArvCamera::index(int row, int column,
                               const QModelIndex& parent) const {
-  if (column > 1) return QModelIndex();
-  QArvCamera::QArvFeatureTree* treenode;
-  if (!parent.isValid()) treenode = featuretree;
-  else treenode =
-      static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
-  auto children = treenode->children();
-  if (row < 0 || row >= children.size()) return QModelIndex();
-  auto child = children.at(row);
-  ArvGcNode* node = arv_gc_get_node(genicam, child->feature());
-  if (ARV_IS_GC_CATEGORY(node) && column > 0) return QModelIndex();
-  return createIndex(row, column, child);
+    if (column > 1) return QModelIndex();
+    QArvCamera::QArvFeatureTree* treenode;
+    if (!parent.isValid()) treenode = featuretree;
+    else treenode =
+            static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
+    auto children = treenode->children();
+    if (row < 0 || row >= children.size()) return QModelIndex();
+    auto child = children.at(row);
+    ArvGcNode* node = arv_gc_get_node(genicam, child->feature());
+    if (ARV_IS_GC_CATEGORY(node) && column > 0) return QModelIndex();
+    return createIndex(row, column, child);
 }
 
 QModelIndex QArvCamera::parent(const QModelIndex& index) const {
-  QArvCamera::QArvFeatureTree* treenode;
-  if (!index.isValid()) treenode = featuretree;
-  else treenode =
-      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
-  if (treenode->parent() == NULL) return QModelIndex();
-  auto parent = treenode->parent();
-  return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
+    QArvCamera::QArvFeatureTree* treenode;
+    if (!index.isValid()) treenode = featuretree;
+    else treenode =
+            static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+    if (treenode->parent() == NULL) return QModelIndex();
+    auto parent = treenode->parent();
+    return createIndex(parent == NULL ? 0 : parent->row(), 0, parent);
 }
 
 int QArvCamera::columnCount(const QModelIndex& parent) const {
-  return 2;
+    return 2;
 }
 
 int QArvCamera::rowCount(const QModelIndex& parent) const {
-  QArvCamera::QArvFeatureTree* treenode;
-  if (!parent.isValid()) treenode = featuretree;
-  else treenode =
-      static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
-  return treenode->children().count();
+    QArvCamera::QArvFeatureTree* treenode;
+    if (!parent.isValid()) treenode = featuretree;
+    else treenode =
+            static_cast<QArvCamera::QArvFeatureTree*>(parent.internalPointer());
+    return treenode->children().count();
 }
 
 QVariant QArvCamera::data(const QModelIndex& index, int role) const {
-  QArvCamera::QArvFeatureTree* treenode;
-  if (!index.isValid()) treenode = featuretree;
-  else treenode =
-      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
-  ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
+    QArvCamera::QArvFeatureTree* treenode;
+    if (!index.isValid()) treenode = featuretree;
+    else treenode =
+            static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+    ArvGcNode* node = arv_gc_get_node(genicam, treenode->feature());
 
-  if (!ARV_IS_GC_FEATURE_NODE(node)) {
-    logMessage() << "data:" << "Node" << treenode->feature() << "is not valid!";
-    return QVariant();
-  }
-
-  const char* string;
-  const char* string2;
-
-  if (role == Qt::UserRole) {
-    string =
-      arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
-    if (string == NULL)
-      return QVariant();
-    return QVariant(string);
-  }
-
-  if (index.column() == 0) {
-    switch (role) {
-    case Qt::DisplayRole:
-      string =
-        arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(node), NULL);
-      if (string == NULL)
-        string = arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
-      if (string == NULL) {
-        logMessage() << "Node has no name!?";
+    if (!ARV_IS_GC_FEATURE_NODE(node)) {
+        logMessage() << "data:" << "Node" << treenode->feature()
+                     << "is not valid!";
         return QVariant();
-      }
-      return QVariant(string);
-
-    case Qt::ToolTipRole:
-    case Qt::StatusTipRole:
-    case Qt::WhatsThisRole:
-      string =
-        arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node), NULL);
-      string2 =
-        arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
-      if (string == NULL || string2 == NULL)
-        return QVariant();
-      return QVariant("<qt/>" + Qt::escape(string2) +": "
-                      + Qt::escape(string));
-
-    default:
-      return QVariant();
     }
-  } else if (index.column() == 1) {
-    switch (role) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-      if (ARV_IS_GC_REGISTER_NODE(node)
-          && QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node)))
-          == "IntReg") {
-        QArvRegister r;
-        r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node), NULL);
-        r.value = QByteArray(r.length, 0);
-        arv_gc_register_get(ARV_GC_REGISTER(node),
-                            r.value.data(), r.length, NULL);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)r);
-        else
-          return QVariant::fromValue(r);
-      }
-      if (ARV_IS_GC_ENUMERATION(node)) {
-        QArvEnumeration e;
-        const GSList* entry =
-          arv_gc_enumeration_get_entries(ARV_GC_ENUMERATION(node));
-        for (; entry != NULL; entry = entry->next) {
-          bool isAvailable =
-            arv_gc_feature_node_is_available(ARV_GC_FEATURE_NODE(entry->data),
-                                             NULL);
-          bool isImplemented =
-            arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(entry->data),
-                                               NULL);
-          e.values
-          << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(entry->data));
-          const char* name =
-            arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(entry->
-                                                                     data),
-                                                 NULL);
-          if (name == NULL)
-            e.names << e.values.last();
-          else
-            e.names << name;
-          if (isAvailable && isImplemented)
-            e.isAvailable << true;
-          else
-            e.isAvailable << false;
+
+    const char* string;
+    const char* string2;
+
+    if (role == Qt::UserRole) {
+        string =
+            arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+        if (string == NULL)
+            return QVariant();
+        return QVariant(string);
+    }
+
+    if (index.column() == 0) {
+        switch (role) {
+        case Qt::DisplayRole:
+            string =
+                arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(node),
+                                                     NULL);
+            if (string == NULL)
+                string =
+                    arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+            if (string == NULL) {
+                logMessage() << "Node has no name!?";
+                return QVariant();
+            }
+            return QVariant(string);
+
+        case Qt::ToolTipRole:
+        case Qt::StatusTipRole:
+        case Qt::WhatsThisRole:
+            string =
+                arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node),
+                                                    NULL);
+            string2 =
+                arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
+            if (string == NULL || string2 == NULL)
+                return QVariant();
+            return QVariant("<qt/>" + Qt::escape(string2) +": "
+                            + Qt::escape(string));
+
+        default:
+            return QVariant();
         }
-        const char* current =
-          arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node), NULL);
-        e.currentValue = e.values.indexOf(current);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)e);
-        else
-          return QVariant::fromValue(e);
-      }
-      if (ARV_IS_GC_COMMAND(node)) {
-        QArvCommand c;
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)c);
-        else
-          return QVariant::fromValue(c);
-      }
-      if (ARV_IS_GC_STRING(node)) {
-        QArvString s;
-        s.value = arv_gc_string_get_value(ARV_GC_STRING(node), NULL);
-        s.maxlength = arv_gc_string_get_max_length(ARV_GC_STRING(node), NULL);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)s);
-        else
-          return QVariant::fromValue(s);
-      }
-      if (ARV_IS_GC_FLOAT(node)) {
-        QArvFloat f;
-        f.value = arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
-        f.min = arv_gc_float_get_min(ARV_GC_FLOAT(node), NULL);
-        f.max = arv_gc_float_get_max(ARV_GC_FLOAT(node), NULL);
-        f.unit = arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)f);
-        else
-          return QVariant::fromValue(f);
-      }
-      if (ARV_IS_GC_BOOLEAN(node)) {
-        QArvBoolean b;
-        b.value = arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node), NULL);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)b);
-        else
-          return QVariant::fromValue(b);
-      }
-      if (ARV_IS_GC_INTEGER(node)) {
-        QArvInteger i;
-        i.value = arv_gc_integer_get_value(ARV_GC_INTEGER(node), NULL);
-        i.min = arv_gc_integer_get_min(ARV_GC_INTEGER(node), NULL);
-        i.max = arv_gc_integer_get_max(ARV_GC_INTEGER(node), NULL);
-        i.inc = arv_gc_integer_get_inc(ARV_GC_INTEGER(node), NULL);
-        if (role == Qt::DisplayRole)
-          return QVariant::fromValue((QString)i);
-        else
-          return QVariant::fromValue(i);
-      }
-      return QVariant();
-    }
-  } else return QVariant();
-  return QVariant();
+    } else if (index.column() == 1) {
+        switch (role) {
+        case Qt::DisplayRole:
+        case Qt::EditRole:
+            if (ARV_IS_GC_REGISTER_NODE(node)
+                && QString(arv_dom_node_get_node_name(ARV_DOM_NODE(node)))
+                == "IntReg") {
+                QArvRegister r;
+                r.length = arv_gc_register_get_length(ARV_GC_REGISTER(node),
+                                                      NULL);
+                r.value = QByteArray(r.length, 0);
+                arv_gc_register_get(ARV_GC_REGISTER(node),
+                                    r.value.data(), r.length, NULL);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)r);
+                else
+                    return QVariant::fromValue(r);
+            }
+            if (ARV_IS_GC_ENUMERATION(node)) {
+                QArvEnumeration e;
+                const GSList* entry =
+                    arv_gc_enumeration_get_entries(ARV_GC_ENUMERATION(node));
+                for (; entry != NULL; entry = entry->next) {
+                    bool isAvailable =
+                        arv_gc_feature_node_is_available(ARV_GC_FEATURE_NODE(
+                                                             entry->data),
+                                                         NULL);
+                    bool isImplemented =
+                        arv_gc_feature_node_is_implemented(ARV_GC_FEATURE_NODE(
+                                                               entry->data),
+                                                           NULL);
+                    e.values
+                        << arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(
+                                                            entry->data));
+                    const char* name =
+                        arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(
+                                                                 entry->
+                                                                     data),
+                                                             NULL);
+                    if (name == NULL)
+                        e.names << e.values.last();
+                    else
+                        e.names << name;
+                    if (isAvailable && isImplemented)
+                        e.isAvailable << true;
+                    else
+                        e.isAvailable << false;
+                }
+                const char* current =
+                    arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(
+                                                            node),
+                                                        NULL);
+                e.currentValue = e.values.indexOf(current);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)e);
+                else
+                    return QVariant::fromValue(e);
+            }
+            if (ARV_IS_GC_COMMAND(node)) {
+                QArvCommand c;
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)c);
+                else
+                    return QVariant::fromValue(c);
+            }
+            if (ARV_IS_GC_STRING(node)) {
+                QArvString s;
+                s.value = arv_gc_string_get_value(ARV_GC_STRING(node), NULL);
+                s.maxlength = arv_gc_string_get_max_length(ARV_GC_STRING(node),
+                                                           NULL);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)s);
+                else
+                    return QVariant::fromValue(s);
+            }
+            if (ARV_IS_GC_FLOAT(node)) {
+                QArvFloat f;
+                f.value = arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
+                f.min = arv_gc_float_get_min(ARV_GC_FLOAT(node), NULL);
+                f.max = arv_gc_float_get_max(ARV_GC_FLOAT(node), NULL);
+                f.unit = arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)f);
+                else
+                    return QVariant::fromValue(f);
+            }
+            if (ARV_IS_GC_BOOLEAN(node)) {
+                QArvBoolean b;
+                b.value = arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node), NULL);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)b);
+                else
+                    return QVariant::fromValue(b);
+            }
+            if (ARV_IS_GC_INTEGER(node)) {
+                QArvInteger i;
+                i.value = arv_gc_integer_get_value(ARV_GC_INTEGER(node), NULL);
+                i.min = arv_gc_integer_get_min(ARV_GC_INTEGER(node), NULL);
+                i.max = arv_gc_integer_get_max(ARV_GC_INTEGER(node), NULL);
+                i.inc = arv_gc_integer_get_inc(ARV_GC_INTEGER(node), NULL);
+                if (role == Qt::DisplayRole)
+                    return QVariant::fromValue((QString)i);
+                else
+                    return QVariant::fromValue(i);
+            }
+            return QVariant();
+        }
+    } else return QVariant();
+    return QVariant();
 }
 
 bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
                          int role) {
-  QAbstractItemModel::setData(index, value, role);
-  if (!(index.model()->flags(index) & Qt::ItemIsEnabled)
-      || !(index.model()->flags(index) & Qt::ItemIsEditable))
-    return false;
+    QAbstractItemModel::setData(index, value, role);
+    if (!(index.model()->flags(index) & Qt::ItemIsEnabled)
+        || !(index.model()->flags(index) & Qt::ItemIsEditable))
+        return false;
 
-  QArvCamera::QArvFeatureTree* treenode;
-  if (!index.isValid()) treenode = featuretree;
-  else treenode =
-      static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
-  ArvGcFeatureNode* node =
-    ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+    QArvCamera::QArvFeatureTree* treenode;
+    if (!index.isValid()) treenode = featuretree;
+    else treenode =
+            static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+    ArvGcFeatureNode* node =
+        ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
 
-  if (value.canConvert<QArvRegister>()) {
-    auto r = qvariant_cast<QArvRegister>(value);
-    arv_gc_register_set(ARV_GC_REGISTER(node), r.value.data(), r.length, NULL);
-  } else if (value.canConvert<QArvEnumeration>()) {
-    auto e = qvariant_cast<QArvEnumeration>(value);
-    if (e.isAvailable.at(e.currentValue)) {
-      arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
-                                          e.values.at(
-                                            e.currentValue).toAscii().data(),
-                                          NULL);
-    } else return false;
-  } else if (value.canConvert<QArvCommand>()) {
-    arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
-  } else if (value.canConvert<QArvString>()) {
-    auto s = qvariant_cast<QArvString>(value);
-    arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(),
+    if (value.canConvert<QArvRegister>()) {
+        auto r = qvariant_cast<QArvRegister>(value);
+        arv_gc_register_set(ARV_GC_REGISTER(node),
+                            r.value.data(),
+                            r.length,
                             NULL);
-  } else if (value.canConvert<QArvFloat>()) {
-    auto f = qvariant_cast<QArvFloat>(value);
-    arv_gc_float_set_value(ARV_GC_FLOAT(node), f.value, NULL);
-  } else if (value.canConvert<QArvBoolean>()) {
-    auto b = qvariant_cast<QArvBoolean>(value);
-    arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), b.value, NULL);
-  } else if (value.canConvert<QArvInteger>()) {
-    auto i = qvariant_cast<QArvInteger>(value);
-    arv_gc_integer_set_value(ARV_GC_INTEGER(node), i.value, NULL);
-  } else
-    return false;
+    } else if (value.canConvert<QArvEnumeration>()) {
+        auto e = qvariant_cast<QArvEnumeration>(value);
+        if (e.isAvailable.at(e.currentValue)) {
+            arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
+                                                e.values.at(
+                                                    e.currentValue).toAscii().data(),
+                                                NULL);
+        } else return false;
+    } else if (value.canConvert<QArvCommand>()) {
+        arv_gc_command_execute(ARV_GC_COMMAND(node), NULL);
+    } else if (value.canConvert<QArvString>()) {
+        auto s = qvariant_cast<QArvString>(value);
+        arv_gc_string_set_value(ARV_GC_STRING(node), s.value.toAscii().data(),
+                                NULL);
+    } else if (value.canConvert<QArvFloat>()) {
+        auto f = qvariant_cast<QArvFloat>(value);
+        arv_gc_float_set_value(ARV_GC_FLOAT(node), f.value, NULL);
+    } else if (value.canConvert<QArvBoolean>()) {
+        auto b = qvariant_cast<QArvBoolean>(value);
+        arv_gc_boolean_set_value(ARV_GC_BOOLEAN(node), b.value, NULL);
+    } else if (value.canConvert<QArvInteger>()) {
+        auto i = qvariant_cast<QArvInteger>(value);
+        arv_gc_integer_set_value(ARV_GC_INTEGER(node), i.value, NULL);
+    } else
+        return false;
 
-  emit dataChanged(QModelIndex(), QModelIndex());
-  return true;
+    emit dataChanged(QModelIndex(), QModelIndex());
+    return true;
 }
 
 Qt::ItemFlags QArvCamera::flags(const QModelIndex& index) const {
-  auto f = QAbstractItemModel::flags(index);
-  if (!index.isValid()) return f;
-  QArvCamera::QArvFeatureTree* treenode;
-  treenode = static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
-  ArvGcFeatureNode* node =
-    ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
-  if (index.column() != 1 && !ARV_IS_GC_CATEGORY(node)) {
-    f = flags(sibling(index.row(), 1, index));
-    f &= ~Qt::ItemIsEditable;
-  } else {
-    int enabled =
-      arv_gc_feature_node_is_available(node, NULL)
-      && arv_gc_feature_node_is_implemented(node, NULL)
-      && !arv_gc_feature_node_is_locked(node, NULL);
-    if (!enabled) {
-      f &= ~Qt::ItemIsEnabled;
-      f &= ~Qt::ItemIsEditable;
-    } else
-      f |= Qt::ItemIsEditable;
-  }
-  return f;
+    auto f = QAbstractItemModel::flags(index);
+    if (!index.isValid()) return f;
+    QArvCamera::QArvFeatureTree* treenode;
+    treenode =
+        static_cast<QArvCamera::QArvFeatureTree*>(index.internalPointer());
+    ArvGcFeatureNode* node =
+        ARV_GC_FEATURE_NODE(arv_gc_get_node(genicam, treenode->feature()));
+    if (index.column() != 1 && !ARV_IS_GC_CATEGORY(node)) {
+        f = flags(sibling(index.row(), 1, index));
+        f &= ~Qt::ItemIsEditable;
+    } else {
+        int enabled =
+            arv_gc_feature_node_is_available(node, NULL)
+            && arv_gc_feature_node_is_implemented(node, NULL)
+            && !arv_gc_feature_node_is_locked(node, NULL);
+        if (!enabled) {
+            f &= ~Qt::ItemIsEnabled;
+            f &= ~Qt::ItemIsEditable;
+        } else
+            f |= Qt::ItemIsEditable;
+    }
+    return f;
 }
 
 QVariant QArvCamera::headerData(int section, Qt::Orientation orientation,
                                 int role) const {
-  switch (section) {
-  case 0:
-    return QVariant::fromValue(QString("Feature"));
+    switch (section) {
+    case 0:
+        return QVariant::fromValue(QString("Feature"));
 
-  case 1:
-    return QVariant::fromValue(QString("Value"));
-  }
-  return QVariant();
+    case 1:
+        return QVariant::fromValue(QString("Value"));
+    }
+    return QVariant();
 }
 
 QList<QString> QArvCamera::categories() const {
-  QList<QString> list;
-  for (int i = 0; i < rowCount(); i++) {
-    auto idx = index(i, 0);
-    list << idx.data().toString();
-  }
-  return list;
+    QList<QString> list;
+    for (int i = 0; i < rowCount(); i++) {
+        auto idx = index(i, 0);
+        list << idx.data().toString();
+    }
+    return list;
 }
 
 QList<QString> QArvCamera::features(const QString& category) const {
-  QList<QString> list;
-  for (int i = 0; i < rowCount(); i++) {
-    auto idx = index(i, 0);
-    if (idx.data().toString() == category) {
-      for (int j = 0; j < rowCount(idx); j++) {
-        auto idx2 = idx.child(j, 0);
-        list << idx2.data().toString();
-      }
-      return list;
+    QList<QString> list;
+    for (int i = 0; i < rowCount(); i++) {
+        auto idx = index(i, 0);
+        if (idx.data().toString() == category) {
+            for (int j = 0; j < rowCount(idx); j++) {
+                auto idx2 = idx.child(j, 0);
+                list << idx2.data().toString();
+            }
+            return list;
+        }
     }
-  }
-  return list;
+    return list;
 }
 
 QModelIndex QArvCamera::featureIndex(const QString& feature) const {
-  for (int i = 0; i < rowCount(); i++) {
-    auto idx = index(i, 0);
-    for (int j = 0; j < rowCount(idx); j++) {
-      auto idx2 = idx.child(j, 0);
-      if (idx2.data(Qt::UserRole).toString() == feature) {
-        return idx.child(j, 1);
-      }
+    for (int i = 0; i < rowCount(); i++) {
+        auto idx = index(i, 0);
+        for (int j = 0; j < rowCount(idx); j++) {
+            auto idx2 = idx.child(j, 0);
+            if (idx2.data(Qt::UserRole).toString() == feature) {
+                return idx.child(j, 1);
+            }
+        }
     }
-  }
-  for (int i = 0; i < rowCount(); i++) {
-    auto idx = index(i, 0);
-    for (int j = 0; j < rowCount(idx); j++) {
-      auto idx2 = idx.child(j, 0);
-      if (idx2.data(Qt::DisplayRole).toString() == feature) {
-        return idx.child(j, 1);
-      }
+    for (int i = 0; i < rowCount(); i++) {
+        auto idx = index(i, 0);
+        for (int j = 0; j < rowCount(idx); j++) {
+            auto idx2 = idx.child(j, 0);
+            if (idx2.data(Qt::DisplayRole).toString() == feature) {
+                return idx.child(j, 1);
+            }
+        }
     }
-  }
-  return QModelIndex();
+    return QModelIndex();
 }

@@ -31,39 +31,39 @@ namespace QArv
 {
 
 class GLVideoWidget : public QGLWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  GLVideoWidget(QWidget* parent = NULL);
-  ~GLVideoWidget();
-  void paintGL();
-  QImage* unusedFrame();
-  void swapFrames();
-  void setImage(const QImage& image_ = QImage());
-  QSize getImageSize();
+    GLVideoWidget(QWidget* parent = NULL);
+    ~GLVideoWidget();
+    void paintGL();
+    QImage* unusedFrame();
+    void swapFrames();
+    void setImage(const QImage& image_ = QImage());
+    QSize getImageSize();
 
 public slots:
-  void enableSelection(bool enable);
-  void setSelectionSize(QSize size);
+    void enableSelection(bool enable);
+    void setSelectionSize(QSize size);
 
 signals:
-  void selectionComplete(QRect region);
+    void selectionComplete(QRect region);
 
 private:
-  virtual void mouseMoveEvent(QMouseEvent* event);
-  virtual void mousePressEvent(QMouseEvent* event);
-  virtual void mouseReleaseEvent(QMouseEvent* event);
-  virtual void resizeEvent(QResizeEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mousePressEvent(QMouseEvent* event);
+    virtual void mouseReleaseEvent(QMouseEvent* event);
+    virtual void resizeEvent(QResizeEvent* event);
 
-  QImage image, unusedImage;
-  QRect in, out;
-  QSvgRenderer idleImageRenderer;
+    QImage image, unusedImage;
+    QRect in, out;
+    QSvgRenderer idleImageRenderer;
 
-  bool idling, selecting, drawRectangle, fixedSelection;
-  QPoint corner1, corner2;
-  QRect rectangle, drawnRectangle;
-  QSize fixedSize;
-  QPen whitepen, blackpen;
+    bool idling, selecting, drawRectangle, fixedSelection;
+    QPoint corner1, corner2;
+    QRect rectangle, drawnRectangle;
+    QSize fixedSize;
+    QPen whitepen, blackpen;
 };
 
 }

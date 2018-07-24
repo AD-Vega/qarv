@@ -30,60 +30,62 @@ using namespace QArv;
 ImageFilterSettingsWidget::ImageFilterSettingsWidget(ImageFilter* filter,
                                                      QWidget* parent,
                                                      Qt::WindowFlags f) :
-  QWidget(parent, f), imageFilter(filter) {}
+    QWidget(parent, f), imageFilter(filter) {}
 
-ImageFilter::ImageFilter(ImageFilterPlugin* plugin):
-  pluginPtr(plugin) {}
+ImageFilter::ImageFilter(ImageFilterPlugin* plugin) :
+    pluginPtr(plugin) {}
 
 ImageFilterPlugin* ImageFilter::plugin() {
-  return pluginPtr;
+    return pluginPtr;
 }
 
 ImageFilter* ImageFilterPlugin::makeFilter(QString name) {
-  auto plugins = QPluginLoader::staticInstances();
-  foreach (auto plugin, plugins) {
-    auto fmt = qobject_cast<ImageFilterPlugin*>(plugin);
-    if (fmt != NULL && name == fmt->name())
-      return fmt->makeFilter();
-  }
-  return NULL;
+    auto plugins = QPluginLoader::staticInstances();
+    foreach (auto plugin, plugins) {
+        auto fmt = qobject_cast<ImageFilterPlugin*>(plugin);
+        if (fmt != NULL && name == fmt->name())
+            return fmt->makeFilter();
+    }
+    return NULL;
 }
 
 ImageFilterSettingsDialog::ImageFilterSettingsDialog(
-  ImageFilterSettingsWidget* settings_,
-  QWidget* parent,
-  Qt::WindowFlags f) :
-  QDockWidget(settings_->windowTitle(), parent, f), settings(settings_) {
-  setWidget(new QWidget);
-  widget()->setLayout(new QVBoxLayout);
-  widget()->layout()->addWidget(settings);
-  auto live = new QCheckBox;
-  live->setText(tr("Live update"));
-  widget()->layout()->addWidget(live);
-  auto buttons = new QDialogButtonBox;
-  widget()->layout()->addWidget(buttons);
+    ImageFilterSettingsWidget* settings_,
+    QWidget* parent,
+    Qt::WindowFlags f) :
+    QDockWidget(settings_->windowTitle(), parent, f), settings(settings_) {
+    setWidget(new QWidget);
+    widget()->setLayout(new QVBoxLayout);
+    widget()->layout()->addWidget(settings);
+    auto live = new QCheckBox;
+    live->setText(tr("Live update"));
+    widget()->layout()->addWidget(live);
+    auto buttons = new QDialogButtonBox;
+    widget()->layout()->addWidget(buttons);
 
-  connect(live, SIGNAL(toggled(bool)), settings, SLOT(setLiveUpdate(bool)));
-  buttons->setStandardButtons(QDialogButtonBox::Ok
-                              | QDialogButtonBox::Apply
-                              | QDialogButtonBox::Cancel);
-  connect(buttons, SIGNAL(accepted()), SLOT(accept()));
-  connect(buttons, SIGNAL(rejected()), SLOT(reject()));
-  connect(buttons->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)), SLOT(apply()));
-  live->setChecked(true);
+    connect(live, SIGNAL(toggled(bool)), settings, SLOT(setLiveUpdate(bool)));
+    buttons->setStandardButtons(QDialogButtonBox::Ok
+                                | QDialogButtonBox::Apply
+                                | QDialogButtonBox::Cancel);
+    connect(buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+    connect(buttons->button(QDialogButtonBox::Apply),
+            SIGNAL(clicked(bool)),
+            SLOT(apply()));
+    live->setChecked(true);
 }
 
 void ImageFilterSettingsDialog::accept() {
-  apply();
-  close();
+    apply();
+    close();
 }
 
 void ImageFilterSettingsDialog::reject() {
-  settings->imageFilter->restoreSettings();
-  close();
+    settings->imageFilter->restoreSettings();
+    close();
 }
 
 void ImageFilterSettingsDialog::apply() {
-  settings->applySettings();
-  settings->imageFilter->saveSettings();
+    settings->applySettings();
+    settings->imageFilter->saveSettings();
 }

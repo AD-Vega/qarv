@@ -57,11 +57,11 @@ typedef quint32 ArvPixelFormat;
  */
 class QArvCameraId {
 public:
-  QArvCameraId();
-  QArvCameraId(const char* id, const char* vendor, const char* model);
-  QArvCameraId(const QArvCameraId& camid);
-  ~QArvCameraId();
-  const char* id, * vendor, * model;
+    QArvCameraId();
+    QArvCameraId(const char* id, const char* vendor, const char* model);
+    QArvCameraId(const QArvCameraId& camid);
+    ~QArvCameraId();
+    const char* id, * vendor, * model;
 };
 
 Q_DECLARE_METATYPE(QArvCameraId)
@@ -102,175 +102,175 @@ Q_DECLARE_METATYPE(QArvCameraId)
  * fails to specify which data is affected. This may change in the future.
  */
 class QArvCamera : public QAbstractItemModel {
-  Q_OBJECT
+    Q_OBJECT
 
-  class QArvCameraExtension;
-  class QArvFeatureTree;
+    class QArvCameraExtension;
+    class QArvFeatureTree;
 
 public:
-  //! Initialize glib and aravis. Call this once in the main program.
-  static void init();
+    //! Initialize glib and aravis. Call this once in the main program.
+    static void init();
 
-  //! A camera with the given ID is opened.
-  QArvCamera(QArvCameraId id, QObject* parent = NULL);
-  ~QArvCamera();
+    //! A camera with the given ID is opened.
+    QArvCamera(QArvCameraId id, QObject* parent = NULL);
+    ~QArvCamera();
 
-  static QList<QArvCameraId> listCameras(); //!< Returns a list of all cameras found.
+    static QList<QArvCameraId> listCameras(); //!< Returns a list of all cameras found.
 
-  QArvCameraId getId(); //!< Returns the ID of the camera.
+    QArvCameraId getId(); //!< Returns the ID of the camera.
 
-  //! Returns the underlying Aravis camera struct.
-  ArvCamera* aravisCamera();
+    //! Returns the underlying Aravis camera struct.
+    ArvCamera* aravisCamera();
 
-  //! \name Manipulate region of interest
-  /*! The ROI behaves like a QRect and supports intersections and such. The
-   * bounds functions behave a bit differently than Aravis counterparts in
-   * that they return absolute limits for size of ROI, while Aravis functions
-   * return smaller limits if the offset is non-zero.
-   */
-  //@{
-  QRect getROI();
-  void setROI(QRect roi);
-  QPair<int, int> getROIWidthBounds();
-  QPair<int, int> getROIHeightBounds();
-  //@}
+    //! \name Manipulate region of interest
+    /*! The ROI behaves like a QRect and supports intersections and such. The
+     * bounds functions behave a bit differently than Aravis counterparts in
+     * that they return absolute limits for size of ROI, while Aravis functions
+     * return smaller limits if the offset is non-zero.
+     */
+    //@{
+    QRect getROI();
+    void setROI(QRect roi);
+    QPair<int, int> getROIWidthBounds();
+    QPair<int, int> getROIHeightBounds();
+    //@}
 
-  //! \name Manipulate pixel binning
-  /**@{*/
-  QSize getBinning();
-  void setBinning(QSize bin);
-  /**@}*/
+    //! \name Manipulate pixel binning
+    /**@{*/
+    QSize getBinning();
+    void setBinning(QSize bin);
+    /**@}*/
 
-  /*! \name Choose pixel format
-   * The lists returned by getPixelFormat(), getPixelFormatNames() and
-   * getPixelFormatIds() are congruent.
-   */
-  /**@{*/
-  QList<QString> getPixelFormats();
-  QList<QString> getPixelFormatNames();
-  QList<ArvPixelFormat> getPixelFormatIds();
-  QString getPixelFormat();
-  ArvPixelFormat getPixelFormatId();
-  void setPixelFormat(const QString& format);
-  /**@}*/
+    /*! \name Choose pixel format
+     * The lists returned by getPixelFormat(), getPixelFormatNames() and
+     * getPixelFormatIds() are congruent.
+     */
+    /**@{*/
+    QList<QString> getPixelFormats();
+    QList<QString> getPixelFormatNames();
+    QList<ArvPixelFormat> getPixelFormatIds();
+    QString getPixelFormat();
+    ArvPixelFormat getPixelFormatId();
+    void setPixelFormat(const QString& format);
+    /**@}*/
 
-  //! \name Manipulate frames-per-second.
-  /**@{*/
-  double getFPS();
-  void setFPS(double fps);
-  /**@}*/
+    //! \name Manipulate frames-per-second.
+    /**@{*/
+    double getFPS();
+    void setFPS(double fps);
+    /**@}*/
 
-  //! \name Manipulate exposure time (in microseconds)
-  /**@{*/
-  double getExposure();
-  void setExposure(double exposure);
-  QPair<double, double> getExposureBounds();
-  bool hasAutoExposure();
-  void setAutoExposure(bool enable);
-  /**@}*/
+    //! \name Manipulate exposure time (in microseconds)
+    /**@{*/
+    double getExposure();
+    void setExposure(double exposure);
+    QPair<double, double> getExposureBounds();
+    bool hasAutoExposure();
+    void setAutoExposure(bool enable);
+    /**@}*/
 
-  //! \name Manipulate sensor gain
-  /**@{*/
-  double getGain();
-  void setGain(double gain);
-  QPair<double, double> getGainBounds();
-  bool hasAutoGain();
-  void setAutoGain(bool enable);
-  /**@}*/
+    //! \name Manipulate sensor gain
+    /**@{*/
+    double getGain();
+    void setGain(double gain);
+    QPair<double, double> getGainBounds();
+    bool hasAutoGain();
+    void setAutoGain(bool enable);
+    /**@}*/
 
-  //! \name Control acquisition
-  /**@{*/
-  void startAcquisition(bool zeroCopy = true, bool dropInvalidFrames = true);
-  void stopAcquisition();
-  void setFrameQueueSize(uint size = 30);
-  /**@}*/
+    //! \name Control acquisition
+    /**@{*/
+    void startAcquisition(bool zeroCopy = true, bool dropInvalidFrames = true);
+    void stopAcquisition();
+    void setFrameQueueSize(uint size = 30);
+    /**@}*/
 
-  /*! \name Manipulate network parameters of an ethernet camera
-   * MTU corresponds to "GevSCPSPacketSize", which should be set to the
-   * MTU of the network interface. getHostIP() can be used to detect the
-   * interface's address.
-   */
-  /**@{*/
-  void setMTU(int mtu);
-  int getMTU();
-  QHostAddress getIP();
-  QHostAddress getHostIP();
-  int getEstimatedBW();
-  /**@}*/
+    /*! \name Manipulate network parameters of an ethernet camera
+     * MTU corresponds to "GevSCPSPacketSize", which should be set to the
+     * MTU of the network interface. getHostIP() can be used to detect the
+     * interface's address.
+     */
+    /**@{*/
+    void setMTU(int mtu);
+    int getMTU();
+    QHostAddress getIP();
+    QHostAddress getHostIP();
+    int getEstimatedBW();
+    /**@}*/
 
 signals:
-  //! Emitted when a new frame is ready.
-  /*! \param frame The raw frame data. May be empty for invalid frames.
-   *  \param aravisFrame The raw Aravis frame. This allows access to info
-   *  such as timestamp.
-   *  \sa ::startAcquisition()
-   */
-  void frameReady(QByteArray frame, ArvBuffer* aravisFrame);
-  //! Emitted when a buffer underrun occurs.
-  void bufferUnderrun();
+    //! Emitted when a new frame is ready.
+    /*! \param frame The raw frame data. May be empty for invalid frames.
+     *  \param aravisFrame The raw Aravis frame. This allows access to info
+     *  such as timestamp.
+     *  \sa ::startAcquisition()
+     */
+    void frameReady(QByteArray frame, ArvBuffer* aravisFrame);
+    //! Emitted when a buffer underrun occurs.
+    void bufferUnderrun();
 
 private slots:
-  void receiveFrame();
+    void receiveFrame();
 
 private:
-  QArvCameraExtension* ext;
-  static QList<QArvCameraId> cameraList;
-  ArvCamera* camera;
-  ArvDevice* device;
-  ArvStream* stream;
-  bool acquiring;
-  uint frameQueueSize;
-  quint64 underruns;
-  bool nocopy;
-  bool dropInvalid;
+    QArvCameraExtension* ext;
+    static QList<QArvCameraId> cameraList;
+    ArvCamera* camera;
+    ArvDevice* device;
+    ArvStream* stream;
+    bool acquiring;
+    uint frameQueueSize;
+    quint64 underruns;
+    bool nocopy;
+    bool dropInvalid;
 
-  friend void QArvStreamCallback(void*, int, ArvBuffer*);
-  friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
-  friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
+    friend void QArvStreamCallback(void*, int, ArvBuffer*);
+    friend QTextStream& operator<<(QTextStream& out, QArvCamera* camera);
+    friend QTextStream& operator>>(QTextStream& in, QArvCamera* camera);
 
 public:
-  /*! \name QAbstractItemModel implementation
-   * The model is a two-level table. The first level contains
-   * a single column with feature categories. Each category
-   * has a second level with two colums. The first contains
-   * the name of a feature, and the second contains its value.
-   * The latter has several roles contaning name, description, tooltip.
-   * QVariant returned using Qt::EditRole contains a QArvType
-   * with actual data. To obtain an internal feature name instead of its
-   * display name, use Qt::UserRole.
-   */
-  /**@{*/
-  QModelIndex index(int row, int column,
-                    const QModelIndex& parent = QModelIndex()) const;
-  QModelIndex parent(const QModelIndex& index) const;
-  int rowCount(const QModelIndex& parent = QModelIndex()) const;
-  int columnCount(const QModelIndex& parent = QModelIndex()) const;
-  QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-  bool setData(const QModelIndex& index,
-               const QVariant& value,
-               int role = Qt::EditRole);
-  Qt::ItemFlags flags(const QModelIndex& index) const;
-  QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const;
-  /**@}*/
+    /*! \name QAbstractItemModel implementation
+     * The model is a two-level table. The first level contains
+     * a single column with feature categories. Each category
+     * has a second level with two colums. The first contains
+     * the name of a feature, and the second contains its value.
+     * The latter has several roles contaning name, description, tooltip.
+     * QVariant returned using Qt::EditRole contains a QArvType
+     * with actual data. To obtain an internal feature name instead of its
+     * display name, use Qt::UserRole.
+     */
+    /**@{*/
+    QModelIndex index(int row, int column,
+                      const QModelIndex& parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex& index) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex& index,
+                 const QVariant& value,
+                 int role = Qt::EditRole);
+    Qt::ItemFlags flags(const QModelIndex& index) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const;
+    /**@}*/
 
-  /*! \name Convenience functions for camera feature access
-   * These functions can be used to avoid some of the QAbstractModel
-   * boilerplate. They can be used to quickly list features and find
-   * the index of a particular feature, which can then be used with
-   * data() and setData() in Qt::EditRole. The featureIndex() function
-   * searches first using the name obtained witn Qt::UserRole, and if
-   * that fails searches again for the name obtained using Qt::DisplayRole.
-   */
-  /**@{*/
-  QList<QString> categories() const;
-  QList<QString> features(const QString& category) const;
-  QModelIndex featureIndex(const QString& feature) const;
-  /**@}*/
+    /*! \name Convenience functions for camera feature access
+     * These functions can be used to avoid some of the QAbstractModel
+     * boilerplate. They can be used to quickly list features and find
+     * the index of a particular feature, which can then be used with
+     * data() and setData() in Qt::EditRole. The featureIndex() function
+     * searches first using the name obtained witn Qt::UserRole, and if
+     * that fails searches again for the name obtained using Qt::DisplayRole.
+     */
+    /**@{*/
+    QList<QString> categories() const;
+    QList<QString> features(const QString& category) const;
+    QModelIndex featureIndex(const QString& feature) const;
+    /**@}*/
 
 private:
-  ArvGc* genicam;
-  QArvFeatureTree* featuretree;
+    ArvGc* genicam;
+    QArvFeatureTree* featuretree;
 };
 
 //! Serializes camera settings in text form.

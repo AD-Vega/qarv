@@ -27,21 +27,21 @@ namespace QArv
 {
 
 class ROIcomboBox : public QComboBox {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  ROIcomboBox(QWidget* parent = 0);
-  ~ROIcomboBox();
+    ROIcomboBox(QWidget* parent = 0);
+    ~ROIcomboBox();
 
 signals:
-  void newSizeSelected(QSize size);
+    void newSizeSelected(QSize size);
 
 private slots:
-  void itemSelected(int index);
-  void customSizeEntered();
+    void itemSelected(int index);
+    void customSizeEntered();
 
 private:
-  QValidator* ROIsizeValidator;
+    QValidator* ROIsizeValidator;
 };
 
 }

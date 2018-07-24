@@ -27,32 +27,32 @@
 #include "recorders/recorder.h"
 #include <QTimer>
 
-class QArvVideoPlayer: public QWidget, private Ui::VideoPlayer {
-  Q_OBJECT
+class QArvVideoPlayer : public QWidget, private Ui::VideoPlayer {
+    Q_OBJECT
 
 public:
-  explicit QArvVideoPlayer(QString filename = QString(),
-                           QWidget* parent = 0,
-                           Qt::WindowFlags f = 0);
-  bool open(QString filename);
+    explicit QArvVideoPlayer(QString filename = QString(),
+                             QWidget* parent = 0,
+                             Qt::WindowFlags f = 0);
+    bool open(QString filename);
 
 private slots:
-  void on_playButton_toggled(bool checked);
-  void on_openButton_clicked(bool checked);
-  void on_slider_valueChanged(int value);
-  void on_transcodeBox_toggled(bool checked);
-  void on_transcodeButton_toggled(bool checked);
-  void on_leftMarkButton_clicked(bool checked);
-  void on_rightMarkButton_clicked(bool checked);
-  void showNextFrame();
-  void readNextFrame(bool seeking = false);
+    void on_playButton_toggled(bool checked);
+    void on_openButton_clicked(bool checked);
+    void on_slider_valueChanged(int value);
+    void on_transcodeBox_toggled(bool checked);
+    void on_transcodeButton_toggled(bool checked);
+    void on_leftMarkButton_clicked(bool checked);
+    void on_rightMarkButton_clicked(bool checked);
+    void showNextFrame();
+    void readNextFrame(bool seeking = false);
 
 private:
-  QTimer* showTimer;
-  QScopedPointer<QArvDecoder> decoder;
-  QScopedPointer<QArvRecordedVideo> recording;
-  QScopedPointer<QArv::Recorder> recorder;
-  int leftFrame, rightFrame;
+    QTimer* showTimer;
+    QScopedPointer<QArvDecoder> decoder;
+    QScopedPointer<QArvRecordedVideo> recording;
+    QScopedPointer<QArv::Recorder> recorder;
+    int leftFrame, rightFrame;
 };
 
 #endif

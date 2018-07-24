@@ -26,61 +26,62 @@
 #include <QMetaType>
 #include <QPair>
 
-namespace QArv {
+namespace QArv
+{
 
 class Recorder {
 public:
-  virtual ~Recorder() {}
+    virtual ~Recorder() {}
 
-  //! Check if the recorder was initialized successfully
-  virtual bool isOK() = 0;
+    //! Check if the recorder was initialized successfully
+    virtual bool isOK() = 0;
 
-  //! Check whether the recorder takes raw input instead of processed.
-  virtual bool recordsRaw() = 0;
+    //! Check whether the recorder takes raw input instead of processed.
+    virtual bool recordsRaw() = 0;
 
-  /*!
-   * Write a single frame. Default implementations does nothing so
-   * that it does not need to be overriden for recorders that can't
-   * take raw video.
-   */
-  virtual void recordFrame(QByteArray raw) {};
+    /*!
+     * Write a single frame. Default implementations does nothing so
+     * that it does not need to be overriden for recorders that can't
+     * take raw video.
+     */
+    virtual void recordFrame(QByteArray raw) {};
 
-  /*!
-   * Write a single frame. Default implementations does nothing so
-   * that it does not need to be overriden for recorders that can't
-   * take processed video.
-   */
-  virtual void recordFrame(cv::Mat processed) {};
+    /*!
+     * Write a single frame. Default implementations does nothing so
+     * that it does not need to be overriden for recorders that can't
+     * take processed video.
+     */
+    virtual void recordFrame(cv::Mat processed) {};
 
-  /*!
-   * Returns the size of recorded file in bytes and the number
-   * of recorded frames.
-   */
-  virtual QPair<qint64, qint64> fileSize() = 0;
+    /*!
+     * Returns the size of recorded file in bytes and the number
+     * of recorded frames.
+     */
+    virtual QPair<qint64, qint64> fileSize() = 0;
 };
 
 class OutputFormat {
 public:
-  //! Returns the name of the output format.
-  virtual QString name() = 0;
+    //! Returns the name of the output format.
+    virtual QString name() = 0;
 
-  //! Returns true if metadata should be written to a .qarv file.
-  virtual bool canWriteInfo() = 0;
+    //! Returns true if metadata should be written to a .qarv file.
+    virtual bool canWriteInfo() = 0;
 
-  //! Instantiates a recorder using this plugin.
-  virtual Recorder* makeRecorder(QArvDecoder* decoder,
-                                 QString fileName,
-                                 QSize frameSize,
-                                 int framesPerSecond,
-                                 bool writeInfo) = 0;
+    //! Instantiates a recorder using this plugin.
+    virtual Recorder* makeRecorder(QArvDecoder* decoder,
+                                   QString fileName,
+                                   QSize frameSize,
+                                   int framesPerSecond,
+                                   bool writeInfo) = 0;
 
-  //! Creates a recorder for the requested output format.
-  static Recorder* makeRecorder(QArvDecoder* decoder,
-                                QString fileName,
-                                QString outputFormat,
-                                QSize frameSize,
-                                int framesPerSecond,
-                                bool writeInfo);
+    //! Creates a recorder for the requested output format.
+    static Recorder* makeRecorder(QArvDecoder* decoder,
+                                  QString fileName,
+                                  QString outputFormat,
+                                  QSize frameSize,
+                                  int framesPerSecond,
+                                  bool writeInfo);
 };
 
 }

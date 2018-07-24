@@ -25,19 +25,19 @@
 using namespace QArv;
 
 ROIcomboBox::ROIcomboBox(QWidget* parent) : QComboBox(parent) {
-  this->addItem(tr("No size constraint"), QVariant(QSize(0, 0)));
-  this->addItem("1024x768", QVariant(QSize(1024, 768)));
-  this->addItem("800x600", QVariant(QSize(800, 600)));
-  this->addItem("640x480", QVariant(QSize(640, 480)));
-  this->addItem("480x360", QVariant(QSize(480, 360)));
-  this->addItem("320x240", QVariant(QSize(320, 240)));
-  this->addItem(tr("Custom"), QVariant(QSize(-1, -1)));
+    this->addItem(tr("No size constraint"), QVariant(QSize(0, 0)));
+    this->addItem("1024x768", QVariant(QSize(1024, 768)));
+    this->addItem("800x600", QVariant(QSize(800, 600)));
+    this->addItem("640x480", QVariant(QSize(640, 480)));
+    this->addItem("480x360", QVariant(QSize(480, 360)));
+    this->addItem("320x240", QVariant(QSize(320, 240)));
+    this->addItem(tr("Custom"), QVariant(QSize(-1, -1)));
 
-  QRegExp ROIregExp("[1-9][0-9]*x[1-9][0-9]*");
-  ROIsizeValidator = new QRegExpValidator(ROIregExp, this);
+    QRegExp ROIregExp("[1-9][0-9]*x[1-9][0-9]*");
+    ROIsizeValidator = new QRegExpValidator(ROIregExp, this);
 
-  this->connect(this, SIGNAL(currentIndexChanged(int)),
-                SLOT(itemSelected(int)));
+    this->connect(this, SIGNAL(currentIndexChanged(int)),
+                  SLOT(itemSelected(int)));
 }
 
 
@@ -45,33 +45,33 @@ ROIcomboBox::~ROIcomboBox() {}
 
 
 void ROIcomboBox::itemSelected(int index) {
-  if (index < 0)
-    index = 0;
+    if (index < 0)
+        index = 0;
 
-  QSize s = this->itemData(index).toSize();
+    QSize s = this->itemData(index).toSize();
 
-  if (s.width() == -1) {
-    this->setEditable(true);
-    this->clearEditText();
+    if (s.width() == -1) {
+        this->setEditable(true);
+        this->clearEditText();
 
-    // Line editor is reset when we call setEditable(false) so the following
-    // must be repeated everytime we enable editing.
-    this->setValidator(ROIsizeValidator);
-    this->connect(this->lineEdit(), SIGNAL(editingFinished()),
-                  SLOT(customSizeEntered()));
-  } else {
-    this->setEditable(false);
-    emit newSizeSelected(s);
-  }
+        // Line editor is reset when we call setEditable(false) so the following
+        // must be repeated everytime we enable editing.
+        this->setValidator(ROIsizeValidator);
+        this->connect(this->lineEdit(), SIGNAL(editingFinished()),
+                      SLOT(customSizeEntered()));
+    } else {
+        this->setEditable(false);
+        emit newSizeSelected(s);
+    }
 }
 
 
 void ROIcomboBox::customSizeEntered() {
-  QRegExp ROIparse("^([0-9]+)x([0-9]+)$");
-  ROIparse.indexIn(this->lineEdit()->text());
-  int width = ROIparse.cap(1).toInt();
-  int height = ROIparse.cap(2).toInt();
+    QRegExp ROIparse("^([0-9]+)x([0-9]+)$");
+    ROIparse.indexIn(this->lineEdit()->text());
+    int width = ROIparse.cap(1).toInt();
+    int height = ROIparse.cap(2).toInt();
 
-  clearFocus();
-  emit newSizeSelected(QSize(width, height));
+    clearFocus();
+    emit newSizeSelected(QSize(width, height));
 }

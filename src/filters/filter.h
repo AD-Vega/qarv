@@ -34,7 +34,8 @@
 #include <opencv2/opencv.hpp>
 #include <atomic>
 
-namespace QArv {
+namespace QArv
+{
 
 class ImageFilter;
 class ImageFilterPlugin;
@@ -42,78 +43,80 @@ class ImageFilterPlugin;
 typedef QSharedPointer<ImageFilter> ImageFilterPtr;
 
 class ImageFilterSettingsWidget : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ImageFilterSettingsWidget(ImageFilter* filter,
-                                     QWidget* parent = 0,
-                                     Qt::WindowFlags f = 0);
-  virtual ~ImageFilterSettingsWidget() {}
+    explicit ImageFilterSettingsWidget(ImageFilter* filter,
+                                       QWidget* parent = 0,
+                                       Qt::WindowFlags f = 0);
+    virtual ~ImageFilterSettingsWidget() {}
 
 protected slots:
-  //! Implemented by each plugin to update the filter continuously.
-  virtual void setLiveUpdate(bool enabled) = 0;
+    //! Implemented by each plugin to update the filter continuously.
+    virtual void setLiveUpdate(bool enabled) = 0;
 
-  //! Implemented by each plugin to update the filter once.
-  virtual void applySettings() = 0;
+    //! Implemented by each plugin to update the filter once.
+    virtual void applySettings() = 0;
 
 protected:
-  ImageFilter* imageFilter;
+    ImageFilter* imageFilter;
 
-  friend class ImageFilterSettingsDialog;
+    friend class ImageFilterSettingsDialog;
 };
 
 class ImageFilter {
 public:
-  ImageFilter(ImageFilterPlugin* plugin);
-  virtual ~ImageFilter() {}
+    ImageFilter(ImageFilterPlugin* plugin);
+    virtual ~ImageFilter() {}
 
-  //! Links back to the plugin, to get the plugin name etc.
-  ImageFilterPlugin* plugin();
+    //! Links back to the plugin, to get the plugin name etc.
+    ImageFilterPlugin* plugin();
 
-  //! Shows the settings dialog.
-  virtual ImageFilterSettingsWidget* createSettingsWidget() = 0;
+    //! Shows the settings dialog.
+    virtual ImageFilterSettingsWidget* createSettingsWidget() = 0;
 
-  //! Called when the filter is instantiated.
-  virtual void restoreSettings() = 0;
+    //! Called when the filter is instantiated.
+    virtual void restoreSettings() = 0;
 
-  //! Called by the ImageFilterSettingsDialog when it is closed.
-  virtual void saveSettings() = 0;
+    //! Called by the ImageFilterSettingsDialog when it is closed.
+    virtual void saveSettings() = 0;
 
-  //! The gist of the matter. It works in-place. It can return a float CV_TYPE!
-  virtual void filterImage(cv::Mat& image) = 0;
+    //! The gist of the matter. It works in-place. It can return a float CV_TYPE!
+    virtual void filterImage(cv::Mat& image) = 0;
 
-  //! Used by the main window to mark filter as enabled.
-  bool isEnabled() { return enabled.load(std::memory_order_relaxed); }
-  void setEnabled(bool enable) { enabled.store(enable, std::memory_order_relaxed); }
+    //! Used by the main window to mark filter as enabled.
+    bool isEnabled() { return enabled.load(std::memory_order_relaxed); }
+    void setEnabled(bool enable) {
+        enabled.store(enable, std::memory_order_relaxed);
+    }
 
 private:
-  ImageFilterPlugin* pluginPtr;
-  std::atomic<bool> enabled;
+    ImageFilterPlugin* pluginPtr;
+    std::atomic<bool> enabled;
 };
 
 class ImageFilterPlugin {
 public:
-  virtual QString name() = 0;
-  virtual ImageFilter* makeFilter() = 0;
-  static ImageFilter* makeFilter(QString name);
+    virtual QString name() = 0;
+    virtual ImageFilter* makeFilter() = 0;
+    static ImageFilter* makeFilter(QString name);
 };
 
 class ImageFilterSettingsDialog : public QDockWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit ImageFilterSettingsDialog(ImageFilterSettingsWidget* settings,
-                                     QWidget* parent = 0,
-                                     Qt::WindowFlags f = 0);
+    explicit ImageFilterSettingsDialog(ImageFilterSettingsWidget* settings,
+                                       QWidget* parent = 0,
+                                       Qt::WindowFlags f = 0);
 
 private slots:
-  void accept();
-  void reject();
-  void apply();
+    void accept();
+    void reject();
+    void apply();
 
 private:
-  ImageFilterSettingsWidget* settings;
+    ImageFilterSettingsWidget* settings;
 };
 
 }

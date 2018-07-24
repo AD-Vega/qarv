@@ -34,17 +34,17 @@ extern "C" {
 }
 
 int getMTU(QString ifname) {
-  struct ifreq req;
-  auto bytes = ifname.toAscii();
-  strcpy(req.ifr_name, bytes.constData());
-  int sock = socket(PF_INET, SOCK_STREAM, 0);
-  if (sock == -1) {
-    qDebug() << "Socket creation error.";
-    return 0;
-  }
-  ioctl(sock, SIOCGIFMTU, &req);
-  close(sock);
-  return req.ifr_mtu;
+    struct ifreq req;
+    auto bytes = ifname.toAscii();
+    strcpy(req.ifr_name, bytes.constData());
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    if (sock == -1) {
+        qDebug() << "Socket creation error.";
+        return 0;
+    }
+    ioctl(sock, SIOCGIFMTU, &req);
+    close(sock);
+    return req.ifr_mtu;
 }
 
 }

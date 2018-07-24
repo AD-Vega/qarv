@@ -24,56 +24,57 @@
 #include "ui_levels.h"
 #include <atomic>
 
-namespace QArv {
+namespace QArv
+{
 
 class LevelsFilter : public ImageFilter {
 public:
-  LevelsFilter(ImageFilterPlugin* plugin);
-  ImageFilterSettingsWidget* createSettingsWidget();
-  void restoreSettings();
-  void saveSettings();
-  void filterImage(cv::Mat& image);
+    LevelsFilter(ImageFilterPlugin* plugin);
+    ImageFilterSettingsWidget* createSettingsWidget();
+    void restoreSettings();
+    void saveSettings();
+    void filterImage(cv::Mat& image);
 
 private:
-  std::atomic<double> black, white, gamma;
+    std::atomic<double> black, white, gamma;
 
-  friend class LevelsSettingsWidget;
+    friend class LevelsSettingsWidget;
 };
 
 class LevelsPlugin : public QObject, public ImageFilterPlugin {
-  Q_OBJECT
-  Q_INTERFACES(QArv::ImageFilterPlugin)
+    Q_OBJECT
+    Q_INTERFACES(QArv::ImageFilterPlugin)
 
 public:
-  QString name();
-  ImageFilter* makeFilter();
+    QString name();
+    ImageFilter* makeFilter();
 };
 
 class LevelsSettingsWidget : public ImageFilterSettingsWidget,
                              private Ui_levelsSettingsWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  LevelsSettingsWidget(ImageFilter* filter,
-                       QWidget* parent = 0,
-                       Qt::WindowFlags f = 0);
+    LevelsSettingsWidget(ImageFilter* filter,
+                         QWidget* parent = 0,
+                         Qt::WindowFlags f = 0);
 
 protected slots:
-  void setLiveUpdate(bool enabled);
-  void applySettings();
+    void setLiveUpdate(bool enabled);
+    void applySettings();
 
 private slots:
-  void on_blackSlider_valueChanged(int value);
-  void on_whiteSlider_valueChanged(int value);
-  void on_gammaSlider_valueChanged(int value);
-  void on_blackSpinbox_valueChanged(double value);
-  void on_whiteSpinbox_valueChanged(double value);
-  void on_gammaSpinbox_valueChanged(double value);
+    void on_blackSlider_valueChanged(int value);
+    void on_whiteSlider_valueChanged(int value);
+    void on_gammaSlider_valueChanged(int value);
+    void on_blackSpinbox_valueChanged(double value);
+    void on_whiteSpinbox_valueChanged(double value);
+    void on_gammaSpinbox_valueChanged(double value);
 
 private:
-  LevelsFilter* filter();
-  int doubleToInt(double val);
-  double intToDouble(int val);
+    LevelsFilter* filter();
+    int doubleToInt(double val);
+    double intToDouble(int val);
 };
 
 };

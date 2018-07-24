@@ -29,75 +29,75 @@
 //! QArvRecordedVideo provides a means of opening a video description file.
 class QArvRecordedVideo {
 
-  class QArvRecordedVideoExtension;
+    class QArvRecordedVideoExtension;
 
 public:
-  //! Opens the description file with the given filename.
-  QArvRecordedVideo(const QString& filename);
+    //! Opens the description file with the given filename.
+    QArvRecordedVideo(const QString& filename);
 
-  //! Returns true if the file has been opened successfully.
-  bool status();
+    //! Returns true if the file has been opened successfully.
+    bool status();
 
-  //! Returns the error status of the underlying QFile.
-  /*
-   * If this function returns NoError but status() returns false
-   * then the description file could not be read.
-   */
-  QFile::FileError error();
+    //! Returns the error status of the underlying QFile.
+    /*
+     * If this function returns NoError but status() returns false
+     * then the description file could not be read.
+     */
+    QFile::FileError error();
 
-  //! Returns the error string of the underlying QFile.
-  QString errorString();
+    //! Returns the error string of the underlying QFile.
+    QString errorString();
 
-  //! Returns true if we are at the end of the underlying QFile.
-  bool atEnd();
+    //! Returns true if we are at the end of the underlying QFile.
+    bool atEnd();
 
-  //! Reads a single frame and advances to the next.
-  /*!
-   * Returns an empty QByteArray on error.
-   */
-  QByteArray read();
+    //! Reads a single frame and advances to the next.
+    /*!
+     * Returns an empty QByteArray on error.
+     */
+    QByteArray read();
 
-  //! Seeks to the provided frame number, if possible.
-  /*!
-   * Returns false on error.
-   */
-  bool seek(uint frame);
+    //! Seeks to the provided frame number, if possible.
+    /*!
+     * Returns false on error.
+     */
+    bool seek(uint frame);
 
-  //! Returns true if video file is seekable.
-  /*!
-   * A file might not be seekable e.g. if it is compressed.
-   */
-  bool isSeekable();
+    //! Returns true if video file is seekable.
+    /*!
+     * A file might not be seekable e.g. if it is compressed.
+     */
+    bool isSeekable();
 
-  //! Return the number of frames for a seekable file.
-  uint numberOfFrames();
+    //! Return the number of frames for a seekable file.
+    uint numberOfFrames();
 
-  //! Returns a decoder for decoding read frames.
-  QArvDecoder* makeDecoder();
+    //! Returns a decoder for decoding read frames.
+    QArvDecoder* makeDecoder();
 
-  //! Returns the frame size.
-  QSize frameSize();
+    //! Returns the frame size.
+    QSize frameSize();
 
-  //! Returns the byte size of a frame.
-  uint frameBytes();
+    //! Returns the byte size of a frame.
+    uint frameBytes();
 
-  //! Returns the nominal frame rate.
-  /*
-   * This is the frame rate that the user chose in the GUI. The actual frame
-   * rate is lower than that. If precise timing is required, it is suggested
-   * to record frame timestamps as well.
-   */
-  int framerate();
+    //! Returns the nominal frame rate.
+    /*
+     * This is the frame rate that the user chose in the GUI. The actual frame
+     * rate is lower than that. If precise timing is required, it is suggested
+     * to record frame timestamps as well.
+     */
+    int framerate();
 
 private:
-  QArvRecordedVideoExtension* ext;
-  QFile videofile;
-  QSize fsize;
-  int fps;
-  bool uncompressed, isOK;
-  ArvPixelFormat arvPixfmt;
-  enum AVPixelFormat swscalePixfmt;
-  uint frameBytes_;
+    QArvRecordedVideoExtension* ext;
+    QFile videofile;
+    QSize fsize;
+    int fps;
+    bool uncompressed, isOK;
+    ArvPixelFormat arvPixfmt;
+    enum AVPixelFormat swscalePixfmt;
+    uint frameBytes_;
 };
 
 #pragma GCC visibility pop

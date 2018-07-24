@@ -23,64 +23,64 @@
 #include <QLayout>
 
 QArvCameraDelegate::QArvCameraDelegate(QObject* parent) :
-  QStyledItemDelegate(parent) {}
+    QStyledItemDelegate(parent) {}
 
 QWidget* QArvCameraDelegate::createEditor(QWidget* parent,
                                           const QStyleOptionViewItem& option,
                                           const QModelIndex& index) const {
-  auto var = index.model()->data(index, Qt::EditRole);
-  if (!var.isValid())
-    return NULL;
-  auto val = static_cast<QArvType*>(var.data());
-  auto editor = val->createEditor(parent);
-  this->connect(editor, SIGNAL(editingFinished()), SLOT(finishEditing()));
-  return editor;
+    auto var = index.model()->data(index, Qt::EditRole);
+    if (!var.isValid())
+        return NULL;
+    auto val = static_cast<QArvType*>(var.data());
+    auto editor = val->createEditor(parent);
+    this->connect(editor, SIGNAL(editingFinished()), SLOT(finishEditing()));
+    return editor;
 }
 
 void QArvCameraDelegate::setEditorData(QWidget* editor,
                                        const QModelIndex& index) const {
-  auto var = index.model()->data(index, Qt::EditRole);
-  if (!var.isValid()) {
-    QArv::logMessage() << "Error setting editor data: QArvCameraDelegate";
-    return;
-  }
-  auto val = static_cast<QArvType*>(var.data());
-  val->populateEditor(editor);
+    auto var = index.model()->data(index, Qt::EditRole);
+    if (!var.isValid()) {
+        QArv::logMessage() << "Error setting editor data: QArvCameraDelegate";
+        return;
+    }
+    auto val = static_cast<QArvType*>(var.data());
+    val->populateEditor(editor);
 }
 
 void QArvCameraDelegate::setModelData(QWidget* editor,
                                       QAbstractItemModel* model,
                                       const QModelIndex& index) const {
-  auto var = model->data(index, Qt::EditRole);
-  if (!var.isValid()) {
-    QArv::logMessage() << "Error setting model data: QArvCameraDelegate";
-    return;
-  }
-  auto val = static_cast<QArvType*>(var.data());
-  val->readFromEditor(editor);
-  model->setData(index, var);
+    auto var = model->data(index, Qt::EditRole);
+    if (!var.isValid()) {
+        QArv::logMessage() << "Error setting model data: QArvCameraDelegate";
+        return;
+    }
+    auto val = static_cast<QArvType*>(var.data());
+    val->readFromEditor(editor);
+    model->setData(index, var);
 }
 
 void QArvCameraDelegate::updateEditorGeometry(QWidget* editor,
                                               const QStyleOptionViewItem& opt,
                                               const QModelIndex& index) const {
-  editor->setGeometry(opt.rect);
+    editor->setGeometry(opt.rect);
 }
 
 void QArvCameraDelegate::finishEditing() {
-  auto editor = qobject_cast<QWidget*>(sender());
-  emit commitData(editor);
-  emit closeEditor(editor);
+    auto editor = qobject_cast<QWidget*>(sender());
+    emit commitData(editor);
+    emit closeEditor(editor);
 }
 
 QSize QArvCameraDelegate::sizeHint(const QStyleOptionViewItem& option,
                                    const QModelIndex& index) const {
-  if (!index.isValid())
-    return QStyledItemDelegate::sizeHint(option, index);
-  QScopedPointer<QWidget> ptr(createEditor(NULL, option, index));
-  if (ptr) {
-    return ptr->layout()->sizeHint();
-  } else {
-    return QStyledItemDelegate::sizeHint(option, index);
-  }
+    if (!index.isValid())
+        return QStyledItemDelegate::sizeHint(option, index);
+    QScopedPointer<QWidget> ptr(createEditor(NULL, option, index));
+    if (ptr) {
+        return ptr->layout()->sizeHint();
+    } else {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
 }

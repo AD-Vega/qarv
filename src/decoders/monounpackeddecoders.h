@@ -22,54 +22,73 @@ extern "C" {
   #include <arv.h>
 }
 
-namespace QArv {
+namespace QArv
+{
 
 class Mono8Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<uint8_t, 8, ARV_PIXEL_FORMAT_MONO_8>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<uint8_t, 8,
+                                       ARV_PIXEL_FORMAT_MONO_8>(size);
+    }
 };
 
 class Mono8SignedFormat : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8_SIGNED; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<int8_t, 8, ARV_PIXEL_FORMAT_MONO_8_SIGNED>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8_SIGNED; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<int8_t, 8,
+                                       ARV_PIXEL_FORMAT_MONO_8_SIGNED>(size);
+    }
 };
 
 class Mono10Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_10; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<uint16_t, 10, ARV_PIXEL_FORMAT_MONO_10>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_10; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<uint16_t, 10, ARV_PIXEL_FORMAT_MONO_10>(
+            size);
+    }
 };
 
 class Mono12Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<uint16_t, 12, ARV_PIXEL_FORMAT_MONO_12>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<uint16_t, 12, ARV_PIXEL_FORMAT_MONO_12>(
+            size);
+    }
 };
 
 class Mono14Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_14; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<uint16_t, 14, ARV_PIXEL_FORMAT_MONO_14>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_14; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<uint16_t, 14, ARV_PIXEL_FORMAT_MONO_14>(
+            size);
+    }
 };
 
 class Mono16Format : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_16; }
-  QArvDecoder* makeDecoder(QSize size) { return new MonoUnpackedDecoder<uint16_t, 16, ARV_PIXEL_FORMAT_MONO_16>(size); }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_16; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new MonoUnpackedDecoder<uint16_t, 16, ARV_PIXEL_FORMAT_MONO_16>(
+            size);
+    }
 };
 
 }

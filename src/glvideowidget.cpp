@@ -26,182 +26,182 @@
 using namespace QArv;
 
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
-  QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
-  idleImageRenderer(QString(":/icons/qarv.svgz")),
-  idling(true), selecting(false),
-  drawRectangle(false), fixedSelection(false), corner1(), corner2(),
-  rectangle(), whitepen(Qt::white), blackpen(Qt::black) {
-  whitepen.setWidth(0);
-  whitepen.setStyle(Qt::DotLine);
-  blackpen.setWidth(0);
+    QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
+    idleImageRenderer(QString(":/icons/qarv.svgz")),
+    idling(true), selecting(false),
+    drawRectangle(false), fixedSelection(false), corner1(), corner2(),
+    rectangle(), whitepen(Qt::white), blackpen(Qt::black) {
+    whitepen.setWidth(0);
+    whitepen.setStyle(Qt::DotLine);
+    blackpen.setWidth(0);
 }
 
 GLVideoWidget::~GLVideoWidget() {}
 
 void GLVideoWidget::setImage(const QImage& image_) {
-  if (image_.isNull()) {
-    idling = true;
-  } else {
-    idling = false;
-    image = image_;
-  }
-  if (in.size() != image.size()) {
-    in = image.rect();
-    QResizeEvent nochange(size(), size());
-    resizeEvent(&nochange);
-  }
-  update();
+    if (image_.isNull()) {
+        idling = true;
+    } else {
+        idling = false;
+        image = image_;
+    }
+    if (in.size() != image.size()) {
+        in = image.rect();
+        QResizeEvent nochange(size(), size());
+        resizeEvent(&nochange);
+    }
+    update();
 }
 
 void GLVideoWidget::swapFrames() {
-  idling = false;
-  image.swap(unusedImage);
-  if (in.size() != image.size()) {
-    in = image.rect();
-    QResizeEvent nochange(size(), size());
-    resizeEvent(&nochange);
-  }
-  update();
+    idling = false;
+    image.swap(unusedImage);
+    if (in.size() != image.size()) {
+        in = image.rect();
+        QResizeEvent nochange(size(), size());
+        resizeEvent(&nochange);
+    }
+    update();
 }
 
 QImage* GLVideoWidget::unusedFrame() {
-  return &unusedImage;
+    return &unusedImage;
 }
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {
-  QGLWidget::resizeEvent(event);
-  auto view = rect();
-  out = view;
-  QSize thesize;
-  if (idling)
-    thesize = idleImageRenderer.defaultSize();
-  else
-    thesize = in.size();
-  if (thesize != view.size()) {
-    float aspect = thesize.width() / (float)thesize.height();
-    float vaspect = view.width() / (float)view.height();
-    int x, y, w, h;
-    if (vaspect > aspect) {
-      h = view.height();
-      w = aspect * h;
-      y = view.y();
-      x = view.x() + (view.width() - w) / 2.;
-    } else {
-      w = view.width();
-      h = w / aspect;
-      x = view.x();
-      y = view.y() + (view.height() - h) / 2.;
+    QGLWidget::resizeEvent(event);
+    auto view = rect();
+    out = view;
+    QSize thesize;
+    if (idling)
+        thesize = idleImageRenderer.defaultSize();
+    else
+        thesize = in.size();
+    if (thesize != view.size()) {
+        float aspect = thesize.width() / (float)thesize.height();
+        float vaspect = view.width() / (float)view.height();
+        int x, y, w, h;
+        if (vaspect > aspect) {
+            h = view.height();
+            w = aspect * h;
+            y = view.y();
+            x = view.x() + (view.width() - w) / 2.;
+        } else {
+            w = view.width();
+            h = w / aspect;
+            x = view.x();
+            y = view.y() + (view.height() - h) / 2.;
+        }
+        out.setRect(x, y, w, h);
     }
-    out.setRect(x, y, w, h);
-  }
 }
 
 void GLVideoWidget::paintGL() {
-  QPainter painter(this);
-  if (!idling) {
-    if (in.size() != out.size())
-      painter.setRenderHint(QPainter::SmoothPixmapTransform);
-    painter.drawImage(out, image);
+    QPainter painter(this);
+    if (!idling) {
+        if (in.size() != out.size())
+            painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        painter.drawImage(out, image);
 
-    if (drawRectangle) {
-      painter.setPen(blackpen);
-      painter.drawRect(drawnRectangle);
-      painter.setPen(whitepen);
-      painter.drawRect(drawnRectangle);
+        if (drawRectangle) {
+            painter.setPen(blackpen);
+            painter.drawRect(drawnRectangle);
+            painter.setPen(whitepen);
+            painter.drawRect(drawnRectangle);
+        }
+    } else {
+        idleImageRenderer.render(&painter, out);
     }
-  } else {
-    idleImageRenderer.render(&painter, out);
-  }
 }
 
 void GLVideoWidget::enableSelection(bool enable) {
-  if (enable) {
-    selecting = true;
-    setCursor(Qt::CrossCursor);
+    if (enable) {
+        selecting = true;
+        setCursor(Qt::CrossCursor);
 
-    if (fixedSelection)
-      setMouseTracking(true);
-  } else {
-    selecting = false;
-    drawRectangle = false;
-    rectangle = QRect();
-    setCursor(Qt::ArrowCursor);
-    setMouseTracking(false);
-  }
+        if (fixedSelection)
+            setMouseTracking(true);
+    } else {
+        selecting = false;
+        drawRectangle = false;
+        rectangle = QRect();
+        setCursor(Qt::ArrowCursor);
+        setMouseTracking(false);
+    }
 }
 
 void GLVideoWidget::setSelectionSize(QSize size) {
-  if (size.width() == 0 || size.height() == 0)
-    fixedSelection = false;
-  else {
-    fixedSelection = true;
-    fixedSize = size;
-  }
+    if (size.width() == 0 || size.height() == 0)
+        fixedSelection = false;
+    else {
+        fixedSelection = true;
+        fixedSize = size;
+    }
 }
 
 void GLVideoWidget::mousePressEvent(QMouseEvent* event) {
-  QWidget::mousePressEvent(event);
-  if (fixedSelection) return;
-  if (selecting) corner1 = event->pos();
+    QWidget::mousePressEvent(event);
+    if (fixedSelection) return;
+    if (selecting) corner1 = event->pos();
 }
 
 void GLVideoWidget::mouseMoveEvent(QMouseEvent* event) {
-  QWidget::mouseMoveEvent(event);
+    QWidget::mouseMoveEvent(event);
 
-  if (!selecting)
-    return;
+    if (!selecting)
+        return;
 
-  drawRectangle = true;
-  float scale = out.width() / (float)in.width();
+    drawRectangle = true;
+    float scale = out.width() / (float)in.width();
 
-  if (fixedSelection) {
-    if ((fixedSize.width() > in.width())
-        || (fixedSize.height() > in.height())) {
-      rectangle = in;
-      drawnRectangle = out;
-      return;
+    if (fixedSelection) {
+        if ((fixedSize.width() > in.width())
+            || (fixedSize.height() > in.height())) {
+            rectangle = in;
+            drawnRectangle = out;
+            return;
+        }
+
+        rectangle.setSize(fixedSize);
+        rectangle.moveCenter((event->pos() - out.topLeft())/scale);
+
+        if (rectangle.x() < 0)
+            rectangle.translate(-rectangle.x(), 0);
+
+        if (rectangle.y() < 0)
+            rectangle.translate(0, -rectangle.y());
+
+        int hmargin = (rectangle.x() + rectangle.width()) - in.width();
+        if (hmargin > 0)
+            rectangle.translate(-hmargin, 0);
+
+        int vmargin = (rectangle.y() + rectangle.height()) - in.height();
+        if (vmargin > 0)
+            rectangle.translate(0, -vmargin);
+
+        drawnRectangle.moveTopLeft(out.topLeft() + rectangle.topLeft()*scale);
+        drawnRectangle.setSize(rectangle.size()*scale);
+    } else {
+        corner2 = event->pos();
+        QRect rec(corner1, corner2);
+        rec &= out;
+        rec = rec.normalized();
+        QPoint corner = rec.topLeft(), outcorner = out.topLeft();
+        corner = (corner - outcorner) / scale;
+        int width = rec.width() / scale, height = rec.height() / scale;
+        rectangle.setRect(corner.x(), corner.y(), width, height);
+        drawnRectangle = rec;
     }
-
-    rectangle.setSize(fixedSize);
-    rectangle.moveCenter((event->pos() - out.topLeft())/scale);
-
-    if (rectangle.x() < 0)
-      rectangle.translate(-rectangle.x(), 0);
-
-    if (rectangle.y() < 0)
-      rectangle.translate(0, -rectangle.y());
-
-    int hmargin = (rectangle.x() + rectangle.width()) - in.width();
-    if (hmargin > 0)
-      rectangle.translate(-hmargin, 0);
-
-    int vmargin = (rectangle.y() + rectangle.height()) - in.height();
-    if (vmargin > 0)
-      rectangle.translate(0, -vmargin);
-
-    drawnRectangle.moveTopLeft(out.topLeft() + rectangle.topLeft()*scale);
-    drawnRectangle.setSize(rectangle.size()*scale);
-  } else {
-    corner2 = event->pos();
-    QRect rec(corner1, corner2);
-    rec &= out;
-    rec = rec.normalized();
-    QPoint corner = rec.topLeft(), outcorner = out.topLeft();
-    corner = (corner - outcorner) / scale;
-    int width = rec.width() / scale, height = rec.height() / scale;
-    rectangle.setRect(corner.x(), corner.y(), width, height);
-    drawnRectangle = rec;
-  }
 }
 
 void GLVideoWidget::mouseReleaseEvent(QMouseEvent* event) {
-  QWidget::mouseReleaseEvent(event);
-  if (selecting) {
-    selecting = false;
-    emit selectionComplete(rectangle);
-  }
+    QWidget::mouseReleaseEvent(event);
+    if (selecting) {
+        selecting = false;
+        emit selectionComplete(rectangle);
+    }
 }
 
 QSize GLVideoWidget::getImageSize() {
-  return image.size();
+    return image.size();
 }

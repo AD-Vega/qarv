@@ -23,7 +23,8 @@
 #include "recorders/recorder.h"
 #include <QStringList>
 
-namespace QArv {
+namespace QArv
+{
 
 Recorder* makeGstRecorder(QStringList plugins,
                           QString pipelineFragment,

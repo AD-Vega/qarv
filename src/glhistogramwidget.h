@@ -30,29 +30,29 @@ namespace QArv
 {
 
 struct Histograms {
-  float red[256], green[256], blue[256];
+    float red[256], green[256], blue[256];
 };
 
 class GLHistogramWidget : public QGLWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  GLHistogramWidget(QWidget* parent = 0);
+    GLHistogramWidget(QWidget* parent = 0);
 
-  void paintGL();
-  void setIdle();
-  Histograms* unusedHistograms();
-  void swapHistograms(bool grayscale);
+    void paintGL();
+    void setIdle();
+    Histograms* unusedHistograms();
+    void swapHistograms(bool grayscale);
 
 public slots:
-  void setLogarithmic(bool logarithmic);
+    void setLogarithmic(bool logarithmic);
 
 private:
-  QIcon idleImageIcon;
-  bool indexed, logarithmic, idle;
-  Histograms histograms1, histograms2;
-  Histograms* unusedHists;
-  float * histRed, * histGreen, * histBlue;
+    QIcon idleImageIcon;
+    bool indexed, logarithmic, idle;
+    Histograms histograms1, histograms2;
+    Histograms* unusedHists;
+    float* histRed, * histGreen, * histBlue;
 };
 
 }

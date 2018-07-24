@@ -22,53 +22,53 @@
 using namespace QArv;
 
 Mono12PackedDecoder::Mono12PackedDecoder(QSize size_) :
-  size(size_), M(size_.height(), size_.width(), CV_16U) {}
+    size(size_), M(size_.height(), size_.width(), CV_16U) {}
 
 
 void Mono12PackedDecoder::decode(QByteArray frame) {
-  const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
-  const int h = size.height(), w = size.width();
+    const uchar* dta = reinterpret_cast<const uchar*>(frame.constData());
+    const int h = size.height(), w = size.width();
 
-  int line = 0;
-  auto linestart = M.ptr<uint16_t>(0);
-  int outcurrent = 0;
-  const uchar* inptr = dta;
-  uint16_t pixel;
-  uchar* bytes = reinterpret_cast<uchar*>(&pixel);
-  while (inptr < dta + frame.size()) {
-    bytes[0] = inptr[1] << 4;
-    bytes[1] = inptr[0];
-    linestart[outcurrent++] = pixel;
+    int line = 0;
+    auto linestart = M.ptr<uint16_t>(0);
+    int outcurrent = 0;
+    const uchar* inptr = dta;
+    uint16_t pixel;
+    uchar* bytes = reinterpret_cast<uchar*>(&pixel);
+    while (inptr < dta + frame.size()) {
+        bytes[0] = inptr[1] << 4;
+        bytes[1] = inptr[0];
+        linestart[outcurrent++] = pixel;
 
-    if (outcurrent == w) {
-      if (++line == h) break;
-      linestart = M.ptr<uint16_t>(line);
-      outcurrent = 0;
+        if (outcurrent == w) {
+            if (++line == h) break;
+            linestart = M.ptr<uint16_t>(line);
+            outcurrent = 0;
+        }
+
+        bytes[0] = inptr[1] & 0xF0;
+        bytes[1] = inptr[2];
+        linestart[outcurrent++] = pixel;
+
+        if (outcurrent == w) {
+            if (++line == h) break;
+            linestart = M.ptr<uint16_t>(line);
+            outcurrent = 0;
+        }
+
+        inptr += 3;
     }
-
-    bytes[0] = inptr[1] & 0xF0;
-    bytes[1] = inptr[2];
-    linestart[outcurrent++] = pixel;
-
-    if (outcurrent == w) {
-      if (++line == h) break;
-      linestart = M.ptr<uint16_t>(line);
-      outcurrent = 0;
-    }
-
-    inptr += 3;
-  }
 }
 
 const cv::Mat Mono12PackedDecoder::getCvImage() {
-  return M;
+    return M;
 }
 
 QByteArray Mono12PackedDecoder::decoderSpecification() {
-  QByteArray b;
-  QDataStream s(&b, QIODevice::WriteOnly);
-  s << QString("Aravis") << size << pixelFormat() << false;
-  return b;
+    QByteArray b;
+    QDataStream s(&b, QIODevice::WriteOnly);
+    s << QString("Aravis") << size << pixelFormat() << false;
+    return b;
 }
 
 

@@ -22,20 +22,21 @@
 
 #include "recorders/recorder.h"
 
-namespace QArv {
+namespace QArv
+{
 
 class HuffyuvAviFormat : public QObject, public OutputFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArv::OutputFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArv::OutputFormat)
 
 public:
-  QString name() { return "huffyuv AVI"; }
-  bool canWriteInfo() { return false; }
-  Recorder* makeRecorder(QArvDecoder* decoder,
-                         QString fileName,
-                         QSize frameSize,
-                         int framesPerSecond,
-                         bool writeInfo);
+    QString name() { return "huffyuv AVI"; }
+    bool canWriteInfo() { return false; }
+    Recorder* makeRecorder(QArvDecoder* decoder,
+                           QString fileName,
+                           QSize frameSize,
+                           int framesPerSecond,
+                           bool writeInfo);
 };
 
 }

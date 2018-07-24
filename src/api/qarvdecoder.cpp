@@ -33,148 +33,158 @@ using namespace QArv;
 
 template<bool grayscale, bool depth8>
 void CV2QImage_RGB24Template(const cv::Mat& image, QImage& img) {
-  typedef typename std::conditional<depth8, uint8_t, uint16_t>::type InputType;
-  const int h = image.rows, w = image.cols;
-  QSize s = img.size();
-  if (s.height() != h
-      || s.width() != w
-      || img.format() != QImage::Format_RGB888) {
-    if (image.channels() == 1)
-      img = QImage(w, h, QImage::Format_Indexed8);
-    else
-      img = QImage(w, h, QImage::Format_RGB888);
-  }
-  if (grayscale) {
-    img.setColorTable(graymap);
-    for (int i = 0; i < h; i++) {
-      auto line = image.ptr<InputType>(i);
-      auto I = img.scanLine(i);
-      for (int j = 0; j < w; j++)
-        if (depth8)
-          I[j] = line[j];
+    typedef typename std::conditional<depth8, uint8_t,
+                                      uint16_t>::type InputType;
+    const int h = image.rows, w = image.cols;
+    QSize s = img.size();
+    if (s.height() != h
+        || s.width() != w
+        || img.format() != QImage::Format_RGB888) {
+        if (image.channels() == 1)
+            img = QImage(w, h, QImage::Format_Indexed8);
         else
-          I[j] = line[j] >> 8;
+            img = QImage(w, h, QImage::Format_RGB888);
     }
-  } else {
-    for (int i = 0; i < h; i++) {
-      auto imgLine = img.scanLine(i);
-      auto imageLine = image.ptr<cv::Vec<InputType, 3> >(i);
-      for (int j = 0; j < w; j++) {
-        auto& bgr = imageLine[j];
-        for (int px = 0; px < 3; px++) {
-          if (depth8)
-            imgLine[3*j + px] = bgr[2-px];
-          else
-            imgLine[3*j + px] = bgr[2-px] >> 8;
+    if (grayscale) {
+        img.setColorTable(graymap);
+        for (int i = 0; i < h; i++) {
+            auto line = image.ptr<InputType>(i);
+            auto I = img.scanLine(i);
+            for (int j = 0; j < w; j++)
+                if (depth8)
+                    I[j] = line[j];
+                else
+                    I[j] = line[j] >> 8;
         }
-      }
+    } else {
+        for (int i = 0; i < h; i++) {
+            auto imgLine = img.scanLine(i);
+            auto imageLine = image.ptr<cv::Vec<InputType, 3> >(i);
+            for (int j = 0; j < w; j++) {
+                auto& bgr = imageLine[j];
+                for (int px = 0; px < 3; px++) {
+                    if (depth8)
+                        imgLine[3*j + px] = bgr[2-px];
+                    else
+                        imgLine[3*j + px] = bgr[2-px] >> 8;
+                }
+            }
+        }
     }
-  }
 }
 
 void QArvDecoder::CV2QImage_RGB24(const cv::Mat& image, QImage& out) {
-  switch (image.type()) {
-  case CV_16UC1:
-    CV2QImage_RGB24Template<true, false>(image, out);
-    break;
-  case CV_16UC3:
-    CV2QImage_RGB24Template<false, false>(image, out);
-    break;
-  case CV_8UC1:
-    CV2QImage_RGB24Template<true, true>(image, out);
-    break;
-  case CV_8UC3:
-    CV2QImage_RGB24Template<false, true>(image, out);
-    break;
-  default:
-    logMessage() << "CV2QImage: Invalid CV image format";
-    return;
-  }
+    switch (image.type()) {
+    case CV_16UC1:
+        CV2QImage_RGB24Template<true, false>(image, out);
+        break;
+
+    case CV_16UC3:
+        CV2QImage_RGB24Template<false, false>(image, out);
+        break;
+
+    case CV_8UC1:
+        CV2QImage_RGB24Template<true, true>(image, out);
+        break;
+
+    case CV_8UC3:
+        CV2QImage_RGB24Template<false, true>(image, out);
+        break;
+
+    default:
+        logMessage() << "CV2QImage: Invalid CV image format";
+        return;
+    }
 }
 
 QImage QArvDecoder::CV2QImage_RGB24(const cv::Mat& image) {
-  QImage img;
-  CV2QImage_RGB24(image, img);
-  return img;
+    QImage img;
+    CV2QImage_RGB24(image, img);
+    return img;
 }
 
 template<bool grayscale, bool depth8>
 void CV2QImageTemplate(const cv::Mat& image_, QImage& image) {
-  typedef typename std::conditional<depth8, uint8_t, uint16_t>::type InputType;
-  const int h = image_.rows, w = image_.cols;
-  QSize s = image.size();
-  if (s.height() != h
-      || s.width() != w
-      || image.format() != QImage::Format_ARGB32_Premultiplied)
-    image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
-  if (!grayscale) {
-    for (int i = 0; i < h; i++) {
-      auto imgLine = image.scanLine(i);
-      auto imageLine = image_.ptr<cv::Vec<InputType, 3> >(i);
-      for (int j = 0; j < w; j++) {
-        auto& bgr = imageLine[j];
-        for (int px = 0; px < 3; px++) {
-          if (depth8)
-            imgLine[4*j + 2 - px] = bgr[2-px];
-          else
-            imgLine[4*j + 2 - px] = bgr[2-px] >> 8;
+    typedef typename std::conditional<depth8, uint8_t,
+                                      uint16_t>::type InputType;
+    const int h = image_.rows, w = image_.cols;
+    QSize s = image.size();
+    if (s.height() != h
+        || s.width() != w
+        || image.format() != QImage::Format_ARGB32_Premultiplied)
+        image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
+    if (!grayscale) {
+        for (int i = 0; i < h; i++) {
+            auto imgLine = image.scanLine(i);
+            auto imageLine = image_.ptr<cv::Vec<InputType, 3> >(i);
+            for (int j = 0; j < w; j++) {
+                auto& bgr = imageLine[j];
+                for (int px = 0; px < 3; px++) {
+                    if (depth8)
+                        imgLine[4*j + 2 - px] = bgr[2-px];
+                    else
+                        imgLine[4*j + 2 - px] = bgr[2-px] >> 8;
+                }
+                imgLine[4*j + 3] = 255;
+            }
         }
-        imgLine[4*j + 3] = 255;
-      }
-    }
-  } else {
-    for (int i = 0; i < h; i++) {
-      auto imgLine = image.scanLine(i);
-      auto imageLine = image_.ptr<InputType>(i);
-      for (int j = 0; j < w; j++) {
-        uint8_t gray;
-        if (depth8)
-          gray = imageLine[j];
-        else
-          gray = imageLine[j] >> 8;
-        for (int px = 0; px < 3; px++) {
-          imgLine[4*j + px] = gray;
+    } else {
+        for (int i = 0; i < h; i++) {
+            auto imgLine = image.scanLine(i);
+            auto imageLine = image_.ptr<InputType>(i);
+            for (int j = 0; j < w; j++) {
+                uint8_t gray;
+                if (depth8)
+                    gray = imageLine[j];
+                else
+                    gray = imageLine[j] >> 8;
+                for (int px = 0; px < 3; px++) {
+                    imgLine[4*j + px] = gray;
+                }
+                imgLine[4*j + 3] = 255;
+            }
         }
-        imgLine[4*j + 3] = 255;
-      }
     }
-  }
 }
 
 void QArvDecoder::CV2QImage(const cv::Mat& image, QImage& out) {
-  switch (image.type()) {
-  case CV_16UC1:
-    CV2QImageTemplate<true, false>(image, out);
-    break;
-  case CV_16UC3:
-    CV2QImageTemplate<false, false>(image, out);
-    break;
-  case CV_8UC1:
-    CV2QImageTemplate<true, true>(image, out);
-    break;
-  case CV_8UC3:
-    CV2QImageTemplate<false, true>(image, out);
-    break;
-  default:
-    logMessage() << "CV2QImage: Invalid CV image format";
-    return;
-  }
+    switch (image.type()) {
+    case CV_16UC1:
+        CV2QImageTemplate<true, false>(image, out);
+        break;
+
+    case CV_16UC3:
+        CV2QImageTemplate<false, false>(image, out);
+        break;
+
+    case CV_8UC1:
+        CV2QImageTemplate<true, true>(image, out);
+        break;
+
+    case CV_8UC3:
+        CV2QImageTemplate<false, true>(image, out);
+        break;
+
+    default:
+        logMessage() << "CV2QImage: Invalid CV image format";
+        return;
+    }
 }
 
 QImage QArvDecoder::CV2QImage(const cv::Mat& image) {
-  QImage img;
-  CV2QImage(image, img);
-  return img;
+    QImage img;
+    CV2QImage(image, img);
+    return img;
 }
 
 static QList<QArvPixelFormat*> initPluginFormats() {
-  QList<QArvPixelFormat*> list;
-  auto plugins = QPluginLoader::staticInstances();
-  foreach (auto plugin, plugins) {
-    auto fmt = qobject_cast<QArvPixelFormat*>(plugin);
-    if (fmt != NULL) list << fmt;
-  }
-  return list;
+    QList<QArvPixelFormat*> list;
+    auto plugins = QPluginLoader::staticInstances();
+    foreach (auto plugin, plugins) {
+        auto fmt = qobject_cast<QArvPixelFormat*>(plugin);
+        if (fmt != NULL) list << fmt;
+    }
+    return list;
 }
 
 static QMap<ArvPixelFormat, enum AVPixelFormat> initSwScaleFormats();
@@ -187,12 +197,12 @@ static QList<QArvPixelFormat*> pluginFormats = initPluginFormats();
 QMap<ArvPixelFormat, enum AVPixelFormat> swScaleFormats = initSwScaleFormats();
 
 QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
-  QList<ArvPixelFormat> list;
-  foreach (auto fmt, pluginFormats) {
-    list << fmt->pixelFormat();
-  }
-  list << swScaleFormats.keys();
-  return list;
+    QList<ArvPixelFormat> list;
+    foreach (auto fmt, pluginFormats) {
+        list << fmt->pixelFormat();
+    }
+    list << swScaleFormats.keys();
+    return list;
 }
 
 /*
@@ -201,30 +211,30 @@ QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
  * a string. All decoders also contain the size.
  */
 QArvDecoder* QArvDecoder::makeDecoder(QByteArray specification) {
-  static QStringList types = {
-    "Aravis",
-    "SwScale",
-  };
-  QDataStream s(&specification, QIODevice::ReadOnly);
-  QString type;
-  QSize size;
-  s >> type;
-  if (!types.contains(type)) return NULL;
-  s >> size;
-  if (type == "Aravis") {
-    ArvPixelFormat fmt;
-    bool fast;
-    s >> fmt >> fast;
-    return QArvDecoder::makeDecoder(fmt, size, fast);
-  } else if (type == "SwScale") {
-    static_assert(sizeof(AVPixelFormat) <= sizeof(qlonglong),
-                  "qlonglong not large enough to hold libav PixelFormat.");
-    qlonglong fmt;
-    int flags;
-    s >> fmt >> flags;
-    return QArvDecoder::makeSwScaleDecoder((AVPixelFormat)fmt, size, flags);
-  }
-  return NULL;
+    static QStringList types = {
+        "Aravis",
+        "SwScale",
+    };
+    QDataStream s(&specification, QIODevice::ReadOnly);
+    QString type;
+    QSize size;
+    s >> type;
+    if (!types.contains(type)) return NULL;
+    s >> size;
+    if (type == "Aravis") {
+        ArvPixelFormat fmt;
+        bool fast;
+        s >> fmt >> fast;
+        return QArvDecoder::makeDecoder(fmt, size, fast);
+    } else if (type == "SwScale") {
+        static_assert(sizeof(AVPixelFormat) <= sizeof(qlonglong),
+                      "qlonglong not large enough to hold libav PixelFormat.");
+        qlonglong fmt;
+        int flags;
+        s >> fmt >> flags;
+        return QArvDecoder::makeSwScaleDecoder((AVPixelFormat)fmt, size, flags);
+    }
+    return NULL;
 }
 
 /*!
@@ -233,19 +243,22 @@ QArvDecoder* QArvDecoder::makeDecoder(QByteArray specification) {
 QArvDecoder* QArvDecoder::makeDecoder(ArvPixelFormat format,
                                       QSize size,
                                       bool fast) {
-  foreach (auto fmt, pluginFormats) {
-    if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
-  }
-  foreach (auto arvfmt, swScaleFormats.keys()) {
-    int swsFlags;
-    if (fast)
-      swsFlags = SWS_FAST_BILINEAR;
-    else
-      swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT;
-    if (arvfmt == format)
-      return new QArv::SwScaleDecoder(size, swScaleFormats[arvfmt], arvfmt, swsFlags);
-  }
-  return NULL;
+    foreach (auto fmt, pluginFormats) {
+        if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
+    }
+    foreach (auto arvfmt, swScaleFormats.keys()) {
+        int swsFlags;
+        if (fast)
+            swsFlags = SWS_FAST_BILINEAR;
+        else
+            swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT;
+        if (arvfmt == format)
+            return new QArv::SwScaleDecoder(size,
+                                            swScaleFormats[arvfmt],
+                                            arvfmt,
+                                            swsFlags);
+    }
+    return NULL;
 }
 
 /*!
@@ -254,23 +267,23 @@ QArvDecoder* QArvDecoder::makeDecoder(ArvPixelFormat format,
 QArvDecoder* QArvDecoder::makeSwScaleDecoder(AVPixelFormat fmt,
                                              QSize size,
                                              int swsFlags) {
-  if (swsFlags)
-    return new QArv::SwScaleDecoder(size, fmt, 0, swsFlags);
-  else
-    return new QArv::SwScaleDecoder(size, fmt, 0);
+    if (swsFlags)
+        return new QArv::SwScaleDecoder(size, fmt, 0, swsFlags);
+    else
+        return new QArv::SwScaleDecoder(size, fmt, 0);
 }
 
 static QMap<ArvPixelFormat, AVPixelFormat> initSwScaleFormats() {
-  QMap<ArvPixelFormat, AVPixelFormat> m;
+    QMap<ArvPixelFormat, AVPixelFormat> m;
 
-  m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = AV_PIX_FMT_UYVY422;
-  m[ARV_PIXEL_FORMAT_RGB_8_PACKED] = AV_PIX_FMT_RGB24;
-  m[ARV_PIXEL_FORMAT_BGR_8_PACKED] = AV_PIX_FMT_BGR24;
-  m[ARV_PIXEL_FORMAT_RGBA_8_PACKED] = AV_PIX_FMT_RGBA;
-  m[ARV_PIXEL_FORMAT_BGRA_8_PACKED] = AV_PIX_FMT_BGRA;
-  m[ARV_PIXEL_FORMAT_YUV_411_PACKED] = AV_PIX_FMT_UYYVYY411;
-  m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = AV_PIX_FMT_UYVY422;
-  m[ARV_PIXEL_FORMAT_YUV_422_YUYV_PACKED] = AV_PIX_FMT_YUYV422;
+    m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = AV_PIX_FMT_UYVY422;
+    m[ARV_PIXEL_FORMAT_RGB_8_PACKED] = AV_PIX_FMT_RGB24;
+    m[ARV_PIXEL_FORMAT_BGR_8_PACKED] = AV_PIX_FMT_BGR24;
+    m[ARV_PIXEL_FORMAT_RGBA_8_PACKED] = AV_PIX_FMT_RGBA;
+    m[ARV_PIXEL_FORMAT_BGRA_8_PACKED] = AV_PIX_FMT_BGRA;
+    m[ARV_PIXEL_FORMAT_YUV_411_PACKED] = AV_PIX_FMT_UYYVYY411;
+    m[ARV_PIXEL_FORMAT_YUV_422_PACKED] = AV_PIX_FMT_UYVY422;
+    m[ARV_PIXEL_FORMAT_YUV_422_YUYV_PACKED] = AV_PIX_FMT_YUYV422;
 
-  return m;
+    return m;
 }

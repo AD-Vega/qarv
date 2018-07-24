@@ -30,38 +30,39 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 }
 
-namespace QArv {
+namespace QArv
+{
 
 /*
  * This decoder works by first decoding into RGB48 using libswscale, and then
  * copying data into the appropriate container.
  */
-class SwScaleDecoder: public QArvDecoder {
+class SwScaleDecoder : public QArvDecoder {
 public:
-  SwScaleDecoder(QSize size,
-                 enum AVPixelFormat inputPixfmt,
-                 ArvPixelFormat arvPixFmt,
-                 int swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT);
-  virtual ~SwScaleDecoder();
-  void decode(QByteArray frame);
-  const cv::Mat getCvImage();
-  int cvType();
-  ArvPixelFormat pixelFormat();
-  QByteArray decoderSpecification();
-  enum AVPixelFormat swscalePixelFormat();
+    SwScaleDecoder(QSize size,
+                   enum AVPixelFormat inputPixfmt,
+                   ArvPixelFormat arvPixFmt,
+                   int swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT);
+    virtual ~SwScaleDecoder();
+    void decode(QByteArray frame);
+    const cv::Mat getCvImage();
+    int cvType();
+    ArvPixelFormat pixelFormat();
+    QByteArray decoderSpecification();
+    enum AVPixelFormat swscalePixelFormat();
 
 private:
-  bool OK;
-  QSize size;
-  struct SwsContext* ctx;
-  uint8_t* image_pointers[4];
-  int image_strides[4];
-  uint8_t bufferBytesPerPixel;
-  int cvMatType;
-  enum AVPixelFormat inputPixfmt, outputPixFmt;
-  struct AVPicture srcInfo;
-  ArvPixelFormat arvPixelFormat;
-  int flags;
+    bool OK;
+    QSize size;
+    struct SwsContext* ctx;
+    uint8_t* image_pointers[4];
+    int image_strides[4];
+    uint8_t bufferBytesPerPixel;
+    int cvMatType;
+    enum AVPixelFormat inputPixfmt, outputPixFmt;
+    struct AVPicture srcInfo;
+    ArvPixelFormat arvPixelFormat;
+    int flags;
 };
 
 }

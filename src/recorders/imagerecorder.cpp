@@ -22,50 +22,49 @@
 
 using namespace QArv;
 
-class ImageRecorder: public Recorder {
+class ImageRecorder : public Recorder {
 public:
-  ImageRecorder(QArvDecoder* decoder_, QString baseName_):
-    decoder(decoder_) {
-    if (!decoder || baseName_.isEmpty()) {
-      return;
-    }
-    baseName = baseName_ +
-                   (baseName_[baseName_.size() - 1] == '-' ? "" : "-")
+    ImageRecorder(QArvDecoder* decoder_, QString baseName_) :
+        decoder(decoder_) {
+        if (!decoder || baseName_.isEmpty()) {
+            return;
+        }
+        baseName = baseName_
+                   +(baseName_[baseName_.size() - 1] == '-' ? "" : "-")
                    + "%1.tiff";
-    OK = true;
-  }
+        OK = true;
+    }
 
-  bool isOK() { return OK; }
+    bool isOK() { return OK; }
 
-  bool recordsRaw() {
-    return false;
-  }
+    bool recordsRaw() {
+        return false;
+    }
 
-  QPair<qint64, qint64> fileSize() {
-    return qMakePair(currentSize, currentNumber);
-  }
+    QPair<qint64, qint64> fileSize() {
+        return qMakePair(currentSize, currentNumber);
+    }
 
-  void recordFrame(cv::Mat decoded) {
-    QString file = baseName.arg(currentNumber++, 19, 10, QChar('0'));
-    OK = cv::imwrite(file.toStdString(), decoded);
-    if (OK)
-        currentSize += QFileInfo(file).size();
-  }
+    void recordFrame(cv::Mat decoded) {
+        QString file = baseName.arg(currentNumber++, 19, 10, QChar('0'));
+        OK = cv::imwrite(file.toStdString(), decoded);
+        if (OK)
+            currentSize += QFileInfo(file).size();
+    }
 
 private:
-  bool OK = false;
-  QArvDecoder* decoder;
-  QString baseName;
-  qint64 currentSize = 0;
-  qint64 currentNumber = 0;
+    bool OK = false;
+    QArvDecoder* decoder;
+    QString baseName;
+    qint64 currentSize = 0;
+    qint64 currentNumber = 0;
 };
 
 Recorder* ImageFormat::makeRecorder(QArvDecoder* decoder,
                                     QString fileName,
                                     QSize frameSize,
                                     int framesPerSecond,
-                                    bool writeInfo)
-{
+                                    bool writeInfo) {
     return new ImageRecorder(decoder, fileName);
 }
 

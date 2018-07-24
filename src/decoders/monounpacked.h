@@ -23,59 +23,61 @@
 #include <type_traits>
 #include "api/qarvdecoder.h"
 
-namespace QArv {
+namespace QArv
+{
 
 template <typename InputType, uint bitsPerPixel, ArvPixelFormat pixFmt>
 class MonoUnpackedDecoder : public QArvDecoder {
 
-  static_assert(sizeof(InputType) <= sizeof(uint16_t),
-                "InputType too large.");
+    static_assert(sizeof(InputType) <= sizeof(uint16_t),
+                  "InputType too large.");
 
 private:
-  QSize size;
-  cv::Mat M;
-  static const bool OutputIsChar = bitsPerPixel <= 8;
-  typedef typename std::conditional<OutputIsChar, uint8_t, uint16_t>::type OutputType;
-  static const int cvMatType = OutputIsChar ? CV_8UC1 : CV_16UC1;
-  static const bool typeIsSigned = std::is_signed<InputType>::value;
-  static const uint zeroBits = 8*sizeof(OutputType) - bitsPerPixel;
-  static const uint signedShiftBits = bitsPerPixel - 1;
+    QSize size;
+    cv::Mat M;
+    static const bool OutputIsChar = bitsPerPixel <= 8;
+    typedef typename std::conditional<OutputIsChar, uint8_t,
+                                      uint16_t>::type OutputType;
+    static const int cvMatType = OutputIsChar ? CV_8UC1 : CV_16UC1;
+    static const bool typeIsSigned = std::is_signed<InputType>::value;
+    static const uint zeroBits = 8*sizeof(OutputType) - bitsPerPixel;
+    static const uint signedShiftBits = bitsPerPixel - 1;
 
 public:
-  MonoUnpackedDecoder(QSize size_) :
-    size(size_), M(size_.height(), size_.width(), cvMatType) {}
+    MonoUnpackedDecoder(QSize size_) :
+        size(size_), M(size_.height(), size_.width(), cvMatType) {}
 
-  ArvPixelFormat pixelFormat() { return pixFmt; }
+    ArvPixelFormat pixelFormat() { return pixFmt; }
 
-  QByteArray decoderSpecification() {
-    QByteArray b;
-    QDataStream s(&b, QIODevice::WriteOnly);
-    s << QString("Aravis") << size << pixFmt << false;
-    return b;
-  }
-
-  int cvType() { return cvMatType; };
-
-  void decode(QByteArray frame) {
-    const InputType* dta =
-      reinterpret_cast<const InputType*>(frame.constData());
-    const int h = size.height(), w = size.width();
-    for (int i = 0; i < h; i++) {
-      auto line = M.ptr<OutputType>(i);
-      for (int j = 0; j < w; j++) {
-        OutputType tmp;
-        if (typeIsSigned)
-          tmp = dta[i * w + j] + (1<<signedShiftBits);
-        else
-          tmp = dta[i * w + j];
-        line[j] = tmp << (zeroBits);
-      }
+    QByteArray decoderSpecification() {
+        QByteArray b;
+        QDataStream s(&b, QIODevice::WriteOnly);
+        s << QString("Aravis") << size << pixFmt << false;
+        return b;
     }
-  }
 
-  const cv::Mat getCvImage() {
-    return M;
-  }
+    int cvType() { return cvMatType; };
+
+    void decode(QByteArray frame) {
+        const InputType* dta =
+            reinterpret_cast<const InputType*>(frame.constData());
+        const int h = size.height(), w = size.width();
+        for (int i = 0; i < h; i++) {
+            auto line = M.ptr<OutputType>(i);
+            for (int j = 0; j < w; j++) {
+                OutputType tmp;
+                if (typeIsSigned)
+                    tmp = dta[i * w + j] + (1<<signedShiftBits);
+                else
+                    tmp = dta[i * w + j];
+                line[j] = tmp << (zeroBits);
+            }
+        }
+    }
+
+    const cv::Mat getCvImage() {
+        return M;
+    }
 };
 
 }

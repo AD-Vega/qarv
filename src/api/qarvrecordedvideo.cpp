@@ -30,121 +30,118 @@ using namespace QArv;
 
 // Make sure settings format matches rawrecorders.cpp!
 
-QArvRecordedVideo::QArvRecordedVideo(const QString& filename):
- fps(0), uncompressed(true), arvPixfmt(0), swscalePixfmt(AV_PIX_FMT_NONE),
- frameBytes_(0) {
-  QSettings s(filename, QSettings::Format::IniFormat);
-  isOK = s.status() == QSettings::Status::NoError;
-  if (!isOK) {
-    return;
-    logMessage() << "Invalid description file.";
-  }
-  s.beginGroup("qarv_raw_video_description");
-  QVariant v = s.value("description_version");
-  isOK = v.toString() == "0.1";
-  if (!isOK) {
-    return;
-    logMessage() << "Invalid video description file version.";
-  }
+QArvRecordedVideo::QArvRecordedVideo(const QString& filename) :
+    fps(0), uncompressed(true), arvPixfmt(0), swscalePixfmt(AV_PIX_FMT_NONE),
+    frameBytes_(0) {
+    QSettings s(filename, QSettings::Format::IniFormat);
+    isOK = s.status() == QSettings::Status::NoError;
+    if (!isOK) {
+        return;
+        logMessage() << "Invalid description file.";
+    }
+    s.beginGroup("qarv_raw_video_description");
+    QVariant v = s.value("description_version");
+    isOK = v.toString() == "0.1";
+    if (!isOK) {
+        return;
+        logMessage() << "Invalid video description file version.";
+    }
 
-  v = s.value("file_name");
-  QFileInfo finfo(filename);
-  QString dirname = finfo.absoluteDir().path();
-  videofile.setFileName(dirname + "/" + v.toString());
-  isOK = videofile.open(QIODevice::ReadOnly);
-  uncompressed = true;
-  if (!isOK) {
-    // TODO: try opening compressed versions
-    logMessage() << "Unable to open video file" << v.toString();
-    return;
-  }
+    v = s.value("file_name");
+    QFileInfo finfo(filename);
+    QString dirname = finfo.absoluteDir().path();
+    videofile.setFileName(dirname + "/" + v.toString());
+    isOK = videofile.open(QIODevice::ReadOnly);
+    uncompressed = true;
+    if (!isOK) {
+        // TODO: try opening compressed versions
+        logMessage() << "Unable to open video file" << v.toString();
+        return;
+    }
 
-  v = s.value("frame_size");
-  fsize = v.toSize();
-  v = s.value("nominal_fps");
-  fps = v.toInt();
-  v = s.value("encoding_type");
-  auto type = v.toString();
+    v = s.value("frame_size");
+    fsize = v.toSize();
+    v = s.value("nominal_fps");
+    fps = v.toInt();
+    v = s.value("encoding_type");
+    auto type = v.toString();
 
-  if (type == "aravis") {
-    v = s.value("arv_pixel_format");
-    arvPixfmt = v.toString().toULongLong(NULL, 16);
-  } else if (type == "libavutil") {
-    v = s.value("libavutil_pixel_format");
-    swscalePixfmt = (enum AVPixelFormat)v.toLongLong();
-  } else {
-    logMessage() << "Unable to determine decoder type.";
-    isOK = false;
-    return;
-  }
+    if (type == "aravis") {
+        v = s.value("arv_pixel_format");
+        arvPixfmt = v.toString().toULongLong(NULL, 16);
+    } else if (type == "libavutil") {
+        v = s.value("libavutil_pixel_format");
+        swscalePixfmt = (enum AVPixelFormat)v.toLongLong();
+    } else {
+        logMessage() << "Unable to determine decoder type.";
+        isOK = false;
+        return;
+    }
 
-  v = s.value("frame_bytes");
-  frameBytes_ = v.toInt();
-  if (!frameBytes_) {
-    isOK = false;
-    logMessage() << "Unable to read frame bytesize.";
-    return;
-  }
+    v = s.value("frame_bytes");
+    frameBytes_ = v.toInt();
+    if (!frameBytes_) {
+        isOK = false;
+        logMessage() << "Unable to read frame bytesize.";
+        return;
+    }
 
-  isOK = true;
+    isOK = true;
 }
 
 bool QArvRecordedVideo::status() {
-  return isOK && (videofile.error() == QFile::NoError);
+    return isOK && (videofile.error() == QFile::NoError);
 }
 
 QFile::FileError QArvRecordedVideo::error() {
-  return videofile.error();
+    return videofile.error();
 }
 
-QString QArvRecordedVideo::errorString()
-{
-  return videofile.errorString();
+QString QArvRecordedVideo::errorString() {
+    return videofile.errorString();
 }
 
-bool QArvRecordedVideo::atEnd()
-{
-  return videofile.atEnd();
+bool QArvRecordedVideo::atEnd() {
+    return videofile.atEnd();
 }
 
 bool QArvRecordedVideo::isSeekable() {
-  return uncompressed;
+    return uncompressed;
 }
 
 int QArvRecordedVideo::framerate() {
-  return fps;
+    return fps;
 }
 
 QSize QArvRecordedVideo::frameSize() {
-  return fsize;
+    return fsize;
 }
 
-uint QArvRecordedVideo::frameBytes()
-{
-  return frameBytes_;
+uint QArvRecordedVideo::frameBytes() {
+    return frameBytes_;
 }
 
 QArvDecoder* QArvRecordedVideo::makeDecoder() {
-  if (!isOK) return NULL;
-  if (arvPixfmt != 0) {
-    return QArvDecoder::makeDecoder(arvPixfmt, fsize);
-  } else if (swscalePixfmt != AV_PIX_FMT_NONE) {
-    return QArvDecoder::makeSwScaleDecoder(swscalePixfmt, fsize);
-  } else {
-    isOK = false;
-    logMessage() << "Unknown decoder type.";
-    return NULL;
-  }
+    if (!isOK) return NULL;
+    if (arvPixfmt != 0) {
+        return QArvDecoder::makeDecoder(arvPixfmt, fsize);
+    } else if (swscalePixfmt != AV_PIX_FMT_NONE) {
+        return QArvDecoder::makeSwScaleDecoder(swscalePixfmt, fsize);
+    } else {
+        isOK = false;
+        logMessage() << "Unknown decoder type.";
+        return NULL;
+    }
 }
 
 bool QArvRecordedVideo::seek(uint frame) {
-  return videofile.seek(frame*frameBytes_);
+    return videofile.seek(frame*frameBytes_);
 }
 
 QByteArray QArvRecordedVideo::read() {
-  return videofile.read(frameBytes_);
+    return videofile.read(frameBytes_);
 }
 
 uint QArvRecordedVideo::numberOfFrames() {
-  return videofile.size() / frameBytes_;
+    return videofile.size() / frameBytes_;
 }

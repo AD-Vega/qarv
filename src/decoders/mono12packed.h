@@ -25,31 +25,32 @@ extern "C" {
   #include <arv.h>
 }
 
-namespace QArv {
+namespace QArv
+{
 
 class Mono12PackedDecoder : public QArvDecoder {
 public:
-  Mono12PackedDecoder(QSize size_);
-  void decode(QByteArray frame);
-  const cv::Mat getCvImage();
-  int cvType() { return CV_16UC1; }
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
-  QByteArray decoderSpecification();
+    Mono12PackedDecoder(QSize size_);
+    void decode(QByteArray frame);
+    const cv::Mat getCvImage();
+    int cvType() { return CV_16UC1; }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
+    QByteArray decoderSpecification();
 
 private:
-  QSize size;
-  cv::Mat M;
+    QSize size;
+    cv::Mat M;
 };
 
 class Mono12PackedFormat : public QObject, public QArvPixelFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArvPixelFormat)
+    Q_OBJECT
+    Q_INTERFACES(QArvPixelFormat)
 
 public:
-  ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
-  QArvDecoder* makeDecoder(QSize size) {
-    return new Mono12PackedDecoder(size);
-  }
+    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
+    QArvDecoder* makeDecoder(QSize size) {
+        return new Mono12PackedDecoder(size);
+    }
 };
 
 }

@@ -21,21 +21,22 @@
 
 #include "recorders/recorder.h"
 
-namespace QArv {
+namespace QArv
+{
 
-class ImageFormat: public QObject, public OutputFormat {
-  Q_OBJECT
-  Q_INTERFACES(QArv::OutputFormat)
+class ImageFormat : public QObject, public OutputFormat {
+    Q_OBJECT
+    Q_INTERFACES(QArv::OutputFormat)
 
 public:
-  QString name() { return "TIFF images"; }
-  bool canAppend() { return true; }
-  bool canWriteInfo() { return false; }
-  Recorder* makeRecorder(QArvDecoder* decoder,
-                         QString fileName,
-                         QSize frameSize,
-                         int framesPerSecond,
-                         bool writeInfo);
+    QString name() { return "TIFF images"; }
+    bool canAppend() { return true; }
+    bool canWriteInfo() { return false; }
+    Recorder* makeRecorder(QArvDecoder* decoder,
+                           QString fileName,
+                           QSize frameSize,
+                           int framesPerSecond,
+                           bool writeInfo);
 };
 
 }

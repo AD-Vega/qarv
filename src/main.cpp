@@ -23,15 +23,15 @@
 #include "api/qarvgui.h"
 
 int main(int argc, char** argv) {
-  QApplication a(argc, argv);
-  QArvCamera::init();
-  QArvGui::init(&a);
+    QApplication a(argc, argv);
+    QArvCamera::init();
+    QArvGui::init(&a);
 
-  QCoreApplication::setOrganizationDomain("ad-vega.si");
-  QCoreApplication::setOrganizationName("AD Vega");
-  QCoreApplication::setApplicationName("QArv");
+    QCoreApplication::setOrganizationDomain("ad-vega.si");
+    QCoreApplication::setOrganizationName("AD Vega");
+    QCoreApplication::setApplicationName("QArv");
 
-  QArvGui g;
-  g.show();
-  return a.exec();
+    QArvGui g;
+    g.show();
+    return a.exec();
 }

@@ -37,24 +37,26 @@ extern "C" {
  */
 class QArvCamera::QArvFeatureTree {
 public:
-  QArvFeatureTree(QArvFeatureTree* parent = NULL, const char* feature = NULL);
-  ~QArvFeatureTree();
-  QArvFeatureTree* parent();
-  QList<QArvFeatureTree*> children();
-  const char* feature();
-  int row();
-  static QArvFeatureTree* createFeaturetree(ArvGc* cam);
-  static void recursiveSerialization(QTextStream& out, QArvCamera* camera,
-                                     QArvFeatureTree* tree);
-  static void freeFeaturetree(QArvFeatureTree* tree);
+    QArvFeatureTree(QArvFeatureTree* parent = NULL, const char* feature = NULL);
+    ~QArvFeatureTree();
+    QArvFeatureTree* parent();
+    QList<QArvFeatureTree*> children();
+    const char* feature();
+    int row();
+    static QArvFeatureTree* createFeaturetree(ArvGc* cam);
+    static void recursiveSerialization(QTextStream& out, QArvCamera* camera,
+                                       QArvFeatureTree* tree);
+    static void freeFeaturetree(QArvFeatureTree* tree);
 
 private:
-  void addChild(QArvFeatureTree* child);
-  void removeChild(QArvFeatureTree* child);
-  static void recursiveMerge(ArvGc* cam, QArvFeatureTree* tree, ArvGcNode* node);
-  QArvFeatureTree* parent_;
-  QList<QArvFeatureTree*> children_;
-  const char* feature_;
+    void addChild(QArvFeatureTree* child);
+    void removeChild(QArvFeatureTree* child);
+    static void recursiveMerge(ArvGc* cam,
+                               QArvFeatureTree* tree,
+                               ArvGcNode* node);
+    QArvFeatureTree* parent_;
+    QList<QArvFeatureTree*> children_;
+    const char* feature_;
 };
 
 #endif

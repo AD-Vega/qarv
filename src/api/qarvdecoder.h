@@ -44,79 +44,80 @@ typedef quint32 ArvPixelFormat;
  */
 class QArvDecoder {
 public:
-  virtual ~QArvDecoder() {};
+    virtual ~QArvDecoder() {};
 
-  //! Decodes the given frame.
-  virtual void decode(QByteArray frame) = 0;
+    //! Decodes the given frame.
+    virtual void decode(QByteArray frame) = 0;
 
-  /*!
-   * Returns the decoded frame as an OpenCv matrix. See cvType() for possible
-   * types. The matrix is constant to avoid copying. It references data
-   * internal to the decoder which is overwritten when decode() is called,
-   * so make sure you copy the matrix or otherwise finish using it before
-   * decoding another frame.
-   */
-  virtual const cv::Mat getCvImage() = 0;
+    /*!
+     * Returns the decoded frame as an OpenCv matrix. See cvType() for possible
+     * types. The matrix is constant to avoid copying. It references data
+     * internal to the decoder which is overwritten when decode() is called,
+     * so make sure you copy the matrix or otherwise finish using it before
+     * decoding another frame.
+     */
+    virtual const cv::Mat getCvImage() = 0;
 
-  /*!
-   * Returns the type of cv::Mat returned by getCvImage(). The decoder chooses
-   * the most sensible type given the number of significant bits in input data.
-   * Possible types are either CV_8U or CV_16U, with 1 or 3 channels.
-   */
-  virtual int cvType() = 0;
+    /*!
+     * Returns the type of cv::Mat returned by getCvImage(). The decoder chooses
+     * the most sensible type given the number of significant bits in input data.
+     * Possible types are either CV_8U or CV_16U, with 1 or 3 channels.
+     */
+    virtual int cvType() = 0;
 
-  //! Returns the pixel format supported by this decoder.
-  virtual ArvPixelFormat pixelFormat() = 0;
+    //! Returns the pixel format supported by this decoder.
+    virtual ArvPixelFormat pixelFormat() = 0;
 
-  //! Returns an opaque token that can be used to create another instance of this decoder.
-  virtual QByteArray decoderSpecification() = 0;
+    //! Returns an opaque token that can be used to create another instance of this decoder.
+    virtual QByteArray decoderSpecification() = 0;
 
-  /*!
-   * Convenience function to convert an OpenCV image to QImage. Limited to
-   * formats used by QArv (see cvType()). Returns Format_ARGB32_Premultiplied,
-   * which is fast to render.
-   */
-  static void CV2QImage(const cv::Mat& image, QImage& out);
-  static QImage CV2QImage(const cv::Mat& image);
+    /*!
+     * Convenience function to convert an OpenCV image to QImage. Limited to
+     * formats used by QArv (see cvType()). Returns Format_ARGB32_Premultiplied,
+     * which is fast to render.
+     */
+    static void CV2QImage(const cv::Mat& image, QImage& out);
+    static QImage CV2QImage(const cv::Mat& image);
 
-  /*!
-   * Alternative version of CV2QImage() which returns either Format_RGB888
-   * or Format_Indexed8, which may be easier to use for direct pixel
-   * manipulation, but are slow to render. Not recommended, for manipulation
-   * cv::Mat should be used instead.
-   */
-  static void CV2QImage_RGB24(const cv::Mat& image, QImage& out);
-  static QImage CV2QImage_RGB24(const cv::Mat& image);
+    /*!
+     * Alternative version of CV2QImage() which returns either Format_RGB888
+     * or Format_Indexed8, which may be easier to use for direct pixel
+     * manipulation, but are slow to render. Not recommended, for manipulation
+     * cv::Mat should be used instead.
+     */
+    static void CV2QImage_RGB24(const cv::Mat& image, QImage& out);
+    static QImage CV2QImage_RGB24(const cv::Mat& image);
 
-  //! Uses the token returned by Decoder::decoderSpecification() to create another instance.
-  static QArvDecoder* makeDecoder(QByteArray specification);
+    //! Uses the token returned by Decoder::decoderSpecification() to create another instance.
+    static QArvDecoder* makeDecoder(QByteArray specification);
 
-  /*!
-   * Creates a decoder for the requested format and frame size.
-   * Some decoders allow using a faster algorithm for decoding colors,
-   * which can be (but is not neccessarily) less precise.
-   */
-  static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size, bool fast = true);
+    /*!
+     * Creates a decoder for the requested format and frame size.
+     * Some decoders allow using a faster algorithm for decoding colors,
+     * which can be (but is not neccessarily) less precise.
+     */
+    static QArvDecoder* makeDecoder(ArvPixelFormat, QSize size,
+                                    bool fast = true);
 
-  //! Convenience function to create a libswscale decoder, not limited to Aravis pixel formats.
-  static QArvDecoder* makeSwScaleDecoder(enum AVPixelFormat fmt,
-                                         QSize size,
-                                         int swsFlags = 0);
+    //! Convenience function to create a libswscale decoder, not limited to Aravis pixel formats.
+    static QArvDecoder* makeSwScaleDecoder(enum AVPixelFormat fmt,
+                                           QSize size,
+                                           int swsFlags = 0);
 };
 
 //! Interface for the plugin to generate a decoder for a particular format.
 class QArvPixelFormat {
 public:
-  virtual ~QArvPixelFormat() {};
+    virtual ~QArvPixelFormat() {};
 
-  //! Returns the Aravis' name for the pixel format supported by this plugin.
-  virtual ArvPixelFormat pixelFormat() = 0;
+    //! Returns the Aravis' name for the pixel format supported by this plugin.
+    virtual ArvPixelFormat pixelFormat() = 0;
 
-  //! Instantiates a decoder using this plugin.
-  virtual QArvDecoder* makeDecoder(QSize size) = 0;
+    //! Instantiates a decoder using this plugin.
+    virtual QArvDecoder* makeDecoder(QSize size) = 0;
 
-  //! Returns the list of supported pixel formats.
-  static QList<ArvPixelFormat> supportedFormats();
+    //! Returns the list of supported pixel formats.
+    static QList<ArvPixelFormat> supportedFormats();
 };
 
 Q_DECLARE_INTERFACE(QArvPixelFormat,

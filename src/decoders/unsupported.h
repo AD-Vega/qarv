@@ -31,23 +31,24 @@ extern "C" {
  * QArvMainWindow when necessary.
  */
 
-namespace QArv {
+namespace QArv
+{
 
 class Unsupported : public QArvDecoder {
 public:
-  Unsupported(ArvPixelFormat type_, QSize size):
-    type(type_), redImage(size.height(), size.width(), CV_8UC3) {
-    redImage = cv::Scalar(0, 0, 255);
-  }
-  void decode(QByteArray frame) {}
-  const cv::Mat getCvImage() { return redImage; }
-  int cvType() { return CV_USRTYPE1; }
-  ArvPixelFormat pixelFormat() { return type; }
-  QByteArray decoderSpecification() { return QByteArray{}; }
+    Unsupported(ArvPixelFormat type_, QSize size) :
+        type(type_), redImage(size.height(), size.width(), CV_8UC3) {
+        redImage = cv::Scalar(0, 0, 255);
+    }
+    void decode(QByteArray frame) {}
+    const cv::Mat getCvImage() { return redImage; }
+    int cvType() { return CV_USRTYPE1; }
+    ArvPixelFormat pixelFormat() { return type; }
+    QByteArray decoderSpecification() { return QByteArray{}; }
 
 private:
-  ArvPixelFormat type;
-  cv::Mat redImage;
+    ArvPixelFormat type;
+    cv::Mat redImage;
 };
 
 }

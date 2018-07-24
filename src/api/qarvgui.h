@@ -65,58 +65,58 @@ class QArvGuiExtension;
  * etc.
  */
 class QArvGui : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  QArvGui(QWidget* parent = 0, bool standalone = true);
-  ~QArvGui();
+    QArvGui(QWidget* parent = 0, bool standalone = true);
+    ~QArvGui();
 
-  //! Does static initialization.
-  static void init(QApplication* a);
+    //! Does static initialization.
+    static void init(QApplication* a);
 
-  //! Permanently enable the frameReady() signal and disable some GUI options.
-  void forceRecording();
+    //! Permanently enable the frameReady() signal and disable some GUI options.
+    void forceRecording();
 
-  //! Returns the camera object.
-  QArvCamera* camera();
+    //! Returns the camera object.
+    QArvCamera* camera();
 
-  //! Returns the underlying QMainWindow.
-  QMainWindow* mainWindow();
+    //! Returns the underlying QMainWindow.
+    QMainWindow* mainWindow();
 
 signals:
-  //! Emitted when a new frame arrives from the camera.
-  /*!
-   * If the QArvGui will not be used to display frames, connecting
-   * to this signal and using QArvDecoder is more efficient.
-   *
-   * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
-   * \param rawAravisBuffer See QArvCamera::getFrame().
-   */
-  void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
+    //! Emitted when a new frame arrives from the camera.
+    /*!
+     * If the QArvGui will not be used to display frames, connecting
+     * to this signal and using QArvDecoder is more efficient.
+     *
+     * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
+     * \param rawAravisBuffer See QArvCamera::getFrame().
+     */
+    void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
 
-  //! Emitted when a new frame arrives from the processing thread.
-  /*!
-   * If the QArvGui is used to display frames, it will need to decode
-   * and (possibly) process them. In that case, connecting to this signal
-   * is more efficient than using the raw frame and decoding it again.
-   *
-   * \param processed The frame as seen in the GUI video display. It is not copied, use cv::Mat::clone() if necessary.
-   */
-  void frameReady(cv::Mat processed);
+    //! Emitted when a new frame arrives from the processing thread.
+    /*!
+     * If the QArvGui is used to display frames, it will need to decode
+     * and (possibly) process them. In that case, connecting to this signal
+     * is more efficient than using the raw frame and decoding it again.
+     *
+     * \param processed The frame as seen in the GUI video display. It is not copied, use cv::Mat::clone() if necessary.
+     */
+    void frameReady(cv::Mat processed);
 
-  //! Emmited when the Record button is toggled.
-  void recordingToggled(bool enabled);
+    //! Emmited when the Record button is toggled.
+    void recordingToggled(bool enabled);
 
 private slots:
-  void signalForwarding(bool enable);
+    void signalForwarding(bool enable);
 
 protected:
-  void closeEvent(QCloseEvent* event);
+    void closeEvent(QCloseEvent* event);
 
 private:
-  QArvGuiExtension* ext;
+    QArvGuiExtension* ext;
 
-  friend class QArvGuiExtension;
+    friend class QArvGuiExtension;
 };
 
 #pragma GCC visibility pop
