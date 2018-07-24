@@ -37,10 +37,11 @@ endmacro(set_prefixed)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5 REQUIRED COMPONENTS
-             Core Gui Widgets OpenGL Network Svg LinguistTools)
+             Core Gui Widgets OpenGL Network Svg LinguistTools
+             Concurrent)
 
 set(QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
-                 Qt5::Network Qt5::Svg Qt5::LinguistTools)
+                 Qt5::Network Qt5::Svg Qt5::Concurrent)
 
 pkg_search_module(ARAVIS REQUIRED aravis-0.6 aravis-0.4 aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
