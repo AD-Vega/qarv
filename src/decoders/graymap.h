@@ -1,5 +1,5 @@
 #ifndef GRAYMAP_H
-#define GRAYMAP_h
+#define GRAYMAP_H
 
 #include <QVector>
 #include <QRgb>
