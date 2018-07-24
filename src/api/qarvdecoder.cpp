@@ -249,7 +249,7 @@ QArvDecoder* QArvDecoder::makeDecoder(ArvPixelFormat format,
     }
     for (auto fmtI = swScaleFormats.keyBegin(), end = swScaleFormats.keyEnd();
          fmtI != end; ++fmtI) {
-        const int arvfmt = *fmtI;
+        const uint arvfmt = *fmtI;
         int swsFlags;
         if (fast)
             swsFlags = SWS_FAST_BILINEAR;
