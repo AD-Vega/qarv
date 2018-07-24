@@ -44,6 +44,7 @@ private:
 class LevelsPlugin : public QObject, public ImageFilterPlugin {
     Q_OBJECT
     Q_INTERFACES(QArv::ImageFilterPlugin)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.LevelsFilter")
 
 public:
     QString name();

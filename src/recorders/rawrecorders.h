@@ -28,6 +28,7 @@ namespace QArv
 class RawUndecodedFormat : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawUndecodedFormat")
 
 public:
     QString name() { return "Raw undecoded"; }
@@ -43,6 +44,7 @@ public:
 class RawDecoded8Format : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawDecoded8Format")
 
 public:
     QString name() { return "Raw decoded (8-bit)"; }
@@ -58,6 +60,7 @@ public:
 class RawDecoded16Format : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawDecoded16Format")
 
 public:
     QString name() { return "Raw decoded (16-bit)"; }

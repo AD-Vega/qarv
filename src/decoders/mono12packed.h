@@ -45,6 +45,7 @@ private:
 class Mono12PackedFormat : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono12PackedFormat")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }

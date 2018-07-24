@@ -227,6 +227,7 @@ private:
 class BayerGR8 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGR8")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GR_8; }
@@ -238,6 +239,7 @@ public:
 class BayerRG8 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG8")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_8; }
@@ -249,6 +251,7 @@ public:
 class BayerGB8 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGB8")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GB_8; }
@@ -260,6 +263,7 @@ public:
 class BayerBG8 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerBG8")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_BG_8; }
@@ -273,6 +277,7 @@ public:
 class BayerGR10 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGR10")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GR_10; }
@@ -284,6 +289,7 @@ public:
 class BayerRG10 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG10")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_10; }
@@ -295,6 +301,7 @@ public:
 class BayerGB10 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGB10")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GB_10; }
@@ -306,6 +313,7 @@ public:
 class BayerBG10 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerBG10")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_BG_10; }
@@ -319,6 +327,7 @@ public:
 class BayerGR12 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGR12")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GR_12; }
@@ -330,6 +339,7 @@ public:
 class BayerRG12 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG12")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_12; }
@@ -341,6 +351,7 @@ public:
 class BayerGB12 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGB12")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GB_12; }
@@ -352,6 +363,7 @@ public:
 class BayerBG12 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerBG12")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_BG_12; }
@@ -367,6 +379,7 @@ public:
 class BayerGR12_PACKED : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGR12_PACKED")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GR_12_PACKED; }
@@ -382,6 +395,7 @@ public:
 class BayerRG12_PACKED : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG12_PACKED")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_12_PACKED; }
@@ -397,6 +411,7 @@ public:
 class BayerGB12_PACKED : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGB12_PACKED")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GB_12_PACKED; }
@@ -410,6 +425,7 @@ public:
 class BayerBG12_PACKED : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerBG12_PACKED")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_BG_12_PACKED; }
@@ -425,6 +441,7 @@ public:
 class BayerGR16 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGR16")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GR_16; }
@@ -436,6 +453,7 @@ public:
 class BayerRG16 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG16")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_16; }
@@ -447,6 +465,7 @@ public:
 class BayerGB16 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerGB16")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_GB_16; }
@@ -458,6 +477,7 @@ public:
 class BayerBG16 : public QObject, public QArvPixelFormat {
     Q_OBJECT
     Q_INTERFACES(QArvPixelFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerBG16")
 
 public:
     ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_BG_16; }

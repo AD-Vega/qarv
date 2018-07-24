@@ -19,20 +19,9 @@
 
 #include "decoders/monounpackeddecoders.h"
 
-Q_EXPORT_STATIC_PLUGIN2(Mono8, QArv::Mono8Format)
 Q_IMPORT_PLUGIN(Mono8)
-
-Q_EXPORT_STATIC_PLUGIN2(Mono8Signed, QArv::Mono8SignedFormat)
 Q_IMPORT_PLUGIN(Mono8Signed)
-
-Q_EXPORT_STATIC_PLUGIN2(Mono10, QArv::Mono10Format)
 Q_IMPORT_PLUGIN(Mono10)
-
-Q_EXPORT_STATIC_PLUGIN2(Mono12, QArv::Mono12Format)
 Q_IMPORT_PLUGIN(Mono12)
-
-Q_EXPORT_STATIC_PLUGIN2(Mono14, QArv::Mono14Format)
 Q_IMPORT_PLUGIN(Mono14)
-
-Q_EXPORT_STATIC_PLUGIN2(Mono16, QArv::Mono16Format)
 Q_IMPORT_PLUGIN(Mono16)

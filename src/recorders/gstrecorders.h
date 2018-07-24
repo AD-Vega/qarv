@@ -28,6 +28,7 @@ namespace QArv
 class HuffyuvAviFormat : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.HuffyuvAviFormat")
 
 public:
     QString name() { return "huffyuv AVI"; }

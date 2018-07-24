@@ -27,6 +27,7 @@ namespace QArv
 class ImageFormat : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)
+    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.ImageFormat")
 
 public:
     QString name() { return "TIFF images"; }

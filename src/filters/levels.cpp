@@ -150,5 +150,4 @@ double LevelsSettingsWidget::intToDouble(int val) {
     return val / 1000.0;
 }
 
-Q_EXPORT_PLUGIN2(LevelsPlugin, QArv::LevelsPlugin)
 Q_IMPORT_PLUGIN(LevelsPlugin)

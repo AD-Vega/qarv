@@ -33,5 +33,4 @@ Recorder* HuffyuvAviFormat::makeRecorder(QArvDecoder* decoder,
                            framesPerSecond, writeInfo);
 }
 
-Q_EXPORT_PLUGIN2(HuffyuvAvi, QArv::HuffyuvAviFormat)
 Q_IMPORT_PLUGIN(HuffyuvAvi)
