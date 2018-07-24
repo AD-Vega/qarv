@@ -73,7 +73,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
     // Setup theme icons if available.
     bool usingFallbackIcons = false;
-    QMap<QAbstractButton*, QString> icons;
+    QHash<QAbstractButton*, QString> icons;
     icons[unzoomButton] = "zoom-original";
     icons[playButton] = "media-playback-start";
     icons[refreshCamerasButton] = "view-refresh";
@@ -89,7 +89,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
             usingFallbackIcons = true;
         }
     }
-    QMap<QAction*, QString> aicons;
+    QHash<QAction*, QString> aicons;
     aicons[showVideoAction] = "video-display";
     aicons[recordAction] = "media-record";
     aicons[closeFileAction] = "media-playback-stop";
@@ -668,8 +668,9 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
             stopRecordingFrames,
             stopRecordingTime,
         };
-        for (auto b: stopRecordingRadios->buttons())
+        foreach (auto b, stopRecordingRadios->buttons()) {
             toDisableWhenRecording << b;
+        }
     }
 
     bool freshStart = (checked && !recorder) || (recorder && !recorder->isOK());
@@ -1206,8 +1207,8 @@ void QArvMainWindow::saveProgramSettings() {
     QSettings settings;
 
     // main window geometry and state
-    for (QDockWidget* wgt:
-         findChildren<QDockWidget*>("Filter settings widget")) {
+    foreach (QDockWidget* wgt,
+             findChildren<QDockWidget*>("Filter settings widget")) {
         wgt->close();
     }
     settings.setValue("qarv_mainwindow/geometry", saveGeometry());

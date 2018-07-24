@@ -31,7 +31,7 @@ using namespace QArv;
 
 // Make sure settings format matches qarvrecordedvideo.cpp!
 
-static const QString descExt(".qarv");
+Q_GLOBAL_STATIC_WITH_ARGS(QString, descExt, (QLatin1String(".qarv")))
 
 static void initDescfile(QSettings& s, QSize size, int FPS) {
     s.beginGroup("qarv_raw_video_description");
@@ -54,7 +54,7 @@ public:
         file(fileName), decoder(decoder_), bytesizeWritten(false) {
         file.open(QIODevice::WriteOnly);
         if (isOK() && writeInfo) {
-            QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+            QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
             initDescfile(s, size, FPS);
             s.setValue("encoding_type", "aravis");
             auto pxfmt = QString::number(decoder->pixelFormat(), 16);
@@ -75,7 +75,7 @@ public:
             file.write(raw);
             if (!bytesizeWritten) {
                 bytesizeWritten = true;
-                QSettings s(file.fileName() + descExt,
+                QSettings s(file.fileName() + *descExt,
                             QSettings::Format::IniFormat);
                 s.beginGroup("qarv_raw_video_description");
                 s.setValue("frame_bytes", raw.size());
@@ -132,7 +132,7 @@ public:
                 return;
             }
             if (writeInfo) {
-                QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+                QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
                 initDescfile(s, size, FPS);
                 s.setValue("encoding_type", "libavutil");
                 s.setValue("libavutil_pixel_format", fmt);
@@ -215,7 +215,7 @@ public:
                 return;
             }
             if (writeInfo) {
-                QSettings s(fileName + descExt, QSettings::Format::IniFormat);
+                QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
                 initDescfile(s, size, FPS);
                 s.setValue("encoding_type", "libavutil");
                 s.setValue("libavutil_pixel_format", fmt);

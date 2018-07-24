@@ -143,7 +143,7 @@ private:
     QTime recordingTime;
     int recordingTimeCumulative;
     QStandardItemModel postprocChain;
-    QList<ImageFilterPtr> postprocChainAsList;
+    QVector<ImageFilterPtr> postprocChainAsList;
     Workthread* workthread;
 
     friend class ::QArvGui;

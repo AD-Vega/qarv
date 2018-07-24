@@ -61,7 +61,7 @@ class Cooker : public QObject {
         bool imageTransform_invert = false;
         int imageTransform_flip = 0;
         int imageTransform_rot = 0;
-        QList<ImageFilterPtr> filterChain;
+        QVector<ImageFilterPtr> filterChain;
         QArvDecoder* decoder = nullptr;
         QFile* timestampFile = nullptr;
         Recorder* recorder = nullptr;
@@ -81,7 +81,7 @@ private slots:
                            int imageTransform_flip,
                            int imageTransform_rot);
 
-    void setFilterChain(QList<QArv::ImageFilterPtr> filterChain);
+    void setFilterChain(QVector<QArv::ImageFilterPtr> filterChain);
 
     void setRecorder(QArv::Recorder* recorder,
                      QFile* timestampFile,
@@ -154,7 +154,7 @@ public:
                            int imageTransform_flip,
                            int imageTransform_rot);
 
-    void setFilterChain(QList<ImageFilterPtr> filterChain);
+    void setFilterChain(QVector<ImageFilterPtr> filterChain);
 
     void renderFrame(QImage* destinationImage,
                      bool markClipped = false,

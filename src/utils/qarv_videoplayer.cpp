@@ -29,7 +29,7 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
                                  QWidget* parent,
                                  Qt::WindowFlags f) : QWidget(parent, f) {
     setupUi(this);
-    QMap<QAbstractButton*, QString> icons;
+    QHash<QAbstractButton*, QString> icons;
     icons[openButton] = "document-open";
     icons[playButton] = "media-playback-start";
     icons[transcodeButton] = "media-record";
@@ -247,7 +247,7 @@ int main(int argc, char** argv) {
     QApplication a(argc, argv);
     QString filename;
     if (argc > 1)
-        filename = QCoreApplication::arguments()[1];
+        filename = QCoreApplication::arguments().at(1);
     QArvVideoPlayer p(filename);
     p.show();
     return a.exec();

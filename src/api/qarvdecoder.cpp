@@ -190,7 +190,8 @@ static QList<QArvPixelFormat*> initPluginFormats() {
 static QMap<ArvPixelFormat, enum AVPixelFormat> initSwScaleFormats();
 
 // List of formats supported by plugins.
-static QList<QArvPixelFormat*> pluginFormats = initPluginFormats();
+Q_GLOBAL_STATIC_WITH_ARGS(QList<QArvPixelFormat*>, pluginFormats,
+                          (initPluginFormats()))
 
 // List of formats supported by libswscale, with mappings to
 // appropriate ffmpeg formats.
@@ -198,7 +199,7 @@ QMap<ArvPixelFormat, enum AVPixelFormat> swScaleFormats = initSwScaleFormats();
 
 QList<ArvPixelFormat> QArvPixelFormat::supportedFormats() {
     QList<ArvPixelFormat> list;
-    foreach (auto fmt, pluginFormats) {
+    foreach (auto fmt, *pluginFormats) {
         list << fmt->pixelFormat();
     }
     list << swScaleFormats.keys();
@@ -243,10 +244,12 @@ QArvDecoder* QArvDecoder::makeDecoder(QByteArray specification) {
 QArvDecoder* QArvDecoder::makeDecoder(ArvPixelFormat format,
                                       QSize size,
                                       bool fast) {
-    foreach (auto fmt, pluginFormats) {
+    foreach (auto fmt, *pluginFormats) {
         if (fmt->pixelFormat() == format) return fmt->makeDecoder(size);
     }
-    foreach (auto arvfmt, swScaleFormats.keys()) {
+    for (auto fmtI = swScaleFormats.keyBegin(), end = swScaleFormats.keyEnd();
+         fmtI != end; ++fmtI) {
+        const int arvfmt = *fmtI;
         int swsFlags;
         if (fast)
             swsFlags = SWS_FAST_BILINEAR;

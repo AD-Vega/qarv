@@ -69,11 +69,19 @@ static bool checkPluginAvailability(const QStringList& plugins) {
     return ok;
 }
 
-static const bool gstOK = checkPluginAvailability({ "fdsrc",
-                                                    "videoparse",
-                                                    "queue",
-                                                    "videoconvert",
-                                                    "filesink" });
+static bool gstOK() {
+    static bool init = false;
+    static bool isOK;
+    if (!init) {
+        init = true;
+        isOK = checkPluginAvailability({"fdsrc",
+                                        "videoparse",
+                                        "queue",
+                                        "videoconvert",
+                                        "filesink" });
+    }
+    return isOK;
+}
 
 class GstRecorder : public Recorder {
 private:
@@ -91,7 +99,7 @@ public:
                 bool writeInfo) {
         numberOfFrames = 0;
         fileName = fileName_;
-        if (!gstOK) return;
+        if (!gstOK()) return;
         QString informat;
         switch (decoder->cvType()) {
         case CV_8UC1:
@@ -163,7 +171,7 @@ public:
     }
 
     bool isOK() {
-        if (!gstOK) return false;
+        if (!gstOK()) return false;
         if (gstprocess.state() == QProcess::Starting) {
             if (!gstprocess.waitForStarted(processTimeout)) {
                 if (gstprocess.bytesAvailable())

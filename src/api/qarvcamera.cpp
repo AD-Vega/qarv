@@ -477,7 +477,6 @@ QTextStream& operator>>(QTextStream& in, QArvCamera* camera) {
         if (type == "Register") {
             QString hex;
             in >> hex;
-            auto b = QByteArray::fromHex(hex.toLatin1());
             arv_gc_register_set(ARV_GC_REGISTER(node), v.data(), v.toLongLong(),
                                 NULL);
         } else if (type == "Enumeration") {

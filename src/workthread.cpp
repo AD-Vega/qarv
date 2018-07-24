@@ -30,14 +30,15 @@ extern "C" {
 
 using namespace QArv;
 
-static int init __attribute__((unused)) = [] () {
-                                              qRegisterMetaType<cv::Mat>(
-                                                  "cv::Mat");
-                                              qRegisterMetaType<QFile*>("QFile*");
-                                              qRegisterMetaType<QList<ImageFilterPtr> >(
-                                                  "QList<QArv::ImageFilterPtr>");
-                                              return 0;
-                                          } ();
+static int init __attribute__((unused)) =
+    [] () {
+        qRegisterMetaType<cv::Mat>(
+            "cv::Mat");
+        qRegisterMetaType<QFile*>("QFile*");
+        qRegisterMetaType<QVector<ImageFilterPtr> >(
+            "QList<QArv::ImageFilterPtr>");
+        return 0;
+    } ();
 
 Workthread::Workthread(QObject* parent) : QObject(parent) {
     camera = nullptr;
@@ -140,9 +141,11 @@ void Workthread::setImageTransform(bool imageTransform_invert,
                               Q_ARG(int, imageTransform_rot));
 }
 
-void Workthread::setFilterChain(QList<ImageFilterPtr> filterChain) {
+void QArv::Workthread::setFilterChain(QVector<QArv::ImageFilterPtr> filterChain)
+{
     QMetaObject::invokeMethod(cooker, "setFilterChain", Qt::QueuedConnection,
-                              Q_ARG(QList<QArv::ImageFilterPtr>, filterChain));
+                              Q_ARG(QVector<QArv::ImageFilterPtr>,
+                                    filterChain));
 }
 
 void Workthread::waitUntilProcessingCycleCompletes() {
@@ -231,7 +234,7 @@ void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
         }
 
         bool needFiltering = false;
-        for (auto filter : p.filterChain) {
+        for (auto filter : qAsConst(p.filterChain)) {
             if (filter->isEnabled()) {
                 needFiltering = true;
                 break;
@@ -242,7 +245,7 @@ void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
         } else {
             img = img.clone();
             int imageType = img.type();
-            for (auto filter : p.filterChain) {
+            for (auto filter : qAsConst(p.filterChain)) {
                 if (filter->isEnabled())
                     filter->filterImage(img);
             }
@@ -287,7 +290,7 @@ void Cooker::setImageTransform(bool imageTransform_invert,
     p.imageTransform_rot = imageTransform_rot;
 }
 
-void Cooker::setFilterChain(QList<ImageFilterPtr> filterChain) {
+void QArv::Cooker::setFilterChain(QVector<QArv::ImageFilterPtr> filterChain) {
     p.filterChain = filterChain;
 }
 
