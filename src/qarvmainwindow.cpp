@@ -451,7 +451,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     readAllValues();
 
     advancedTree->setModel(camera);
-    advancedTree->header()->setResizeMode(QHeaderView::ResizeToContents);
+    advancedTree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     advancedTree->setItemDelegate(new QArvCameraDelegate);
 
     autoreadexposure->start();
@@ -514,7 +514,7 @@ void QArvMainWindow::on_applyROIButton_clicked(bool clicked) {
               wSpinbox->value(), hSpinbox->value());
 
     {
-        auto ROI2 = roirange.intersect(ROI);
+        auto ROI2 = roirange.intersected(ROI);
         if (ROI2 != ROI)
             statusBar()->showMessage(tr(
                                          "Region of interest too large, shrinking."),
