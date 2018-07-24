@@ -17,61 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RAWRECORDERS_H
-#define RAWRECORDERS_H
+#pragma once
 
-#include "recorder.h"
-
-namespace QArv
-{
-
-class RawUndecodedFormat : public QObject, public OutputFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArv::OutputFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawUndecodedFormat")
-
-public:
-    QString name() { return "Raw undecoded"; }
-    bool canAppend() { return true; }
-    bool canWriteInfo() { return true; }
-    Recorder* makeRecorder(QArvDecoder* decoder,
-                           QString fileName,
-                           QSize frameSize,
-                           int framesPerSecond,
-                           bool writeInfo);
-};
-
-class RawDecoded8Format : public QObject, public OutputFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArv::OutputFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawDecoded8Format")
-
-public:
-    QString name() { return "Raw decoded (8-bit)"; }
-    bool canAppend() { return true; }
-    bool canWriteInfo() { return true; }
-    Recorder* makeRecorder(QArvDecoder* decoder,
-                           QString fileName,
-                           QSize frameSize,
-                           int framesPerSecond,
-                           bool writeInfo);
-};
-
-class RawDecoded16Format : public QObject, public OutputFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArv::OutputFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.RawDecoded16Format")
-
-public:
-    QString name() { return "Raw decoded (16-bit)"; }
-    bool canWriteInfo() { return true; }
-    Recorder* makeRecorder(QArvDecoder* decoder,
-                           QString fileName,
-                           QSize frameSize,
-                           int framesPerSecond,
-                           bool writeInfo);
-};
-
-}
-
-#endif
+#include "rawrecorders/undecoded.h"
+#include "rawrecorders/decoded8.h"
+#include "rawrecorders/decoded16.h"

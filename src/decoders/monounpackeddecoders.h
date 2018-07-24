@@ -17,84 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "decoders/monounpacked.h"
-extern "C" {
-  #include <arv.h>
-}
+#pragma once
 
-namespace QArv
-{
-
-class Mono8Format : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono8Format")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<uint8_t, 8,
-                                       ARV_PIXEL_FORMAT_MONO_8>(size);
-    }
-};
-
-class Mono8SignedFormat : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono8SignedFormat")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_8_SIGNED; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<int8_t, 8,
-                                       ARV_PIXEL_FORMAT_MONO_8_SIGNED>(size);
-    }
-};
-
-class Mono10Format : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono10Format")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_10; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<uint16_t, 10, ARV_PIXEL_FORMAT_MONO_10>(
-            size);
-    }
-};
-
-class Mono12Format : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono12Format")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<uint16_t, 12, ARV_PIXEL_FORMAT_MONO_12>(
-            size);
-    }
-};
-
-class Mono14Format : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono14Format")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_14; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<uint16_t, 14, ARV_PIXEL_FORMAT_MONO_14>(
-            size);
-    }
-};
-
-class Mono16Format : public QObject, public QArvPixelFormat {
-    Q_OBJECT
-    Q_INTERFACES(QArvPixelFormat)
-    Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono16Format")
-public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_16; }
-    QArvDecoder* makeDecoder(QSize size) {
-        return new MonoUnpackedDecoder<uint16_t, 16, ARV_PIXEL_FORMAT_MONO_16>(
-            size);
-    }
-};
-
-}
+#include "monounpackeddecoders/Mono10Format.h"
+#include "monounpackeddecoders/Mono12Format.h"
+#include "monounpackeddecoders/Mono14Format.h"
+#include "monounpackeddecoders/Mono16Format.h"
+#include "monounpackeddecoders/Mono8Format.h"
+#include "monounpackeddecoders/Mono8SignedFormat.h"

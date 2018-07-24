@@ -121,8 +121,32 @@ set_prefixed(qarv_SRCS src/
 )
 set_prefixed(qarv_decoders_MOCS src/decoders/
   mono12packed.h
-  monounpackeddecoders.h
-  bayer.h
+  monounpackeddecoders/Mono10Format.h
+  monounpackeddecoders/Mono12Format.h
+  monounpackeddecoders/Mono14Format.h
+  monounpackeddecoders/Mono16Format.h
+  monounpackeddecoders/Mono8Format.h
+  monounpackeddecoders/Mono8SignedFormat.h
+  bayer/BayerBG10.h
+  bayer/BayerBG12.h
+  bayer/BayerBG12_PACKED.h
+  bayer/BayerBG16.h
+  bayer/BayerBG8.h
+  bayer/BayerGB10.h
+  bayer/BayerGB12.h
+  bayer/BayerGB12_PACKED.h
+  bayer/BayerGB16.h
+  bayer/BayerGB8.h
+  bayer/BayerGR10.h
+  bayer/BayerGR12.h
+  bayer/BayerGR12_PACKED.h
+  bayer/BayerGR16.h
+  bayer/BayerGR8.h
+  bayer/BayerRG10.h
+  bayer/BayerRG12.h
+  bayer/BayerRG12_PACKED.h
+  bayer/BayerRG16.h
+  bayer/BayerRG8.h
 )
 qt5_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
@@ -133,7 +157,9 @@ set_prefixed(qarv_decoders_SRC src/decoders/
   bayer.cpp
 )
 set_prefixed(qarv_recorders_MOCS src/recorders/
-  rawrecorders.h
+  rawrecorders/undecoded.h
+  rawrecorders/decoded8.h
+  rawrecorders/decoded16.h
   gstrecorders.h
   imagerecorder.h
 )
