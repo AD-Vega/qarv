@@ -72,4 +72,4 @@ QByteArray Mono12PackedDecoder::decoderSpecification() {
 }
 
 
-Q_IMPORT_PLUGIN(Mono12Packed)
+Q_IMPORT_PLUGIN(Mono12PackedFormat)

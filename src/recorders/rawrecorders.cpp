@@ -304,6 +304,6 @@ Recorder* RawDecoded16Format::makeRecorder(QArvDecoder* decoder,
                             writeInfo);
 }
 
-Q_IMPORT_PLUGIN(RawUndecoded)
-Q_IMPORT_PLUGIN(RawDecoded8)
-Q_IMPORT_PLUGIN(RawDecoded16)
+Q_IMPORT_PLUGIN(RawUndecodedFormat)
+Q_IMPORT_PLUGIN(RawDecoded8Format)
+Q_IMPORT_PLUGIN(RawDecoded16Format)

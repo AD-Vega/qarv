@@ -19,9 +19,9 @@
 
 #include "decoders/monounpackeddecoders.h"
 
-Q_IMPORT_PLUGIN(Mono8)
-Q_IMPORT_PLUGIN(Mono8Signed)
-Q_IMPORT_PLUGIN(Mono10)
-Q_IMPORT_PLUGIN(Mono12)
-Q_IMPORT_PLUGIN(Mono14)
-Q_IMPORT_PLUGIN(Mono16)
+Q_IMPORT_PLUGIN(Mono8Format)
+Q_IMPORT_PLUGIN(Mono8SignedFormat)
+Q_IMPORT_PLUGIN(Mono10Format)
+Q_IMPORT_PLUGIN(Mono12Format)
+Q_IMPORT_PLUGIN(Mono14Format)
+Q_IMPORT_PLUGIN(Mono16Format)

@@ -68,4 +68,4 @@ Recorder* ImageFormat::makeRecorder(QArvDecoder* decoder,
     return new ImageRecorder(decoder, fileName);
 }
 
-Q_IMPORT_PLUGIN(ImageRecorder)
+Q_IMPORT_PLUGIN(ImageFormat)
