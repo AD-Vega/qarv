@@ -1,10 +1,13 @@
 project(qarv)
 cmake_minimum_required(VERSION 2.8)
 
+include(FindPkgConfig)
+include(CheckSymbolExists)
+
 # Only set the version in release tarballs.
 #set(qarv_VERSION 1.0.99)
-set(qarv_ABI 2)
-set(qarv_API 2)
+set(qarv_ABI 3)
+set(qarv_API 3)
 
 if (NOT DEFINED qarv_VERSION)
   message("Program version not specified, using git description.")
@@ -31,14 +34,14 @@ macro(set_prefixed varname string)
   endforeach(name)
 endmacro(set_prefixed)
 
-find_package(Qt4 REQUIRED
-  QtCore
-  QtGui
-  QtOpenGL
-  QtNetwork
-  QtSVG
-)
-include(FindPkgConfig)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+find_package(Qt5 REQUIRED COMPONENTS
+             Core Gui Widgets OpenGL Network Svg LinguistTools)
+
+set(QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
+                 Qt5::Network Qt5::Svg Qt5::LinguistTools)
+
 pkg_search_module(ARAVIS REQUIRED aravis-0.6 aravis-0.4 aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
@@ -47,11 +50,7 @@ pkg_check_modules(AVUTIL REQUIRED libavutil)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 find_package( OpenCV REQUIRED )
 
-include(${QT_USE_FILE})
-
 include_directories(
-  ${QT_INCLUDES}
-  ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${ARAVIS_INCLUDE_DIRS}
   ${GIO_INCLUDE_DIRS}
@@ -61,7 +60,8 @@ include_directories(
 
 
 set(qarv_DATA share/qarv/${qarv_ABI}/)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fvisibility-inlines-hidden -fvisibility=hidden")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
 if (NOT qarv_BTYPE MATCHES "debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG")
@@ -84,9 +84,9 @@ endif()
 set_prefixed(qarv_UIS_pre src/
   mainwindow.ui
 )
-qt4_wrap_ui(qarv_UIS ${qarv_UIS_pre})
+qt5_wrap_ui(qarv_UIS ${qarv_UIS_pre})
 set_prefixed(qarv_RCS_pre res/ icons/icons.qrc)
-qt4_add_resources(qarv_RCS ${qarv_RCS_pre})
+qt5_add_resources(qarv_RCS ${qarv_RCS_pre})
 set_prefixed(qarv_MOCS src/
   glvideowidget.h
   glhistogramwidget.h
@@ -100,7 +100,7 @@ set_prefixed(qarv_MOCS src/
   api/qarvcameradelegate.h
   filters/filter.h
 )
-qt4_wrap_cpp(qarv_MOCD ${qarv_MOCS})
+qt5_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/
   qarvmainwindow.cpp
   main.cpp
@@ -124,7 +124,7 @@ set_prefixed(qarv_decoders_MOCS src/decoders/
   monounpackeddecoders.h
   bayer.h
 )
-qt4_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
+qt5_wrap_cpp(qarv_decoders_MOCD ${qarv_decoders_MOCS})
 set_prefixed(qarv_decoders_SRC src/decoders/
   graymap.cpp
   mono12packed.cpp
@@ -137,7 +137,7 @@ set_prefixed(qarv_recorders_MOCS src/recorders/
   gstrecorders.h
   imagerecorder.h
 )
-qt4_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
+qt5_wrap_cpp(qarv_recorders_MOCD ${qarv_recorders_MOCS})
 set_prefixed(qarv_recorders_SRC src/recorders/
   rawrecorders.cpp
   gstrecorders.cpp
@@ -147,16 +147,16 @@ set_prefixed(qarv_recorders_SRC src/recorders/
 set_prefixed(qarv_filters_MOCS src/filters/
   levels.h
 )
-qt4_wrap_cpp(qarv_filters_MOCD ${qarv_filters_MOCS})
+qt5_wrap_cpp(qarv_filters_MOCD ${qarv_filters_MOCS})
 set_prefixed(qarv_filters_SRC src/filters/
   levels.cpp
 )
 set_prefixed(qarv_filters_UIS_pre src/filters/
   levels.ui
 )
-qt4_wrap_ui(qarv_filters_UIS ${qarv_filters_UIS_pre})
+qt5_wrap_ui(qarv_filters_UIS ${qarv_filters_UIS_pre})
 set_prefixed(qarv_TRANS_pre i18n/qarv_ sl.ts cs.ts)
-qt4_add_translation(qarv_TRANS ${qarv_TRANS_pre})
+qt5_add_translation(qarv_TRANS ${qarv_TRANS_pre})
 
 set(libqarv "qarv-${qarv_API}")
 add_library(${libqarv} SHARED
@@ -188,8 +188,8 @@ add_executable(qarvexe src/main.cpp)
 target_link_libraries(qarvexe ${QT_LIBRARIES} ${libqarv})
 set_target_properties(qarvexe PROPERTIES OUTPUT_NAME qarv)
 
-qt4_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
-qt4_wrap_cpp(qarv_videoplayer_MOC
+qt5_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
+qt5_wrap_cpp(qarv_videoplayer_MOC
   src/utils/qarv_videoplayer.h
   src/glvideowidget.h
   src/globals.h
