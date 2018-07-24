@@ -119,6 +119,7 @@ private slots:
 private:
     void readROILimits();
     void stopAllAcquisition();
+    void closeEvent(QCloseEvent* event);
 
     QImage invalidImage;
     QArvCamera* camera;

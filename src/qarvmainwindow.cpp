@@ -248,7 +248,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
 QArvMainWindow::~QArvMainWindow() {
     stopAllAcquisition();
-    saveProgramSettings();
     if (camera)
         delete camera;
 }
@@ -1264,6 +1263,12 @@ void QArvMainWindow::restoreProgramSettings() {
             logMessage() << "FIXME: don't know how to restore setting"
                          << i.key();
     }
+}
+
+void QArv::QArvMainWindow::closeEvent(QCloseEvent* event) {
+    stopAllAcquisition();
+    saveProgramSettings();
+    event->accept();
 }
 
 void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
