@@ -1212,7 +1212,7 @@ void QArvMainWindow::saveProgramSettings() {
         wgt->close();
     }
     settings.setValue("qarv_mainwindow/geometry", saveGeometry());
-    settings.setValue("qarv_mainwindow/state", saveState());
+    settings.setValue("qarv_mainwindow/state", saveState(QARV_API));
 
     // buttons, combo boxes, text fields etc.
     for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
@@ -1239,7 +1239,8 @@ void QArvMainWindow::restoreProgramSettings() {
 
     // main window geometry and state
     restoreGeometry(settings.value("qarv_mainwindow/geometry").toByteArray());
-    restoreState(settings.value("qarv_mainwindow/state").toByteArray());
+    restoreState(settings.value("qarv_mainwindow/state").toByteArray(),
+                 QARV_API);
 
     // buttons, combo boxes, text fields etc.
     for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
