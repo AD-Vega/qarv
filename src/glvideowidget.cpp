@@ -22,15 +22,18 @@
 #include "glvideowidget.h"
 #include "api/qarvdecoder.h"
 #include "globals.h"
+#include <QPainter>
+#include <QApplication>
 
 using namespace QArv;
 
 GLVideoWidget::GLVideoWidget(QWidget* parent) :
-    QGLWidget(QGLFormat(QGL::NoDepthBuffer | QGL::NoSampleBuffers), parent),
+    QOpenGLWidget(parent),
     idleImageRenderer(QString(":/icons/qarv.svgz")),
     idling(true), selecting(false),
     drawRectangle(false), fixedSelection(false), corner1(), corner2(),
-    rectangle(), whitepen(Qt::white), blackpen(Qt::black) {
+    rectangle(), whitepen(Qt::white), blackpen(Qt::black),
+    backgroundBrush(QApplication::palette().base()) {
     whitepen.setWidth(0);
     whitepen.setStyle(Qt::DotLine);
     blackpen.setWidth(0);
@@ -69,7 +72,7 @@ QImage* GLVideoWidget::unusedFrame() {
 }
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {
-    QGLWidget::resizeEvent(event);
+    QOpenGLWidget::resizeEvent(event);
     auto view = rect();
     out = view;
     QSize thesize;
@@ -98,6 +101,7 @@ void GLVideoWidget::resizeEvent(QResizeEvent* event) {
 
 void GLVideoWidget::paintGL() {
     QPainter painter(this);
+    painter.fillRect(rect(), backgroundBrush);
     if (!idling) {
         if (in.size() != out.size())
             painter.setRenderHint(QPainter::SmoothPixmapTransform);

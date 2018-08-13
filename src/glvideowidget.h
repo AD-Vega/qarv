@@ -21,16 +21,17 @@
 #ifndef GLVIDEOWIDGET_H
 #define GLVIDEOWIDGET_H
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QImage>
 #include <QMouseEvent>
 #include <QSvgRenderer>
+#include <QPen>
 #include <opencv2/core/core.hpp>
 
 namespace QArv
 {
 
-class GLVideoWidget : public QGLWidget {
+class GLVideoWidget : public QOpenGLWidget {
     Q_OBJECT
 
 public:
@@ -64,6 +65,7 @@ private:
     QRect rectangle, drawnRectangle;
     QSize fixedSize;
     QPen whitepen, blackpen;
+    QBrush backgroundBrush;
 };
 
 }

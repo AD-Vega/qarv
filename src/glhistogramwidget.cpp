@@ -19,16 +19,24 @@
 
 #include "globals.h"
 #include "glhistogramwidget.h"
-#include <QStyleOption>
 #include "globals.h"
+#include <QStyleOption>
+#include <QPainter>
 
 using namespace QArv;
 
 GLHistogramWidget::GLHistogramWidget(QWidget* parent) :
-    QGLWidget(), unusedHists(&histograms2), histRed(histograms1.red),
-    histGreen(histograms1.green), histBlue(histograms1.blue) {
+    QOpenGLWidget(parent), unusedHists(&histograms2),
+    histRed(histograms1.red), histGreen(histograms1.green),
+    histBlue(histograms1.blue) {
     indexed = true;
     logarithmic = false;
+
+    QStyleOption opt;
+    opt.initFrom(this);
+    backgroundBrush = opt.palette.brush(QPalette::Background);
+    foregroundBrush = opt.palette.brush(QPalette::WindowText);
+
     QFile iconfile(QString(qarv_datafiles)
                    + "/view-object-histogram-linear.svgz");
     if (iconfile.exists())
@@ -68,24 +76,21 @@ void GLHistogramWidget::swapHistograms(bool grayscale) {
 }
 
 void GLHistogramWidget::paintGL() {
+    QPainter painter(this);
+    painter.setBackground(backgroundBrush);
+    painter.fillRect(rect(), backgroundBrush);
+
     if (idle) {
-        QPainter painter(this);
         painter.drawPixmap(rect(), idleImageIcon.pixmap(rect().size()));
         return;
     }
-
-    QStyleOption opt;
-    opt.initFrom(this);
-    QPainter painter(this);
-    painter.setBackground(opt.palette.color(QPalette::Background));
-    painter.fillRect(rect(), opt.palette.color(QPalette::Background));
 
     float wUnit = rect().width() / 256.;
     QPointF origin = rect().bottomLeft();
 
     if (indexed) {
-        painter.setPen(opt.palette.color(QPalette::WindowText));
-        painter.setBrush(QBrush(opt.palette.color(QPalette::WindowText)));
+        painter.setPen(foregroundBrush.color());
+        painter.setBrush(foregroundBrush);
 
         float max = 0;
         for (int i = 0; i < 256; i++)

@@ -21,7 +21,7 @@
 #ifndef GLHISTOGRAMWIDGET_H
 #define GLHISTOGRAMWIDGET_H
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QMouseEvent>
 #include <QIcon>
 #include <opencv2/core/core.hpp>
@@ -33,7 +33,7 @@ struct Histograms {
     float red[256], green[256], blue[256];
 };
 
-class GLHistogramWidget : public QGLWidget {
+class GLHistogramWidget : public QOpenGLWidget {
     Q_OBJECT
 
 public:
@@ -53,6 +53,7 @@ private:
     Histograms histograms1, histograms2;
     Histograms* unusedHists;
     float* histRed, * histGreen, * histBlue;
+    QBrush backgroundBrush, foregroundBrush;
 };
 
 }
