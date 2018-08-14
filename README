@@ -75,7 +75,8 @@ Aravis:     https://live.gnome.org/Aravis
 REQUIREMENTS AND INSTALLATION
 -----------------------------
 
-qarv requires Qt-4.8, aravis-0.2, OpenCV and either libav or ffmpeg.
+qarv requires Qt 5 (tested with 5.11), aravis-0.2 or later, OpenCV and
+either libav or ffmpeg.
 
 Optionally, gstreamer-1.0 with the base, good, bad and libav plugin
 sets allows recording and transcoding to AVI and other non-raw formats.
