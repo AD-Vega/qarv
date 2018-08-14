@@ -173,6 +173,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     connect(&postprocChain,
             SIGNAL(rowsRemoved(const QModelIndex&,int,int)),
             SLOT(updatePostprocQList()));
+    connect(&postprocChain, &QStandardItemModel::itemChanged,
+            this, &QArvMainWindow::updatePostprocQList);
 
     autoreadexposure = new QTimer(this);
     autoreadexposure->setInterval(sliderUpdateSpinbox->value());

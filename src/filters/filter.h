@@ -127,5 +127,6 @@ Q_DECLARE_METATYPE(QArv::ImageFilterPlugin*)
 Q_DECLARE_METATYPE(QArv::ImageFilter*)
 Q_DECLARE_METATYPE(QArv::ImageFilterSettingsWidget*)
 Q_DECLARE_METATYPE(QArv::ImageFilterSettingsDialog*)
+Q_DECLARE_METATYPE(QVector<QArv::ImageFilterPtr>)
 
 #endif
