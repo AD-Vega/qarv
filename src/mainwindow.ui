@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>926</width>
-    <height>610</height>
+    <height>644</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,8 +69,7 @@
                  </property>
                  <property name="icon">
                   <iconset theme="view-refresh">
-                   <normaloff/>
-                  </iconset>
+                   <normaloff>.</normaloff>.</iconset>
                  </property>
                 </widget>
                </item>
@@ -139,7 +138,7 @@
                   <number>1</number>
                  </property>
                  <property name="maximum">
-                  <number>999</number>
+                  <number>999999999</number>
                  </property>
                 </widget>
                </item>
@@ -291,8 +290,7 @@
                </property>
                <property name="icon">
                 <iconset theme="edit-select">
-                 <normaloff/>
-                </iconset>
+                 <normaloff>.</normaloff>.</iconset>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -373,8 +371,7 @@
                  </property>
                  <property name="icon">
                   <iconset theme="edit-clear-locationbar-rtl">
-                   <normaloff/>
-                  </iconset>
+                   <normaloff>.</normaloff>.</iconset>
                  </property>
                 </widget>
                </item>
@@ -448,8 +445,7 @@
                  </property>
                  <property name="icon">
                   <iconset theme="edit-clear-locationbar-rtl">
-                   <normaloff/>
-                  </iconset>
+                   <normaloff>.</normaloff>.</iconset>
                  </property>
                 </widget>
                </item>
@@ -791,8 +787,7 @@
                </property>
                <property name="icon">
                 <iconset theme="document-open">
-                 <normaloff/>
-                </iconset>
+                 <normaloff>.</normaloff>.</iconset>
                </property>
               </widget>
              </item>
@@ -893,8 +888,7 @@
                </property>
                <property name="icon">
                 <iconset theme="document-open">
-                 <normaloff/>
-                </iconset>
+                 <normaloff>.</normaloff>.</iconset>
                </property>
               </widget>
              </item>
@@ -1132,7 +1126,7 @@
   </widget>
   <widget class="QDockWidget" name="videodock">
    <property name="windowTitle">
-    <string>Video Display</string>
+    <string>Video Disp&amp;lay</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1151,8 +1145,7 @@
          </property>
          <property name="icon">
           <iconset theme="media-playback-start">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1169,8 +1162,7 @@
          </property>
          <property name="icon">
           <iconset theme="zoom-original">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1213,7 +1205,7 @@
   </widget>
   <widget class="QDockWidget" name="histogramdock">
    <property name="windowTitle">
-    <string>Histogram</string>
+    <string>His&amp;togram</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1232,8 +1224,7 @@
          </property>
          <property name="icon">
           <iconset theme="view-object-histogram-logarithmic">
-           <normaloff/>
-          </iconset>
+           <normaloff>.</normaloff>.</iconset>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1270,7 +1261,7 @@
   </widget>
   <widget class="QDockWidget" name="messageDock">
    <property name="windowTitle">
-    <string>Diagnostic log</string>
+    <string>&amp;Diagnostic log</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1339,8 +1330,7 @@
    </property>
    <property name="icon">
     <iconset theme="media-record">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Record</string>
@@ -1355,8 +1345,7 @@
    </property>
    <property name="icon">
     <iconset theme="media-playback-stop">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Finish</string>
@@ -1374,8 +1363,7 @@
    </property>
    <property name="icon">
     <iconset theme="video-display">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Video Display</string>
@@ -1393,8 +1381,7 @@
    </property>
    <property name="icon">
     <iconset theme="office-chart-bar">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Histogram</string>
@@ -1412,8 +1399,7 @@
    </property>
    <property name="icon">
     <iconset theme="dialog-information">
-     <normaloff/>
-    </iconset>
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Diagnostic Log</string>
