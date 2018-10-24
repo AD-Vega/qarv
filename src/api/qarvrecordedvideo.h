@@ -35,6 +35,10 @@ public:
     //! Opens the description file with the given filename.
     QArvRecordedVideo(const QString& filename);
 
+    //! Opens a raw video file directly. Only supports uncompressed files.
+    QArvRecordedVideo(const QString& filename, enum AVPixelFormat swsFmt,
+                      uint headerBytes, QSize fsize);
+
     //! Returns true if the file has been opened successfully.
     bool status();
 

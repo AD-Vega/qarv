@@ -31,16 +31,15 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="openButton">
-       <property name="toolTip">
-        <string>Open a video description file for raw video.</string>
-       </property>
+      <widget class="QToolButton" name="openMenuButton">
        <property name="text">
-        <string/>
+        <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="document-open">
-         <normaloff>.</normaloff>.</iconset>
+        <iconset theme="document-open"/>
+       </property>
+       <property name="popupMode">
+        <enum>QToolButton::InstantPopup</enum>
        </property>
       </widget>
      </item>
@@ -204,6 +203,19 @@
     </widget>
    </item>
   </layout>
+  <action name="openQArvVideoAction">
+   <property name="text">
+    <string>Open QArv video</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a QArv video information file.</string>
+   </property>
+  </action>
+  <action name="openRawVideoAction">
+   <property name="text">
+    <string>Open raw video</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

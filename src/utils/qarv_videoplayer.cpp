@@ -22,6 +22,11 @@
 #include "globals.h"
 #include <QFileDialog>
 #include <QPluginLoader>
+#include <QMenu>
+extern "C" {
+#include <libavutil/pixdesc.h>
+#include <libswscale/swscale.h>
+}
 
 using namespace QArv;
 
@@ -30,7 +35,7 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
                                  Qt::WindowFlags f) : QWidget(parent, f) {
     setupUi(this);
     QHash<QAbstractButton*, QString> icons;
-    icons[openButton] = "document-open";
+    icons[openMenuButton] = "document-open";
     icons[playButton] = "media-playback-start";
     icons[transcodeButton] = "media-record";
     icons[leftMarkButton] = "go-first";
@@ -39,12 +44,22 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
         if (!QIcon::hasThemeIcon(*i))
             i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
 
+    auto submenu = new QMenu;
+    submenu->addAction(openQArvVideoAction);
+    submenu->addAction(openRawVideoAction);
+    openMenuButton->setMenu(submenu);
+
     showTimer = new QTimer(this);
     connect(showTimer, SIGNAL(timeout()), SLOT(showNextFrame()));
     transcodeBox->setEnabled(false);
     transcodeBox->setChecked(false);
-    if (!filename.isNull())
-        open(filename);
+    if (!filename.isNull()) {
+        if (filename.endsWith(".qarv")) {
+            openQArvVideo(filename);
+        } else {
+            openRawVideo(filename);
+        }
+    }
 
     auto plugins = QPluginLoader::staticInstances();
     foreach (auto plugin, plugins) {
@@ -56,12 +71,37 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
     codecBox->setCurrentIndex(0);
 }
 
-bool QArvVideoPlayer::open(QString filename) {
+void QArvVideoPlayer::openQArvVideo(QString name) {
+    if (name.isNull()) {
+        QString filter = tr("QArv video description (*.qarv)");
+        name = QFileDialog::getOpenFileName(this,
+                                            tr("Open file"),
+                                            QString(), filter);
+    }
+    if (!name.isNull()) {
+        recording.reset(new QArvRecordedVideo(name));
+    } else {
+        recording.reset(nullptr);
+    }
+    handleFileOpening();
+}
+
+void QArvVideoPlayer::openRawVideo(QString name) {
+    QArvRawVideoDialog dialog(this, name);
+    dialog.exec();
+    if (dialog.result() == QDialog::Accepted) {
+        recording.reset(dialog.getVideo());
+        handleFileOpening();
+    }
+}
+
+// Call this when `recording` is reset.
+bool QArvVideoPlayer::handleFileOpening() {
     if (playButton->isChecked())
         playButton->setChecked(false);
     playButton->setEnabled(false);
-    recording.reset(new QArvRecordedVideo(filename));
-    if (!recording->status()) {
+
+    if (!recording || !recording->status()) {
         transcodeBox->setEnabled(false);
         return false;
     }
@@ -97,15 +137,12 @@ void QArvVideoPlayer::on_playButton_toggled(bool checked) {
     }
 }
 
-void QArvVideoPlayer::on_openButton_clicked(bool checked) {
-    QString filter =
-        tr("qarv video description (*.qarv);;All file types (*.*)");
-    auto name = QFileDialog::getOpenFileName(this,
-                                             tr("Open file"),
-                                             QString(),
-                                             filter);
-    if (!name.isNull())
-        open(name);
+void QArvVideoPlayer::on_openQArvVideoAction_triggered(bool checked) {
+    openQArvVideo();
+}
+
+void QArvVideoPlayer::on_openRawVideoAction_triggered(bool checked) {
+    openRawVideo();
 }
 
 void QArvVideoPlayer::readNextFrame(bool seeking) {
@@ -242,6 +279,49 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
         }
     }
 }
+
+QArvRawVideoDialog::QArvRawVideoDialog(QWidget* parent, QString name) :
+    QDialog(parent) {
+    setupUi(this);
+    if (!QIcon::hasThemeIcon("document-open")) {
+        inputFileButton->setIcon(QIcon(QString(qarv_datafiles)
+                                       + "document-open.svgz"));
+    }
+    inputFileEdit->setText(name);
+
+    connect(inputFileButton, &QPushButton::clicked, [this](bool) {
+        QString filter = tr("Raw video file (*)");
+        QString name = QFileDialog::getOpenFileName(this,
+                                                    tr("Open file"),
+                                                    QString(), filter);
+        if (!name.isNull()) {
+            inputFileEdit->setText(name);
+        }
+    });
+
+    QStringList formats;
+    //TODO don't use AV_PIX_FMT_NB once libav is updated
+    for (int i = 0; i < AV_PIX_FMT_NB; i++) {
+        if (sws_isSupportedInput((enum AVPixelFormat)i))
+            formats.append(av_get_pix_fmt_name((enum AVPixelFormat)i));
+    }
+    formats.sort();
+    fmtCombo->clear();
+    fmtCombo->addItems(formats);
+}
+
+QArvRecordedVideo* QArvRawVideoDialog::getVideo() {
+    if (result() == QDialog::Accepted) {
+        auto pixfmt = av_get_pix_fmt(fmtCombo->currentText().toLatin1());
+        return new QArvRecordedVideo(inputFileEdit->text(), pixfmt,
+                                     headerSpin->value(),
+                                     QSize(widthSpin->value(),
+                                           heightSpin->value()));
+    } else {
+        return nullptr;
+    }
+}
+
 
 int main(int argc, char** argv) {
     QApplication a(argc, argv);

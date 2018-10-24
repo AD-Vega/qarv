@@ -214,7 +214,10 @@ add_executable(qarvexe src/main.cpp)
 target_link_libraries(qarvexe ${QT_LIBRARIES} ${libqarv})
 set_target_properties(qarvexe PROPERTIES OUTPUT_NAME qarv)
 
-qt5_wrap_ui(qarv_videoplayer_UI src/utils/qarv_videoplayer.ui)
+qt5_wrap_ui(qarv_videoplayer_UI
+  src/utils/qarv_videoplayer.ui
+  src/utils/qarv_videoplayer_rawvideo.ui
+)
 qt5_wrap_cpp(qarv_videoplayer_MOC
   src/utils/qarv_videoplayer.h
   src/glvideowidget.h

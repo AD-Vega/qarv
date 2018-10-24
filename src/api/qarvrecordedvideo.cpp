@@ -24,6 +24,7 @@
 #include "globals.h"
 extern "C" {
 #include <arv.h>
+#include <libavcodec/avcodec.h>
 }
 
 using namespace QArv;
@@ -87,6 +88,30 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename) :
     }
 
     isOK = true;
+}
+
+QArvRecordedVideo::QArvRecordedVideo(const QString& filename,
+                                     enum AVPixelFormat swsFmt,
+                                     uint headerBytes, QSize size) :
+    videofile(filename), fsize(size), fps(10), uncompressed(true),
+    isOK(fsize.isValid()), arvPixfmt(0), swscalePixfmt(swsFmt) {
+    if (!isOK) {
+        logMessage() << "Invalid frame size" << fsize;
+        return;
+    }
+    isOK = videofile.open(QIODevice::ReadOnly);
+    if (!isOK) {
+        logMessage() << "Unable to open video file" << filename;
+        return;
+    }
+    if (headerBytes) {
+        isOK = videofile.seek(headerBytes);
+    }
+    if (!isOK) {
+        logMessage() << "Unable to skip header, file not seekable.";
+        return;
+    }
+    frameBytes_ = avpicture_get_size(swscalePixfmt, size.width(), size.height());
 }
 
 bool QArvRecordedVideo::status() {
