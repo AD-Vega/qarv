@@ -33,6 +33,7 @@ public:
     QString name() { return "TIFF images"; }
     bool canAppend() { return true; }
     bool canWriteInfo() { return false; }
+    bool recordsRaw() { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,

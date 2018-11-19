@@ -68,6 +68,12 @@ public:
     //! Returns true if metadata should be written to a .qarv file.
     virtual bool canWriteInfo() = 0;
 
+    //! Check whether the recorder takes raw input instead of processed.
+    virtual bool recordsRaw() = 0;
+
+    //! Check whether the recorder takes raw input instead of processed.
+    static bool recordsRaw(QString outputFormat);
+
     //! Instantiates a recorder using this plugin.
     virtual Recorder* makeRecorder(QArvDecoder* decoder,
                                    QString fileName,

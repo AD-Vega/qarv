@@ -13,6 +13,7 @@ class RawDecoded16Format : public QObject, public OutputFormat {
 public:
     QString name() { return "Raw decoded (16-bit)"; }
     bool canWriteInfo() { return true; }
+    bool recordsRaw() { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,

@@ -714,6 +714,9 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
         }
 
         auto rct = camera->getROI();
+        if (!OutputFormat::recordsRaw(videoFormatSelector->currentText())) {
+            rct = imageTransform.map(QRegion(rct)).boundingRect();
+        }
         recorder.reset(OutputFormat::makeRecorder(decoder,
                                                   filenameEdit->text(),
                                                   videoFormatSelector->

@@ -14,6 +14,7 @@ public:
     QString name() { return "Raw decoded (8-bit)"; }
     bool canAppend() { return true; }
     bool canWriteInfo() { return true; }
+    bool recordsRaw() { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,

@@ -33,6 +33,7 @@ class HuffyuvAviFormat : public QObject, public OutputFormat {
 public:
     QString name() { return "huffyuv AVI"; }
     bool canWriteInfo() { return false; }
+    bool recordsRaw() { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,

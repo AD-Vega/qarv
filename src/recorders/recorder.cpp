@@ -43,3 +43,13 @@ Recorder* OutputFormat::makeRecorder(QArvDecoder* decoder,
     }
     return NULL;
 }
+
+bool OutputFormat::recordsRaw(QString outputFormat) {
+    auto plugins = QPluginLoader::staticInstances();
+    foreach (auto plugin, plugins) {
+        auto fmt = qobject_cast<OutputFormat*>(plugin);
+        if (fmt != NULL && outputFormat == fmt->name())
+            return fmt->recordsRaw();
+    }
+    return false;
+}

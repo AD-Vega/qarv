@@ -14,6 +14,7 @@ public:
     QString name() { return "Raw undecoded"; }
     bool canAppend() { return true; }
     bool canWriteInfo() { return true; }
+    bool recordsRaw() { return true; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,
