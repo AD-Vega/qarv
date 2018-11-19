@@ -37,15 +37,15 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename) :
     QSettings s(filename, QSettings::Format::IniFormat);
     isOK = s.status() == QSettings::Status::NoError;
     if (!isOK) {
-        return;
         logMessage() << "Invalid description file.";
+        return;
     }
     s.beginGroup("qarv_raw_video_description");
     QVariant v = s.value("description_version");
     isOK = v.toString() == "0.1";
     if (!isOK) {
-        return;
         logMessage() << "Invalid video description file version.";
+        return;
     }
 
     v = s.value("file_name");
@@ -159,7 +159,8 @@ QArvDecoder* QArvRecordedVideo::makeDecoder() {
     }
 }
 
-bool QArvRecordedVideo::seek(uint frame) {
+bool QArvRecordedVideo::seek(quint64 frame)
+{
     return videofile.seek(frame*frameBytes_);
 }
 
