@@ -38,8 +38,8 @@ public:
 
 private slots:
     void on_playButton_toggled(bool checked);
-    void on_openQArvVideoAction_triggered(bool checked);
-    void on_openRawVideoAction_triggered(bool checked);
+    void on_openQArvVideoAction_triggered(bool);
+    void on_openRawVideoAction_triggered(bool);
     void on_slider_valueChanged(int value);
     void on_transcodeBox_toggled(bool checked);
     void on_transcodeButton_toggled(bool checked);

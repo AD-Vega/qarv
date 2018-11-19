@@ -44,13 +44,13 @@ signals:
 private slots:
     void editingComplete() { emit editingFinished(); }
 
-    friend class QArvEnumeration;
-    friend class QArvString;
-    friend class QArvFloat;
-    friend class QArvInteger;
-    friend class QArvBoolean;
-    friend class QArvCommand;
-    friend class QArvRegister;
+    friend struct QArvEnumeration;
+    friend struct QArvString;
+    friend struct QArvFloat;
+    friend struct QArvInteger;
+    friend struct QArvBoolean;
+    friend struct QArvCommand;
+    friend struct QArvRegister;
 };
 
 //! These types are used by the QArvCamera model and delegate to edit feature node values.

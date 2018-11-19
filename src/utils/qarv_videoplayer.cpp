@@ -137,11 +137,11 @@ void QArvVideoPlayer::on_playButton_toggled(bool checked) {
     }
 }
 
-void QArvVideoPlayer::on_openQArvVideoAction_triggered(bool checked) {
+void QArvVideoPlayer::on_openQArvVideoAction_triggered(bool) {
     openQArvVideo();
 }
 
-void QArvVideoPlayer::on_openRawVideoAction_triggered(bool checked) {
+void QArvVideoPlayer::on_openRawVideoAction_triggered(bool) {
     openRawVideo();
 }
 

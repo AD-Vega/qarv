@@ -1048,9 +1048,9 @@ void QArvMainWindow::on_exposureSpinbox_editingFinished() {
 
 static void makeDockAWindow(QDockWidget* dock) {
     // Currently disabled as it causes jerkyness when undocking.
+    //dock->setWindowFlags(Qt::Window);
+    //dock->show();
     return;
-    dock->setWindowFlags(Qt::Window);
-    dock->show();
 }
 
 void QArvMainWindow::on_showVideoAction_toggled(bool checked) {
