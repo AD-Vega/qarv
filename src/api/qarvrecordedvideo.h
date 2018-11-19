@@ -65,7 +65,7 @@ public:
     /*!
      * Returns false on error.
      */
-    bool seek(uint frame);
+    bool seek(quint64 frame);
 
     //! Returns true if video file is seekable.
     /*!
