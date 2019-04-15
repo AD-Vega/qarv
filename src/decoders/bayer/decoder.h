@@ -47,91 +47,91 @@ public:
 
         switch (fmt) {
         case ARV_PIXEL_FORMAT_BAYER_GR_8:
-            cvt = CV_BayerGB2BGR;
+            cvt = cv::COLOR_BayerGB2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_RG_8:
-            cvt = CV_BayerBG2BGR;
+            cvt = cv::COLOR_BayerBG2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_GB_8:
-            cvt = CV_BayerGR2BGR;
+            cvt = cv::COLOR_BayerGR2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_BG_8:
-            cvt = CV_BayerRG2BGR;
+            cvt = cv::COLOR_BayerRG2BGR;
             break;
 
 #ifdef ARV_PIXEL_FORMAT_BAYER_GR_16
         case ARV_PIXEL_FORMAT_BAYER_GR_16:
-            cvt = CV_BayerGB2BGR;
+            cvt = cv::COLOR_BayerGB2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_RG_16:
-            cvt = CV_BayerBG2BGR;
+            cvt = cv::COLOR_BayerBG2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_GB_16:
-            cvt = CV_BayerGR2BGR;
+            cvt = cv::COLOR_BayerGR2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_BG_16:
-            cvt = CV_BayerRG2BGR;
+            cvt = cv::COLOR_BayerRG2BGR;
             break;
 
 #endif
         case ARV_PIXEL_FORMAT_BAYER_GR_10:
-            cvt = CV_BayerGB2BGR;
+            cvt = cv::COLOR_BayerGB2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_RG_10:
-            cvt = CV_BayerBG2BGR;
+            cvt = cv::COLOR_BayerBG2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_GB_10:
-            cvt = CV_BayerGR2BGR;
+            cvt = cv::COLOR_BayerGR2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_BG_10:
-            cvt = CV_BayerRG2BGR;
+            cvt = cv::COLOR_BayerRG2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_GR_12:
-            cvt = CV_BayerGB2BGR;
+            cvt = cv::COLOR_BayerGB2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_RG_12:
-            cvt = CV_BayerBG2BGR;
+            cvt = cv::COLOR_BayerBG2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_GB_12:
-            cvt = CV_BayerGR2BGR;
+            cvt = cv::COLOR_BayerGR2BGR;
             break;
 
         case ARV_PIXEL_FORMAT_BAYER_BG_12:
-            cvt = CV_BayerRG2BGR;
+            cvt = cv::COLOR_BayerRG2BGR;
             break;
 
 #ifdef ARV_PIXEL_FORMAT_BAYER_GR_12_PACKED
         case ARV_PIXEL_FORMAT_BAYER_GR_12_PACKED:
-            cvt = CV_BayerGB2BGR;
+            cvt = cv::COLOR_BayerGB2BGR;
             break;
 
 #endif
 #ifdef ARV_PIXEL_FORMAT_BAYER_RG_12_PACKED
         case ARV_PIXEL_FORMAT_BAYER_RG_12_PACKED:
-            cvt = CV_BayerBG2BGR;
+            cvt = cv::COLOR_BayerBG2BGR;
             break;
 
 #endif
 #ifdef ARV_PIXEL_FORMAT_BAYER_GB_12_PACKED
         case ARV_PIXEL_FORMAT_BAYER_GB_12_PACKED:
-            cvt = CV_BayerGR2BGR;
+            cvt = cv::COLOR_BayerGR2BGR;
             break;
 
 #endif
         case ARV_PIXEL_FORMAT_BAYER_BG_12_PACKED:
-            cvt = CV_BayerRG2BGR;
+            cvt = cv::COLOR_BayerRG2BGR;
             break;
         }
     };

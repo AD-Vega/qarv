@@ -42,7 +42,7 @@ public:
     }
     void decode(QByteArray frame) {}
     const cv::Mat getCvImage() { return redImage; }
-    int cvType() { return CV_USRTYPE1; }
+    int cvType() { return -1; }
     ArvPixelFormat pixelFormat() { return type; }
     QByteArray decoderSpecification() { return QByteArray{}; }
 
