@@ -585,9 +585,6 @@ void QArvMainWindow::startVideo(bool start) {
             decoder = QArvDecoder::makeDecoder(camera->getPixelFormatId(),
                                                camera->getROI().size(),
                                                useFastInterpolator->isChecked());
-            invalidImage = QImage(camera->getROI().size(),
-                                  QImage::Format_ARGB32_Premultiplied);
-            invalidImage.fill(Qt::red);
             if (decoder == NULL) {
                 QString message = tr("Decoder for %1 doesn't exist!");
                 message = message.arg(camera->getPixelFormat());
@@ -869,6 +866,11 @@ void QArvMainWindow::snapshotCooked(cv::Mat frame) {
     QString fileName = snappathEdit->text() + "/"
                        + snapbasenameEdit->text()
                        + time.toString("yyyy-MM-dd-hhmmss.zzz");
+    if (frame.empty()) {
+        statusBar()->showMessage(tr("Current frame is invalid, try "
+                                    "snapshotting again."), statusTimeoutMsec);
+        return;
+    }
     if (!cv::imwrite((fileName + ".png").toStdString(), frame))
         statusBar()->showMessage(tr("Snapshot cannot be written."),
                                  statusTimeoutMsec);
@@ -895,8 +897,8 @@ void QArvMainWindow::pickedROI(QRect roi) {
 
     // Compensate for the transform of the image. The actual transform must
     // be calculated using the size of the actual image, so we get this size
-    // from the image prepared for invalid frames.
-    auto imagesize = invalidImage.size();
+    // from the camera.
+    auto imagesize = camera->getROI().size();
     auto truexform = QImage::trueMatrix(imageTransform,
                                         imagesize.width(),
                                         imagesize.height());

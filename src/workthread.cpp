@@ -206,6 +206,15 @@ void Cooker::cameraAcquisition(QArvCamera* camera,
 void Cooker::processFrame(QByteArray frame, ArvBuffer* aravisFrame) {
     receivedFrames.fetch_add(1, std::memory_order_relaxed);
     if (p.decoder) {
+        if (frame.isEmpty()) {
+            emit frameCooked(cv::Mat());
+            if (doRender.load()) {
+                doRender.store(false);
+                emit frameToRender(cv::Mat());
+            }
+            return;
+        }
+
         p.decoder->decode(frame);
         cv::Mat img = p.decoder->getCvImage();
 
@@ -337,10 +346,18 @@ static void renderFrameF(const cv::Mat frame,
     QImage& image = *image_;
     const int h = frame.rows, w = frame.cols;
     QSize s = image.size();
-    if (s.height() != h
-        || s.width() != w
-        || image.format() != QImage::Format_ARGB32_Premultiplied)
+    if (frame.empty()) {
+        if (image.format() != QImage::Format_ARGB32_Premultiplied) {
+            // An empty frame, but also an invalid QImage. Just make up something.
+            image = QImage(1, 1, QImage::Format_ARGB32_Premultiplied);
+        }
+        image.fill(Qt::red);
+    } else if (s.height() != h
+               || s.width() != w
+               || image.format() != QImage::Format_ARGB32_Premultiplied) {
+        // A valid frame, but invalid QImage. Initialize it.
         image = QImage(w, h, QImage::Format_ARGB32_Premultiplied);
+    }
     if (!grayscale) {
         float* histograms[3] = { histRed, histGreen, histBlue };
         for (int i = 0; i < h; i++) {

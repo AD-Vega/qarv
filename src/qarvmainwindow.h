@@ -121,7 +121,6 @@ private:
     void stopAllAcquisition();
     void closeEvent(QCloseEvent* event);
 
-    QImage invalidImage;
     QArvCamera* camera;
     QArvDecoder* decoder;
     QRect roirange, roidefault;

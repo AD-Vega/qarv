@@ -89,7 +89,7 @@ signals:
      * If the QArvGui will not be used to display frames, connecting
      * to this signal and using QArvDecoder is more efficient.
      *
-     * \param raw Undecoded buffer. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
+     * \param raw Undecoded buffer. May be empty if the received frame was invalid. Be aware that, depending on the settings in the GUI, this data may be overwritten if not used or copied soon enough.
      * \param rawAravisBuffer See QArvCamera::getFrame().
      */
     void frameReady(QByteArray raw, ArvBuffer* rawAravisBuffer);
@@ -100,7 +100,7 @@ signals:
      * and (possibly) process them. In that case, connecting to this signal
      * is more efficient than using the raw frame and decoding it again.
      *
-     * \param processed The frame as seen in the GUI video display. It is not copied, use cv::Mat::clone() if necessary.
+     * \param processed The frame as seen in the GUI video display. May be empty if the received frame was invalid. It is not copied, use cv::Mat::clone() if necessary.
      */
     void frameReady(cv::Mat processed);
 
