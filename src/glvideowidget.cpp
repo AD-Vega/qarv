@@ -43,15 +43,18 @@ GLVideoWidget::~GLVideoWidget() {}
 
 void GLVideoWidget::setImage(const QImage& image_) {
     if (image_.isNull()) {
-        idling = true;
+        if (!idling) {
+            idling = true;
+            in = QRect();
+            updateOutRect();
+        }
     } else {
         idling = false;
         image = image_;
-    }
-    if (in.size() != image.size()) {
-        in = image.rect();
-        QResizeEvent nochange(size(), size());
-        resizeEvent(&nochange);
+        if (in.size() != image.size()) {
+            in = image.rect();
+            updateOutRect();
+        }
     }
     update();
 }
@@ -61,8 +64,7 @@ void GLVideoWidget::swapFrames() {
     image.swap(unusedImage);
     if (in.size() != image.size()) {
         in = image.rect();
-        QResizeEvent nochange(size(), size());
-        resizeEvent(&nochange);
+        updateOutRect();
     }
     update();
 }
@@ -73,6 +75,10 @@ QImage* GLVideoWidget::unusedFrame() {
 
 void GLVideoWidget::resizeEvent(QResizeEvent* event) {
     QOpenGLWidget::resizeEvent(event);
+    updateOutRect();
+}
+
+void GLVideoWidget::updateOutRect() {
     auto view = rect();
     out = view;
     QSize thesize;

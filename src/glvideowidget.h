@@ -55,6 +55,7 @@ private:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseReleaseEvent(QMouseEvent* event);
     virtual void resizeEvent(QResizeEvent* event);
+    void updateOutRect();
 
     QImage image, unusedImage;
     QRect in, out;
