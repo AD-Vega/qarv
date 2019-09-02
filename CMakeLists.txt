@@ -42,7 +42,7 @@ find_package(Qt5 REQUIRED COMPONENTS
 set(QT_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network Qt5::Svg
                  Qt5::Concurrent)
 
-pkg_search_module(ARAVIS REQUIRED aravis-0.6 aravis-0.4 aravis-0.2)
+pkg_search_module(ARAVIS REQUIRED aravis-0.8 aravis-0.6 aravis-0.4 aravis-0.2)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(SWSCALE REQUIRED libswscale)
 pkg_check_modules(AVCODEC REQUIRED libavcodec)
