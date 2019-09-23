@@ -148,7 +148,7 @@
                   <string>Actual frame rate.</string>
                  </property>
                  <property name="text">
-                  <string>Actual: </string>
+                  <string>Actual:</string>
                  </property>
                 </widget>
                </item>
