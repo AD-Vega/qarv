@@ -124,6 +124,6 @@ QMainWindow* QArvGui::mainWindow() {
 }
 
 void QArvGui::closeEvent(QCloseEvent* event) {
+    ext->mw->close();
     QWidget::closeEvent(event);
-    return ext->mw->stopAllAcquisition();
 }
