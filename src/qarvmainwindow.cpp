@@ -236,7 +236,6 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
 
     setupListOfSavedWidgets();
     restoreProgramSettings();
-
     updateImageTransform();
 
     auto makeVerticalLine = [] () {
@@ -1266,21 +1265,34 @@ void QArvMainWindow::restoreProgramSettings() {
         if (!data.isValid())
             continue;
 
-        if (auto* w = qobject_cast<QCheckBox*>(widget))
+        if (auto* w = qobject_cast<QCheckBox*>(widget)) {
+            w->blockSignals(true);
             w->setCheckState(Qt::CheckState(data.toInt()));
-        else if (auto* w = qobject_cast<QAbstractButton*>(widget))
+            w->blockSignals(false);
+        } else if (auto* w = qobject_cast<QAbstractButton*>(widget)) {
+            w->blockSignals(true);
             w->setChecked(data.toBool());
-        else if (auto* w = qobject_cast<QComboBox*>(widget))
+            w->blockSignals(false);
+        } else if (auto* w = qobject_cast<QComboBox*>(widget)) {
+            w->blockSignals(true);
             w->setCurrentIndex(data.toInt());
-        else if (auto* w = qobject_cast<QLineEdit*>(widget))
+            w->blockSignals(false);
+        } else if (auto* w = qobject_cast<QLineEdit*>(widget)) {
+            w->blockSignals(true);
             w->setText(data.toString());
-        else if (auto* w = qobject_cast<QSpinBox*>(widget))
+            w->blockSignals(false);
+        } else if (auto* w = qobject_cast<QSpinBox*>(widget)) {
+            w->blockSignals(true);
             w->setValue(data.toInt());
-        else if (auto* w = qobject_cast<QTimeEdit*>(widget))
+            w->blockSignals(false);
+        } else if (auto* w = qobject_cast<QTimeEdit*>(widget)) {
+            w->blockSignals(true);
             w->setTime(data.toTime());
-        else
+            w->blockSignals(false);
+        } else {
             logMessage() << "FIXME: don't know how to restore setting"
                          << i.key();
+        }
     }
 }
 
