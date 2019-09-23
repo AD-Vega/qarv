@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>926</width>
-    <height>644</height>
+    <width>934</width>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1059,6 +1059,22 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="registerCacheCheck">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting may make browsing camera features more responsive. However, some cameras specify cacheability of settings incorrectly. If this checkbox is set to partially enabled, debug mode is entered where cached values are checked against actual values.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Enable camera register cache</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <widget class="QPushButton" name="saveSettingsButton">
@@ -1464,7 +1480,7 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="stopRecordingRadios"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="stopRecordingRadios"/>
  </buttongroups>
 </ui>

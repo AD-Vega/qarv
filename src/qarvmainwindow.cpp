@@ -71,6 +71,10 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     connect(workthread, SIGNAL(frameRendered()), SLOT(frameRendered()));
     connect(workthread, SIGNAL(recordingStopped()), SLOT(stopRecording()));
 
+#ifndef ARAVIS_HAVE_REGISTER_CACHE
+    registerCacheCheck->setEnabled(false);
+#endif
+
     // Setup theme icons if available.
     bool usingFallbackIcons = false;
     QHash<QAbstractButton*, QString> icons;
@@ -449,6 +453,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
 
     camera->setAutoGain(false);
     camera->setAutoExposure(false);
+    on_registerCacheCheck_stateChanged(registerCacheCheck->checkState());
     readAllValues();
 
     advancedTree->setModel(camera);
@@ -1207,6 +1212,9 @@ void QArvMainWindow::setupListOfSavedWidgets() {
     // display widgets
     saved_widgets["qarv_videodisplay/actual_size"] = unzoomButton;
     saved_widgets["qarv_histogram/logarithmic"] = histogramLog;
+
+    // features tab
+    saved_widgets["qarv_features/cache_policy"] = registerCacheCheck;
 }
 
 void QArvMainWindow::saveProgramSettings() {
@@ -1224,7 +1232,9 @@ void QArvMainWindow::saveProgramSettings() {
     for (auto i = saved_widgets.begin(); i != saved_widgets.end(); i++) {
         QWidget* widget = i.value();
 
-        if (auto* w = qobject_cast<QAbstractButton*>(widget))
+        if (auto* w = qobject_cast<QCheckBox*>(widget))
+            settings.setValue(i.key(), w->checkState());
+        else if (auto* w = qobject_cast<QAbstractButton*>(widget))
             settings.setValue(i.key(), w->isChecked());
         else if (auto* w = qobject_cast<QComboBox*>(widget))
             settings.setValue(i.key(), w->currentIndex());
@@ -1256,7 +1266,9 @@ void QArvMainWindow::restoreProgramSettings() {
         if (!data.isValid())
             continue;
 
-        if (auto* w = qobject_cast<QAbstractButton*>(widget))
+        if (auto* w = qobject_cast<QCheckBox*>(widget))
+            w->setCheckState(Qt::CheckState(data.toInt()));
+        else if (auto* w = qobject_cast<QAbstractButton*>(widget))
             w->setChecked(data.toBool());
         else if (auto* w = qobject_cast<QComboBox*>(widget))
             w->setCurrentIndex(data.toInt());
@@ -1320,6 +1332,15 @@ void QArvMainWindow::on_postprocList_doubleClicked(const QModelIndex& index) {
     editor->show();
     editor->setFocus();
 }
+
+void QArvMainWindow::on_registerCacheCheck_stateChanged(int state) {
+#ifdef ARAVIS_HAVE_REGISTER_CACHE
+    bool enable = state != Qt::Unchecked;
+    bool debug = state == Qt::PartiallyChecked;
+    camera->enableRegisterCache(enable, debug);
+#endif
+}
+
 
 void QArvMainWindow::updateRecordingTime() {
     if (recording && standalone && !recorder->isOK()) {

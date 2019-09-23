@@ -82,6 +82,8 @@ if (ARAVIS_VERSION VERSION_LESS "0.3.5")
 endif()
 if (ARAVIS_VERSION VERSION_LESS "0.7.0")
   add_definitions(-DARAVIS_OLD_SET_FEATURE)
+else()
+  add_definitions(-DARAVIS_HAVE_REGISTER_CACHE)
 endif()
 
 set_prefixed(qarv_UIS_pre src/

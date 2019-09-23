@@ -95,6 +95,7 @@ private slots:
     void on_videoFormatSelector_currentIndexChanged(int i);
     void on_postprocRemoveButton_clicked(bool checked);
     void on_postprocList_doubleClicked(const QModelIndex & index);
+    void on_registerCacheCheck_stateChanged(int state);
     void pickedROI(QRect roi);
     void readExposure();
     void readGain();

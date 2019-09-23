@@ -266,6 +266,7 @@ public:
     QList<QString> categories() const;
     QList<QString> features(const QString& category) const;
     QModelIndex featureIndex(const QString& feature) const;
+    void enableRegisterCache(bool enable = true, bool debug = false);
     /**@}*/
 
 private:

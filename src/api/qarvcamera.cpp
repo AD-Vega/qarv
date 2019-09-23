@@ -858,3 +858,17 @@ QModelIndex QArvCamera::featureIndex(const QString& feature) const {
     }
     return QModelIndex();
 }
+
+void QArvCamera::enableRegisterCache(bool enable, bool debug) {
+#ifdef ARAVIS_HAVE_REGISTER_CACHE
+    auto policy = enable ?
+        ARV_REGISTER_CACHE_POLICY_ENABLE :
+        ARV_REGISTER_CACHE_POLICY_DISABLE;
+    if (enable && debug) {
+        policy = ARV_REGISTER_CACHE_POLICY_DEBUG;
+    }
+    arv_gc_set_register_cache_policy(genicam, policy);
+#else
+    qDebug() << "Register cache not supported with aravis < 0.7.";
+#endif
+}
