@@ -158,12 +158,21 @@ void QArvCamera::setROI(QRect roi) {
     roi.getRect(&x, &y, &width, &height);
     auto hmin = getROIHeightBounds();
     auto wmin = getROIWidthBounds();
+#ifdef ARAVIS_OLD_SET_FEATURE
     arv_device_set_integer_feature_value(device, "Width", wmin.first);
     arv_device_set_integer_feature_value(device, "Height", hmin.first);
     arv_device_set_integer_feature_value(device, "OffsetX", x);
     arv_device_set_integer_feature_value(device, "OffsetY", y);
     arv_device_set_integer_feature_value(device, "Width", width);
     arv_device_set_integer_feature_value(device, "Height", height);
+#else
+    arv_device_set_integer_feature_value(device, "Width", wmin.first, nullptr);
+    arv_device_set_integer_feature_value(device, "Height", hmin.first, nullptr);
+    arv_device_set_integer_feature_value(device, "OffsetX", x, nullptr);
+    arv_device_set_integer_feature_value(device, "OffsetY", y, nullptr);
+    arv_device_set_integer_feature_value(device, "Width", width, nullptr);
+    arv_device_set_integer_feature_value(device, "Height", height, nullptr);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
@@ -238,12 +247,21 @@ void QArvCamera::setFPS(double fps) {
 }
 
 int QArvCamera::getMTU() {
+#ifdef ARAVIS_OLD_SET_FEATURE
     return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
+#else
+    return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize", nullptr);
+#endif
 }
 
 void QArvCamera::setMTU(int mtu) {
+#ifdef ARAVIS_OLD_SET_FEATURE
     arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
     arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
+#else
+    arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu, nullptr);
+    arv_device_set_integer_feature_value(device, "GevSCBWR", 10, nullptr);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
@@ -434,7 +452,11 @@ QHostAddress QArvCamera::getHostIP() {
 }
 
 int QArvCamera::getEstimatedBW() {
+#ifdef ARAVIS_OLD_SET_FEATURE
     return arv_device_get_integer_feature_value(device, "GevSCDCT");
+#else
+    return arv_device_get_integer_feature_value(device, "GevSCDCT", nullptr);
+#endif
 }
 
 QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {

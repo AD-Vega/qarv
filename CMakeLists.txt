@@ -80,6 +80,9 @@ endif()
 if (ARAVIS_VERSION VERSION_LESS "0.3.5")
   add_definitions(-DARAVIS_OLD_BUFFER)
 endif()
+if (ARAVIS_VERSION VERSION_LESS "0.7.0")
+  add_definitions(-DARAVIS_OLD_SET_FEATURE)
+endif()
 
 set_prefixed(qarv_UIS_pre src/
   mainwindow.ui
