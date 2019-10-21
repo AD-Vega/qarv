@@ -78,63 +78,63 @@ struct QArvEnumeration : QArvType {
     QList<bool> isAvailable;
     int currentValue;
     QArvEnumeration();
-    operator QString()  const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString()  const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvString : QArvType {
     QString value;
     qint64 maxlength;
     QArvString();
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvFloat : QArvType {
     double value, min, max;
     QString unit;
     QArvFloat();
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvInteger : QArvType {
     qint64 value, min, max, inc;
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvBoolean : QArvType {
     bool value;
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvCommand : QArvType {
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 struct QArvRegister : QArvType {
     QByteArray value;
     qint64 length;
     QArvRegister();
-    operator QString() const;
-    QArvEditor* createEditor(QWidget* parent) const;
-    void populateEditor(QWidget* editor) const;
-    void readFromEditor(QWidget* editor);
+    operator QString() const override;
+    QArvEditor* createEditor(QWidget* parent) const override;
+    void populateEditor(QWidget* editor) const override;
+    void readFromEditor(QWidget* editor) override;
 };
 
 /**@}*/

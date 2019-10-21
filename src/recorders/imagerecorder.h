@@ -30,15 +30,15 @@ class ImageFormat : public QObject, public OutputFormat {
     Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.ImageFormat")
 
 public:
-    QString name() { return "TIFF images"; }
+    QString name() override { return "TIFF images"; }
     bool canAppend() { return true; }
-    bool canWriteInfo() { return false; }
-    bool recordsRaw() { return false; }
+    bool canWriteInfo() override { return false; }
+    bool recordsRaw() override { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,
                            int framesPerSecond,
-                           bool writeInfo);
+                           bool writeInfo) override;
 };
 
 }

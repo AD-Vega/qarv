@@ -31,14 +31,14 @@ class HuffyuvAviFormat : public QObject, public OutputFormat {
     Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.HuffyuvAviFormat")
 
 public:
-    QString name() { return "huffyuv AVI"; }
-    bool canWriteInfo() { return false; }
-    bool recordsRaw() { return false; }
+    QString name() override { return "huffyuv AVI"; }
+    bool canWriteInfo() override { return false; }
+    bool recordsRaw() override { return false; }
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,
                            int framesPerSecond,
-                           bool writeInfo);
+                           bool writeInfo) override;
 };
 
 }

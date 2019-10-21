@@ -44,11 +44,11 @@ public:
                    ArvPixelFormat arvPixFmt,
                    int swsFlags = SWS_FAST_BILINEAR | SWS_BITEXACT);
     virtual ~SwScaleDecoder();
-    void decode(QByteArray frame);
-    const cv::Mat getCvImage();
-    int cvType();
-    ArvPixelFormat pixelFormat();
-    QByteArray decoderSpecification();
+    void decode(QByteArray frame) override;
+    const cv::Mat getCvImage() override;
+    int cvType() override;
+    ArvPixelFormat pixelFormat() override;
+    QByteArray decoderSpecification() override;
     enum AVPixelFormat swscalePixelFormat();
 
 private:

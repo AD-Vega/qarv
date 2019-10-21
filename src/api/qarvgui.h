@@ -111,7 +111,7 @@ private slots:
     void signalForwarding(bool enable);
 
 protected:
-    void closeEvent(QCloseEvent* event);
+    void closeEvent(QCloseEvent* event) override;
 
 private:
     QArvGuiExtension* ext;

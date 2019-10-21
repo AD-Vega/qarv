@@ -37,7 +37,7 @@ class GLVideoWidget : public QOpenGLWidget {
 public:
     GLVideoWidget(QWidget* parent = NULL);
     ~GLVideoWidget();
-    void paintGL();
+    void paintGL() override;
     QImage* unusedFrame();
     void swapFrames();
     void setImage(const QImage& image_ = QImage());
@@ -51,10 +51,10 @@ signals:
     void selectionComplete(QRect region);
 
 private:
-    virtual void mouseMoveEvent(QMouseEvent* event);
-    virtual void mousePressEvent(QMouseEvent* event);
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-    virtual void resizeEvent(QResizeEvent* event);
+    virtual void mouseMoveEvent(QMouseEvent* event) override;
+    virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void resizeEvent(QResizeEvent* event) override;
     void updateOutRect();
 
     QImage image, unusedImage;

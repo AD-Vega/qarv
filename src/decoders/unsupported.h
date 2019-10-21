@@ -40,11 +40,11 @@ public:
         type(type_), redImage(size.height(), size.width(), CV_8UC3) {
         redImage = cv::Scalar(0, 0, 255);
     }
-    void decode(QByteArray frame) {}
-    const cv::Mat getCvImage() { return redImage; }
-    int cvType() { return -1; }
-    ArvPixelFormat pixelFormat() { return type; }
-    QByteArray decoderSpecification() { return QByteArray{}; }
+    void decode(QByteArray frame) override {}
+    const cv::Mat getCvImage() override { return redImage; }
+    int cvType() override { return -1; }
+    ArvPixelFormat pixelFormat() override { return type; }
+    QByteArray decoderSpecification() override { return QByteArray{}; }
 
 private:
     ArvPixelFormat type;

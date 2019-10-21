@@ -30,10 +30,10 @@ namespace QArv
 class LevelsFilter : public ImageFilter {
 public:
     LevelsFilter(ImageFilterPlugin* plugin);
-    ImageFilterSettingsWidget* createSettingsWidget();
-    void restoreSettings();
-    void saveSettings();
-    void filterImage(cv::Mat& image);
+    ImageFilterSettingsWidget* createSettingsWidget() override;
+    void restoreSettings() override;
+    void saveSettings() override;
+    void filterImage(cv::Mat& image) override;
 
 private:
     std::atomic<double> black, white, gamma;
@@ -47,8 +47,8 @@ class LevelsPlugin : public QObject, public ImageFilterPlugin {
     Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.LevelsFilter")
 
 public:
-    QString name();
-    ImageFilter* makeFilter();
+    QString name() override;
+    ImageFilter* makeFilter() override;
 };
 
 class LevelsSettingsWidget : public ImageFilterSettingsWidget,
@@ -61,8 +61,8 @@ public:
                          Qt::WindowFlags f = 0);
 
 protected slots:
-    void setLiveUpdate(bool enabled);
-    void applySettings();
+    void setLiveUpdate(bool enabled) override;
+    void applySettings() override;
 
 private slots:
     void on_blackSlider_valueChanged(int value);

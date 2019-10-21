@@ -136,9 +136,9 @@ public:
         }
     };
 
-    const cv::Mat getCvImage() { return decoded; }
+    const cv::Mat getCvImage() override { return decoded; }
 
-    int cvType() {
+    int cvType() override {
         switch (fmt) {
         case ARV_PIXEL_FORMAT_BAYER_GR_8:
         case ARV_PIXEL_FORMAT_BAYER_RG_8:
@@ -151,16 +151,16 @@ public:
         }
     }
 
-    ArvPixelFormat pixelFormat() { return fmt; }
+    ArvPixelFormat pixelFormat() override { return fmt; }
 
-    QByteArray decoderSpecification() {
+    QByteArray decoderSpecification() override {
         QByteArray b;
         QDataStream s(&b, QIODevice::WriteOnly);
         s << QString("Aravis") << size << pixelFormat() << false;
         return b;
     }
 
-    void decode(QByteArray frame) {
+    void decode(QByteArray frame) override {
         // Workaround: cv::Mat has no const data constructor, but data need
         // not be copied, as QByteArray::data() does.
         void* data =

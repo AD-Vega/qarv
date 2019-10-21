@@ -35,17 +35,17 @@ public:
         OK = true;
     }
 
-    bool isOK() { return OK; }
+    bool isOK() override { return OK; }
 
-    bool recordsRaw() {
+    bool recordsRaw() override {
         return false;
     }
 
-    QPair<qint64, qint64> fileSize() {
+    QPair<qint64, qint64> fileSize() override {
         return qMakePair(currentSize, currentNumber);
     }
 
-    void recordFrame(cv::Mat decoded) {
+    void recordFrame(cv::Mat decoded) override {
         QString file = baseName.arg(currentNumber++, 19, 10, QChar('0'));
         OK = cv::imwrite(file.toStdString(), decoded);
         if (OK)

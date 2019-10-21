@@ -39,7 +39,7 @@ class GLHistogramWidget : public QOpenGLWidget {
 public:
     GLHistogramWidget(QWidget* parent = 0);
 
-    void paintGL();
+    void paintGL() override;
     void setIdle();
     Histograms* unusedHistograms();
     void swapHistograms(bool grayscale);

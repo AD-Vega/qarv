@@ -120,7 +120,7 @@ private slots:
 private:
     void readROILimits();
     void stopAllAcquisition();
-    void closeEvent(QCloseEvent* event);
+    void closeEvent(QCloseEvent* event) override;
 
     QArvCamera* camera;
     QArvDecoder* decoder;
@@ -163,7 +163,7 @@ public:
     ToolTipToRichTextFilter(int size_threshold, QObject* parent);
 
 protected:
-    bool eventFilter(QObject* obj, QEvent* evt);
+    bool eventFilter(QObject* obj, QEvent* evt) override;
 
 private:
     int size_threshold;

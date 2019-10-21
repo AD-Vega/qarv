@@ -11,8 +11,8 @@ class BayerRG12 : public QObject, public QArvPixelFormat {
     Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.BayerRG12")
 
 public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_BAYER_RG_12; }
-    QArvDecoder* makeDecoder(QSize size) {
+    ArvPixelFormat pixelFormat() override { return ARV_PIXEL_FORMAT_BAYER_RG_12; }
+    QArvDecoder* makeDecoder(QSize size) override {
         return new BayerDecoder<ARV_PIXEL_FORMAT_BAYER_RG_12>(size);
     }
 };

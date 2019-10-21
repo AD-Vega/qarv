@@ -170,7 +170,7 @@ public:
             logMessage(false) << gstprocess.readAll().constData();
     }
 
-    bool isOK() {
+    bool isOK() override {
         if (!gstOK()) return false;
         if (gstprocess.state() == QProcess::Starting) {
             if (!gstprocess.waitForStarted(processTimeout)) {
@@ -183,11 +183,11 @@ public:
         return gstprocess.state() == QProcess::Running;
     }
 
-    bool recordsRaw() {
+    bool recordsRaw() override {
         return false;
     }
 
-    void recordFrame(cv::Mat decoded) {
+    void recordFrame(cv::Mat decoded) override {
         if (!isOK())
             return;
         numberOfFrames++;
@@ -209,7 +209,7 @@ public:
             logMessage(false) << gstprocess.readAll().constData();
     }
 
-    QPair<qint64, qint64> fileSize() {
+    QPair<qint64, qint64> fileSize() override {
         QFileInfo file(fileName);
         return qMakePair(file.size(), numberOfFrames);
     }

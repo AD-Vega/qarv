@@ -47,18 +47,18 @@ public:
     MonoUnpackedDecoder(QSize size_) :
         size(size_), M(size_.height(), size_.width(), cvMatType) {}
 
-    ArvPixelFormat pixelFormat() { return pixFmt; }
+    ArvPixelFormat pixelFormat() override { return pixFmt; }
 
-    QByteArray decoderSpecification() {
+    QByteArray decoderSpecification() override {
         QByteArray b;
         QDataStream s(&b, QIODevice::WriteOnly);
         s << QString("Aravis") << size << pixFmt << false;
         return b;
     }
 
-    int cvType() { return cvMatType; };
+    int cvType() override { return cvMatType; };
 
-    void decode(QByteArray frame) {
+    void decode(QByteArray frame) override {
         const InputType* dta =
             reinterpret_cast<const InputType*>(frame.constData());
         const int h = size.height(), w = size.width();
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    const cv::Mat getCvImage() {
+    const cv::Mat getCvImage() override {
         return M;
     }
 };

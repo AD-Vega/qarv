@@ -31,11 +31,11 @@ namespace QArv
 class Mono12PackedDecoder : public QArvDecoder {
 public:
     Mono12PackedDecoder(QSize size_);
-    void decode(QByteArray frame);
-    const cv::Mat getCvImage();
-    int cvType() { return CV_16UC1; }
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
-    QByteArray decoderSpecification();
+    void decode(QByteArray frame) override;
+    const cv::Mat getCvImage() override;
+    int cvType() override { return CV_16UC1; }
+    ArvPixelFormat pixelFormat() override { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
+    QByteArray decoderSpecification() override;
 
 private:
     QSize size;
@@ -48,8 +48,8 @@ class Mono12PackedFormat : public QObject, public QArvPixelFormat {
     Q_PLUGIN_METADATA(IID "si.ad-vega.qarv.Mono12PackedFormat")
 
 public:
-    ArvPixelFormat pixelFormat() { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
-    QArvDecoder* makeDecoder(QSize size) {
+    ArvPixelFormat pixelFormat() override { return ARV_PIXEL_FORMAT_MONO_12_PACKED; }
+    QArvDecoder* makeDecoder(QSize size) override {
         return new Mono12PackedDecoder(size);
     }
 };

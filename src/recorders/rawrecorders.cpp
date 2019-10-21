@@ -62,15 +62,15 @@ public:
         }
     }
 
-    bool isOK() {
+    bool isOK() override {
         return file.isOpen() && (file.error() == QFile::NoError);
     }
 
-    bool recordsRaw() {
+    bool recordsRaw() override {
         return true;
     }
 
-    void recordFrame(QByteArray raw) {
+    void recordFrame(QByteArray raw) override {
         if (isOK()) {
             file.write(raw);
             if (!bytesizeWritten) {
@@ -84,7 +84,7 @@ public:
         }
     }
 
-    QPair<qint64, qint64> fileSize() {
+    QPair<qint64, qint64> fileSize() override {
         qint64 s, n;
         if (!bytesizeWritten || !frameBytes) {
             s = n = 0;
@@ -143,15 +143,15 @@ public:
         }
     }
 
-    bool isOK() {
+    bool isOK() override {
         return OK && file.isOpen() && (file.error() == QFile::NoError);
     }
 
-    bool recordsRaw() {
+    bool recordsRaw() override {
         return false;
     }
 
-    void recordFrame(cv::Mat decoded) {
+    void recordFrame(cv::Mat decoded) override {
         if (!isOK())
             return;
         int pixPerRow = decoded.cols*decoded.channels();
@@ -172,7 +172,7 @@ public:
         }
     }
 
-    QPair<qint64, qint64> fileSize() {
+    QPair<qint64, qint64> fileSize() override {
         qint64 s = file.size();
         qint64 n = s / frameBytes;
         return qMakePair(s, n);
@@ -226,15 +226,15 @@ public:
         }
     }
 
-    bool isOK() {
+    bool isOK() override {
         return OK && file.isOpen() && (file.error() == QFile::NoError);
     }
 
-    bool recordsRaw() {
+    bool recordsRaw() override {
         return false;
     }
 
-    void recordFrame(cv::Mat decoded) {
+    void recordFrame(cv::Mat decoded) override {
         if (!isOK())
             return;
         int pixPerRow = decoded.cols * decoded.channels();
@@ -255,7 +255,7 @@ public:
         }
     }
 
-    QPair<qint64, qint64> fileSize() {
+    QPair<qint64, qint64> fileSize() override {
         qint64 s = file.size();
         qint64 n = s / frameBytes;
         return qMakePair(s, n);
