@@ -60,7 +60,7 @@ private:
     uint8_t bufferBytesPerPixel;
     int cvMatType;
     enum AVPixelFormat inputPixfmt, outputPixFmt;
-    struct AVPicture srcInfo;
+    struct AVFrame srcInfo;
     ArvPixelFormat arvPixelFormat;
     int flags;
 };

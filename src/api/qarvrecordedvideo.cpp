@@ -24,7 +24,7 @@
 #include "globals.h"
 extern "C" {
 #include <arv.h>
-#include <libavcodec/avcodec.h>
+#include <libavutil/imgutils.h>
 }
 
 using namespace QArv;
@@ -111,7 +111,8 @@ QArvRecordedVideo::QArvRecordedVideo(const QString& filename,
         logMessage() << "Unable to skip header, file not seekable.";
         return;
     }
-    frameBytes_ = avpicture_get_size(swscalePixfmt, size.width(), size.height());
+    frameBytes_ = av_image_get_buffer_size(
+        swscalePixfmt, size.width(), size.height(), 1);
 }
 
 bool QArvRecordedVideo::status() {
