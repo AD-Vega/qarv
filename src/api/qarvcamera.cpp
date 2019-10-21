@@ -828,7 +828,7 @@ QList<QString> QArvCamera::features(const QString& category) const {
         auto idx = index(i, 0);
         if (idx.data().toString() == category) {
             for (int j = 0; j < rowCount(idx); j++) {
-                auto idx2 = idx.child(j, 0);
+                auto idx2 = index(j, 0, idx);
                 list << idx2.data().toString();
             }
             return list;
@@ -841,18 +841,18 @@ QModelIndex QArvCamera::featureIndex(const QString& feature) const {
     for (int i = 0; i < rowCount(); i++) {
         auto idx = index(i, 0);
         for (int j = 0; j < rowCount(idx); j++) {
-            auto idx2 = idx.child(j, 0);
+            auto idx2 = index(j, 0, idx);
             if (idx2.data(Qt::UserRole).toString() == feature) {
-                return idx.child(j, 1);
+                return index(j, 1, idx);
             }
         }
     }
     for (int i = 0; i < rowCount(); i++) {
         auto idx = index(i, 0);
         for (int j = 0; j < rowCount(idx); j++) {
-            auto idx2 = idx.child(j, 0);
+            auto idx2 = index(j, 0, idx);
             if (idx2.data(Qt::DisplayRole).toString() == feature) {
-                return idx.child(j, 1);
+                return index(j, 1, idx);
             }
         }
     }
