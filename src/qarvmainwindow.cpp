@@ -263,7 +263,6 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
     cameraSelector->setEnabled(false);
     cameraSelector->addItem(tr("Looking for cameras..."));
     QApplication::processEvents();
-    QApplication::flush();
     cameraSelector->clear();
     auto cameras = QArvCamera::listCameras();
     foreach (auto cam, cameras) {
@@ -308,7 +307,6 @@ void QArvMainWindow::on_unzoomButton_toggled(bool checked) {
         video->setFixedSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
         video->setMinimumSize(QSize(64, 64));
         QApplication::processEvents();
-        QApplication::flush();
         on_videodock_topLevelChanged(videodock->isFloating());
     }
 }
