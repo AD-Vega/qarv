@@ -84,6 +84,7 @@ if (ARAVIS_VERSION VERSION_LESS "0.7.0")
   add_definitions(-DARAVIS_OLD_SET_FEATURE)
 else()
   add_definitions(-DARAVIS_HAVE_REGISTER_CACHE)
+  add_definitions(-DARAVIS_HAVE_GERROR_PARAMS)
 endif()
 
 set_prefixed(qarv_UIS_pre src/

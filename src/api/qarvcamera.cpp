@@ -79,7 +79,11 @@ QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
     ext = new QArvCameraExtension;
     setFrameQueueSize();
     camera = arv_camera_new(id.id);
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS, nullptr);
+#else
     arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
+#endif
     device = arv_camera_get_device(camera);
     genicam = arv_device_get_genicam(device);
     featuretree = QArvFeatureTree::createFeaturetree(genicam);
@@ -108,8 +112,13 @@ QList<QArvCameraId> QArvCamera::listCameras() {
             continue;
         }
         ArvCamera* camera = arv_camera_new(camid);
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+        QArvCameraId id(camid, arv_camera_get_vendor_name(camera, nullptr),
+                        arv_camera_get_model_name(camera, nullptr));
+#else
         QArvCameraId id(camid, arv_camera_get_vendor_name(camera),
                         arv_camera_get_model_name(camera));
+#endif
         g_object_unref(camera);
         cameraList << id;
     }
@@ -118,9 +127,15 @@ QList<QArvCameraId> QArvCamera::listCameras() {
 
 QArvCameraId QArvCamera::getId() {
     const char* id, * vendor, * model;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    id = arv_camera_get_device_id(camera, nullptr);
+    vendor = arv_camera_get_vendor_name(camera, nullptr);
+    model = arv_camera_get_model_name(camera, nullptr);
+#else
     id = arv_camera_get_device_id(camera);
     vendor = arv_camera_get_vendor_name(camera);
     model = arv_camera_get_model_name(camera);
+#endif
     return QArvCameraId(id, vendor, model);
 }
 
@@ -135,20 +150,32 @@ ArvCamera* QArvCamera::aravisCamera() {
 
 QRect QArvCamera::getROI() {
     int x, y, width, height;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_region(camera, &x, &y, &width, &height, nullptr);
+#else
     arv_camera_get_region(camera, &x, &y, &width, &height);
+#endif
     return QRect(x, y, width, height);
 }
 
 QPair<int, int> QArvCamera::getROIWidthBounds() {
     int wmin, wmax;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_width_bounds(camera, &wmin, &wmax, nullptr);
+#else
     arv_camera_get_width_bounds(camera, &wmin, &wmax);
+#endif
     QRect roi = getROI();
     return qMakePair(wmin, wmax + roi.x());
 }
 
 QPair<int, int> QArvCamera::getROIHeightBounds() {
     int hmin, hmax;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_height_bounds(camera, &hmin, &hmax, nullptr);
+#else
     arv_camera_get_height_bounds(camera, &hmin, &hmax);
+#endif
     QRect roi = getROI();
     return qMakePair(hmin, hmax + roi.y());
 }
@@ -178,19 +205,32 @@ void QArvCamera::setROI(QRect roi) {
 
 QSize QArvCamera::getBinning() {
     int x, y;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_binning(camera, &x, &y, nullptr);
+#else
     arv_camera_get_binning(camera, &x, &y);
+#endif
     return QSize(x, y);
 }
 
 void QArvCamera::setBinning(QSize bin) {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_binning(camera, bin.width(), bin.height(), nullptr);
+#else
     arv_camera_set_binning(camera, bin.width(), bin.height());
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QList< QString > QArvCamera::getPixelFormats() {
     unsigned int numformats;
-    const char** formats =
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    const char **formats = arv_camera_get_available_pixel_formats_as_strings(
+        camera, &numformats, nullptr);
+#else
+    const char **formats =
         arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
+#endif
     QList<QString> list;
     for (uint i = 0; i < numformats; i++)
         list << formats[i];
@@ -200,9 +240,16 @@ QList< QString > QArvCamera::getPixelFormats() {
 
 QList< QString > QArvCamera::getPixelFormatNames() {
     unsigned int numformats;
-    const char** formats =
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    const char **formats =
+        arv_camera_get_available_pixel_formats_as_display_names(camera,
+                                                                &numformats,
+                                                                nullptr);
+#else
+    const char **formats =
         arv_camera_get_available_pixel_formats_as_display_names(camera,
                                                                 &numformats);
+#endif
     QList<QString> list;
     for (uint i = 0; i < numformats; i++) {
         list << formats[i];
@@ -213,8 +260,13 @@ QList< QString > QArvCamera::getPixelFormatNames() {
 
 QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
     unsigned int numformats;
-    gint64* formats =
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    gint64 *formats =
+        arv_camera_get_available_pixel_formats(camera, &numformats, nullptr);
+#else
+    gint64 *formats =
         arv_camera_get_available_pixel_formats(camera, &numformats);
+#endif
     QList<ArvPixelFormat> list;
     for (uint i = 0; i < numformats; i++) {
         list << formats[i];
@@ -224,25 +276,45 @@ QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
 }
 
 QString QArvCamera::getPixelFormat() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return QString(arv_camera_get_pixel_format_as_string(camera, nullptr));
+#else
     return QString(arv_camera_get_pixel_format_as_string(camera));
+#endif
 }
 
 ArvPixelFormat QArvCamera::getPixelFormatId() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_get_pixel_format(camera, nullptr);
+#else
     return arv_camera_get_pixel_format(camera);
+#endif
 }
 
 void QArvCamera::setPixelFormat(const QString& format) {
     auto tmp = format.toLatin1();
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_pixel_format_from_string(camera, tmp.constData(), nullptr);
+#else
     arv_camera_set_pixel_format_from_string(camera, tmp.constData());
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double QArvCamera::getFPS() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_get_frame_rate(camera, nullptr);
+#else
     return arv_camera_get_frame_rate(camera);
+#endif
 }
 
 void QArvCamera::setFPS(double fps) {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_frame_rate(camera, fps, nullptr);
+#else
     arv_camera_set_frame_rate(camera, fps);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
@@ -266,56 +338,92 @@ void QArvCamera::setMTU(int mtu) {
 }
 
 double QArvCamera::getExposure() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_get_exposure_time(camera, nullptr);
+#else
     return arv_camera_get_exposure_time(camera);
+#endif
 }
 
 void QArvCamera::setExposure(double exposure) {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_exposure_time(camera, exposure, nullptr);
+#else
     arv_camera_set_exposure_time(camera, exposure);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 bool QArvCamera::hasAutoExposure() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_is_exposure_auto_available(camera, nullptr);
+#else
     return arv_camera_is_exposure_auto_available(camera);
+#endif
 }
 
 void QArvCamera::setAutoExposure(bool enable) {
-    if (enable)
-        arv_camera_set_exposure_time_auto(camera, ARV_AUTO_CONTINUOUS);
-    else
-        arv_camera_set_exposure_time_auto(camera, ARV_AUTO_OFF);
+    auto mode = enable ? ARV_AUTO_CONTINUOUS : ARV_AUTO_OFF;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_exposure_time_auto(camera, mode, nullptr);
+#else
+    arv_camera_set_exposure_time_auto(camera, mode);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 double QArvCamera::getGain() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_get_gain(camera, nullptr);
+#else
     return arv_camera_get_gain(camera);
+#endif
 }
 
 void QArvCamera::setGain(double gain) {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_gain(camera, gain, nullptr);
+#else
     arv_camera_set_gain(camera, gain);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
 QPair< double, double > QArvCamera::getExposureBounds() {
     double expomin, expomax;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax, nullptr);
+#else
     arv_camera_get_exposure_time_bounds(camera, &expomin, &expomax);
+#endif
     return QPair<double, double>(expomin, expomax);
 }
 
 QPair< double, double > QArvCamera::getGainBounds() {
     double gainmin, gainmax;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_get_gain_bounds(camera, &gainmin, &gainmax, nullptr);
+#else
     arv_camera_get_gain_bounds(camera, &gainmin, &gainmax);
+#endif
     return QPair<double, double>(gainmin, gainmax);
 }
 
 bool QArvCamera::hasAutoGain() {
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    return arv_camera_is_gain_auto_available(camera, nullptr);
+#else
     return arv_camera_is_gain_auto_available(camera);
+#endif
 }
 
 void QArvCamera::setAutoGain(bool enable) {
-    if (enable)
-        arv_camera_set_gain_auto(camera, ARV_AUTO_CONTINUOUS);
-    else
-        arv_camera_set_gain_auto(camera, ARV_AUTO_OFF);
+    auto mode = enable ? ARV_AUTO_CONTINUOUS : ARV_AUTO_OFF;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_set_gain_auto(camera, mode, nullptr);
+#else
+    arv_camera_set_gain_auto(camera, mode);
+#endif
     emit dataChanged(QModelIndex(), QModelIndex());
 }
 
@@ -393,12 +501,20 @@ void QArvCamera::startAcquisition(bool zeroCopy, bool dropInvalidFrames) {
     nocopy = zeroCopy;
     dropInvalid = dropInvalidFrames;
     if (acquiring) return;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    unsigned int framesize = arv_camera_get_payload(camera, nullptr);
+#else
     unsigned int framesize = arv_camera_get_payload(camera);
+#endif
     stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this);
     for (uint i = 0; i < frameQueueSize; i++) {
         arv_stream_push_buffer(stream, arv_buffer_new(framesize, NULL));
     }
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_start_acquisition(camera, nullptr);
+#else
     arv_camera_start_acquisition(camera);
+#endif
     acquiring = true;
     underruns = 0;
     emit dataChanged(QModelIndex(), QModelIndex());
@@ -406,7 +522,11 @@ void QArvCamera::startAcquisition(bool zeroCopy, bool dropInvalidFrames) {
 
 void QArvCamera::stopAcquisition() {
     if (!acquiring) return;
+#ifdef ARAVIS_HAVE_GERROR_PARAMS
+    arv_camera_stop_acquisition(camera, nullptr);
+#else
     arv_camera_stop_acquisition(camera);
+#endif
     g_object_unref(stream);
     acquiring = false;
     emit dataChanged(QModelIndex(), QModelIndex());

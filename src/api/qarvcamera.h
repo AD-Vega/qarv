@@ -47,6 +47,9 @@ typedef _ArvGc ArvGc;
 #ifndef ARV_PIXEL_FORMAT_MONO_8
 typedef quint32 ArvPixelFormat;
 #endif
+
+Q_DECLARE_OPAQUE_POINTER(ArvBuffer*)
+Q_DECLARE_METATYPE(ArvBuffer*)
 /**@}*/
 
 //! Objects of this class are used to identify cameras.
