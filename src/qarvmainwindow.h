@@ -31,7 +31,7 @@
 #include "recorders/recorder.h"
 
 #include <QTimer>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QTransform>
 #include <QStandardItemModel>
@@ -141,7 +141,7 @@ private:
     bool futureHoldsAHistogram;
     QFile timestampFile;
     QLabel* recordingTimeLabel;
-    QTime recordingTime;
+    QElapsedTimer recordingTime;
     int recordingTimeCumulative;
     QStandardItemModel postprocChain;
     QVector<ImageFilterPtr> postprocChainAsList;

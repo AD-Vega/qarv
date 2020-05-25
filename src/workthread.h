@@ -37,7 +37,7 @@
 #include "api/qarvcamera.h"
 #include <QImage>
 #include <QFile>
-#include <QTime>
+#include <QElapsedTimer>
 #include <opencv2/core/core.hpp>
 #include <functional>
 
@@ -102,7 +102,7 @@ private:
     int recordedFrames;
     std::atomic<uint> receivedFrames;
     uint lastFpsRequestFrames;
-    QTime lastFpsRequest;
+    QElapsedTimer lastFpsRequest;
 };
 
 class Renderer : public QObject {

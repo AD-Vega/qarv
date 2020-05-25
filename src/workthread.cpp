@@ -195,7 +195,7 @@ void Cooker::cameraAcquisition(QArvCamera* camera,
                                bool dropInvalidFrames) {
     if (start) {
         camera->startAcquisition(zeroCopy, dropInvalidFrames);
-        lastFpsRequest = QTime::currentTime();
+        lastFpsRequest.start();
         receivedFrames.store(0);
         lastFpsRequestFrames = 0;
     } else {
@@ -315,11 +315,10 @@ void Cooker::setRecorder(Recorder* recorder, QFile* timestampFile,
 
 void Cooker::getFps(uint* fps) {
     if (fps) {
-        uint ms = lastFpsRequest.elapsed();
+        const auto ms = lastFpsRequest.restart();
         uint rcvFrm = receivedFrames.load(std::memory_order_relaxed);
         double tmp = (rcvFrm - lastFpsRequestFrames) * 1000 / (double)ms;
         *fps = nearbyint(tmp);
-        lastFpsRequest.start();
         lastFpsRequestFrames = rcvFrm;
     }
 }

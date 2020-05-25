@@ -701,7 +701,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
 
         if (earlyBail) {
             recordAction->setChecked(false);
-            recordingTime = QTime();
+            recordingTime.invalidate();
             recordingTimeCumulative = 0;
             return;
         }
@@ -796,7 +796,7 @@ skip_all_file_opening:
     } else {
         // Update the elapsed time before invalidating the timer.
         updateRecordingTime();
-        recordingTime = QTime();
+        recordingTime.invalidate();
     }
     if (!error)
         emit recordingStarted(recording);
@@ -1359,7 +1359,7 @@ void QArvMainWindow::updateRecordingTime() {
         on_closeFileAction_triggered(true);
         return;
     }
-    if (!recordingTime.isNull()) {
+    if (recordingTime.isValid()) {
         static const QChar zero('0');
         const QString txt(tr("Recording time: %1:%2:%3"));
         recordingTimeCumulative += recordingTime.restart();
