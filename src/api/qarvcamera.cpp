@@ -832,7 +832,11 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
                 f.value = arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL);
                 f.min = arv_gc_float_get_min(ARV_GC_FLOAT(node), NULL);
                 f.max = arv_gc_float_get_max(ARV_GC_FLOAT(node), NULL);
+#ifdef ARAVIS_HAVE_08_API
+                f.unit = arv_gc_float_get_unit(ARV_GC_FLOAT(node));
+#else
                 f.unit = arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL);
+#endif
                 if (role == Qt::DisplayRole)
                     return QVariant::fromValue((QString)f);
                 else

@@ -136,8 +136,13 @@ void QArvCamera::QArvFeatureTree::recursiveSerialization(
         out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL)
             << endl;
     } else if (ARV_IS_GC_FLOAT(node)) {
-        out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
-            << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
+#ifdef ARAVIS_HAVE_08_API
+      out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
+          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node)) << endl;
+#else
+      out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
+          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
+#endif
     } else if (ARV_IS_GC_BOOLEAN(node)) {
         out << "Boolean\t" << arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node),
                                                        NULL) << endl;
