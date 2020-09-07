@@ -57,8 +57,7 @@ class LevelsSettingsWidget : public ImageFilterSettingsWidget,
 
 public:
     LevelsSettingsWidget(ImageFilter* filter,
-                         QWidget* parent = 0,
-                         Qt::WindowFlags f = 0);
+                         QWidget* parent = 0);
 
 protected slots:
     void setLiveUpdate(bool enabled) override;

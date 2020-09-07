@@ -75,9 +75,8 @@ ImageFilterSettingsWidget* LevelsFilter::createSettingsWidget() {
 }
 
 LevelsSettingsWidget::LevelsSettingsWidget(ImageFilter* filter_,
-                                           QWidget* parent,
-                                           Qt::WindowFlags f) :
-    ImageFilterSettingsWidget(filter_, parent, f) {
+                                           QWidget* parent) :
+    ImageFilterSettingsWidget(filter_, parent) {
     setupUi(this);
     QMetaObject::connectSlotsByName(this);
     blackSpinbox->setValue(filter()->black.load(std::memory_order_relaxed));

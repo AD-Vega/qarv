@@ -47,8 +47,7 @@ class ImageFilterSettingsWidget : public QWidget {
 
 public:
     explicit ImageFilterSettingsWidget(ImageFilter* filter,
-                                       QWidget* parent = 0,
-                                       Qt::WindowFlags f = 0);
+                                       QWidget* parent = 0);
     virtual ~ImageFilterSettingsWidget() {}
 
 protected slots:
@@ -107,8 +106,7 @@ class ImageFilterSettingsDialog : public QDockWidget {
 
 public:
     explicit ImageFilterSettingsDialog(ImageFilterSettingsWidget* settings,
-                                       QWidget* parent = 0,
-                                       Qt::WindowFlags f = 0);
+                                       QWidget* parent = 0);
 
 private slots:
     void accept();

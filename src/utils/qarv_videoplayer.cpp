@@ -31,8 +31,7 @@ extern "C" {
 using namespace QArv;
 
 QArvVideoPlayer::QArvVideoPlayer(QString filename,
-                                 QWidget* parent,
-                                 Qt::WindowFlags f) : QWidget(parent, f) {
+                                 QWidget* parent) : QWidget(parent) {
     setupUi(this);
     QHash<QAbstractButton*, QString> icons;
     icons[openMenuButton] = "document-open";

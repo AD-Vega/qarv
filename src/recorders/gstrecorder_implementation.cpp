@@ -37,7 +37,7 @@ static bool checkPluginAvailability(const QStringList& plugins) {
     if (failed) return false;
     if (!haveInspector) {
         QProcess I;
-        I.start("gst-inspect-1.0 --version");
+        I.start("gst-inspect-1.0", { "--version" });
         if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
             if (I.bytesAvailable())
                 logMessage(false) << I.readAll().constData();
@@ -45,7 +45,7 @@ static bool checkPluginAvailability(const QStringList& plugins) {
             failed = true;
             return false;
         }
-        I.start("gst-launch-1.0 --version");
+        I.start("gst-launch-1.0", { "--version" });
         if (!I.waitForFinished(processTimeout) || I.exitCode() != 0) {
             if (I.bytesAvailable())
                 logMessage(false) << I.readAll().constData();
@@ -55,11 +55,10 @@ static bool checkPluginAvailability(const QStringList& plugins) {
         }
         haveInspector = true;
     }
-    QString cmd("gst-inspect-1.0 --exists ");
     bool ok = true;
     foreach (QString p, plugins) {
         QProcess I;
-        I.start(cmd + p);
+        I.start("gst-inspect-1.0", { "--exists", p });
         I.waitForFinished();
         if (I.exitCode() != 0) {
             logMessage() << "gstreamer missing plugin" << p;
@@ -74,11 +73,11 @@ static bool gstOK() {
     static bool isOK;
     if (!init) {
         init = true;
-        isOK = checkPluginAvailability({"fdsrc",
-                                        "videoparse",
-                                        "queue",
-                                        "videoconvert",
-                                        "filesink" });
+        isOK = checkPluginAvailability({ "fdsrc",
+                                         "videoparse",
+                                         "queue",
+                                         "videoconvert",
+                                         "filesink" });
     }
     return isOK;
 }
@@ -129,7 +128,8 @@ public:
             logMessage() << "Recorder: Invalid CV image format";
             return;
         }
-        QString cmdline("gst-launch-1.0 -e "
+        QString cmd("gst-launch-1.0");
+        QString cmdline("-e "
                         "fdsrc fd=0 do-timestamp=true ! "
                         "funnel ! "
                         "videoparse "
@@ -147,7 +147,7 @@ public:
                               outputFormat,
                               fileName);
         gstprocess.setProcessChannelMode(QProcess::MergedChannels);
-        gstprocess.start(cmdline, QIODevice::ReadWrite);
+        gstprocess.start(cmd, cmdline.split(' '), QIODevice::ReadWrite);
         if (gstprocess.bytesAvailable())
             logMessage(false) << gstprocess.readAll().constData();
         if (!gstprocess.waitForStarted(processTimeout))

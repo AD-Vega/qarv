@@ -28,9 +28,8 @@
 using namespace QArv;
 
 ImageFilterSettingsWidget::ImageFilterSettingsWidget(ImageFilter* filter,
-                                                     QWidget* parent,
-                                                     Qt::WindowFlags f) :
-    QWidget(parent, f), imageFilter(filter) {}
+                                                     QWidget* parent) :
+    QWidget(parent), imageFilter(filter) {}
 
 ImageFilter::ImageFilter(ImageFilterPlugin* plugin) :
     pluginPtr(plugin) {}
@@ -51,9 +50,8 @@ ImageFilter* ImageFilterPlugin::makeFilter(QString name) {
 
 ImageFilterSettingsDialog::ImageFilterSettingsDialog(
     ImageFilterSettingsWidget* settings_,
-    QWidget* parent,
-    Qt::WindowFlags f) :
-    QDockWidget(settings_->windowTitle(), parent, f), settings(settings_) {
+    QWidget* parent) :
+    QDockWidget(settings_->windowTitle(), parent), settings(settings_) {
     setWidget(new QWidget);
     widget()->setLayout(new QVBoxLayout);
     widget()->layout()->addWidget(settings);

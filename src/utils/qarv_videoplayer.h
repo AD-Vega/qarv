@@ -33,8 +33,7 @@ class QArvVideoPlayer : public QWidget, private Ui::VideoPlayer {
 
 public:
     explicit QArvVideoPlayer(QString filename = QString(),
-                             QWidget* parent = 0,
-                             Qt::WindowFlags f = 0);
+                             QWidget* parent = 0);
 
 private slots:
     void on_playButton_toggled(bool checked);

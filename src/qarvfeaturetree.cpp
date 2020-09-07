@@ -107,7 +107,7 @@ void QArvCamera::QArvFeatureTree::recursiveSerialization(
 
     if (tree->children().count() != 0) {
         if (QString("Root") != tree->feature())
-            out << "Category: " << tree->feature() << endl;
+            out << "Category: " << tree->feature() << Qt::endl;
         foreach (auto child, tree->children()) {
             recursiveSerialization(out, camera, child);
         }
@@ -126,28 +126,28 @@ void QArvCamera::QArvFeatureTree::recursiveSerialization(
         arv_gc_register_get(ARV_GC_REGISTER(node),
                             r.value.data(), r.length, NULL);
         out << "Register\t" << QString::number(r.length) << "\t"
-            << QString("0x") + r.value.toHex() << endl;
+            << QString("0x") + r.value.toHex() << Qt::endl;
     } else if (ARV_IS_GC_ENUMERATION(node)) {
         out << "Enumeration\t"
             << arv_gc_enumeration_get_string_value(ARV_GC_ENUMERATION(node),
                                                NULL)
-            << endl;
+            << Qt::endl;
     } else if (ARV_IS_GC_STRING(node)) {
         out << "String\t" << arv_gc_string_get_value(ARV_GC_STRING(node), NULL)
-            << endl;
+            << Qt::endl;
     } else if (ARV_IS_GC_FLOAT(node)) {
 #ifdef ARAVIS_HAVE_08_API
       out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
-          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node)) << endl;
+          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node)) << Qt::endl;
 #else
       out << "Float\t" << arv_gc_float_get_value(ARV_GC_FLOAT(node), NULL)
-          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << endl;
+          << "\t" << arv_gc_float_get_unit(ARV_GC_FLOAT(node), NULL) << Qt::endl;
 #endif
     } else if (ARV_IS_GC_BOOLEAN(node)) {
         out << "Boolean\t" << arv_gc_boolean_get_value(ARV_GC_BOOLEAN(node),
-                                                       NULL) << endl;
+                                                       NULL) << Qt::endl;
     } else if (ARV_IS_GC_INTEGER(node)) {
         out << "Integer\t" << arv_gc_integer_get_value(ARV_GC_INTEGER(node),
-                                                       NULL) << endl;
+                                                       NULL) << Qt::endl;
     }
 }

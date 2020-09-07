@@ -584,9 +584,9 @@ int QArvCamera::getEstimatedBW() {
 
 QTextStream& operator<<(QTextStream& out, QArvCamera* camera) {
     auto id = camera->getId();
-    out << id.vendor << endl
-        << id.model << endl
-        << id.id << endl;
+    out << id.vendor << Qt::endl
+        << id.model << Qt::endl
+        << id.id << Qt::endl;
     QArvCamera::QArvFeatureTree::recursiveSerialization(out,
                                                         camera,
                                                         camera->featuretree);
