@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.9)
 
 include(FindPkgConfig)
 include(CheckSymbolExists)
+include(GNUInstallDirs)
 
 # Only set the version in release tarballs.
 #set(qarv_VERSION 1.0.99)
@@ -59,7 +60,7 @@ include_directories(
 )
 
 
-set(qarv_DATA share/qarv/${qarv_ABI}/)
+set(qarv_DATA ${CMAKE_INSTALL_FULL_DATAROOTDIR}/qarv/${qarv_ABI}/)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden -fvisibility=hidden")
 string(TOLOWER "${CMAKE_BUILD_TYPE}" qarv_BTYPE)
@@ -68,7 +69,7 @@ if (NOT qarv_BTYPE MATCHES "debug")
 endif()
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -Wall -Wextra -Wno-unused-parameter")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter")
-add_definitions(-DQARV_DATA=\"${CMAKE_INSTALL_PREFIX}/${qarv_DATA}\" -DQT_STATICPLUGIN
+add_definitions(-DQARV_DATA=\"${qarv_DATA}\" -DQT_STATICPLUGIN
   -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=${qarv_API} -DQARV_ABI=${qarv_ABI})
 
 set(CMAKE_REQUIRED_LIBRARIES ${AVUTIL_LDFLAGS})
@@ -262,8 +263,8 @@ set_prefixed(qarv_ICONS res/icons/
 )
 
 install(TARGETS ${libqarv} qarvexe qarv_videoplayer
-        RUNTIME DESTINATION bin/
-        LIBRARY DESTINATION lib/)
+	RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR}
+	LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 set_prefixed(qarv_IHDR src/api/
              qarvcamera.h
              qarvcameradelegate.h
@@ -273,22 +274,22 @@ set_prefixed(qarv_IHDR src/api/
              qarvtype.h
 )
 install(FILES ${qarv_IHDR}
-        DESTINATION include/qarv-${qarv_API}/)
+	DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/qarv-${qarv_API}/)
 install(FILES ${qarv_TRANS} ${qarv_ICONS}
         DESTINATION ${qarv_DATA})
 install(FILES res/icons/qarv.svgz
         RENAME application-x-qarv.svgz
-        DESTINATION share/icons/)
+	DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/icons/)
 install(FILES res/qarv.desktop res/qarv-player.desktop
-        DESTINATION share/applications/)
+	DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/applications/)
 install(FILES res/qarv.xml
-        DESTINATION share/mime/packages/)
+	DESTINATION ${CMAKE_INSTALL_FULL_DATAROOTDIR}/mime/packages/)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/res/qarv.pc.in
 	       ${CMAKE_CURRENT_BINARY_DIR}/qarv-${qarv_API}.pc
                @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qarv-${qarv_API}.pc
-	DESTINATION lib/pkgconfig/)
+	DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig/)
 
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
