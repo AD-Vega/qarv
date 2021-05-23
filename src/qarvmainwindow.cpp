@@ -38,10 +38,6 @@
 #include <QMenu>
 #include <QToolButton>
 
-extern "C" {
-  #include <arvbuffer.h>
-}
-
 Q_DECLARE_METATYPE(cv::Mat)
 
 using namespace QArv;

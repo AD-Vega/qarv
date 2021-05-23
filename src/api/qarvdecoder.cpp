@@ -25,9 +25,7 @@
 #include <QMap>
 #include "globals.h"
 #include <type_traits>
-extern "C" {
-  #include <arv.h>
-}
+#include <arv.h>
 
 using namespace QArv;
 

@@ -24,9 +24,7 @@
 #include <QThread>
 #include <QCoreApplication>
 
-extern "C" {
 #include <arv.h>
-}
 
 using namespace QArv;
 

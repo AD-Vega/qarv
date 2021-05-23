@@ -22,8 +22,8 @@
 #include <QFileInfo>
 #include <QDir>
 #include "globals.h"
-extern "C" {
 #include <arv.h>
+extern "C" {
 #include <libavutil/imgutils.h>
 }
 

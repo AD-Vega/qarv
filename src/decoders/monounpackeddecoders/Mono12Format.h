@@ -1,9 +1,7 @@
 #pragma once
 
 #include "decoders/monounpacked.h"
-extern "C" {
-  #include <arv.h>
-}
+#include <arv.h>
 
 namespace QArv
 {

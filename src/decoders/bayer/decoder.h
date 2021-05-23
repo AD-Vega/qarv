@@ -3,9 +3,7 @@
 #include "api/qarvdecoder.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QDataStream>
-extern "C" {
-  #include <arv.h>
-}
+#include <arv.h>
 
 namespace QArv
 {
