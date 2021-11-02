@@ -1,32 +1,46 @@
-project(qarv)
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.12)
 
-include(FindPkgConfig)
-include(CheckSymbolExists)
-include(GNUInstallDirs)
-
-# Only set the version in release tarballs.
-#set(qarv_VERSION 1.0.99)
 set(qarv_ABI 3)
 set(qarv_API 3)
 
-if (NOT DEFINED qarv_VERSION)
+# Only set the version in release tarballs.
+#set(QARV_VERSION 1.0.99)
+
+if (DEFINED QARV_VERSION)
+  set(VERSION_FOR_CMAKE "${QARV_VERSION}")
+  set(VERSION_FOR_DEB "${QARV_VERSION}")
+else()
   message("Program version not specified, using git description.")
-  execute_process(COMMAND "git" "show" "-s" "--format='%h'"
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                  OUTPUT_VARIABLE qarv_GIT_VERSION
-                  RESULT_VARIABLE qarv_GIT_RESULT)
-  if (NOT ${qarv_GIT_RESULT} EQUAL 0)
+  execute_process(COMMAND "git" "describe" "--tags"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE QARV_GIT_VERSION
+    RESULT_VARIABLE QARV_GIT_RESULT
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(NOT ${QARV_GIT_RESULT} EQUAL 0 OR NOT ${QARV_GIT_VERSION} MATCHES "^([0-9]\+)\.([0-9]\+)\.([0-9]\+)(-([0-9]\+)-g([0-9a-f]\+))\?$")
     message("Not building from git, defaulting to version 99.99.99.")
-    set(qarv_VERSION "99.99.99")
+    set(QARV_VERSION "99.99.99")
+    set(VERSION_FOR_CMAKE "${QARV_VERSION}")
+    set(VERSION_FOR_DEB "${QARV_VERSION}")
   else()
-    string(REPLACE "qarv-" ""
-           qarv_VERSION
-           ${qarv_GIT_VERSION})
-    string (STRIP ${qarv_VERSION} qarv_VERSION)
+    set(GIT_VERSION_MAJOR ${CMAKE_MATCH_1})
+    set(GIT_VERSION_MINOR ${CMAKE_MATCH_2})
+    set(GIT_VERSION_PATCH ${CMAKE_MATCH_3})
+    if (DEFINED CMAKE_MATCH_4)
+      set(GIT_VERSION_COMMITS ${CMAKE_MATCH_5})
+      set(GIT_VERSION_HASH ${CMAKE_MATCH_6})
+      set(VERSION_FOR_CMAKE "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}.${GIT_VERSION_COMMITS}")
+      set(VERSION_FOR_DEB "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}+${GIT_VERSION_COMMITS}+${GIT_VERSION_HASH}")
+    else()
+      set(VERSION_FOR_CMAKE "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}")
+      set(VERSION_FOR_DEB "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}")
+    endif()
+    message(STATUS "Determined package version ${VERSION_FOR_CMAKE} and debian version ${VERSION_FOR_DEB}")
   endif()
 endif()
-message("QArv version: ${qarv_VERSION}")
+
+project(qarv
+  VERSION ${VERSION_FOR_CMAKE}
+  DESCRIPTION "A Qt interface to Aravis")
 
 macro(set_prefixed varname string)
   set(${varname})
@@ -36,6 +50,10 @@ macro(set_prefixed varname string)
 endmacro(set_prefixed)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+include(FindPkgConfig)
+include(CheckSymbolExists)
+include(GNUInstallDirs)
 
 find_package(Qt5 REQUIRED COMPONENTS
              Core Gui Widgets Network Svg LinguistTools Concurrent)
@@ -70,7 +88,7 @@ endif()
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -Wall -Wextra -Wno-unused-parameter")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -Wno-unused-parameter")
 add_definitions(-DQARV_DATA=\"${qarv_DATA}\" -DQT_STATICPLUGIN
-  -DQARV_VERSION=\"${qarv_VERSION}\" -DQARV_API=${qarv_API} -DQARV_ABI=${qarv_ABI})
+  -DQARV_VERSION=\"${VERSION_FOR_DEB}\" -DQARV_API=${qarv_API} -DQARV_ABI=${qarv_ABI})
 
 set(CMAKE_REQUIRED_LIBRARIES ${AVUTIL_LDFLAGS})
 set(CMAKE_REQUIRED_INCLUDES ${AVUTIL_INCLUDE_DIRS})
@@ -305,3 +323,14 @@ COMMAND echo "API documentation can be found in ${CMAKE_CURRENT_BINARY_DIR}/apid
 COMMAND echo
 )
 endif(DOXYGEN_FOUND)
+
+# Debian/Ubuntu packaging
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_VERSION "${VERSION_FOR_DEB}")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jure Varlec <jure.varlec@ad-vega.si>")
+set(CPACK_DEBIAN_PACKAGE_SECTION "video")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}")
+set(CPACK_PACKAGING_INSTALL_PREFIX /usr/)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libaravis libopencv libavcodec libswscale libqt5* ffmpeg")
+
+include(CPack)
