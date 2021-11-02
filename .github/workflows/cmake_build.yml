@@ -27,9 +27,25 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
+
+
+    - name: Package
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --config $BUILD_TYPE --target package
+
+    - name: Get Package Name
+      working-directory: ${{runner.workspace}}/build
+      run: "echo *.deb | sed 's/^/package_name=/' >> $GITHUB_ENV"
+
+    - name: Store Package Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{env.package_name}}
+        path: ${{runner.workspace}}/build/${{env.package_name}}
+        if-no-files-found: error
