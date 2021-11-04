@@ -17,6 +17,8 @@ jobs:
         sudo apt-get install -y -qq 'libqt5*-dev' qttools5-dev libswscale-dev ffmpeg libavcodec-dev libopencv-dev libaravis-dev
 
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # get entire history because we need tags for versioning
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
