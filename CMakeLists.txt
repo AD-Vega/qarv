@@ -324,13 +324,25 @@ COMMAND echo
 )
 endif(DOXYGEN_FOUND)
 
-# Debian/Ubuntu packaging
+# Ubuntu 20.04 packaging
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VERSION "${VERSION_FOR_DEB}")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jure Varlec <jure.varlec@ad-vega.si>")
 set(CPACK_DEBIAN_PACKAGE_SECTION "video")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/)
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libaravis libopencv libavcodec libswscale libqt5* ffmpeg")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "\
+libaravis-0.6-0, \
+libopencv-highgui4.2, \
+libavcodec58, \
+libswscale5, \
+ffmpeg, \
+libqt5core5a, \
+libqt5gui5, \
+libqt5widgets5, \
+libqt5network5, \
+libqt5svg5, \
+libqt5concurrent5 \
+")
 
 include(CPack)
