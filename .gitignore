@@ -1,6 +1,7 @@
 *~
 .kdev4/
 .ccls-cache/
+.direnv
 apidoc/html/
 build/
 qarv.kdev4
