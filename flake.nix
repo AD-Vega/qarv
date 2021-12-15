@@ -4,9 +4,13 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-21.11";
     flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils }: let
+  outputs = { self, nixpkgs, flake-utils, flake-compat }: let
     pkgs = nixpkgs.legacyPackages.x86_64-linux;
     buildDeps = with pkgs; [
       # aravis and dependencies
