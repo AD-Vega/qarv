@@ -42,6 +42,7 @@
     shellTools = with pkgs; [
       git
       ninja
+      ccls
     ];
   in rec {
     devShell.x86_64-linux = pkgs.mkShell {
