@@ -909,19 +909,6 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QCheckBox" name="recordInfoCheck">
-             <property name="toolTip">
-              <string>Raw video formats do not contain any identifying information in the video file itself. If checked, an additional file with a .qarv extension will be created and will contain video format information. This file can be opened with the qarv video player.</string>
-             </property>
-             <property name="text">
-              <string>Write video information file</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
             <widget class="QCheckBox" name="recordTimestampsCheck">
              <property name="toolTip">
               <string>An additional file with a .timestamps extension will be created and will contain frame timestamps in nanoseconds, one per line, in text form.</string>
@@ -931,7 +918,7 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="3" column="1">
             <widget class="QCheckBox" name="recordMetadataCheck">
              <property name="toolTip">
               <string>Creates an additional file with .caminfo extension. It can be loaded using Advanced settings tab.</string>
@@ -941,14 +928,14 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_19">
              <property name="text">
               <string>Stop recording:</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
+           <item row="4" column="1">
             <widget class="QRadioButton" name="stopRecordingManuallyRadio">
              <property name="toolTip">
               <string>Recording will not be stopped automatically.</string>
@@ -964,7 +951,7 @@
              </attribute>
             </widget>
            </item>
-           <item row="6" column="1">
+           <item row="5" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QRadioButton" name="stopRecordingFramesRadio">
@@ -994,7 +981,7 @@
              </item>
             </layout>
            </item>
-           <item row="7" column="1">
+           <item row="6" column="1">
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
               <widget class="QRadioButton" name="stopRecordingTimeRadio">
