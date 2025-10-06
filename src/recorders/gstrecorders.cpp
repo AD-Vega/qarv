@@ -25,12 +25,11 @@ using namespace QArv;
 Recorder* HuffyuvAviFormat::makeRecorder(QArvDecoder* decoder,
                                          QString fileName,
                                          QSize frameSize,
-                                         int framesPerSecond,
-                                         bool writeInfo) {
+                                         int framesPerSecond) {
     return makeGstRecorder({ "avenc_huffyuv", "avimux" },
                            "avenc_huffyuv ! avimux",
                            decoder, fileName, frameSize,
-                           framesPerSecond, writeInfo);
+                           framesPerSecond);
 }
 
 Q_IMPORT_PLUGIN(HuffyuvAviFormat)

@@ -78,16 +78,14 @@ public:
     virtual Recorder* makeRecorder(QArvDecoder* decoder,
                                    QString fileName,
                                    QSize frameSize,
-                                   int framesPerSecond,
-                                   bool writeInfo) = 0;
+                                   int framesPerSecond) = 0;
 
     //! Creates a recorder for the requested output format.
     static Recorder* makeRecorder(QArvDecoder* decoder,
                                   QString fileName,
                                   QString outputFormat,
                                   QSize frameSize,
-                                  int framesPerSecond,
-                                  bool writeInfo);
+                                  int framesPerSecond);
 };
 
 }
