@@ -67,6 +67,12 @@ void ROIcomboBox::itemSelected(int index) {
 
 
 void ROIcomboBox::customSizeEntered() {
+    if (!this->isEditable()) {
+        // This can happen just before the combo box reverts back to being
+        // non-editable.
+        return;
+    }
+
     QRegExp ROIparse("^([0-9]+)x([0-9]+)$");
     ROIparse.indexIn(this->lineEdit()->text());
     int width = ROIparse.cap(1).toInt();
