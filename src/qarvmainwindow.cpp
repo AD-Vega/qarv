@@ -658,7 +658,6 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
             filenameEdit,
             chooseFilenameButton,
             videoFormatSelector,
-            recordInfoCheck,
             recordMetadataCheck,
             recordTimestampsCheck,
             stopRecordingFrames,
@@ -717,8 +716,7 @@ void QArvMainWindow::on_recordAction_toggled(bool checked) {
                                                   videoFormatSelector->
                                                       currentText(),
                                                   rct.size(),
-                                                  fpsSpinbox->value(),
-                                                  recordInfoCheck->isChecked()));
+                                                  fpsSpinbox->value()));
         bool open = recorder && recorder->isOK();
 
         if (!open) {
@@ -1193,7 +1191,6 @@ void QArvMainWindow::setupListOfSavedWidgets() {
     saved_widgets["qarv_recording/snapshot_raw"] = snapshotRaw;
     saved_widgets["qarv_recording/video_file"] = filenameEdit;
     saved_widgets["qarv_recording/video_format"] = videoFormatSelector;
-    saved_widgets["qarv_recording/write_info"] = recordInfoCheck;
     saved_widgets["qarv_recording/write_timestamps"] = recordTimestampsCheck;
     saved_widgets["qarv_recording/dump_camera_settings"] = recordMetadataCheck;
     saved_widgets["qarv_recording/stop_manually"] = stopRecordingManuallyRadio;
@@ -1298,10 +1295,7 @@ void QArv::QArvMainWindow::closeEvent(QCloseEvent* event) {
 
 void QArvMainWindow::on_videoFormatSelector_currentIndexChanged(int i) {
     auto fmt = qvariant_cast<OutputFormat*>(videoFormatSelector->itemData(i));
-    if (fmt) {
-        bool b = !recording && !closeFileAction->isEnabled();
-        recordInfoCheck->setEnabled(fmt->canWriteInfo() && b);
-    } else {
+    if (!fmt) {
         logMessage() << "Video format pointer is not an OutputFormat plugin";
         statusBar()->showMessage(tr("Cannot select this video format."));
     }

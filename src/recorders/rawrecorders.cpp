@@ -49,11 +49,10 @@ public:
     RawUndecoded(QArvDecoder* decoder_,
                  QString fileName,
                  QSize size,
-                 int FPS,
-                 bool writeInfo) :
+                 int FPS) :
         file(fileName), decoder(decoder_), bytesizeWritten(false) {
         file.open(QIODevice::WriteOnly);
-        if (isOK() && writeInfo) {
+        if (isOK()) {
             QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
             initDescfile(s, size, FPS);
             s.setValue("encoding_type", "aravis");
@@ -107,8 +106,7 @@ public:
     RawDecoded8(QArvDecoder* decoder_,
                 QString fileName,
                 QSize size,
-                int FPS,
-                bool writeInfo) :
+                int FPS) :
         file(fileName), decoder(decoder_), OK(true) {
         file.open(QIODevice::WriteOnly);
         if (isOK()) {
@@ -131,15 +129,14 @@ public:
                 logMessage() << "Recorder: Invalid CV image format";
                 return;
             }
-            if (writeInfo) {
-                QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
-                initDescfile(s, size, FPS);
-                s.setValue("encoding_type", "libavutil");
-                s.setValue("libavutil_pixel_format", fmt);
-                s.setValue("libavutil_pixel_format_name",
-                           av_get_pix_fmt_name(fmt));
-                s.setValue("frame_bytes", frameBytes);
-            }
+
+            QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
+            initDescfile(s, size, FPS);
+            s.setValue("encoding_type", "libavutil");
+            s.setValue("libavutil_pixel_format", fmt);
+            s.setValue("libavutil_pixel_format_name",
+                        av_get_pix_fmt_name(fmt));
+            s.setValue("frame_bytes", frameBytes);
         }
     }
 
@@ -190,8 +187,7 @@ public:
     RawDecoded16(QArvDecoder* decoder_,
                  QString fileName,
                  QSize size,
-                 int FPS,
-                 bool writeInfo) :
+                 int FPS) :
         file(fileName), decoder(decoder_), OK(true) {
         file.open(QIODevice::WriteOnly);
         if (isOK()) {
@@ -214,15 +210,14 @@ public:
                 logMessage() << "Recorder: Invalid CV image format";
                 return;
             }
-            if (writeInfo) {
-                QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
-                initDescfile(s, size, FPS);
-                s.setValue("encoding_type", "libavutil");
-                s.setValue("libavutil_pixel_format", fmt);
-                s.setValue("libavutil_pixel_format_name",
-                           av_get_pix_fmt_name(fmt));
-                s.setValue("frame_bytes", frameBytes);
-            }
+
+            QSettings s(fileName + *descExt, QSettings::Format::IniFormat);
+            initDescfile(s, size, FPS);
+            s.setValue("encoding_type", "libavutil");
+            s.setValue("libavutil_pixel_format", fmt);
+            s.setValue("libavutil_pixel_format_name",
+                        av_get_pix_fmt_name(fmt));
+            s.setValue("frame_bytes", frameBytes);
         }
     }
 
@@ -271,37 +266,31 @@ private:
 Recorder* RawUndecodedFormat::makeRecorder(QArvDecoder* decoder,
                                            QString fileName,
                                            QSize frameSize,
-                                           int framesPerSecond,
-                                           bool writeInfo) {
+                                           int framesPerSecond) {
     return new RawUndecoded(decoder,
                             fileName,
                             frameSize,
-                            framesPerSecond,
-                            writeInfo);
+                            framesPerSecond);
 }
 
 Recorder* RawDecoded8Format::makeRecorder(QArvDecoder* decoder,
                                           QString fileName,
                                           QSize frameSize,
-                                          int framesPerSecond,
-                                          bool writeInfo) {
+                                          int framesPerSecond) {
     return new RawDecoded8(decoder,
                            fileName,
                            frameSize,
-                           framesPerSecond,
-                           writeInfo);
+                           framesPerSecond);
 }
 
 Recorder* RawDecoded16Format::makeRecorder(QArvDecoder* decoder,
                                            QString fileName,
                                            QSize frameSize,
-                                           int framesPerSecond,
-                                           bool writeInfo) {
+                                           int framesPerSecond) {
     return new RawDecoded16(decoder,
                             fileName,
                             frameSize,
-                            framesPerSecond,
-                            writeInfo);
+                            framesPerSecond);
 }
 
 Q_IMPORT_PLUGIN(RawUndecodedFormat)

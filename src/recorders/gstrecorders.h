@@ -37,8 +37,7 @@ public:
     Recorder* makeRecorder(QArvDecoder* decoder,
                            QString fileName,
                            QSize frameSize,
-                           int framesPerSecond,
-                           bool writeInfo) override;
+                           int framesPerSecond) override;
 };
 
 }

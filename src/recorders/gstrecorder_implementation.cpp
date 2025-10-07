@@ -94,8 +94,7 @@ public:
                 QArvDecoder* decoder,
                 QString fileName_,
                 QSize size,
-                int FPS,
-                bool writeInfo) {
+                int FPS) {
         numberOfFrames = 0;
         fileName = fileName_;
         if (!gstOK()) return;
@@ -220,13 +219,12 @@ Recorder* QArv::makeGstRecorder(QStringList plugins,
                                 QArvDecoder* decoder,
                                 QString fileName,
                                 QSize size,
-                                int FPS,
-                                bool writeInfo) {
+                                int FPS) {
     static bool OK = checkPluginAvailability(plugins);
     if (OK)
         return new GstRecorder(pipelineFragment,
                                decoder, fileName, size,
-                               FPS, writeInfo);
+                               FPS);
     else
         return NULL;
 }

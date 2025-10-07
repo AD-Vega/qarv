@@ -63,8 +63,7 @@ private:
 Recorder* ImageFormat::makeRecorder(QArvDecoder* decoder,
                                     QString fileName,
                                     QSize frameSize,
-                                    int framesPerSecond,
-                                    bool writeInfo) {
+                                    int framesPerSecond) {
     return new ImageRecorder(decoder, fileName);
 }
 
