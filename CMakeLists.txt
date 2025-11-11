@@ -324,7 +324,7 @@ COMMAND echo
 )
 endif(DOXYGEN_FOUND)
 
-# Ubuntu 20.04 packaging
+# Ubuntu 24.04 packaging
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_VERSION "${VERSION_FOR_DEB}")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Jure Varlec <jure.varlec@ad-vega.si>")
@@ -332,17 +332,17 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "video")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${CMAKE_PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/)
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "\
-libaravis-0.6-0, \
-libopencv-highgui4.2, \
-libavcodec58, \
-libswscale5, \
+libaravis-0.8-0, \
+libopencv-highgui406t64, \
+libavcodec60, \
+libswscale7, \
 ffmpeg, \
-libqt5core5a, \
-libqt5gui5, \
-libqt5widgets5, \
-libqt5network5, \
+libqt5core5t64, \
+libqt5gui5t64, \
+libqt5widgets5t64, \
+libqt5network5t64, \
 libqt5svg5, \
-libqt5concurrent5 \
+libqt5concurrent5t64 \
 ")
 
 include(CPack)
