@@ -1,0 +1,28 @@
+name: Package the tarball
+
+on: [push]
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # get entire history because we need tags for versioning
+
+    - name: Package
+      working-directory: ${{runner.workspace}}/qarv
+      shell: bash
+      run: ./make_release ..
+
+    - name: Get Package Name
+      working-directory: ${{runner.workspace}}
+      run: "echo *.tar.xz | sed 's/^/package_name=/' >> $GITHUB_ENV"
+
+    - name: Store Package Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.package_name}}
+        path: ${{runner.workspace}}/${{env.package_name}}
+        if-no-files-found: error

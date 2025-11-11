@@ -1,8 +1,10 @@
 #!/bin/sh -e
 
-version=$1
-[[ -z "$version" ]] && exit 1
+destdir="${1:-.}"
 
+version=$(git describe --tags --always --dirty)
 name=qarv-$version
-git archive --prefix=$name/ --output=$name.tar $name
-xz -9 $name.tar
+sed -i "s/@@VERSION@@/$version/" CMakeLists.txt
+echo "CMakeLists.txt has beed dirtied, don't forget to undo." 1>&2
+git archive --prefix=$name/ HEAD | \
+  xz -9 > $destdir/$name.tar.xz

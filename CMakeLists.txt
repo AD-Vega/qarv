@@ -4,9 +4,9 @@ set(qarv_ABI 3)
 set(qarv_API 3)
 
 # Only set the version in release tarballs.
-#set(QARV_VERSION 1.0.99)
+set(QARV_VERSION "@@VERSION@@")
 
-if (DEFINED QARV_VERSION)
+if (NOT QARV_VERSION STREQUAL "@@VERSION@@")
   set(VERSION_FOR_CMAKE "${QARV_VERSION}")
   set(VERSION_FOR_DEB "${QARV_VERSION}")
 else()
