@@ -1,0 +1,91 @@
+name: Build and Release
+
+on: [push]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build_and_package:
+    runs-on: ubuntu-24.04
+
+    steps:
+
+    # Tarball packaging
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # get entire history because we need tags for versioning
+
+    - name: Package Tarball
+      working-directory: ${{runner.workspace}}/qarv
+      shell: bash
+      run: ./make_release ..
+
+    - name: Get Tarball Name
+      working-directory: ${{runner.workspace}}
+      run: "echo *.tar.xz | sed 's/^/tarball_package_name=/' >> $GITHUB_ENV"
+
+    - name: Store Tarball Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.tarball_package_name}}
+        path: ${{runner.workspace}}/${{env.tarball_package_name}}
+        if-no-files-found: error
+
+    # Build
+
+    - name: Install prerequisites
+      run: |
+        sudo apt-get update -y -qq
+        sudo apt-get install -y -qq \
+          'libqt5*-dev' qttools5-dev \
+          ffmpeg libswscale-dev libavcodec-dev \
+          libopencv-dev \
+          libaravis-dev libusb-1.0-0-dev \
+          doxygen graphviz
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      # Note the current convention is to use the -S and -B options here to specify source
+      # and build directories, but this is only available with CMake 3.13 and higher.
+      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Package
+      working-directory: ${{runner.workspace}}/build
+      run: cmake --build . --config $BUILD_TYPE --target package
+
+    - name: Get Package Name
+      working-directory: ${{runner.workspace}}/build
+      run: "echo *.deb | sed 's/^/deb_package_name=/' >> $GITHUB_ENV"
+
+    - name: Store Package Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.deb_package_name}}
+        path: ${{runner.workspace}}/build/${{env.deb_package_name}}
+        if-no-files-found: error
+
+    # Create draft release - only on tags
+
+    - name: Create Draft Release
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create ${{ github.ref_name }} \
+          --draft \
+          --generate-notes \
+          ${{runner.workspace}}/build/${{env.deb_package_name}} \
+          ${{runner.workspace}}/${{env.tarball_package_name}}
