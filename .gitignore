@@ -5,3 +5,4 @@
 apidoc/html/
 build/
 qarv.kdev4
+compile_commands.json
