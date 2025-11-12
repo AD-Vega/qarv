@@ -135,7 +135,7 @@ public:
             s.setValue("encoding_type", "libavutil");
             s.setValue("libavutil_pixel_format", fmt);
             s.setValue("libavutil_pixel_format_name",
-                        av_get_pix_fmt_name(fmt));
+                       av_get_pix_fmt_name(fmt));
             s.setValue("frame_bytes", frameBytes);
         }
     }
@@ -216,7 +216,7 @@ public:
             s.setValue("encoding_type", "libavutil");
             s.setValue("libavutil_pixel_format", fmt);
             s.setValue("libavutil_pixel_format_name",
-                        av_get_pix_fmt_name(fmt));
+                       av_get_pix_fmt_name(fmt));
             s.setValue("frame_bytes", frameBytes);
         }
     }

@@ -4,7 +4,7 @@
 
 namespace QArv
 {
-    
+
 class RawUndecodedFormat : public QObject, public OutputFormat {
     Q_OBJECT
     Q_INTERFACES(QArv::OutputFormat)

@@ -160,8 +160,7 @@ QArvDecoder* QArvRecordedVideo::makeDecoder() {
     }
 }
 
-bool QArvRecordedVideo::seek(quint64 frame)
-{
+bool QArvRecordedVideo::seek(quint64 frame) {
     return videofile.seek(frame*frameBytes_);
 }
 

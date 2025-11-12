@@ -43,6 +43,7 @@
       git
       ninja
       ccls
+      uncrustify
     ];
   in rec {
     devShell.x86_64-linux = pkgs.mkShell {

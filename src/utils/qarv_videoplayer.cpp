@@ -288,7 +288,7 @@ QArvRawVideoDialog::QArvRawVideoDialog(QWidget* parent, QString name) :
     }
     inputFileEdit->setText(name);
 
-    connect(inputFileButton, &QPushButton::clicked, [this](bool) {
+    connect(inputFileButton, &QPushButton::clicked, [this] (bool) {
         QString filter = tr("Raw video file (*)");
         QString name = QFileDialog::getOpenFileName(this,
                                                     tr("Open file"),

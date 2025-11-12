@@ -139,8 +139,8 @@ void Workthread::setImageTransform(bool imageTransform_invert,
                               Q_ARG(int, imageTransform_rot));
 }
 
-void QArv::Workthread::setFilterChain(QVector<QArv::ImageFilterPtr> filterChain)
-{
+void QArv::Workthread::setFilterChain(
+    QVector<QArv::ImageFilterPtr> filterChain) {
     QMetaObject::invokeMethod(cooker, "setFilterChain", Qt::QueuedConnection,
                               Q_ARG(QVector<QArv::ImageFilterPtr>,
                                     filterChain));

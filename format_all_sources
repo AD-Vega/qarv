@@ -1,0 +1,4 @@
+#!/bin/sh
+
+find src -name \*.cpp -or -name \*.h | \
+  xargs uncrustify -c uncrustify.cfg --replace --no-backup

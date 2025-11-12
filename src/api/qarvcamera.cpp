@@ -82,7 +82,9 @@ QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
     setFrameQueueSize();
 #ifdef ARAVIS_HAVE_08_API
     camera = arv_camera_new(id.id, nullptr);
-    arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS, nullptr);
+    arv_camera_set_acquisition_mode(camera,
+                                    ARV_ACQUISITION_MODE_CONTINUOUS,
+                                    nullptr);
 #else
     camera = arv_camera_new(id.id);
     arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
@@ -229,10 +231,10 @@ void QArvCamera::setBinning(QSize bin) {
 QList< QString > QArvCamera::getPixelFormats() {
     unsigned int numformats;
 #ifdef ARAVIS_HAVE_08_API
-    const char **formats = arv_camera_dup_available_pixel_formats_as_strings(
+    const char** formats = arv_camera_dup_available_pixel_formats_as_strings(
         camera, &numformats, nullptr);
 #else
-    const char **formats =
+    const char** formats =
         arv_camera_get_available_pixel_formats_as_strings(camera, &numformats);
 #endif
     QList<QString> list;
@@ -245,12 +247,12 @@ QList< QString > QArvCamera::getPixelFormats() {
 QList< QString > QArvCamera::getPixelFormatNames() {
     unsigned int numformats;
 #ifdef ARAVIS_HAVE_08_API
-    const char **formats =
+    const char** formats =
         arv_camera_dup_available_pixel_formats_as_display_names(camera,
                                                                 &numformats,
                                                                 nullptr);
 #else
-    const char **formats =
+    const char** formats =
         arv_camera_get_available_pixel_formats_as_display_names(camera,
                                                                 &numformats);
 #endif
@@ -265,10 +267,10 @@ QList< QString > QArvCamera::getPixelFormatNames() {
 QList<ArvPixelFormat> QArvCamera::getPixelFormatIds() {
     unsigned int numformats;
 #ifdef ARAVIS_HAVE_08_API
-    gint64 *formats =
+    gint64* formats =
         arv_camera_dup_available_pixel_formats(camera, &numformats, nullptr);
 #else
-    gint64 *formats =
+    gint64* formats =
         arv_camera_get_available_pixel_formats(camera, &numformats);
 #endif
     QList<ArvPixelFormat> list;
@@ -326,7 +328,9 @@ int QArvCamera::getMTU() {
 #ifdef ARAVIS_OLD_SET_FEATURE
     return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
 #else
-    return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize", nullptr);
+    return arv_device_get_integer_feature_value(device,
+                                                "GevSCPSPacketSize",
+                                                nullptr);
 #endif
 }
 
@@ -335,7 +339,10 @@ void QArvCamera::setMTU(int mtu) {
     arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
     arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
 #else
-    arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu, nullptr);
+    arv_device_set_integer_feature_value(device,
+                                         "GevSCPSPacketSize",
+                                         mtu,
+                                         nullptr);
     arv_device_set_integer_feature_value(device, "GevSCBWR", 10, nullptr);
 #endif
     emit dataChanged(QModelIndex(), QModelIndex());
@@ -507,7 +514,10 @@ void QArvCamera::startAcquisition(bool zeroCopy, bool dropInvalidFrames) {
     if (acquiring) return;
 #ifdef ARAVIS_HAVE_08_API
     unsigned int framesize = arv_camera_get_payload(camera, nullptr);
-    stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this, nullptr);
+    stream = arv_camera_create_stream(camera,
+                                      QArvStreamCallbackWrap,
+                                      this,
+                                      nullptr);
 #else
     unsigned int framesize = arv_camera_get_payload(camera);
     stream = arv_camera_create_stream(camera, QArvStreamCallbackWrap, this);
@@ -738,7 +748,7 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
                 arv_gc_feature_node_get_description(ARV_GC_FEATURE_NODE(node),
                                                     nullptr);
 #endif
-                string2 =
+            string2 =
                 arv_gc_feature_node_get_name(ARV_GC_FEATURE_NODE(node));
             if (string == NULL || string2 == NULL)
                 return QVariant();
@@ -784,14 +794,16 @@ QVariant QArvCamera::data(const QModelIndex& index, int role) const {
                                                             entry->data));
                     const char* name =
 #ifdef ARAVIS_HAVE_08_API
-                        arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(
-                                                                 entry->
-                                                                     data));
+                        arv_gc_feature_node_get_display_name(
+                            ARV_GC_FEATURE_NODE(
+                                entry->
+                                    data));
 #else
-                        arv_gc_feature_node_get_display_name(ARV_GC_FEATURE_NODE(
-                                                                 entry->
-                                                                     data),
-                                                             nullptr);
+                        arv_gc_feature_node_get_display_name(
+                            ARV_GC_FEATURE_NODE(
+                                entry->
+                                    data),
+                            nullptr);
 #endif
                     if (name == NULL)
                         e.names << e.values.last();
@@ -894,7 +906,8 @@ bool QArvCamera::setData(const QModelIndex& index, const QVariant& value,
         if (e.isAvailable.at(e.currentValue)) {
             arv_gc_enumeration_set_string_value(ARV_GC_ENUMERATION(node),
                                                 e.values.at(
-                                                    e.currentValue).toLatin1().data(),
+                                                    e.currentValue).toLatin1().
+                                                    data(),
                                                 NULL);
         } else return false;
     } else if (value.canConvert<QArvCommand>()) {
@@ -1004,9 +1017,9 @@ QModelIndex QArvCamera::featureIndex(const QString& feature) const {
 
 void QArvCamera::enableRegisterCache(bool enable, bool debug) {
 #ifdef ARAVIS_HAVE_REGISTER_CACHE
-    auto policy = enable ?
-        ARV_REGISTER_CACHE_POLICY_ENABLE :
-        ARV_REGISTER_CACHE_POLICY_DISABLE;
+    auto policy = enable
+                  ? ARV_REGISTER_CACHE_POLICY_ENABLE
+                  : ARV_REGISTER_CACHE_POLICY_DISABLE;
     if (enable && debug) {
         policy = ARV_REGISTER_CACHE_POLICY_DEBUG;
     }
