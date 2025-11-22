@@ -68,8 +68,20 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="view-refresh">
-                   <normaloff>.</normaloff>.</iconset>
+                  <iconset theme="view-refresh"/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="editCamerasButton">
+                 <property name="toolTip">
+                  <string>Edit the list of manually added cameras. This allows you to connect to cameras that are not automatically detected by entering their addresses.</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset theme="document-edit"/>
                  </property>
                 </widget>
                </item>
@@ -289,8 +301,7 @@
                 <string>Pick</string>
                </property>
                <property name="icon">
-                <iconset theme="edit-select">
-                 <normaloff>.</normaloff>.</iconset>
+                <iconset theme="edit-select"/>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -370,8 +381,7 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="edit-clear-locationbar-rtl">
-                   <normaloff>.</normaloff>.</iconset>
+                  <iconset theme="edit-clear-locationbar-rtl"/>
                  </property>
                 </widget>
                </item>
@@ -444,8 +454,7 @@
                   <string/>
                  </property>
                  <property name="icon">
-                  <iconset theme="edit-clear-locationbar-rtl">
-                   <normaloff>.</normaloff>.</iconset>
+                  <iconset theme="edit-clear-locationbar-rtl"/>
                  </property>
                 </widget>
                </item>
@@ -786,8 +795,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="document-open">
-                 <normaloff>.</normaloff>.</iconset>
+                <iconset theme="document-open"/>
                </property>
               </widget>
              </item>
@@ -887,8 +895,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="document-open">
-                 <normaloff>.</normaloff>.</iconset>
+                <iconset theme="document-open"/>
                </property>
               </widget>
              </item>
@@ -1147,8 +1154,7 @@
           <string>Display image</string>
          </property>
          <property name="icon">
-          <iconset theme="media-playback-start">
-           <normaloff>.</normaloff>.</iconset>
+          <iconset theme="media-playback-start"/>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1164,8 +1170,7 @@
           <string>Actual size</string>
          </property>
          <property name="icon">
-          <iconset theme="zoom-original">
-           <normaloff>.</normaloff>.</iconset>
+          <iconset theme="zoom-original"/>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1226,8 +1231,7 @@
           <string>Logarithmic</string>
          </property>
          <property name="icon">
-          <iconset theme="view-object-histogram-logarithmic">
-           <normaloff>.</normaloff>.</iconset>
+          <iconset theme="view-object-histogram-logarithmic"/>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1332,8 +1336,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="media-record">
-     <normaloff>.</normaloff>.</iconset>
+    <iconset theme="media-record"/>
    </property>
    <property name="text">
     <string>Record</string>
@@ -1347,8 +1350,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="media-playback-stop">
-     <normaloff>.</normaloff>.</iconset>
+    <iconset theme="media-playback-stop"/>
    </property>
    <property name="text">
     <string>Finish</string>
@@ -1365,8 +1367,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="video-display">
-     <normaloff>.</normaloff>.</iconset>
+    <iconset theme="video-display"/>
    </property>
    <property name="text">
     <string>Video Display</string>
@@ -1383,8 +1384,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="office-chart-bar">
-     <normaloff>.</normaloff>.</iconset>
+    <iconset theme="office-chart-bar"/>
    </property>
    <property name="text">
     <string>Histogram</string>
@@ -1401,8 +1401,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset theme="dialog-information">
-     <normaloff>.</normaloff>.</iconset>
+    <iconset theme="dialog-information"/>
    </property>
    <property name="text">
     <string>Diagnostic Log</string>

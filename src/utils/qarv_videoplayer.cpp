@@ -40,8 +40,7 @@ QArvVideoPlayer::QArvVideoPlayer(QString filename,
     icons[leftMarkButton] = "go-first";
     icons[rightMarkButton] = "go-last";
     for (auto i = icons.begin(); i != icons.end(); i++)
-        if (!QIcon::hasThemeIcon(*i))
-            i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+        setButtonIcon(i.key(), *i);
 
     auto submenu = new QMenu;
     submenu->addAction(openQArvVideoAction);
@@ -282,11 +281,8 @@ void QArvVideoPlayer::on_transcodeButton_toggled(bool checked) {
 QArvRawVideoDialog::QArvRawVideoDialog(QWidget* parent, QString name) :
     QDialog(parent) {
     setupUi(this);
-    if (!QIcon::hasThemeIcon("document-open")) {
-        inputFileButton->setIcon(QIcon(QString(qarv_datafiles)
-                                       + "document-open.svgz"));
-    }
     inputFileEdit->setText(name);
+    setButtonIcon(inputFileButton, "document-open");
 
     connect(inputFileButton, &QPushButton::clicked, [this] (bool) {
         QString filter = tr("Raw video file (*)");

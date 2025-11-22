@@ -55,6 +55,7 @@ signals:
 
 private slots:
     void on_refreshCamerasButton_clicked(bool clicked = false);
+    void on_editCamerasButton_clicked(bool clicked);
     void on_unzoomButton_toggled(bool checked);
     void on_cameraSelector_currentIndexChanged(int index);
     void on_exposureAutoButton_toggled(bool checked);

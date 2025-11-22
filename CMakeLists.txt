@@ -116,6 +116,7 @@ set_prefixed(qarv_MOCS src/
   glvideowidget.h
   glhistogramwidget.h
   qarvmainwindow.h
+  manualcameradialog.h
   roicombobox.h
   globals.h
   workthread.h
@@ -128,6 +129,7 @@ set_prefixed(qarv_MOCS src/
 qt5_wrap_cpp(qarv_MOCD ${qarv_MOCS})
 set_prefixed(qarv_SRCS src/
   qarvmainwindow.cpp
+  manualcameradialog.cpp
   main.cpp
   glvideowidget.cpp
   glhistogramwidget.cpp
@@ -278,6 +280,9 @@ set_prefixed(qarv_ICONS res/icons/
   dialog-information.svgz
   go-first.svgz
   go-last.svgz
+  document-edit.svgz
+  list-add.svgz
+  list-remove.svgz
 )
 
 install(TARGETS ${libqarv} qarvexe qarv_videoplayer

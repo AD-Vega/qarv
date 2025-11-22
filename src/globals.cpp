@@ -1,5 +1,8 @@
 #include "globals.h"
 
+#include <QAbstractButton>
+#include <QAction>
+#include <QIcon>
 #include <QTime>
 
 using namespace QArv;
@@ -47,4 +50,22 @@ QArvDebug::~QArvDebug() {
             messageSender.sendMessage(now + line);
         }
     }
+}
+
+bool QArv::setButtonIcon(QAbstractButton* button, QString themeName) {
+    if (QIcon::hasThemeIcon(themeName)) {
+        button->setIcon(QIcon::fromTheme(themeName));
+        return true;
+    }
+    button->setIcon(QIcon(QString(qarv_datafiles) + themeName + ".svgz"));
+    return false;
+}
+
+bool QArv::setActionIcon(QAction* action, QString themeName) {
+    if (QIcon::hasThemeIcon(themeName)) {
+        action->setIcon(QIcon::fromTheme(themeName));
+        return true;
+    }
+    action->setIcon(QIcon(QString(qarv_datafiles) + themeName + ".svgz"));
+    return false;
 }

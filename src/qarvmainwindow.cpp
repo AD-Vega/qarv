@@ -23,6 +23,7 @@
 #include "getmtu_linux.h"
 #include "decoders/unsupported.h"
 #include "filters/filter.h"
+#include "manualcameradialog.h"
 
 #include <QNetworkInterface>
 #include <QFileInfo>
@@ -77,6 +78,7 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     icons[unzoomButton] = "zoom-original";
     icons[playButton] = "media-playback-start";
     icons[refreshCamerasButton] = "view-refresh";
+    icons[editCamerasButton] = "document-edit";
     icons[chooseFilenameButton] = "document-open";
     icons[chooseSnappathButton] = "document-open";
     icons[editGainButton] = "edit-clear-locationbar-rtl";
@@ -84,10 +86,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     icons[histogramLog] = "view-object-histogram-logarithmic";
     icons[pickROIButton] = "edit-select";
     for (auto i = icons.begin(); i != icons.end(); i++) {
-        if (!QIcon::hasThemeIcon(*i)) {
-            i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+        if (!setButtonIcon(i.key(), *i))
             usingFallbackIcons = true;
-        }
     }
     QHash<QAction*, QString> aicons;
     aicons[showVideoAction] = "video-display";
@@ -96,10 +96,8 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     aicons[showHistogramAction] = "office-chart-bar";
     aicons[messageAction] = "dialog-information";
     for (auto i = aicons.begin(); i != aicons.end(); i++) {
-        if (!QIcon::hasThemeIcon(*i)) {
-            i.key()->setIcon(QIcon(QString(qarv_datafiles) + *i + ".svgz"));
+        if (!setActionIcon(i.key(), *i))
             usingFallbackIcons = true;
-        }
     }
     if (usingFallbackIcons)
         logMessage()
@@ -284,6 +282,11 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
         cameraSelector->setCurrentIndex(previous_cam);
     else
         cameraSelector->setCurrentIndex(0);
+}
+
+void QArvMainWindow::on_editCamerasButton_clicked(bool clicked) {
+    ManualCameraDialog dialog(this);
+    dialog.exec();
 }
 
 void QArvMainWindow::on_unzoomButton_toggled(bool checked) {

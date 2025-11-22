@@ -6,6 +6,9 @@
 #include <QStandardItemModel>
 #include <cmath>
 
+class QAction;
+class QAbstractButton;
+
 namespace QArv
 {
 
@@ -78,6 +81,11 @@ template <typename T>
 static inline T* var2ptr(const QVariant& val) {
     return reinterpret_cast<T*>(val.value<quintptr>());
 }
+
+// Returns false if the icon theme doesn't have the icon, in which case, the
+// bundled icon is used.
+bool setButtonIcon(QAbstractButton* button, QString themeName);
+bool setActionIcon(QAction* action, QString themeName);
 
 }
 
