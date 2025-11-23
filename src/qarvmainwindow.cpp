@@ -286,6 +286,7 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
     message += tr("and %n manually added)",
                   "Number of manually added cameras",
                   numManual);
+    statusBar()->clearMessage();
     statusBar()->showMessage(statusBar()->currentMessage() + " " + message,
                              statusTimeoutMsec);
     logMessage() << message;
@@ -455,7 +456,6 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
                              "trying best-effort MTU %1.");
         int mtu = 1500;
         message = message.arg(mtu);
-        statusBar()->showMessage(message, statusTimeoutMsec);
         logMessage() << message;
         camera->setMTU(mtu);
     }
