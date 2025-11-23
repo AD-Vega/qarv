@@ -202,6 +202,7 @@ public:
     /**@{*/
     void setMTU(int mtu);
     int getMTU();
+    void setAutoPacketSize(bool enable);
     QHostAddress getIP();
     QHostAddress getHostIP();
     int getEstimatedBW();

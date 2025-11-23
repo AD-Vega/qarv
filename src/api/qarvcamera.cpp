@@ -339,6 +339,9 @@ void QArvCamera::setFPS(double fps) {
 }
 
 int QArvCamera::getMTU() {
+    if (!ARV_IS_GV_DEVICE(device)) {
+        return 0;
+    }
 #ifdef ARAVIS_OLD_SET_FEATURE
     return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
 #else
@@ -349,6 +352,9 @@ int QArvCamera::getMTU() {
 }
 
 void QArvCamera::setMTU(int mtu) {
+    if (!ARV_IS_GV_DEVICE(device)) {
+        return;
+    }
 #ifdef ARAVIS_OLD_SET_FEATURE
     arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
     arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
@@ -360,6 +366,18 @@ void QArvCamera::setMTU(int mtu) {
     arv_device_set_integer_feature_value(device, "GevSCBWR", 10, nullptr);
 #endif
     emit dataChanged(QModelIndex(), QModelIndex());
+}
+
+void QArvCamera::setAutoPacketSize(bool enable) {
+    if (!ARV_IS_GV_DEVICE(device)) {
+        return;
+    }
+
+    arv_gv_device_set_packet_size_adjustment(
+        ARV_GV_DEVICE(device),
+        enable
+        ? ARV_GV_PACKET_SIZE_ADJUSTMENT_ALWAYS
+        : ARV_GV_PACKET_SIZE_ADJUSTMENT_DEFAULT);
 }
 
 double QArvCamera::getExposure() {
@@ -601,6 +619,9 @@ QHostAddress QArvCamera::getHostIP() {
 }
 
 int QArvCamera::getEstimatedBW() {
+    if (!ARV_IS_GV_DEVICE(device)) {
+        return 0;
+    }
 #ifdef ARAVIS_OLD_SET_FEATURE
     return arv_device_get_integer_feature_value(device, "GevSCDCT");
 #else
