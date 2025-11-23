@@ -971,7 +971,7 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
             readBack.seek(0);
             wholefile >> camera;
             readBack << camera;
-            readBack << endl << endl;
+            readBack << Qt::endl << Qt::endl;
         }
         QStringList failures;
         wholefile.seek(0);
@@ -980,7 +980,7 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
             QString actual = readBack.readLine();
             if (wanted != actual) {
                 logMessage() << "Setting failure, wanted:"
-                             << wanted << endl
+                             << wanted << Qt::endl
                              << "actual:" << actual;
                 failures << wanted;
             }
