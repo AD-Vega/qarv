@@ -258,23 +258,38 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
     cameraSelector->addItem(tr("Looking for cameras..."));
     QApplication::processEvents();
     cameraSelector->clear();
+
     auto cameras = QArvCamera::listCameras();
     foreach (auto cam, cameras) {
-        QString display;
-        display = display + cam.vendor + " (" + cam.model + ")";
-        cameraSelector->addItem(display,
-                                QVariant::fromValue<QArvCameraId>(cam));
+        cameraSelector->addItem(cam.id, QVariant::fromValue<QArvCameraId>(cam));
     }
+    auto numDetected = cameras.size() - 1;  // Subtract the fake camera
+
+    QSettings settings;
+    QStringList manualCameras =
+        settings.value("qarv_manual_cameras/addresses").toStringList();
+    foreach (auto addr, manualCameras) {
+        QArvCameraId id{ addr.toUtf8().data(), "", "" };
+        cameraSelector->addItem(addr, QVariant::fromValue<QArvCameraId>(id));
+    }
+    auto numManual = manualCameras.size();
+
     cameraSelector->setCurrentIndex(-1);
     cameraSelector->setEnabled(true);
     cameraSelector->blockSignals(false);
-    QString message = tr("Found %n cameras.",
-                         "Number of cameras",
-                         cameraSelector->count());
+    QString message = tr("Found %n cameras ",
+                         "Total number of cameras",
+                         numDetected + numManual);
+    message += tr("(%n detected ",
+                  "Number of detected cameras",
+                  numDetected);
+    message += tr("and %n manually added)",
+                  "Number of manually added cameras",
+                  numManual);
     statusBar()->showMessage(statusBar()->currentMessage() + " " + message,
                              statusTimeoutMsec);
     logMessage() << message;
-    QSettings settings;
+
     QVariant data = settings.value("qarv_camera/selected");
     int previous_cam;
     if (data.isValid()
@@ -286,7 +301,9 @@ void QArvMainWindow::on_refreshCamerasButton_clicked(bool clicked) {
 
 void QArvMainWindow::on_editCamerasButton_clicked(bool clicked) {
     ManualCameraDialog dialog(this);
-    dialog.exec();
+    if (dialog.exec() == QDialog::Accepted) {
+        on_refreshCamerasButton_clicked();
+    }
 }
 
 void QArvMainWindow::on_unzoomButton_toggled(bool checked) {
@@ -388,18 +405,27 @@ void QArvMainWindow::on_replayButton_clicked(bool checked) {
 void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     autoreadexposure->stop();
 
-    QSettings settings;
-    settings.setValue("qarv_camera/selected", cameraSelector->currentText());
-
     auto camid = cameraSelector->itemData(index).value<QArvCameraId>();
     if (camera != NULL) {
         startVideo(false);
         delete camera;
     }
+
     camera = new QArvCamera(camid);
+    if (!camera->isConnected()) {
+        QString message(tr("Could not connect to camera!"));
+        statusBar()->showMessage(message, statusTimeoutMsec);
+        logMessage() << message;
+        cameraSelector->setCurrentIndex(0);
+        return;
+    }
+
     this->connect(camera,
                   SIGNAL(bufferUnderrun()),
                   SLOT(bufferUnderrunOccured()));
+
+    QSettings settings;
+    settings.setValue("qarv_camera/selected", cameraSelector->currentText());
 
     logMessage() << "Pixel formats:" << camera->getPixelFormats();
 

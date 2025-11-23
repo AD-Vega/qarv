@@ -80,25 +80,39 @@ QArvCamera::QArvCamera(QArvCameraId id, QObject* parent) :
     QAbstractItemModel(parent), acquiring(false) {
     ext = new QArvCameraExtension;
     setFrameQueueSize();
+
 #ifdef ARAVIS_HAVE_08_API
     camera = arv_camera_new(id.id, nullptr);
-    arv_camera_set_acquisition_mode(camera,
-                                    ARV_ACQUISITION_MODE_CONTINUOUS,
-                                    nullptr);
+    if (camera)
+        arv_camera_set_acquisition_mode(camera,
+                                        ARV_ACQUISITION_MODE_CONTINUOUS,
+                                        nullptr);
 #else
     camera = arv_camera_new(id.id);
-    arv_camera_set_acquisition_mode(camera, ARV_ACQUISITION_MODE_CONTINUOUS);
+    if (camera)
+        arv_camera_set_acquisition_mode(camera,
+                                        ARV_ACQUISITION_MODE_CONTINUOUS);
 #endif
+
+    if (!camera)
+        return;
+
     device = arv_camera_get_device(camera);
     genicam = arv_device_get_genicam(device);
     featuretree = QArvFeatureTree::createFeaturetree(genicam);
 }
 
 QArvCamera::~QArvCamera() {
+    if (camera) {
+        stopAcquisition();
+        QArvFeatureTree::freeFeaturetree(featuretree);
+        g_object_unref(camera);
+    }
     delete ext;
-    QArvFeatureTree::freeFeaturetree(featuretree);
-    stopAcquisition();
-    g_object_unref(camera);
+}
+
+bool QArvCamera::isConnected() const {
+    return camera;
 }
 
 /*!

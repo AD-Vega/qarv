@@ -118,6 +118,12 @@ public:
     QArvCamera(QArvCameraId id, QObject* parent = NULL);
     ~QArvCamera();
 
+    //! Checks if the camera is connected. MUST be called after constructing QArvCamera.
+    /*! If this function returns false, the object is useless and no other
+     *  functions (except destructor) may be called.
+     */
+    bool isConnected() const;
+
     static QList<QArvCameraId> listCameras(); //!< Returns a list of all cameras found.
 
     QArvCameraId getId(); //!< Returns the ID of the camera.
