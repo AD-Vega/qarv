@@ -349,17 +349,17 @@ int QArvCamera::getMTU() {
 }
 
 void QArvCamera::setMTU(int mtu) {
-#ifdef ARAVIS_OLD_SET_FEATURE
-    arv_device_set_integer_feature_value(device, "GevSCPSPacketSize", mtu);
-    arv_device_set_integer_feature_value(device, "GevSCBWR", 10);
-#else
-    arv_device_set_integer_feature_value(device,
-                                         "GevSCPSPacketSize",
-                                         mtu,
-                                         nullptr);
-    arv_device_set_integer_feature_value(device, "GevSCBWR", 10, nullptr);
-#endif
-    emit dataChanged(QModelIndex(), QModelIndex());
+    if (!ARV_IS_GV_DEVICE(device)) {
+        return;
+    }
+
+    auto dev = ARV_GV_DEVICE(device);
+
+    if (mtu > 0) {
+        arv_gv_device_set_packet_size(dev, mtu, nullptr);
+    } else {
+        arv_gv_device_auto_packet_size(dev, nullptr);
+    }
 }
 
 double QArvCamera::getExposure() {

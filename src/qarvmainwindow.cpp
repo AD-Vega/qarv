@@ -20,7 +20,6 @@
 #include "globals.h"
 #include "qarvmainwindow.h"
 #include "api/qarvcameradelegate.h"
-#include "getmtu_linux.h"
 #include "decoders/unsupported.h"
 #include "filters/filter.h"
 #include "manualcameradialog.h"
@@ -57,6 +56,13 @@ QArvMainWindow::QArvMainWindow(QWidget* parent, bool standalone_) :
     logMessage() << "Please ignore \"Could not resolve property\" warnings "
                     "unless icons look bad.";
     setupUi(this);
+
+    // Designer doesn't allow adding widgets that span rows, so we fix the
+    // layout here.
+    auto cameraBoxLayout = qobject_cast<QFormLayout*>(cameraBox->layout());
+    cameraBoxLayout->takeRow(ethernetBox);
+    cameraBoxLayout->addRow(ethernetBox);
+
     on_statusTimeoutSpinbox_valueChanged(statusTimeoutSpinbox->value());
     messageList->connect(&QArvDebug::messageSender,
                          SIGNAL(newDebugMessage(QString)),
@@ -431,47 +437,7 @@ void QArvMainWindow::on_cameraSelector_currentIndexChanged(int index) {
     logMessage() << "Pixel formats:" << camera->getPixelFormats();
 
     auto ifaceIP = camera->getHostIP();
-    QNetworkInterface cameraIface;
-    if (!ifaceIP.isNull()) {
-        auto ifaces = QNetworkInterface::allInterfaces();
-        bool process_loop = true;
-        foreach (QNetworkInterface iface, ifaces) {
-            if (!process_loop) break;
-            auto addresses = iface.addressEntries();
-            foreach (QNetworkAddressEntry addr, addresses) {
-                if (addr.ip() == ifaceIP) {
-                    cameraIface = iface;
-                    process_loop = false;
-                    break;
-                }
-            }
-        }
-
-        if (cameraIface.isValid()) {
-            int mtu = getMTU(cameraIface.name());
-            camera->setMTU(mtu);
-        }
-    } else {
-        QString message = tr("Network address not found, "
-                             "trying best-effort MTU %1.");
-        int mtu = 1500;
-        message = message.arg(mtu);
-        logMessage() << message;
-        camera->setMTU(mtu);
-    }
-
-    if (camera->getMTU() == 0)
-        cameraMTUDescription->setText(tr("Not an ethernet camera."));
-    else {
-        int mtu = camera->getMTU();
-        QString ifname = cameraIface.name();
-        QString description = tr("Camera is on interface %1,\nMTU set to %2.");
-        description = description.arg(ifname);
-        description = description.arg(QString::number(mtu));
-        if (mtu < 3000)
-            description += tr("\nConsider increasing the MTU!");
-        cameraMTUDescription->setText(description);
-    }
+    ethernetBox->setVisible(!ifaceIP.isNull());
 
     camera->setAutoGain(false);
     camera->setAutoExposure(false);
@@ -1005,7 +971,7 @@ void QArvMainWindow::on_loadSettingsButton_clicked(bool checked) {
 void QArvMainWindow::updateBandwidthEstimation() {
     int bw = camera->getEstimatedBW();
     if (bw == 0) {
-        bandwidthDescription->setText(tr("Not an ethernet camera."));
+        bandwidthDescription->setText(tr("Could not determine."));
     } else {
         QString unit(" B/s");
         if (bw >= 1024) {
@@ -1018,6 +984,26 @@ void QArvMainWindow::updateBandwidthEstimation() {
         }
         bandwidthDescription->setText(QString::number(bw) + unit);
     }
+
+    int mtu = camera->getMTU();
+    if (mtu > 0) {
+        QString mtuText = tr("%1 bytes");
+        cameraMTUDescription->setText(mtuText.arg(mtu));
+    } else {
+        cameraMTUDescription->setText("");
+    }
+}
+
+void QArvMainWindow::on_mtu1500_clicked(bool checked) {
+    camera->setMTU(1500);
+}
+
+void QArvMainWindow::on_mtu9000_clicked(bool checked) {
+    camera->setMTU(9000);
+}
+
+void QArvMainWindow::on_mtuAuto_clicked(bool checked) {
+    camera->setMTU(-1);
 }
 
 void QArvMainWindow::updateImageTransform() {

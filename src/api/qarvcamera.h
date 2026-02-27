@@ -197,7 +197,8 @@ public:
     /*! \name Manipulate network parameters of an ethernet camera
      * MTU corresponds to "GevSCPSPacketSize", which should be set to the
      * MTU of the network interface. getHostIP() can be used to detect the
-     * interface's address.
+     * interface's address. Passing a negative value to getMTU() will attempt
+     * to measure the MTU by firing a test packet, with 1500 bytes as fallback.
      */
     /**@{*/
     void setMTU(int mtu);

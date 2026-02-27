@@ -97,6 +97,9 @@ private slots:
     void on_postprocRemoveButton_clicked(bool checked);
     void on_postprocList_doubleClicked(const QModelIndex & index);
     void on_registerCacheCheck_stateChanged(int state);
+    void on_mtu1500_clicked(bool checked);
+    void on_mtu9000_clicked(bool checked);
+    void on_mtuAuto_clicked(bool checked);
     void pickedROI(QRect roi);
     void readExposure();
     void readGain();

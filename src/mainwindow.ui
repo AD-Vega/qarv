@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>934</width>
+    <width>1053</width>
     <height>740</height>
    </rect>
   </property>
@@ -94,51 +94,6 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Pixel format:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QComboBox" name="pixelFormatSelector">
-               <property name="toolTip">
-                <string>Select the camera's pixel format.</string>
-               </property>
-               <property name="minimumContentsLength">
-                <number>30</number>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>Ethernet MTU:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QLabel" name="cameraMTUDescription">
-               <property name="text">
-                <string>Not an ethernet camera.</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_13">
-               <property name="text">
-                <string>Bandwidth:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QLabel" name="bandwidthDescription">
-               <property name="text">
-                <string>Not an ethernet camera.</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
@@ -175,6 +130,94 @@
                 </widget>
                </item>
               </layout>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Pixel format:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="pixelFormatSelector">
+               <property name="toolTip">
+                <string>Select the camera's pixel format.</string>
+               </property>
+               <property name="minimumContentsLength">
+                <number>30</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QGroupBox" name="ethernetBox">
+               <property name="title">
+                <string>Ethernet:</string>
+               </property>
+               <layout class="QFormLayout" name="formLayout_4">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_3">
+                  <property name="text">
+                   <string>Packet size:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_13">
+                  <property name="text">
+                   <string>Bandwidth:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="bandwidthDescription">
+                  <property name="text">
+                   <string>1 kB/s</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <layout class="QHBoxLayout" name="horizontalLayout_12">
+                  <item>
+                   <widget class="QLabel" name="cameraMTUDescription">
+                    <property name="text">
+                     <string>1500 bytes</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="mtu1500">
+                    <property name="toolTip">
+                     <string>Sets the packet size to 1500 bytes. This is the most common MTU on Ethernet networks. Check the MTU of your Ethernet interface; you might be able to use a larger packet size.</string>
+                    </property>
+                    <property name="text">
+                     <string>1500</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="mtu9000">
+                    <property name="toolTip">
+                     <string>Sets the packet size to 9000 bytes. This is the most common Ethernet jumbo frame size. If you need a custom size, open the Camera features tab and manually set the GevSCPSPacketSize register.</string>
+                    </property>
+                    <property name="text">
+                     <string>9000</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="mtuAuto">
+                    <property name="toolTip">
+                     <string>Attempts to determine the appropriate packet size by firing a test packet. Not all cameras support this feature. In case of failure, the packet size will either not change, or will be set to 1500 bytes.</string>
+                    </property>
+                    <property name="text">
+                     <string>Auto</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
              </item>
             </layout>
            </widget>
