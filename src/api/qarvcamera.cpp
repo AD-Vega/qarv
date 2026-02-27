@@ -339,13 +339,30 @@ void QArvCamera::setFPS(double fps) {
 }
 
 int QArvCamera::getMTU() {
-#ifdef ARAVIS_OLD_SET_FEATURE
-    return arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
-#else
-    return arv_device_get_integer_feature_value(device,
-                                                "GevSCPSPacketSize",
-                                                nullptr);
+#ifdef ARAVIS_HAVE_REGISTER_CACHE
+    // MTU is an important thing to see, and some cameras don't return it
+    // correctly with cache enabled. The store-restore thing we are doing here
+    // could race with something setting the cache policy while we are reading
+    // MTU, but the policy isn't something that should change often, so let's
+    // not worry about it.
+    auto policy = arv_gc_get_register_cache_policy(genicam);
+    arv_gc_set_register_cache_policy(genicam,
+                                     ARV_REGISTER_CACHE_POLICY_DISABLE);
 #endif
+
+#ifdef ARAVIS_OLD_SET_FEATURE
+    int mtu = arv_device_get_integer_feature_value(device, "GevSCPSPacketSize");
+#else
+    int mtu = arv_device_get_integer_feature_value(device,
+                                                   "GevSCPSPacketSize",
+                                                   nullptr);
+#endif
+
+#ifdef ARAVIS_HAVE_REGISTER_CACHE
+    arv_gc_set_register_cache_policy(genicam, policy);
+#endif
+
+    return mtu;
 }
 
 void QArvCamera::setMTU(int mtu) {
