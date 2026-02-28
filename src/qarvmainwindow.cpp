@@ -987,8 +987,8 @@ void QArvMainWindow::updateBandwidthEstimation() {
 
     int mtu = camera->getMTU();
     if (mtu > 0) {
-        QString mtuText = tr("%1 bytes");
-        cameraMTUDescription->setText(mtuText.arg(mtu));
+        QString mtuText = tr("%n bytes", "Packet size in bytes", mtu);
+        cameraMTUDescription->setText(mtuText);
     } else {
         cameraMTUDescription->setText("");
     }
