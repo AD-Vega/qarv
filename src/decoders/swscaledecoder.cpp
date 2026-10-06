@@ -19,7 +19,7 @@
 
 #include "decoders/swscaledecoder.h"
 #include <cstdlib>
-#include <opencv2/core/types_c.h>
+#include <opencv2/core.hpp>
 #include "globals.h"
 
 extern "C" {
