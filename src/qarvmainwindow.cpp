@@ -38,6 +38,8 @@
 #include <QMenu>
 #include <QToolButton>
 
+#include <cstring>
+
 Q_DECLARE_METATYPE(cv::Mat)
 
 using namespace QArv;
